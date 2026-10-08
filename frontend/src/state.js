@@ -7,8 +7,15 @@ function read(key) {
     return null;
   }
 }
+function savedTracking(key) {
+  try {
+    return JSON.parse(read(`admincafe-tracking:${key}`) || "null");
+  } catch {
+    return null;
+  }
+}
 export function shared(config) {
-  const key = `${config.apiBase || "demo"}:${config.tableToken || "default"}`;
+  const key = `${config.apiBase || "demo"}${Number(config.branchId) ? `:branch-${Number(config.branchId)}` : ""}:${config.tableToken || "default"}`;
   if (!stores.has(key)) {
     let cart = [];
     try {
@@ -22,6 +29,7 @@ export function shared(config) {
         cart,
         category: 0,
         pendingOrderId: read(`admincafe-request:${key}`) || "",
+        tracking: savedTracking(key),
         bootstrap: null,
         language: "",
         languageEntered: false,
@@ -42,6 +50,10 @@ export function shared(config) {
       try {
         localStorage.setItem(`admincafe:${key}`, JSON.stringify(state.cart));
         localStorage.setItem(`admincafe-request:${key}`, state.pendingOrderId);
+        localStorage.setItem(
+          `admincafe-tracking:${key}`,
+          JSON.stringify(state.tracking),
+        );
       } catch {}
     },
     key,

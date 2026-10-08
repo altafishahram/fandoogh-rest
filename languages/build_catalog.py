@@ -8,6 +8,8 @@ for path in [ROOT / 'fandoogh-rest.php', *sorted((ROOT / 'src').rglob('*.php')),
     text = path.read_text(encoding='utf-8')
     patterns = [r"(?:__|esc_html__|esc_attr__|_e|esc_html_e|esc_attr_e)\(\s*" + literal + r"\s*,\s*'fandoogh-rest'"]
     # Reader intentionally routes static validation/exception messages through __($message).
+    if path.name == 'Branches.php':
+        patterns += [r"\$error\(\s*" + literal]
     if path.name == 'Reader.php':
         patterns += [r"self::error\(\s*" + literal, r"new \\RuntimeException\(\s*" + literal]
     if path.parent.name == 'Appearance' and path.name == 'CssCompiler.php':
@@ -37,8 +39,8 @@ translations.update({message: message for message in ui_messages})
 missing = sorted(set(entries) - set(translations))
 if missing:
     raise SystemExit('Missing Persian translations: ' + json.dumps(missing, ensure_ascii=False, indent=2))
-header = ('Project-Id-Version: Fandoogh Rest 1.3.1\nReport-Msgid-Bugs-To: \n'
-          'POT-Creation-Date: 2026-10-08 00:00+0000\nPO-Revision-Date: 2026-10-08 00:00+0000\n'
+header = ('Project-Id-Version: Fandoogh Rest 1.4.0\nReport-Msgid-Bugs-To: \n'
+          'POT-Creation-Date: 2026-10-09 00:00+0000\nPO-Revision-Date: 2026-10-09 00:00+0000\n'
           'Last-Translator: Fandoogh Rest\nLanguage-Team: Persian\nLanguage: fa_IR\n'
           'MIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\n'
           'Plural-Forms: nplurals=2; plural=(n > 1);\nX-Domain: fandoogh-rest\n')

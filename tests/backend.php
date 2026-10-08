@@ -7,6 +7,7 @@ namespace FandooghRest\Core {
     }
 }
 namespace {
+    require __DIR__ . '/branch-double.php';
     function __($message, $domain = '') { return $message; }
     function do_action($hook, ...$args) {}
     class WP_Error {
@@ -15,6 +16,7 @@ namespace {
     class WP_REST_Request implements ArrayAccess {
         public function __construct(public array $data = [], public string $nonce = 'valid') {}
         public function get_json_params() { return $this->data; }
+        public function get_route() { return '/admincafe/v1/manage/test'; }
         public function get_header($name) { return $this->nonce; }
         public function offsetExists($offset): bool { return isset($this->data[$offset]); }
         public function offsetGet($offset): mixed { return $this->data[$offset] ?? null; }
@@ -85,6 +87,7 @@ namespace {
     require __DIR__ . '/../src/Tables/Tables.php';
     require __DIR__ . '/../src/Menu/Catalog.php';
     require __DIR__ . '/../src/Rest/Management.php';
+    require __DIR__ . '/../src/Commerce/Orders.php';
     require __DIR__ . '/../src/Reports/Reports.php';
     $checks = 0;
     function check($condition, $message) {

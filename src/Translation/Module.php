@@ -1,6 +1,7 @@
 <?php
 namespace FandooghRest\Translation;
 defined('ABSPATH') || exit;
+use FandooghRest\Branches\Branches;
 final class Module
 {
     public function register(): void
@@ -14,7 +15,7 @@ final class Module
         );
         add_action('admincafe_translation_recover',[Queue::class,'recover']);
         add_action('admincafe_translation_work',[Queue::class,'work']);
-        add_action('admincafe_translation_scan',[Queue::class,'scan'],10,2);
+        add_action('admincafe_translation_scan',[Queue::class,'scan'],10,3);
         add_action('admincafe_translation_manual_input',static function ($scope,$id,$patch): void {
             self::safe(static fn()=>Source::manual($scope,(int)$id,$patch));
         }
@@ -31,6 +32,9 @@ final class Module
             }
             );
         }
+        add_action('fandoogh_branch_settings_updated', static function (int $branch): void {
+            self::safe(static fn() => Queue::enqueue('settings', $branch === Branches::defaultId() ? 0 : $branch));
+        });
         add_action('updated_option',static function ($name): void {
             if ($name==='admincafe_settings') {
                 self::safe(static fn()=>Queue::enqueue('settings',0));
@@ -80,6 +84,7 @@ final class Module
         register_rest_route('admincafe/v1','/manage/translation/settings',[
         ['methods'=>'GET','permission_callback'=>$permission,'callback'=>static fn()=>Config::read()],
         ['methods'=>'POST','permission_callback'=>$permission,'callback'=>static function ($r) {
+            if (!Branches::isCentral()) { return new \WP_Error('branch_shared_setting', __('Only the collection manager can change the shared translation provider.', 'fandoogh-rest'), ['status'=>403]); }
             $input=$r->get_json_params(); return is_array($input)?Config::update($input):new \WP_Error('admincafe_translation_input',__('Invalid translation settings.', 'fandoogh-rest'),['status'=>400]);
         }
         ],

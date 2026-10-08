@@ -33,6 +33,9 @@
       "Category ID (0 for all)": [
         "شناسه دسته‌بندی (۰ برای همه)"
       ],
+      "Branch ID or slug (empty for current branch)": [
+        "شناسه یا آدرس شعبه (خالی برای شعبهٔ فعلی)"
+      ],
       "Ordering": [
         "سفارش‌گیری"
       ],

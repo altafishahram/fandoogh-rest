@@ -4,7 +4,7 @@
     const t = (message) => i18n.__(message, 'fandoogh-rest');
     blocks.registerBlockType('admincafe/menu', {
         title: t('Fandoogh Rest menu'), icon: 'food', category: 'widgets',
-        attributes: { component: { type: 'string', default: 'menu' }, category: { type: 'number', default: 0 }, mode: { type: 'string', default: 'auto' } },
+        attributes: { component: { type: 'string', default: 'menu' }, category: { type: 'number', default: 0 }, mode: { type: 'string', default: 'auto' }, branch: { type: 'string', default: '' } },
         edit: function (props) {
             return el('div', editor.useBlockProps(),
                 el(editor.InspectorControls, {}, el(components.PanelBody, { title: t('Restaurant menu') },
@@ -13,6 +13,7 @@
                         { label: t('Product cards'), value: 'products' }, { label: t('Order basket'), value: 'cart' }
                     ], onChange: value => props.setAttributes({ component: value }) }),
                     el(components.TextControl, { label: t('Category ID (0 for all)'), type: 'number', min: 0, value: props.attributes.category, onChange: value => props.setAttributes({ category: Math.max(0, Number(value) || 0) }) }),
+                    el(components.TextControl, { label: t('Branch ID or slug (empty for current branch)'), value: props.attributes.branch, onChange: value => props.setAttributes({ branch: value }) }),
                     el(components.SelectControl, { label: t('Ordering'), value: props.attributes.mode, options: [
                         { label: t('Follow restaurant settings'), value: 'auto' }, { label: t('View menu only'), value: 'menu' }
                     ], onChange: value => props.setAttributes({ mode: value }) })

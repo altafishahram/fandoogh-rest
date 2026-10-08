@@ -18,6 +18,10 @@ export default {
 </script>
 <template>
   <template v-if="tab === 'settings'">
+    <p class="ac-hint">
+      تنظیمات شعبه {{ branch.name }}؛ مسیرهای سایت و واحد پول بین شعبه‌ها مشترک
+      هستند.
+    </p>
     <div class="ac-settings-grid">
       <section class="ac-surface">
         <h2>زبان‌های منوی مشتری</h2>
@@ -54,17 +58,17 @@ export default {
             </option>
           </select></label
         >
-        <AutomaticTranslations />
+        <AutomaticTranslations :can-manage="!!bootstrap.can_manage_branches" />
         <h2>{{ t("هویت و مسیرهای کافه") }}</h2>
         <div class="ac-form-grid">
           <label
             >{{ t("نام کافه") }}<input v-model="settings.restaurant_name" />
           </label>
           <label>{{ t("شعار") }}<input v-model="settings.tagline" /> </label>
-          <label
+          <label v-if="bootstrap.can_manage_branches"
             >{{ t("اسلاگ منو") }}<input v-model="settings.menu_slug" />
           </label>
-          <label
+          <label v-if="bootstrap.can_manage_branches"
             >{{ t("اسلاگ مدیریت") }}<input v-model="settings.panel_slug" />
           </label>
           <label
@@ -176,7 +180,7 @@ export default {
             >{{ t("آدرس فونت سفارشی")
             }}<input type="url" v-model="settings.custom_font_url" />
           </label>
-          <label
+          <label v-if="bootstrap.can_manage_branches"
             >{{ t("واحد پول فروشگاه")
             }}<select v-model="settings.currency_code">
               <option

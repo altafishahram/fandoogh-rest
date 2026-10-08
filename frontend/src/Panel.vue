@@ -8,6 +8,7 @@ import Catalog from "./pages/Catalog.vue";
 import Import from "./pages/Import.vue";
 import Settings from "./pages/Settings.vue";
 import Notifications from "./pages/Notifications.vue";
+import Branches from "./pages/Branches.vue";
 export default {
   props: ["config", "mountRoot"],
   components: {
@@ -18,6 +19,7 @@ export default {
     Import,
     Settings,
     Notifications,
+    Branches,
   },
   setup(props) {
     const state = usePanel(props.config, props.mountRoot);
@@ -36,6 +38,14 @@ export default {
           <small>{{ t("مدیریت با طعم آرامش") }}</small>
         </div>
       </div>
+      <label class="ac-branch-picker"
+        >شعبه فعال
+        <select :value="branchId" @change="switchBranch($event.target.value)">
+          <option v-for="b in selectableBranches" :key="b.id" :value="b.id">
+            {{ b.name }}{{ b.enabled === false ? " (غیرفعال)" : "" }}
+          </option>
+        </select>
+      </label>
       <nav aria-label="مدیریت کافه" class="ac-select-none">
         <button
           v-for="item in allowed"
@@ -52,7 +62,7 @@ export default {
         <strong>{{ bootstrap.user.name }}</strong>
         <small>{{ bootstrap.settings.restaurant_name }}</small>
         <a
-          :href="config.demo ? '/' : bootstrap.menu_url"
+          :href="config.demo ? '/' : branch.menu_url || bootstrap.menu_url"
           target="_blank"
           rel="noopener"
           >{{ t("مشاهده منوی کافه ↗") }}</a
@@ -69,6 +79,7 @@ export default {
             bootstrap.settings.restaurant_name || "مدیریت کافه"
           }}</span>
           <h1>{{ title }}</h1>
+          <small v-if="branch.name">شعبه: {{ branch.name }}</small>
         </div>
         <span class="ac-pill">{{
           new Date().toLocaleDateString("fa-IR", {
@@ -87,12 +98,9 @@ export default {
       <p v-if="busy" class="ac-loading" role="status">
         {{ t("در حال ارتباط با کافه…") }}
       </p>
-      <Overview />
-      <Orders />
-      <Catalog />
-      <Import />
-      <Settings />
-      <Notifications />
+      <div v-if="branchReady" :key="branchEpoch">
+        <Overview /><Orders /><Catalog /><Import /><Settings /><Notifications /><Branches />
+      </div>
     </main>
     <div v-if="edit" class="ac-overlay" @click.self="close">
       <form
@@ -116,6 +124,7 @@ export default {
               categories: "دسته‌بندی",
               tables: "میز",
               staff: "همکار",
+              branches: "شعبه",
               orders: "سفارش صندوق",
               orderDetails: "جزئیات سفارش",
             }[edit.kind]
@@ -231,7 +240,36 @@ export default {
             }}</label
           >
         </template>
+        <template v-if="edit.kind === 'branches'">
+          <label>نام شعبه<input v-model="form.name" required /></label>
+          <label
+            >نشانی شعبه<input
+              v-model="form.slug"
+              required
+              dir="ltr"
+              pattern="[a-z0-9]+(?:-[a-z0-9]+)*"
+              placeholder="central-cafe"
+          /></label>
+          <label
+            ><input type="checkbox" v-model="form.enabled" />شعبه فعال
+            است</label
+          >
+          <p class="ac-hint">
+            نام نشانی را با حروف کوچک انگلیسی، عدد و خط تیره وارد کنید. هر شعبه
+            منو، میز و سفارش مستقل دارد.
+          </p>
+        </template>
         <template v-if="edit.kind === 'staff'">
+          <fieldset v-if="bootstrap.can_manage_branches" class="ac-checks">
+            <legend>دسترسی به شعبه‌ها</legend>
+            <label v-for="b in bootstrap.branches" :key="b.id"
+              ><input
+                type="checkbox"
+                v-model="form.branch_ids"
+                :value="b.id"
+              />{{ b.name }}</label
+            >
+          </fieldset>
           <label
             >{{ t("نام نمایشی") }}<input v-model="form.name" required />
           </label>

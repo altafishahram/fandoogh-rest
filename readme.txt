@@ -4,7 +4,7 @@ Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 8.2
 Requires Plugins: woocommerce
-Stable tag: 1.3.1
+Stable tag: 1.4.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,6 +14,8 @@ WooCommerce digital menus and a dedicated restaurant operations panel with Persi
 Fandoogh Rest uses WooCommerce products, categories, inventory and orders as the single data source. The dedicated /cafe-panel/ handles menu editing, table requests, cashier orders, reports, staff permissions, imports, appearance and notifications.
 
 The menu works as a standalone /menu/ route or as shared components in WordPress, Elementor and shortcode-compatible builders. Menu-only QR codes work without creating tables or enabling orders. Table orders require staff approval before preparation. Pickup and delivery use the native WooCommerce cart, checkout and payment gateways.
+
+Each branch has its own menu, prices/stock, tables, settings, translations, reports and scoped staff access. The payment gateway and store currency remain shared. Use branch="slug" in menu shortcodes or [fandoogh_rest_branches] for branch menu links.
 
 Includes local Vazirmatn fonts, CSV/XLSX column mapping, category-specific ordering, PNG/SVG QR downloads, four-language customer menus and checkout, a Persian panel, a panel manifest/service worker and bundled Web Push dependencies.
 
@@ -51,6 +53,9 @@ Web Push requires HTTPS, browser/OS support, user permission and working server-
 No. Normal uninstall preserves data. Optional FANDOOGH_REST_REMOVE_DATA only removes Fandoogh Rest-specific settings, roles and events; WooCommerce products/orders remain.
 
 == Changelog ==
+= 1.4.0 =
+Multi-branch menus and staff operations, isolated carts/orders/QR/content/notifications, branch builder embeds and a shared Woo gateway/currency. Branch-specific shipping rates are deferred.
+
 = 1.3.1 =
 Fandoogh Rest branding, compatible legacy identifiers and shortcodes, documented Git workflow, CI and reproducible packages. Multi-branch support remains planned.
 

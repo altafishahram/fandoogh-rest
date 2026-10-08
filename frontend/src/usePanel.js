@@ -5,6 +5,7 @@ import { api } from "./api.js";
 import { money, sortCategory } from "./domain.js";
 
 const tabs = [
+  ["branches", "شعبه‌ها", "▦", "central"],
   ["overview", "نمای کلی", "◫", "admincafe_view_reports"],
   ["orders", "سفارش‌ها", "◷", "admincafe_manage_orders"],
   ["products", "محصولات", "☕", "admincafe_manage_menu"],
@@ -27,6 +28,9 @@ export function usePanel(config, root) {
       pages: [],
       roles: [],
     }),
+    branchId = ref(Number(config.branchId) || 0),
+    branchEpoch = ref(0),
+    branchReady = ref(false),
     tab = ref("overview"),
     busy = ref(false),
     error = ref(""),
@@ -50,6 +54,8 @@ export function usePanel(config, root) {
     importMode = ref("upsert"),
     days = ref(7),
     drag = ref(null);
+  let viewGeneration = 0,
+    running = 0;
   let poll,
     focus,
     notificationReady = false,
@@ -87,7 +93,11 @@ export function usePanel(config, root) {
       : Object.entries(currencies).map(([code, name]) => ({ code, name }));
   });
   const allowed = computed(() =>
-    tabs.filter((t) => bootstrap.value.capabilities.includes(t[3])),
+    tabs.filter((t) =>
+      t[3] === "central"
+        ? bootstrap.value.can_manage_branches
+        : bootstrap.value.capabilities.includes(t[3]),
+    ),
   );
   const title = computed(() =>
     t(tabs.find((item) => item[0] === tab.value)?.[1] || ""),
@@ -115,70 +125,106 @@ export function usePanel(config, root) {
     delivered: "تحویل شده",
     cancelled: "لغو شده",
   };
-  async function run(fn) {
+  async function run(fn, current = () => true) {
+    const epoch = branchEpoch.value;
+    running++;
     busy.value = true;
     error.value = "";
     notice.value = "";
     try {
       return await fn();
     } catch (e) {
-      error.value = e.message;
+      if (
+        epoch === branchEpoch.value &&
+        current() &&
+        !["stale_branch", "stale_view"].includes(e.code)
+      )
+        error.value = e.message;
+      return false;
     } finally {
-      busy.value = false;
+      if (epoch === branchEpoch.value) {
+        running = Math.max(0, running - 1);
+        busy.value = running > 0;
+      }
     }
   }
   async function load() {
-    await run(async () => {
-      if (["overview", "reports"].includes(tab.value)) {
-        reports.value = await client.request(
-          "/manage/reports?days=" + days.value,
-        );
-        if (tab.value === "overview") {
-          const r = await client.request("/manage/orders");
-          data.value = r.orders || [];
-        }
-      } else if (tab.value === "settings") {
-        settings.value = { ...(await client.request("/manage/settings")) };
-        categories.value = await client.request("/manage/categories");
-      } else if (tab.value === "notifications") {
-        await notifications();
-        devices.value = await client.request("/manage/push/devices");
-      } else if (
-        ["orders", "products", "categories", "tables", "staff"].includes(
-          tab.value,
-        )
-      ) {
-        const r = await client.request(
-          "/manage/" +
-            tab.value +
-            (tab.value === "orders"
-              ? "?stage=" + stage.value + "&page=" + page.value
-              : ""),
-        );
-        data.value = Array.isArray(r) ? r : r.orders || r.items || [];
-        if (tab.value === "orders") pages.value = r.pages || 1;
-        if (tab.value === "products") {
-          products.value = data.value;
-          categories.value = await client.request("/manage/categories");
-        }
+    const epoch = branchEpoch.value,
+      view = tab.value,
+      generation = ++viewGeneration;
+    const request = async (...args) => {
+      const response = await client.request(...args);
+      if (generation !== viewGeneration || view !== tab.value) {
+        const error = new Error("پاسخ صفحه قبلی کنار گذاشته شد");
+        error.code = "stale_view";
+        throw error;
       }
-    });
+      return response;
+    };
+    return run(
+      async () => {
+        if (view === "branches") {
+          data.value = await request("/manage/branches");
+        } else if (["overview", "reports"].includes(view)) {
+          reports.value = await request("/manage/reports?days=" + days.value);
+          if (view === "overview") {
+            const r = await request("/manage/orders");
+            data.value = r.orders || [];
+          }
+        } else if (view === "settings") {
+          settings.value = { ...(await request("/manage/settings")) };
+          categories.value = await request("/manage/categories");
+        } else if (view === "notifications") {
+          await notifications();
+          devices.value = await request("/manage/push/devices");
+        } else if (
+          ["orders", "products", "categories", "tables", "staff"].includes(view)
+        ) {
+          const r = await request(
+            "/manage/" +
+              view +
+              (view === "orders"
+                ? "?stage=" + stage.value + "&page=" + page.value
+                : ""),
+          );
+          data.value = Array.isArray(r) ? r : r.orders || r.items || [];
+          if (view === "orders") pages.value = r.pages || 1;
+          if (view === "products") {
+            products.value = data.value;
+            categories.value = await request("/manage/categories");
+          }
+        }
+        return epoch === branchEpoch.value;
+      },
+      () => generation === viewGeneration && view === tab.value,
+    );
   }
   async function openEvent(event) {
-    await go("orders");
+    const epoch = branchEpoch.value;
+    if (!(await go("orders")) || epoch !== branchEpoch.value) return;
     window.location.hash = "orders/" + event.order_id;
     orderHighlight.value = Number(event.order_id);
+    const generation = viewGeneration;
     await run(async () => {
       const detail = await client.request("/manage/orders/" + event.order_id);
+      if (generation !== viewGeneration) return;
       open(detail, "orderDetails");
     });
   }
   async function go(t) {
     tab.value = t;
+    data.value = [];
+    reports.value = {};
+    categories.value = [];
+    products.value = [];
+    edit.value = null;
+    form.value = {};
+    preview.value = null;
+    mapping.value = {};
     page.value = 1;
     search.value = "";
     filterCategory.value = 0;
-    await load();
+    return load();
   }
   function open(item = null, kind = tab.value) {
     focus = document.activeElement;
@@ -205,6 +251,8 @@ export function usePanel(config, root) {
           role: "admincafe_staff",
           items: [],
           channel: "counter",
+          slug: "",
+          branch_ids: [branchId.value],
         };
     if (kind === "staff" && item)
       form.value.name = item.name || item.display_name;
@@ -219,6 +267,7 @@ export function usePanel(config, root) {
     nextTick(() => focus?.focus());
   }
   async function save() {
+    const savedEdit = edit.value;
     await run(async () => {
       const k = edit.value.kind,
         id = edit.value.id;
@@ -241,6 +290,7 @@ export function usePanel(config, root) {
       if (k === "staff") {
         body.name = body.name || body.display_name;
         if (!body.password) delete body.password;
+        if (!bootstrap.value.can_manage_branches) delete body.branch_ids;
       }
       if (k === "orders") body.items = body.items.filter((i) => i.quantity > 0);
       await client.request(
@@ -248,8 +298,10 @@ export function usePanel(config, root) {
         id ? "PATCH" : "POST",
         body,
       );
+      if (edit.value !== savedEdit) return;
       close();
-      await load();
+      if (k === "branches") await refreshBootstrap();
+      if (!(await load())) return;
       notice.value = "تغییرات ذخیره شد.";
     });
   }
@@ -257,13 +309,13 @@ export function usePanel(config, root) {
     if (!window.confirm("این مورد حذف شود؟")) return;
     await run(async () => {
       await client.request("/manage/" + tab.value + "/" + x.id, "DELETE");
-      await load();
+      if (!(await load())) return;
     });
   }
   async function orderAction(o, payload) {
     await run(async () => {
       await client.request("/manage/orders/" + o.id, "PATCH", payload);
-      await load();
+      if (!(await load())) return;
       notice.value = "وضعیت سفارش به‌روزرسانی شد.";
     });
   }
@@ -277,6 +329,7 @@ export function usePanel(config, root) {
     });
   }
   async function drop(to) {
+    const generation = viewGeneration;
     if (drag.value === null || !filterCategory.value) return;
     if (search.value) {
       error.value = "برای تغییر ترتیب، جستجو را پاک کنید.";
@@ -292,6 +345,7 @@ export function usePanel(config, root) {
         category_id: Number(filterCategory.value),
         ids: list.map((x) => x.id),
       });
+      if (generation !== viewGeneration) return;
       data.value = [...list, ...data.value.filter((x) => !list.includes(x))];
       const category = categories.value.find(
         (c) => c.id === Number(filterCategory.value),
@@ -302,12 +356,19 @@ export function usePanel(config, root) {
     drag.value = null;
   }
   async function media(e, target = "form", field = "image_id") {
+    const generation = viewGeneration,
+      originalForm = form.value;
     const file = e.target.files[0];
     if (!file) return;
     await run(async () => {
       const body = new FormData();
       body.append("file", file);
       const r = await client.request("/manage/media", "POST", body);
+      if (
+        generation !== viewGeneration ||
+        (target !== "settings" && originalForm !== form.value)
+      )
+        return;
       (target === "settings" ? settings.value : form.value)[field] = r.id;
       if (target !== "settings") form.value.image = r.url;
     });
@@ -394,10 +455,12 @@ export function usePanel(config, root) {
         } catch {}
       }
       if (tab.value === "orders") {
+        const generation = viewGeneration;
         const queue = await client.request(
           "/manage/orders?stage=" + stage.value,
         );
-        data.value = queue.orders || [];
+        if (tab.value === "orders" && generation === viewGeneration)
+          data.value = queue.orders || [];
       }
     }
     lastEvent = Math.max(
@@ -419,6 +482,7 @@ export function usePanel(config, root) {
     });
   }
   async function subscribe() {
+    const epoch = branchEpoch.value;
     await run(async () => {
       if (!push.value.available)
         throw new Error(push.value.reason || "ارسال پوش هنوز آماده نیست");
@@ -430,11 +494,13 @@ export function usePanel(config, root) {
         throw new Error("اعلان مرورگر به HTTPS و مرورگر سازگار نیاز دارد.");
       if ((await Notification.requestPermission()) !== "granted")
         throw new Error("اجازه اعلان داده نشد");
+      if (epoch !== branchEpoch.value) return;
       const reg = await navigator.serviceWorker.register(
         config.serviceWorkerUrl ||
           `${config.panelUrl.replace(/\/$/, "")}/sw.js`,
         { scope: config.panelUrl.replace(/\/$/, "") + "/" },
       );
+      if (epoch !== branchEpoch.value) return;
       const key = push.value.public_key,
         padded = (key + "=".repeat((4 - (key.length % 4)) % 4))
           .replace(/-/g, "+")
@@ -444,6 +510,7 @@ export function usePanel(config, root) {
         userVisibleOnly: true,
         applicationServerKey: bytes,
       });
+      if (epoch !== branchEpoch.value) return;
       await client.request("/manage/push/subscribe", "POST", {
         subscription: sub.toJSON(),
         label: navigator.userAgent.slice(0, 100),
@@ -473,16 +540,23 @@ export function usePanel(config, root) {
   }
   async function saveSettings() {
     await run(async () => {
+      const payload = { ...settings.value };
+      if (!bootstrap.value.can_manage_branches)
+        for (const key of ["menu_slug", "panel_slug", "currency_code"])
+          delete payload[key];
       settings.value = await client.request(
         "/manage/settings",
         "POST",
-        settings.value,
+        payload,
       );
       notice.value = "تنظیمات ذخیره شد.";
     });
   }
   async function counter() {
-    products.value = await client.request("/manage/products");
+    const generation = viewGeneration;
+    const response = await client.request("/manage/products");
+    if (generation !== viewGeneration) return;
+    products.value = response;
     open(null, "orders");
   }
   function trap(e) {
@@ -497,34 +571,166 @@ export function usePanel(config, root) {
       nodes[0]?.focus();
     }
   }
+  const selectableBranches = computed(() =>
+    (bootstrap.value.branches || []).filter(
+      (b) => bootstrap.value.can_manage_branches || b.enabled !== false,
+    ),
+  );
+  const branch = computed(
+    () =>
+      bootstrap.value.branches?.find((b) => Number(b.id) === branchId.value) ||
+      bootstrap.value.branch ||
+      {},
+  );
+  function preferenceKey() {
+    return `admincafe-panel-branch:${config.apiBase || "demo"}:${bootstrap.value.user.id || ""}`;
+  }
+  async function refreshBootstrap() {
+    bootstrap.value = await client.request("/manage/bootstrap");
+    bootstrap.value.capabilities = Array.isArray(bootstrap.value.capabilities)
+      ? bootstrap.value.capabilities
+      : Object.keys(bootstrap.value.capabilities || {}).filter(
+          (k) => bootstrap.value.capabilities[k],
+        );
+    branchId.value =
+      Number(bootstrap.value.branch_id) ||
+      Number(bootstrap.value.branches?.[0]?.id) ||
+      0;
+    client.setBranch(branchId.value);
+    settings.value = { ...bootstrap.value.settings };
+    push.value = bootstrap.value.push || {};
+    branchReady.value = true;
+  }
+  async function startNotifications() {
+    const epoch = branchEpoch.value;
+    if (
+      bootstrap.value.capabilities.includes("admincafe_receive_notifications")
+    ) {
+      await notifications();
+      if (epoch !== branchEpoch.value) return;
+      clearInterval(poll);
+      poll = setInterval(() => notifications().catch(() => {}), 15000);
+    }
+  }
+  async function switchBranch(id) {
+    if (!selectableBranches.value.some((b) => Number(b.id) === Number(id)))
+      return;
+    clearInterval(poll);
+    branchEpoch.value++;
+    running = 0;
+    viewGeneration++;
+    const epoch = branchEpoch.value;
+    branchReady.value = false;
+    branchId.value = Number(id);
+    client.invalidate();
+    client.setBranch(id);
+    edit.value = null;
+    form.value = {};
+    data.value = [];
+    products.value = [];
+    categories.value = [];
+    reports.value = {};
+    settings.value = {};
+    events.value = [];
+    devices.value = [];
+    push.value = {};
+    unread.value = 0;
+    preview.value = null;
+    mapping.value = {};
+    search.value = "";
+    stage.value = "";
+    filterCategory.value = 0;
+    page.value = 1;
+    pages.value = 1;
+    orderHighlight.value = 0;
+    drag.value = null;
+    lastEvent = 0;
+    notificationReady = false;
+    await run(async () => {
+      try {
+        await refreshBootstrap();
+      } catch (exception) {
+        if (epoch !== branchEpoch.value) throw exception;
+        if (
+          ![403, 404].includes(exception.status) &&
+          !["branch_disabled", "branch"].includes(exception.code)
+        )
+          throw exception;
+        // Assignments may have changed since the branch list or saved preference was read.
+        client.setBranch(0);
+        await refreshBootstrap();
+        notice.value =
+          "دسترسی به شعبه قبلی در دسترس نیست؛ شعبه مجاز انتخاب شد.";
+      }
+      try {
+        localStorage.setItem(preferenceKey(), String(branchId.value));
+      } catch {}
+      if (!allowed.value.some((item) => item[0] === tab.value))
+        tab.value = allowed.value[0]?.[0] || "orders";
+      if (!(await load()) || epoch !== branchEpoch.value) return;
+      await startNotifications();
+    });
+  }
+  async function setBranchEnabled(item) {
+    await run(async () => {
+      await client.request("/manage/branches/" + item.id, "PATCH", {
+        enabled: !item.enabled,
+      });
+      await refreshBootstrap();
+      if (!(await load())) return;
+    });
+  }
+  async function copyBranch(item) {
+    await run(async () => {
+      await navigator.clipboard.writeText(item.menu_url);
+      notice.value = "پیوند منو کپی شد.";
+    });
+  }
   onMounted(async () => {
     await run(async () => {
-      bootstrap.value = await client.request("/manage/bootstrap");
-      bootstrap.value.capabilities = Array.isArray(bootstrap.value.capabilities)
-        ? bootstrap.value.capabilities
-        : Object.keys(bootstrap.value.capabilities || {}).filter(
-            (k) => bootstrap.value.capabilities[k],
-          );
-      settings.value = { ...bootstrap.value.settings };
-      push.value = bootstrap.value.push || {};
-      tab.value = allowed.value[0]?.[0] || "orders";
+      try {
+        await refreshBootstrap();
+      } catch (exception) {
+        if (![403, 404].includes(exception.status)) throw exception;
+        client.setBranch(0);
+        await refreshBootstrap();
+      }
+      let saved = 0;
+      try {
+        saved = Number(localStorage.getItem(preferenceKey()));
+      } catch {}
+      tab.value =
+        allowed.value.find((item) => item[0] !== "branches")?.[0] ||
+        allowed.value[0]?.[0] ||
+        "orders";
       if (
         window.location.hash.startsWith("#orders") &&
         bootstrap.value.capabilities.includes("admincafe_manage_orders")
       )
         tab.value = "orders";
-      await load();
       if (
-        bootstrap.value.capabilities.includes("admincafe_receive_notifications")
+        saved &&
+        saved !== branchId.value &&
+        selectableBranches.value.some((b) => Number(b.id) === saved)
       ) {
-        await notifications();
-        poll = setInterval(() => notifications().catch(() => {}), 15000);
+        await switchBranch(saved);
+        return;
       }
+      if (!(await load())) return;
+      await startNotifications();
     });
   });
   onUnmounted(() => clearInterval(poll));
   return {
     t,
+    branchId,
+    selectableBranches,
+    branch,
+    branchEpoch,
+    branchReady,
+    switchBranch,
+    setBranchEnabled,
+    copyBranch,
     currencyOptions,
     page,
     pages,

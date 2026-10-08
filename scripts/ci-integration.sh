@@ -33,6 +33,6 @@ wp --path="$site" plugin install "$root"/dist/fandoogh-rest-[0-9]*.zip --activat
 wp --path="$site" core version
 wp --path="$site" plugin get woocommerce --field=version
 wp --path="$site" plugin get fandoogh-rest --field=version
-for suite in integration multilingual-integration commerce-language-integration wp-translation wp-translation-security wp-appearance wp-branding; do
+for suite in integration multilingual-integration commerce-language-integration wp-translation wp-translation-security wp-appearance wp-branding wp-branches-core wp-branches-commerce wp-branches-content; do
   php "$root/tests/$suite.php" "$site/wp-load.php"
 done

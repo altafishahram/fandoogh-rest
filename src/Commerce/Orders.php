@@ -7,6 +7,7 @@ use FandooghRest\Core\Security;
 use FandooghRest\Menu\Catalog;
 use FandooghRest\Tables\Tables;
 use FandooghRest\Localization\Language;
+use FandooghRest\Branches\Branches;
 
 final class Orders
 {
@@ -46,6 +47,9 @@ final class Orders
                 return new \WP_Error('items', __('Invalid product or quantity.', 'fandoogh-rest'), ['status' => 400]);
             }
             $product = wc_get_product($variation ?: $id);
+            if ($product && Branches::productBranch($product) !== Branches::current()) {
+                return new \WP_Error('branch_items', __('All items must belong to the selected branch.', 'fandoogh-rest'), ['status' => 409]);
+            }
             if (
                 !$product
                 || ($variation && (!$product->is_type('variation') || $product->get_parent_id() !== $id))
@@ -69,6 +73,21 @@ final class Orders
     /** Persist a Woo order once per session/table request, recovering only confirmed writes. */
     public static function create(array $input, bool $manual = false): array|\WP_Error
     {
+        $branchId = Checkout::resolveBranch($input, !$manual);
+        if (is_wp_error($branchId)) { return $branchId; }
+        $cashier = !$manual || current_user_can('admincafe_manage_settings') || in_array('admincafe_cashier', wp_get_current_user()->roles, true);
+        if ($manual && (!$cashier || !current_user_can('admincafe_manage_orders') || !Branches::canAccess($branchId))) {
+            return new \WP_Error('forbidden', __('Order permission required.', 'fandoogh-rest'), ['status' => 403]);
+        }
+        return Branches::runFor($branchId, static fn() => self::createInBranch($input, $manual));
+    }
+
+    private static function createInBranch(array $input, bool $manual): array|\WP_Error
+    {
+        $branch = Branches::get(Branches::current());
+        if (!$branch || !$branch['enabled'] || Settings::get('ordering_paused')) {
+            return new \WP_Error('closed', __('Ordering is unavailable.', 'fandoogh-rest'), ['status' => 403]);
+        }
         $language = Checkout::language($input['language'] ?? null);
         if (is_wp_error($language)) {
             return $language;
@@ -88,6 +107,9 @@ final class Orders
             if (!$table || empty($table['can_order'])) {
                 return new \WP_Error('table', __('This table supports menu viewing only.', 'fandoogh-rest'), ['status' => 403]);
             }
+            if ((int) $table['branch_id'] !== Branches::current()) {
+                return new \WP_Error('branch_table', __('The table belongs to a different branch.', 'fandoogh-rest'), ['status' => 409]);
+            }
         }
         if (!isset($input['items']) || !is_array($input['items'])) {
             return new \WP_Error('items', __('An item list is required.', 'fandoogh-rest'), ['status' => 400]);
@@ -96,7 +118,7 @@ final class Orders
         if (!$manual && !preg_match('/^[A-Za-z0-9_-]{16,100}$/D', $request)) {
             return new \WP_Error('request_id', __('A unique request ID is required.', 'fandoogh-rest'), ['status' => 400]);
         }
-        $scope = hash('sha256', Security::sessionKey() . '|' . ($table['token'] ?? 'counter') . '|' . $request);
+        $scope = hash('sha256', Branches::current() . '|' . Security::sessionKey() . '|' . ($table['token'] ?? 'counter') . '|' . $request);
         $fingerprint = hash('sha256', wp_json_encode([
             $input['items'] ?? [],
             $input['name'] ?? '',
@@ -165,6 +187,7 @@ final class Orders
         $order = null;
         try {
             $order = new \WC_Order();
+            self::snapshotBranch($order);
             $order->set_status('pending');
             $order->set_created_via('admincafe');
             $order->set_currency(get_woocommerce_currency());
@@ -236,12 +259,32 @@ final class Orders
     {
         return [
             'id' => $order->get_id(),
+            'branch_id' => Branches::orderBranch($order),
+            'branch_name' => $order->get_meta('_fandoogh_branch_name'),
             'number' => $order->get_order_number(),
             'stage' => $order->get_meta('_admincafe_stage'),
             'total' => $order->get_total(),
             'currency_symbol' => html_entity_decode(get_woocommerce_currency_symbol($order->get_currency())),
             'tracking_token' => $token
         ];
+    }
+
+    public static function snapshotBranch(\WC_Order $order): void
+    {
+        // Draft checkout orders may be decorated twice. Never rewrite an attributed order.
+        if ($order->get_meta('_fandoogh_branch_id')) { return; }
+        $branch = Branches::get(Branches::current());
+        $order->update_meta_data('_fandoogh_branch_id', Branches::current());
+        $order->update_meta_data('_fandoogh_branch_name', $branch['name'] ?? '');
+        $order->update_meta_data('_fandoogh_branch_address', Settings::get('restaurant_address', ''));
+    }
+
+    public static function branchQuery(): array
+    {
+        $query = ['key' => '_fandoogh_branch_id', 'value' => Branches::current(), 'type' => 'NUMERIC'];
+        return Branches::current() === Branches::defaultId()
+            ? ['relation' => 'OR', $query, ['key' => '_fandoogh_branch_id', 'compare' => 'NOT EXISTS']]
+            : $query;
     }
 
     public static function snapshotItem(\WC_Order_Item_Product $item, \WC_Product $product, string $language): void
@@ -288,6 +331,9 @@ final class Orders
     /** Keep operational stages independent from financial settlement and gateway refunds. */
     public static function update(\WC_Order $order, array $input): array|\WP_Error
     {
+        if (Branches::orderBranch($order) !== Branches::current() || !Branches::canAccess(Branches::orderBranch($order))) {
+            return new \WP_Error('not_found', __('Order not found.', 'fandoogh-rest'), ['status' => 404]);
+        }
         $current = $order->get_meta('_admincafe_stage');
         $next = $input['stage'] ?? $current;
         if ($next !== $current && !in_array($next, self::transitions()[$current] ?? [], true)) {

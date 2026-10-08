@@ -2,6 +2,7 @@
 namespace FandooghRest\Rest;
 
 use FandooghRest\Core\Settings;
+use FandooghRest\Branches\Branches;
 use FandooghRest\Menu\Catalog;
 use FandooghRest\Tables\Tables;
 use FandooghRest\Reports\Reports;
@@ -19,6 +20,7 @@ final class Management
             return new \WP_Error('rest_forbidden', __('Sign in again to continue.', 'fandoogh-rest'), ['status' => 401]);
         }
         if (!current_user_can($cap)) { return new \WP_Error('rest_forbidden', __('You do not have permission.', 'fandoogh-rest'), ['status' => 403]); }
+        if (!(Branches::isCentral() && preg_match('#^/admincafe/v1/manage/branches(?:/[0-9]+)?$#D', $request->get_route())) && !Branches::canAccess(Branches::current())) { return self::error(__('You do not have access to this branch.', 'fandoogh-rest'), 403); }
         return true;
     }
     private function route(string $path, string $methods, callable $callback, string $cap): void
@@ -38,6 +40,10 @@ final class Management
             foreach (self::CAPS as $cap) { if (current_user_can($cap)) { return self::permission($request, $cap); } }
             return new \WP_Error('rest_forbidden', __('You do not have access to the panel.', 'fandoogh-rest'), ['status' => 403]);
         }]);
+        $this->route('branches', 'GET', fn() => array_values(array_map([Branches::class, 'publicData'], array_filter(Branches::all(), static fn($row) => in_array((int) $row['id'], Branches::allowedIds(), true)))), 'admincafe_manage_orders');
+        $this->route('branches', 'POST', fn($r) => Branches::save($r->get_json_params() ?: []), 'admincafe_manage_settings');
+        $this->route('branches/(?P<id>\d+)', 'PATCH', fn($r) => Branches::save($r->get_json_params() ?: [], (int) $r['id']), 'admincafe_manage_settings');
+        $this->route('branches/(?P<id>\d+)', 'DELETE', fn($r) => Branches::save(['enabled' => false], (int) $r['id']), 'admincafe_manage_settings');
         $this->route('settings', 'GET', fn() => Settings::all(), 'admincafe_manage_settings');
         $this->route('settings', 'POST', fn($r) => Settings::update($r->get_json_params() ?: []), 'admincafe_manage_settings');
         $this->route('products', 'GET', [$this, 'products'], 'admincafe_manage_menu');
@@ -46,17 +52,18 @@ final class Management
         $this->route('products/(?P<id>\d+)', 'PATCH', fn($r) => Catalog::saveProduct($r->get_json_params() ?: [], (int) $r['id']), 'admincafe_manage_menu');
         $this->route('products/(?P<id>\d+)', 'DELETE', function ($r) {
             $product = wc_get_product((int) $r['id']);
-            if (!$product) { return self::error(__('Product not found.', 'fandoogh-rest'), 404); }
+            if (!$product || !Branches::ownsProduct($product)) { return self::error(__('Product not found.', 'fandoogh-rest'), 404); }
             $product->delete(false);
             return ['deleted' => true];
         }, 'admincafe_manage_menu');
         $this->route('categories', 'GET', function () {
             $terms = get_terms(['taxonomy' => 'product_cat', 'hide_empty' => false]);
-            return is_wp_error($terms) ? $terms : array_map([Catalog::class, 'category'], $terms);
+            return is_wp_error($terms) ? $terms : array_values(array_map([Catalog::class, 'category'], array_filter($terms, static fn($term) => Branches::ownsCategory((int) $term->term_id))));
         }, 'admincafe_manage_menu');
         $this->route('categories', 'POST', fn($r) => $this->saveCategory($r), 'admincafe_manage_menu');
         $this->route('categories/(?P<id>\d+)', 'PATCH', fn($r) => $this->saveCategory($r, (int) $r['id']), 'admincafe_manage_menu');
         $this->route('categories/(?P<id>\d+)', 'DELETE', function ($r) {
+            if (!Branches::ownsCategory((int) $r['id'])) { return self::error(__('Category not found.', 'fandoogh-rest'), 404); }
             $result = wp_delete_term((int) $r['id'], 'product_cat');
             return is_wp_error($result) ? $result : ($result ? ['deleted' => true] : self::error(__('Category not found.', 'fandoogh-rest'), 404));
         }, 'admincafe_manage_menu');
@@ -94,7 +101,7 @@ final class Management
                 $roles[] = ['id' => $role, 'name' => $role_names[$role]];
             }
         }
-        return apply_filters('admincafe_management_bootstrap', ['settings' => Settings::all(), 'capabilities' => $capabilities,
+        return apply_filters('admincafe_management_bootstrap', ['branch_id' => Branches::current(), 'branches' => array_values(array_map([Branches::class, 'publicData'], array_filter(Branches::all(), static fn($row) => in_array((int) $row['id'], Branches::allowedIds(), true)))), 'can_manage_branches' => Branches::isCentral(), 'settings' => Settings::all(), 'capabilities' => $capabilities,
             'user' => ['id' => $user->ID, 'name' => $user->display_name, 'roles' => array_values($user->roles)], 'menu_url' => Settings::menuUrl(), 'panel_url' => Settings::panelUrl(),
             'pages' => $pages, 'checkout_url' => wc_get_checkout_url(), 'currency_symbol' => html_entity_decode(get_woocommerce_currency_symbol()),
             'push' => ['public_key' => '', 'available' => false, 'reason' => __('Push is not configured.', 'fandoogh-rest')], 'roles' => $roles,
@@ -103,9 +110,11 @@ final class Management
     }
     public function products($request): array
     {
-        $args = ['limit' => isset($request['page']) ? 100 : -1, 'page' => max(1, (int) ($request['page'] ?? 1)), 'type' => ['simple', 'variable'], 'status' => ['publish', 'draft', 'private'], 'orderby' => 'menu_order', 'order' => 'ASC'];
+        $args = ['fandoogh_branch_id' => Branches::current(), 'limit' => isset($request['page']) ? 100 : -1, 'page' => max(1, (int) ($request['page'] ?? 1)), 'type' => ['simple', 'variable'], 'status' => ['publish', 'draft', 'private'], 'orderby' => 'menu_order', 'order' => 'ASC'];
         if (!empty($request['search'])) { $args['s'] = sanitize_text_field($request['search']); }
-        return array_map([Catalog::class, 'serialize'], wc_get_products($args));
+        // The data-store filter scopes the SQL query before its limit and page.
+        $products = array_values(array_filter(wc_get_products($args), [Branches::class, 'ownsProduct']));
+        return array_map([Catalog::class, 'serialize'], $products);
     }
     public function saveCategory($request, int $id = 0): array|\WP_Error
     {
@@ -117,48 +126,54 @@ final class Management
         }
         foreach (['name', 'parent', 'image_id', 'icon', 'order'] as $key) { if (isset($input[$key]) && !is_scalar($input[$key])) { return self::error(__('Invalid category field.', 'fandoogh-rest')); } }
         $term = $id ? get_term($id, 'product_cat') : null;
-        if ($id && (!$term || is_wp_error($term))) { return self::error(__('Category not found.', 'fandoogh-rest'), 404); }
+        if ($id && (!$term || is_wp_error($term) || !Branches::ownsCategory($id))) { return self::error(__('Category not found.', 'fandoogh-rest'), 404); }
         $name = sanitize_text_field($input['name'] ?? ($term ? $term->name : ''));
         if (!$name) { return self::error(__('Category name is required.', 'fandoogh-rest')); }
         $parent = isset($input['parent']) ? absint($input['parent']) : ($term ? (int) $term->parent : 0);
-        if ($parent && (!term_exists($parent, 'product_cat') || $parent === $id || ($id && term_is_ancestor_of($id, $parent, 'product_cat')))) { return self::error(__('Invalid category parent.', 'fandoogh-rest')); }
-        if (isset($input['image_id']) && (int) $input['image_id'] && !wp_attachment_is_image(absint($input['image_id']))) { return self::error(__('Choose an image attachment.', 'fandoogh-rest')); }
-        $saved = $id ? wp_update_term($id, 'product_cat', ['name' => $name, 'parent' => $parent]) : wp_insert_term($name, 'product_cat', ['parent' => $parent]);
+        if ($parent && (!Branches::ownsCategory($parent) || !term_exists($parent, 'product_cat') || $parent === $id || ($id && term_is_ancestor_of($id, $parent, 'product_cat')))) { return self::error(__('Invalid category parent.', 'fandoogh-rest')); }
+        if (isset($input['image_id']) && (int) $input['image_id'] && (!wp_attachment_is_image(absint($input['image_id'])) || !Branches::ownsMedia(absint($input['image_id'])))) { return self::error(__('Choose an image attachment.', 'fandoogh-rest')); }
+        $saved = $id ? wp_update_term($id, 'product_cat', ['name' => $name, 'parent' => $parent]) : wp_insert_term($name, 'product_cat', ['parent' => $parent, 'slug' => sanitize_title($name) . '-b' . Branches::current()]);
         if (is_wp_error($saved)) { return $saved; }
         $id = (int) $saved['term_id'];
+        update_term_meta($id, Branches::META, Branches::current());
         if (isset($input['image_id'])) { update_term_meta($id, 'thumbnail_id', absint($input['image_id'])); }
         if (isset($input['icon'])) { update_term_meta($id, '_admincafe_icon', sanitize_text_field(mb_substr((string) $input['icon'], 0, 60))); }
         if (isset($input['order'])) { update_term_meta($id, '_admincafe_order', max(0, (int) $input['order'])); }
         if ($translation_patch !== null) { update_term_meta($id, '_admincafe_translations', Catalog::mergeTranslations(Catalog::storedTranslations(get_term_meta($id, '_admincafe_translations', true), ['name']), $translation_patch)); }
         if ($translation_patch !== null) { do_action('admincafe_translation_manual_input', 'category', $id, $translation_patch); }
+        // WordPress fires its creation hook before ownership metadata exists. Queue the final source after branch attribution and manual translations.
+        if (class_exists(\FandooghRest\Translation\Module::class)) {
+            \FandooghRest\Translation\Module::safe(static fn() => \FandooghRest\Translation\Queue::enqueue('category', $id));
+        }
         return Catalog::category(get_term($id, 'product_cat'));
     }
     public function reorder($request): array|\WP_Error
     {
         $input = $request->get_json_params() ?: [];
         $id = absint($input['category_id'] ?? 0);
-        if (!$id || !term_exists($id, 'product_cat') || !isset($input['ids']) || !is_array($input['ids']) || count($input['ids']) > 2000) { return self::error(__('Supply a category and product IDs.', 'fandoogh-rest')); }
+        if (!$id || !Branches::ownsCategory($id) || !term_exists($id, 'product_cat') || !isset($input['ids']) || !is_array($input['ids']) || count($input['ids']) > 2000) { return self::error(__('Supply a category and product IDs.', 'fandoogh-rest')); }
         $ids = array_values(array_unique(array_map('absint', $input['ids'])));
         foreach ($ids as $product_id) {
             $product = wc_get_product($product_id);
-            if (!$product || !in_array($id, $product->get_category_ids(), true)) { return self::error(__('Every product must belong to this category.', 'fandoogh-rest')); }
+            if (!$product || !Branches::ownsProduct($product) || !in_array($id, $product->get_category_ids(), true)) { return self::error(__('Every product must belong to this category.', 'fandoogh-rest')); }
         }
         update_term_meta($id, '_admincafe_product_order', $ids);
         return ['category_id' => $id, 'ids' => $ids];
     }
     private static function staffData($user): array
     {
-        return ['id' => $user->ID, 'name' => $user->display_name, 'username' => $user->user_login, 'email' => $user->user_email, 'role' => current(array_intersect($user->roles, self::ROLES)) ?: '', 'roles' => array_values(array_intersect($user->roles, self::ROLES))];
+        return ['id' => $user->ID, 'name' => $user->display_name, 'username' => $user->user_login, 'email' => $user->user_email, 'role' => current(array_intersect($user->roles, self::ROLES)) ?: '', 'roles' => array_values(array_intersect($user->roles, self::ROLES)), 'branch_ids' => Branches::allowedIds((int) $user->ID)];
     }
     public function staff(): array
     {
-        return array_map([self::class, 'staffData'], get_users(['role__in' => self::ROLES, 'number' => 200, 'orderby' => 'display_name']));
+        return array_values(array_map([self::class, 'staffData'], array_filter(get_users(['role__in' => self::ROLES, 'number' => 200, 'orderby' => 'display_name']), static fn($user) => Branches::isCentral() || in_array(Branches::current(), Branches::allowedIds((int) $user->ID), true))));
     }
     private static function editableStaff(int $id): bool
     {
         $user = get_user_by('id', $id);
         if (!$user || $id === get_current_user_id() || is_super_admin($id) || in_array('administrator', $user->roles, true)) { return false; }
         if (array_diff($user->roles, self::ROLES) || !array_intersect($user->roles, self::ROLES)) { return false; }
+        if (!Branches::isCentral() && (!in_array(Branches::current(), Branches::allowedIds($id), true) || array_diff(Branches::allowedIds($id), Branches::allowedIds()))) { return false; }
         return !in_array('admincafe_manager', $user->roles, true) || current_user_can('manage_options');
     }
     public function saveStaff($request, int $id = 0): array|\WP_Error
@@ -168,6 +183,14 @@ final class Management
         if ($id && !self::editableStaff($id)) { return self::error(__('This account cannot be changed from the panel.', 'fandoogh-rest'), 403); }
         $role = $input['role'] ?? ($id ? self::staffData(get_user_by('id', $id))['role'] : 'admincafe_staff');
         if (!in_array($role, self::ROLES, true) || ($role === 'admincafe_manager' && !current_user_can('manage_options'))) { return self::error(__('Choose an operational Fandoogh Rest role.', 'fandoogh-rest'), 403); }
+        $assignments = $id ? Branches::allowedIds($id) : [Branches::current()];
+        if (array_key_exists('branch_ids', $input)) {
+            if (!is_array($input['branch_ids']) || !$input['branch_ids'] || array_filter($input['branch_ids'], static fn($value) => (!is_int($value) && !is_string($value)) || !preg_match('/^[1-9][0-9]*$/D', (string) $value))) { return self::error(__('Choose valid branches.', 'fandoogh-rest')); }
+            $requested = array_values(array_unique(array_map('intval', $input['branch_ids'])));
+            if (!Branches::isCentral() && $requested !== $assignments) { return self::error(__('Only the collection administrator may assign branches.', 'fandoogh-rest'), 403); }
+            foreach ($requested as $branchId) { if (!Branches::get($branchId)) { return self::error(__('Branch not found.', 'fandoogh-rest'), 404); } }
+            $assignments = $requested;
+        }
         $data = ['role' => $role];
         if ($id) { $data['ID'] = $id; }
         if (isset($input['name'])) { $data['display_name'] = sanitize_text_field($input['name']); }
@@ -185,6 +208,7 @@ final class Management
             $data['user_pass'] = $password;
         }
         $saved = $id ? wp_update_user($data) : wp_insert_user($data);
+        if (!is_wp_error($saved)) { update_user_meta((int) $saved, Branches::USER_META, $assignments); }
         return is_wp_error($saved) ? $saved : self::staffData(get_user_by('id', $saved));
     }
     public function deleteStaff($request): array|\WP_Error
@@ -209,6 +233,7 @@ final class Management
         require_once ABSPATH . 'wp-admin/includes/media.php';
         require_once ABSPATH . 'wp-admin/includes/image.php';
         $id = media_handle_upload('file', 0, [], ['test_form' => false, 'mimes' => $mimes]);
+        if (!is_wp_error($id)) { update_post_meta((int) $id, Branches::META, Branches::current()); }
         return is_wp_error($id) ? $id : ['id' => $id, 'url' => wp_get_attachment_url($id)];
     }
 }

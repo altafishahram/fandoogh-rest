@@ -1993,3 +1993,8 @@
   height: 700px;
   background: white;
 }
+
+.ac-branch-picker { display: grid; gap: .5rem; padding: 1rem; }
+.ac-branch-picker select { width: 100%; color: #242424; background: #fff; padding: .6rem; border-radius: .5rem; }
+.ac-branches-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 1rem; }
+.ac-branches-grid a { overflow-wrap: anywhere; display: block; }

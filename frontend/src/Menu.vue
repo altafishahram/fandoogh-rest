@@ -42,6 +42,9 @@ export default {
           </option>
         </select></label
       >
+      <p v-if="boot.branch?.name || config.branchName" class="ac-hint">
+        {{ t("شعبه") }}: {{ boot.branch?.name || config.branchName }}
+      </p>
       <div v-if="config.demo" class="ac-demo">
         {{ t("پیش‌نمایش نمایشی • سفارش و پرداخت واقعی انجام نمی‌شود")
         }}<a href="/panel.html">{{ t("پنل مدیریت ←") }}</a>

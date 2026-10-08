@@ -1,6 +1,7 @@
 <?php
 namespace FandooghRest\Translation;
 defined('ABSPATH') || exit;
+use FandooghRest\Branches\Branches;
 final class Source
 {
     public const PROVENANCE='_admincafe_translation_provenance';
@@ -8,6 +9,9 @@ final class Source
     public static bool $applying=false;
     public static function read(string $scope,int $id): ?array
     {
+        if ($scope === 'settings' && $id > 0 && Branches::current() !== $id) {
+            return Branches::runFor($id, static fn(): ?array => self::read($scope, $id));
+        }
         if ($scope==='product') {
             $p=wc_get_product($id);
             if (!$p||$p->get_status()==='trash') {
@@ -53,7 +57,7 @@ final class Source
         return $out;
     }
     public static function optionKey(string $key): string {
-        return 'admincafe_translation_'.str_replace('_admincafe_translation_','',$key);
+        return 'admincafe_translation_'.str_replace('_admincafe_translation_','',$key) . (Branches::current() === Branches::defaultId() ? '' : '_branch_' . Branches::current());
     }
     public static function metadata(string $scope,int $id,string $key): array {
         return (array)($scope==='settings'?get_option(self::optionKey($key),[]):($scope==='category'?get_term_meta($id,$key,true):get_post_meta($id,$key,true)));
@@ -108,11 +112,12 @@ final class Source
         if ($wpdb->query('START TRANSACTION')===false) {
             return false;
         }
-        $locked=$wpdb->get_results("SELECT option_name FROM {$wpdb->options} WHERE option_name IN ('admincafe_settings','admincafe_translation_config') FOR UPDATE");
+        $locked=$wpdb->get_results("SELECT option_name FROM {$wpdb->options} WHERE option_name IN ('admincafe_settings','admincafe_translation_config','fandoogh_branches') FOR UPDATE");
         if ($wpdb->last_error) {
             $wpdb->query('ROLLBACK');
             return false;
         }
+        wp_cache_delete('fandoogh_branches','options');
         wp_cache_delete('admincafe_settings','options');
         wp_cache_delete(Config::OPTION,'options');
         wp_cache_delete('alloptions','options');
@@ -146,7 +151,8 @@ final class Source
             }
             if ($scope==='settings') {
                 global $wpdb;
-                $old=get_option('admincafe_settings',[]);
+                $option = Branches::current() === Branches::defaultId() ? 'admincafe_settings' : 'fandoogh_branches';
+                $old=get_option($option,[]);
                 $next=$old;
                 $nested=[];
                 foreach ($translations as $lang=>$fields) {
@@ -162,9 +168,15 @@ final class Source
                 if (self::read($scope,$id)['translations']!==$before['translations']) {
                     return false;
                 }
-                $next['content_translations']=$nested;
-                $ok=$wpdb->query($wpdb->prepare("UPDATE {$wpdb->options} SET option_value=%s WHERE option_name='admincafe_settings' AND option_value=%s AND NOT EXISTS (SELECT 1 FROM (SELECT option_value FROM {$wpdb->options} WHERE option_name=%s LIMIT 1) AS ac_manual WHERE option_value<>%s)",maybe_serialize($next),maybe_serialize($old),self::optionKey(self::MANUAL),maybe_serialize($expectedManual)))===1;
-                wp_cache_delete('admincafe_settings','options');
+                if ($option === 'admincafe_settings') { $next['content_translations']=$nested; }
+                else {
+                    $index = null;
+                    foreach ($next as $key => $branch) { if ((int) ($branch['id'] ?? 0) === Branches::current()) { $index = $key; break; } }
+                    if ($index === null) { return false; }
+                    $next[$index]['settings']['content_translations']=$nested;
+                }
+                $ok=$wpdb->query($wpdb->prepare("UPDATE {$wpdb->options} SET option_value=%s WHERE option_name=%s AND option_value=%s AND NOT EXISTS (SELECT 1 FROM (SELECT option_value FROM {$wpdb->options} WHERE option_name=%s LIMIT 1) AS ac_manual WHERE option_value<>%s)",maybe_serialize($next),$option,maybe_serialize($old),self::optionKey(self::MANUAL),maybe_serialize($expectedManual)))===1;
+                wp_cache_delete($option,'options');
                 wp_cache_delete('alloptions','options');
             }
             else {

@@ -1,6 +1,9 @@
 <?php
 namespace FandooghRest\Reports;
 
+use FandooghRest\Branches\Branches;
+use FandooghRest\Commerce\Orders;
+
 final class Reports
 {
     public function register(): void {}
@@ -17,10 +20,10 @@ final class Reports
         $products = [];
         $page = 1;
         do {
-            $batch = wc_get_orders(['limit' => 100, 'page' => $page++, 'paginate' => true, 'date_created' => '>=' . $start->getTimestamp(), 'type' => 'shop_order', 'orderby' => 'date', 'order' => 'ASC']);
+            $batch = wc_get_orders(['limit' => 100, 'page' => $page++, 'paginate' => true, 'date_created' => '>=' . $start->getTimestamp(), 'type' => 'shop_order', 'orderby' => 'date', 'order' => 'ASC', 'meta_query' => [Orders::branchQuery()]]);
             foreach ($batch->orders as $order) {
                 // Filter through CRUD rather than storage-specific post/meta queries (HPOS).
-                if (!$order->get_meta('_admincafe_channel') || $order->get_status() === 'checkout-draft') { continue; }
+                if (Branches::orderBranch($order) !== Branches::current() || !$order->get_meta('_admincafe_channel') || $order->get_status() === 'checkout-draft') { continue; }
                 $result['order_count']++;
                 if (in_array($order->get_meta('_admincafe_stage'), ['awaiting_approval', 'accepted', 'preparing', 'ready'], true)) { $result['pending_count']++; }
                 $date = $order->get_date_created()->setTimezone(wp_timezone())->format('Y-m-d');

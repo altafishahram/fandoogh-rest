@@ -29,7 +29,7 @@ $request = static function (string $path, array $body, ?string $nonce = null): W
     if ($nonce !== null) { $r->set_header('X-WP-Nonce', $nonce); }
     return $r;
 };
-$scope = '.admincafe-root[data-admincafe-app="menu"] .ac-menu';
+$scope = \FandooghRest\Appearance\Appearance::MENU_SCOPE;
 $validMap = [
     'general' => 'h2, .ac-product-card { color: #123456; } @media (min-width: 700px) { @supports (display: grid) { .ac-products { gap: 12px; } } }',
     'card' => 'border-radius: 19px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);',
@@ -118,6 +118,9 @@ try {
         ':root { color:red; }', 'body { color:red; }', 'html { color:red; }',
         '.ac-menu + .outside { color:red; }', '.ac-menu:hover ~ .outside { color:red; }',
     ] as $css) { $badShapes[] = ['custom_css' => ['general' => $css]]; }
+    // Currency is now collection-owned: exercise atomic multi-field rejection
+    // as an authorized collection administrator, not an unauthorized branch user.
+    (new WP_User($manager))->add_cap('manage_options');
     foreach ($badShapes as $index => $bad) {
         $snapshot = get_option('admincafe_settings');
         $currency = get_option('woocommerce_currency');
@@ -129,6 +132,7 @@ try {
         $failedPreview = rest_do_request($request('appearance/preview', $bad, wp_create_nonce('wp_rest')));
         $check($failedPreview->get_status() === 400 && get_option('admincafe_settings') === $snapshot, 'Preview applies same CSS/type rejection: ' . $index);
     }
+    (new WP_User($manager))->remove_cap('manage_options');
     foreach ([['user' => 0, 'nonce' => null], ['user' => $manager, 'nonce' => null], ['user' => $manager, 'nonce' => 'invalid']] as $case) {
         wp_set_current_user($case['user']);
         foreach (['settings', 'appearance/preview'] as $path) {

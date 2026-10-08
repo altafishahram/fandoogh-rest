@@ -16,6 +16,7 @@ final class Plugin
         foreach ([
             \FandooghRest\Localization\Language::class,
             Currency::class,
+            \FandooghRest\Branches\Module::class,
             Routes::class,
             Assets::class,
             \FandooghRest\Appearance\Module::class,

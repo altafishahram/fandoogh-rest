@@ -17,6 +17,7 @@ final class Installation
 
     public static function upgrade(): void
     {
+        \FandooghRest\Branches\Branches::migrate();
         if (get_option('admincafe_db_version') === FANDOOGH_REST_VERSION) {
             return;
         }
@@ -29,13 +30,15 @@ final class Installation
             id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
             event_key varchar(191) NOT NULL,
             order_id bigint(20) unsigned NOT NULL,
+            branch_id bigint(20) unsigned NOT NULL DEFAULT 1,
             channel varchar(32) NOT NULL,
             title varchar(255) NOT NULL,
             body text NOT NULL,
             created_at datetime NOT NULL,
             PRIMARY KEY  (id),
             UNIQUE KEY event_key (event_key),
-            KEY created_at (created_at)
+            KEY created_at (created_at),
+            KEY branch_id (branch_id,id)
         ) $charset;");
         dbDelta("CREATE TABLE {$wpdb->prefix}admincafe_event_reads (
             event_id bigint(20) unsigned NOT NULL,
@@ -44,6 +47,8 @@ final class Installation
             KEY user_id (user_id)
         ) $charset;");
         update_option('admincafe_db_version', FANDOOGH_REST_VERSION, false);
+        Routes::rewrites();
+        flush_rewrite_rules(false);
         if (!wp_next_scheduled('admincafe_cleanup')) {
             wp_schedule_event(time() + DAY_IN_SECONDS, 'daily', 'admincafe_cleanup');
         }
