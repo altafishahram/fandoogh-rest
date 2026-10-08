@@ -29,6 +29,9 @@ check(FANDOOGH_REST_GOOGLE_TRANSLATE_API_KEY === 'test-legacy-credential', 'Lega
 check(class_exists('AdminCafe\\Core\\Settings'), 'Old class names resolve');
 check(is_a('AdminCafe\\Core\\Settings', 'FandooghRest\\Core\\Settings', true), 'Old class aliases reference the same settings implementation');
 check(FandooghRest\Core\Access::CAPS[0] === 'admincafe_manage_menu', 'Existing permissions preserved');
+(new FandooghRest\Localization\Language())->register();
+check(isset($hooks['gettext_fandoogh-rest'], $hooks['gettext_admincafe']), 'Current and legacy gettext domains register the locale override');
+check($hooks['gettext_fandoogh-rest'][0] === $hooks['gettext_admincafe'][0], 'Both domains use the same customer and panel language implementation');
 (new FandooghRest\Integrations\Builders())->register();
 foreach (['menu', 'categories', 'products', 'cart'] as $component) {
     check(isset($shortcodes['admincafe_' . $component], $shortcodes['fandoogh_rest_' . $component]), 'Saved shortcodes and new aliases registered');

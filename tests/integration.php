@@ -181,4 +181,4 @@ Settings::update(['menu_page_id' => 0]);
 wp_set_current_user(0);
 $denied = rest_do_request(new WP_REST_Request('GET', '/admincafe/v1/manage/products'));
 ac_check($denied->get_status() >= 400, 'Guest cannot read management data');
-echo "Integration: $passed checks passed; WP " . get_bloginfo('version') . ', Woo ' . WC_VERSION . "; real HPOS via SQLite test database.\n";
+echo "Integration: $passed checks passed; WP " . get_bloginfo('version') . ', Woo ' . WC_VERSION . "; real HPOS disposable integration database.\n";

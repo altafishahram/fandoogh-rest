@@ -16,6 +16,8 @@ final class Language
     {
         add_filter('determine_locale', [self::class, 'requestLocale'], 99);
         add_filter('locale', [self::class, 'requestLocale'], 99);
+        add_filter('gettext_fandoogh-rest', [self::class, 'gettext'], 20, 3);
+        // Third-party integrations may still translate strings using the legacy domain.
         add_filter('gettext_admincafe', [self::class, 'gettext'], 20, 3);
         add_filter('get_available_languages', static function (array $locales): array {
             foreach (self::supported() as $language) {
