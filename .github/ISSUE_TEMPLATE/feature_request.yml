@@ -1,0 +1,9 @@
+name: Feature request
+description: Describe the user problem and expected outcome
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: User problem and expected outcome
+    validations:
+      required: true

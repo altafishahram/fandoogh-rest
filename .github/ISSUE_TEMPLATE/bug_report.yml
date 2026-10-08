@@ -1,0 +1,21 @@
+name: Bug report
+description: Report a reproducible problem without private data
+body:
+  - type: input
+    id: versions
+    attributes:
+      label: Plugin / WordPress / WooCommerce / PHP versions
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps, expected behavior and actual behavior
+      description: Include a minimal example. Remove customer data and credentials.
+    validations:
+      required: true
+  - type: textarea
+    id: regression
+    attributes:
+      label: Last working version and relevant logs
+      description: If known, include the commit or release where this changed.
