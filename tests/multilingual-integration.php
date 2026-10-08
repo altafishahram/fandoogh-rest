@@ -8,15 +8,15 @@ if (!defined('ABSPATH')) {
     require $loader;
 }
 if (get_option('admincafe_test_environment') !== 'local-disposable') { fwrite(STDERR, "Disposable environment marker required.\n"); exit(1); }
-if (!class_exists(\AdminCafe\Localization\Language::class)) { fwrite(STDERR, "Sync the multilingual plugin source before running.\n"); exit(1); }
+if (!class_exists(\FandooghRest\Localization\Language::class)) { fwrite(STDERR, "Sync the multilingual plugin source before running.\n"); exit(1); }
 set_exception_handler(static function (Throwable $error): void { fwrite(STDERR, $error->getMessage() . "\n"); exit(1); });
 add_filter('pre_wp_mail', '__return_true');
-use AdminCafe\Core\Settings;
-use AdminCafe\Core\Security;
-use AdminCafe\Menu\Catalog;
-use AdminCafe\Localization\Language;
-use AdminCafe\Commerce\Orders;
-use AdminCafe\Tables\Tables;
+use FandooghRest\Core\Settings;
+use FandooghRest\Core\Security;
+use FandooghRest\Menu\Catalog;
+use FandooghRest\Localization\Language;
+use FandooghRest\Commerce\Orders;
+use FandooghRest\Tables\Tables;
 $passed = 0;
 function ac_ml_check(bool $ok, string $label): void {
     global $passed;
@@ -104,7 +104,7 @@ foreach (['fa', 'en', 'zh', 'tr'] as $language) {
     $data = $response->get_data(); $row = ac_ml_find($data['products'], $product_id); $variant_parent = ac_ml_find($data['products'], $variable_id);
     ac_ml_check($data['language'] === $language && $data['direction'] === ($language === 'fa' ? 'rtl' : 'ltr'), 'Correct public language and direction ' . $language);
     ac_ml_check(get_locale() === Language::locale($language), 'WordPress locale hooks follow explicit public language ' . $language);
-    $unavailable = __('An item is unavailable.', 'admincafe');
+    $unavailable = __('An item is unavailable.', 'fandoogh-rest');
     ac_ml_check($language === 'en' ? $unavailable === 'An item is unavailable.' : $unavailable !== 'An item is unavailable.', 'Customer backend gettext follows selected language ' . $language);
     ac_ml_check($row['name'] === $expected_names[$language] && $row['price'] === $canonical_price, 'Localized content with same canonical ID/price ' . $language);
     ac_ml_check($data['settings']['restaurant_name'] === $expected_restaurant[$language], 'Restaurant content translated ' . $language);
@@ -135,7 +135,7 @@ ac_ml_check($manage->get_status() === 200 && $manage->get_data()['name'] === $ca
 ac_ml_check(isset($manage->get_data()['translations']->en), 'Manager can edit complete persisted translation maps');
 $management_bootstrap = rest_do_request(ac_ml_request('GET', '/manage/bootstrap', [], ['lang' => 'tr']));
 ac_ml_check($management_bootstrap->get_status() === 200 && $management_bootstrap->get_data()['settings']['restaurant_name'] === Settings::get('restaurant_name'), 'Manager restaurant settings stay Persian');
-$panel_locale = get_locale(); $panel_role = __('Restaurant manager', 'admincafe');
+$panel_locale = get_locale(); $panel_role = __('Restaurant manager', 'fandoogh-rest');
 ac_ml_check($panel_locale === 'fa_IR' && $panel_role === 'مدیر رستوران', 'Panel WordPress locale/gettext stay Persian after customer locale switch (' . $panel_locale . ', ' . $panel_role . ')');
 Settings::update(['enabled_languages' => ['fa', 'en'], 'default_language' => 'fa']);
 wp_set_current_user(0);

@@ -1,5 +1,5 @@
 <?php
-namespace AdminCafe\Appearance;
+namespace FandooghRest\Appearance;
 
 defined('ABSPATH') || exit;
 
@@ -73,7 +73,7 @@ final class Appearance
     {
         return new \WP_Error(
             'admincafe_appearance',
-            sprintf(__('CSS setting "%1$s": %2$s', 'admincafe'), $field, __($message, 'admincafe')),
+            sprintf(__('CSS setting "%1$s": %2$s', 'fandoogh-rest'), $field, __($message, 'fandoogh-rest')),
             ['status' => 400, 'field' => $field]
         );
     }

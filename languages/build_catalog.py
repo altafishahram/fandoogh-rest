@@ -4,9 +4,9 @@ import re, json, struct
 ROOT = Path(__file__).resolve().parents[1]
 entries = {}
 literal = r"'((?:\\.|[^'\\])*)'"
-for path in [ROOT / 'admincafe.php', *sorted((ROOT / 'src').rglob('*.php')), *sorted((ROOT / 'templates').rglob('*.php')), *sorted((ROOT / 'resources').rglob('*.php'))]:
+for path in [ROOT / 'fandoogh-rest.php', *sorted((ROOT / 'src').rglob('*.php')), *sorted((ROOT / 'templates').rglob('*.php')), *sorted((ROOT / 'resources').rglob('*.php'))]:
     text = path.read_text(encoding='utf-8')
-    patterns = [r"(?:__|esc_html__|esc_attr__|_e|esc_html_e|esc_attr_e)\(\s*" + literal + r"\s*,\s*'admincafe'"]
+    patterns = [r"(?:__|esc_html__|esc_attr__|_e|esc_html_e|esc_attr_e)\(\s*" + literal + r"\s*,\s*'fandoogh-rest'"]
     # Reader intentionally routes static validation/exception messages through __($message).
     if path.name == 'Reader.php':
         patterns += [r"self::error\(\s*" + literal, r"new \\RuntimeException\(\s*" + literal]
@@ -37,11 +37,11 @@ translations.update({message: message for message in ui_messages})
 missing = sorted(set(entries) - set(translations))
 if missing:
     raise SystemExit('Missing Persian translations: ' + json.dumps(missing, ensure_ascii=False, indent=2))
-header = ('Project-Id-Version: AdminCafe 1.3.0\nReport-Msgid-Bugs-To: \n'
+header = ('Project-Id-Version: Fandoogh Rest 1.3.1\nReport-Msgid-Bugs-To: \n'
           'POT-Creation-Date: 2026-10-08 00:00+0000\nPO-Revision-Date: 2026-10-08 00:00+0000\n'
-          'Last-Translator: AdminCafe\nLanguage-Team: Persian\nLanguage: fa_IR\n'
+          'Last-Translator: Fandoogh Rest\nLanguage-Team: Persian\nLanguage: fa_IR\n'
           'MIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\n'
-          'Plural-Forms: nplurals=2; plural=(n > 1);\nX-Domain: admincafe\n')
+          'Plural-Forms: nplurals=2; plural=(n > 1);\nX-Domain: fandoogh-rest\n')
 quote = lambda value: json.dumps(value, ensure_ascii=False)
 english_ui = json.loads((ROOT / 'languages/en_US.json').read_text(encoding='utf-8'))
 missing_english = sorted(set(ui_messages) - set(english_ui))
@@ -51,12 +51,12 @@ english = {message: english_ui[message] if message in english_ui else message fo
 for kind, locale, translated in [('pot', '', {}), ('po', 'fa_IR', translations), ('po', 'en_US', english)]:
     local_header = header.replace('Language: fa_IR', 'Language: ' + locale).replace('Language-Team: Persian', 'Language-Team: ' + ('English' if locale == 'en_US' else 'Persian'))
     if locale == 'en_US': local_header = local_header.replace('plural=(n > 1)', 'plural=(n != 1)')
-    lines = ['# AdminCafe translation catalog.', 'msgid ""', 'msgstr ' + quote(local_header)]
+    lines = ['# Fandoogh Rest translation catalog.', 'msgid ""', 'msgstr ' + quote(local_header)]
     for message in sorted(entries):
         lines += ['', '#: ' + ' '.join(sorted(entries[message]))]
         if re.search(r'%(?:[0-9]+\$)?[sd]', message): lines.append('#, php-format')
         lines += ['msgid ' + quote(message), 'msgstr ' + quote(translated[message] if kind == 'po' else '')]
-    (ROOT / 'languages' / ('admincafe.pot' if kind == 'pot' else f'admincafe-{locale}.po')).write_text('\n'.join(lines)+'\n', encoding='utf-8')
+    (ROOT / 'languages' / ('fandoogh-rest.pot' if kind == 'pot' else f'fandoogh-rest-{locale}.po')).write_text('\n'.join(lines)+'\n', encoding='utf-8')
     if kind == 'pot': continue
     catalog = {'': local_header, **{key: translated[key] for key in entries}}
     keys = sorted(catalog)
@@ -71,7 +71,7 @@ for kind, locale, translated in [('pot', '', {}), ('po', 'fa_IR', translations),
         value_table.append((len(item), value_offset + len(value_blob))); value_blob += item + b'\0'
     data = struct.pack('<7I', 0x950412de, 0, count, 28, 28 + count * 8, 0, 0)
     data += b''.join(struct.pack('<2I', *row) for row in id_table + value_table) + id_blob + value_blob
-    (ROOT / f'languages/admincafe-{locale}.mo').write_bytes(data)
-    jed = {'translation-revision-date': '2026-10-06 00:00+0000', 'generator': 'AdminCafe', 'domain': 'messages', 'locale_data': {'messages': {'': {'domain': 'messages', 'lang': locale, 'plural-forms': 'nplurals=2; plural=' + ('(n > 1);' if locale == 'fa_IR' else '(n != 1);')}, **{message: [translated[message]] for message in builder_messages}}}}
-    (ROOT / f'languages/admincafe-{locale}-admincafe-block.json').write_text(json.dumps(jed, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
+    (ROOT / f'languages/fandoogh-rest-{locale}.mo').write_bytes(data)
+    jed = {'translation-revision-date': '2026-10-06 00:00+0000', 'generator': 'Fandoogh Rest', 'domain': 'messages', 'locale_data': {'messages': {'': {'domain': 'messages', 'lang': locale, 'plural-forms': 'nplurals=2; plural=' + ('(n > 1);' if locale == 'fa_IR' else '(n != 1);')}, **{message: [translated[message]] for message in builder_messages}}}}
+    (ROOT / f'languages/fandoogh-rest-{locale}-admincafe-block.json').write_text(json.dumps(jed, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
     print(f'{locale}: {len(entries)} messages, 100% translated; MO {len(data)} bytes.')

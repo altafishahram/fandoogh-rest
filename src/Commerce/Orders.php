@@ -1,12 +1,12 @@
 <?php
 
-namespace AdminCafe\Commerce;
+namespace FandooghRest\Commerce;
 
-use AdminCafe\Core\Settings;
-use AdminCafe\Core\Security;
-use AdminCafe\Menu\Catalog;
-use AdminCafe\Tables\Tables;
-use AdminCafe\Localization\Language;
+use FandooghRest\Core\Settings;
+use FandooghRest\Core\Security;
+use FandooghRest\Menu\Catalog;
+use FandooghRest\Tables\Tables;
+use FandooghRest\Localization\Language;
 
 final class Orders
 {
@@ -29,7 +29,7 @@ final class Orders
     public static function validateItems(array $items): array|\WP_Error
     {
         if (!$items || count($items) > 100) {
-            return new \WP_Error('items', __('Choose between 1 and 100 items.', 'admincafe'), ['status' => 400]);
+            return new \WP_Error('items', __('Choose between 1 and 100 items.', 'fandoogh-rest'), ['status' => 400]);
         }
         $menu = Catalog::menu();
         $visible = array_column($menu['products'], 'id');
@@ -37,13 +37,13 @@ final class Orders
         $counts = [];
         foreach ($items as $item) {
             if (!is_array($item)) {
-                return new \WP_Error('items', __('Invalid item.', 'admincafe'), ['status' => 400]);
+                return new \WP_Error('items', __('Invalid item.', 'fandoogh-rest'), ['status' => 400]);
             }
             $id = absint($item['product_id'] ?? 0);
             $variation = absint($item['variation_id'] ?? 0);
             $quantity = $item['quantity'] ?? 0;
             if (!is_numeric($quantity) || (int) $quantity != $quantity || $quantity < 1 || $quantity > 99 || !in_array($id, $visible, true)) {
-                return new \WP_Error('items', __('Invalid product or quantity.', 'admincafe'), ['status' => 400]);
+                return new \WP_Error('items', __('Invalid product or quantity.', 'fandoogh-rest'), ['status' => 400]);
             }
             $product = wc_get_product($variation ?: $id);
             if (
@@ -54,12 +54,12 @@ final class Orders
                 || !$product->is_in_stock()
                 || $product->get_price() === ''
             ) {
-                return new \WP_Error('unavailable', __('An item is unavailable.', 'admincafe'), ['status' => 409]);
+                return new \WP_Error('unavailable', __('An item is unavailable.', 'fandoogh-rest'), ['status' => 409]);
             }
             $key = $product->get_id();
             $counts[$key] = ($counts[$key] ?? 0) + (int) $quantity;
             if ($counts[$key] > 99 || ($product->is_sold_individually() && $counts[$key] > 1) || !$product->has_enough_stock($counts[$key])) {
-                return new \WP_Error('stock', __('Requested quantity is unavailable.', 'admincafe'), ['status' => 409]);
+                return new \WP_Error('stock', __('Requested quantity is unavailable.', 'fandoogh-rest'), ['status' => 409]);
             }
             $result[] = ['product' => $product, 'quantity' => (int) $quantity];
         }
@@ -79,22 +79,22 @@ final class Orders
         $table = null;
         if (!$manual) {
             if (Settings::get('ordering_paused') || !Settings::get('dine_in_enabled')) {
-                return new \WP_Error('closed', __('Table ordering is unavailable.', 'admincafe'), ['status' => 403]);
+                return new \WP_Error('closed', __('Table ordering is unavailable.', 'fandoogh-rest'), ['status' => 403]);
             }
             $table = Tables::context(sanitize_text_field($input['table_token'] ?? ''));
             if (is_wp_error($table)) {
                 return $table;
             }
             if (!$table || empty($table['can_order'])) {
-                return new \WP_Error('table', __('This table supports menu viewing only.', 'admincafe'), ['status' => 403]);
+                return new \WP_Error('table', __('This table supports menu viewing only.', 'fandoogh-rest'), ['status' => 403]);
             }
         }
         if (!isset($input['items']) || !is_array($input['items'])) {
-            return new \WP_Error('items', __('An item list is required.', 'admincafe'), ['status' => 400]);
+            return new \WP_Error('items', __('An item list is required.', 'fandoogh-rest'), ['status' => 400]);
         }
         $request = sanitize_text_field($input['request_id'] ?? '');
         if (!$manual && !preg_match('/^[A-Za-z0-9_-]{16,100}$/D', $request)) {
-            return new \WP_Error('request_id', __('A unique request ID is required.', 'admincafe'), ['status' => 400]);
+            return new \WP_Error('request_id', __('A unique request ID is required.', 'fandoogh-rest'), ['status' => 400]);
         }
         $scope = hash('sha256', Security::sessionKey() . '|' . ($table['token'] ?? 'counter') . '|' . $request);
         $fingerprint = hash('sha256', wp_json_encode([
@@ -107,7 +107,7 @@ final class Orders
             $existing = get_option($option);
             if ($existing) {
                 if ($existing['fingerprint'] !== $fingerprint) {
-                    return new \WP_Error('request_conflict', __('Request ID already used for different items.', 'admincafe'), ['status' => 409]);
+                    return new \WP_Error('request_conflict', __('Request ID already used for different items.', 'fandoogh-rest'), ['status' => 409]);
                 }
                 if (!empty($existing['order_id'])) {
                     $order = wc_get_order($existing['order_id']);
@@ -143,11 +143,11 @@ final class Orders
                     // Do not recreate an uncertain request: a worker may have died after a gateway/storage write.
                     return new \WP_Error(
                         'request_recovery',
-                        __('This request needs staff review before retrying. Please contact the restaurant.', 'admincafe'),
+                        __('This request needs staff review before retrying. Please contact the restaurant.', 'fandoogh-rest'),
                         ['status' => 409]
                     );
                 }
-                return new \WP_Error('request_pending', __('This request is being processed.', 'admincafe'), ['status' => 409]);
+                return new \WP_Error('request_pending', __('This request is being processed.', 'fandoogh-rest'), ['status' => 409]);
             }
         }
         $items = self::validateItems($input['items']);
@@ -160,7 +160,7 @@ final class Orders
             'token' => $token,
             'created' => time()
         ], '', false)) {
-            return new \WP_Error('request_pending', __('This request is being processed.', 'admincafe'), ['status' => 409]);
+            return new \WP_Error('request_pending', __('This request is being processed.', 'fandoogh-rest'), ['status' => 409]);
         }
         $order = null;
         try {
@@ -221,13 +221,13 @@ final class Orders
             if (!$manual) {
                 delete_option($option);
             }
-            return new \WP_Error('order_failed', __('Unable to create the order. Please try again.', 'admincafe'), ['status' => 500]);
+            return new \WP_Error('order_failed', __('Unable to create the order. Please try again.', 'fandoogh-rest'), ['status' => 500]);
         }
         // Notification failures must never undo an already persisted customer order.
         try {
             do_action('admincafe_order_created', $order->get_id());
         } catch (\Throwable $error) {
-            wc_get_logger()->error(__('AdminCafe order notification failed.', 'admincafe'), ['source' => 'admincafe']);
+            wc_get_logger()->error(__('Fandoogh Rest order notification failed.', 'fandoogh-rest'), ['source' => 'admincafe']);
         }
         return self::publicOrder($order, $token);
     }
@@ -291,7 +291,7 @@ final class Orders
         $current = $order->get_meta('_admincafe_stage');
         $next = $input['stage'] ?? $current;
         if ($next !== $current && !in_array($next, self::transitions()[$current] ?? [], true)) {
-            return new \WP_Error('stage', __('Invalid stage transition.', 'admincafe'), ['status' => 409]);
+            return new \WP_Error('stage', __('Invalid stage transition.', 'fandoogh-rest'), ['status' => 409]);
         }
         if (in_array($order->get_meta('_admincafe_channel'), ['pickup', 'delivery'], true) && in_array($next, [
             'accepted',
@@ -309,46 +309,46 @@ final class Orders
                 && !(in_array($order->get_payment_method(), $offline, true)
                     && in_array($order->get_status(), ['pending', 'on-hold'], true))
             ) {
-                return new \WP_Error('payment_required', __('Payment must be confirmed before accepting this online order.', 'admincafe'), ['status' => 409]);
+                return new \WP_Error('payment_required', __('Payment must be confirmed before accepting this online order.', 'fandoogh-rest'), ['status' => 409]);
             }
         }
         $action = $input['payment_action'] ?? '';
         $user = wp_get_current_user();
         $manager = current_user_can('admincafe_manage_settings');
         if ($action && (!$manager && !in_array('admincafe_cashier', $user->roles, true))) {
-            return new \WP_Error('payment_permission', __('Cashier permission is required.', 'admincafe'), ['status' => 403]);
+            return new \WP_Error('payment_permission', __('Cashier permission is required.', 'fandoogh-rest'), ['status' => 403]);
         }
         if ($action === 'refund' && !$manager) {
-            return new \WP_Error('refund_permission', __('Manager permission is required.', 'admincafe'), ['status' => 403]);
+            return new \WP_Error('refund_permission', __('Manager permission is required.', 'fandoogh-rest'), ['status' => 403]);
         }
         if ($action && !in_array($action, ['settle', 'refund'], true)) {
-            return new \WP_Error('payment_action', __('Invalid payment action.', 'admincafe'), ['status' => 400]);
+            return new \WP_Error('payment_action', __('Invalid payment action.', 'fandoogh-rest'), ['status' => 400]);
         }
         if ($action === 'settle') {
             if ($current === 'cancelled' || $next === 'cancelled' || !in_array($order->get_status(), ['pending', 'on-hold'], true)) {
-                return new \WP_Error('settlement', __('This order cannot be settled.', 'admincafe'), ['status' => 409]);
+                return new \WP_Error('settlement', __('This order cannot be settled.', 'fandoogh-rest'), ['status' => 409]);
             }
             $order->payment_complete();
-            $order->add_order_note(sprintf(__('Offline settlement recorded by user %d.', 'admincafe'), get_current_user_id()));
+            $order->add_order_note(sprintf(__('Offline settlement recorded by user %d.', 'fandoogh-rest'), get_current_user_id()));
         }
         if ($action === 'refund') {
             $remaining = (float) $order->get_total() - (float) $order->get_total_refunded();
             if (!$order->get_date_paid() || $remaining <= 0) {
-                return new \WP_Error('refund', __('No paid balance to refund.', 'admincafe'), ['status' => 409]);
+                return new \WP_Error('refund', __('No paid balance to refund.', 'fandoogh-rest'), ['status' => 409]);
             }
             $gateway = wc_get_payment_gateway_by_order($order);
             $online = (bool) $order->get_transaction_id();
             if ($online && (!$gateway || !$gateway->supports('refunds'))) {
                 return new \WP_Error(
                     'refund_gateway',
-                    __('Refund through the gateway dashboard first; automatic refunds are unavailable.', 'admincafe'),
+                    __('Refund through the gateway dashboard first; automatic refunds are unavailable.', 'fandoogh-rest'),
                     ['status' => 409]
                 );
             }
             $refund = wc_create_refund([
                 'order_id' => $order->get_id(),
                 'amount' => $remaining,
-                'reason' => __('AdminCafe manager refund', 'admincafe'),
+                'reason' => __('Fandoogh Rest manager refund', 'fandoogh-rest'),
                 'refund_payment' => $online,
                 'restock_items' => false
             ]);
@@ -366,7 +366,7 @@ final class Orders
             try {
                 do_action('admincafe_order_stage_changed', $order->get_id(), $next);
             } catch (\Throwable $error) {
-                wc_get_logger()->error(__('AdminCafe stage notification failed.', 'admincafe'), ['source' => 'admincafe']);
+                wc_get_logger()->error(__('Fandoogh Rest stage notification failed.', 'fandoogh-rest'), ['source' => 'admincafe']);
             }
         }
         return self::detail($order);

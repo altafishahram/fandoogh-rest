@@ -8,9 +8,9 @@ if (!$loader || !is_file($loader)) { fwrite(STDERR, "Pass a disposable WordPress
 require $loader;
 if (get_option('admincafe_test_environment') !== 'local-disposable') { fwrite(STDERR, "Disposable database marker required.\n"); exit(1); }
 
-use AdminCafe\Core\Settings;
-use AdminCafe\Core\Assets;
-use AdminCafe\Integrations\Builders;
+use FandooghRest\Core\Settings;
+use FandooghRest\Core\Assets;
+use FandooghRest\Integrations\Builders;
 
 $checks = 0;
 $check = static function (bool $ok, string $label) use (&$checks): void {

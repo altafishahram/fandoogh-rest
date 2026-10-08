@@ -14,12 +14,12 @@ if (get_option('admincafe_test_environment') !== 'local-disposable') {
     exit(1);
 }
 
-use AdminCafe\Commerce\Checkout;
-use AdminCafe\Commerce\Orders;
-use AdminCafe\Core\Settings;
-use AdminCafe\Localization\Language;
-use AdminCafe\Menu\Catalog;
-use AdminCafe\Tables\Tables;
+use FandooghRest\Commerce\Checkout;
+use FandooghRest\Commerce\Orders;
+use FandooghRest\Core\Settings;
+use FandooghRest\Localization\Language;
+use FandooghRest\Menu\Catalog;
+use FandooghRest\Tables\Tables;
 
 add_filter('pre_wp_mail', '__return_true');
 $checks = 0;

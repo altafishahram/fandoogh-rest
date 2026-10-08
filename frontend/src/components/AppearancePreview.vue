@@ -16,7 +16,7 @@ function prepareFrame(event) {
   const frameDocument = event.target.contentDocument;
   if (!frameDocument) return;
   for (const sheet of document.querySelectorAll('link[rel="stylesheet"]')) {
-    if (sheet.href.includes("admincafe"))
+    if (sheet.href.includes("fandoogh-rest") || sheet.href.includes("admincafe"))
       frameDocument.head.appendChild(sheet.cloneNode(true));
   }
   // Vite development supplies the same compiled menu styles as inline sheets.

@@ -1,8 +1,8 @@
 <?php
-namespace AdminCafe\Appearance;
+namespace FandooghRest\Appearance;
 
-use AdminCafe\Core\Settings;
-use AdminCafe\Rest\Management;
+use FandooghRest\Core\Settings;
+use FandooghRest\Rest\Management;
 
 defined('ABSPATH') || exit;
 
@@ -34,7 +34,7 @@ final class Module
         if (!is_array($input) || array_diff(array_keys($input), array_keys(Appearance::defaults()))) {
             return new \WP_Error(
                 'admincafe_appearance',
-                __('Send an appearance settings object.', 'admincafe'),
+                __('Send an appearance settings object.', 'fandoogh-rest'),
                 ['status' => 400]
             );
         }

@@ -13,15 +13,15 @@ if (get_option('admincafe_test_environment') !== 'local-disposable') {
     exit(1);
 }
 
-use AdminCafe\Core\Settings;
-use AdminCafe\Core\Security;
-use AdminCafe\Menu\Catalog;
-use AdminCafe\Tables\Tables;
-use AdminCafe\Commerce\Orders;
-use AdminCafe\Commerce\Checkout;
-use AdminCafe\Import\Reader;
-use AdminCafe\Import\Importer;
-use AdminCafe\Notifications\Notifications;
+use FandooghRest\Core\Settings;
+use FandooghRest\Core\Security;
+use FandooghRest\Menu\Catalog;
+use FandooghRest\Tables\Tables;
+use FandooghRest\Commerce\Orders;
+use FandooghRest\Commerce\Checkout;
+use FandooghRest\Import\Reader;
+use FandooghRest\Import\Importer;
+use FandooghRest\Notifications\Notifications;
 
 $passed = 0;
 function ac_check(bool $condition, string $label): void {
@@ -169,7 +169,7 @@ WC()->session->set('admincafe_channel', '');
 $manager = rest_do_request(ac_request('GET', '/manage/bootstrap'));
 ac_check($manager->get_status() === 200 && isset($manager->get_data()['user']['roles']), 'Actual management REST bootstrap');
 ac_check(in_array('IRT', array_column($manager->get_data()['currencies'], 'code'), true), 'Real REST currencies include Toman');
-$builderPage = wp_insert_post(['post_type' => 'page', 'post_status' => 'publish', 'post_title' => 'AdminCafe builder smoke', 'post_content' => '[admincafe_menu mode="menu"]']);
+$builderPage = wp_insert_post(['post_type' => 'page', 'post_status' => 'publish', 'post_title' => 'Fandoogh Rest builder smoke', 'post_content' => '[admincafe_menu mode="menu"]']);
 Settings::update(['menu_page_id' => $builderPage]);
 $pageRequest = apply_filters('request', ['admincafe_route' => 'menu']);
 ac_check(($pageRequest['page_id'] ?? 0) === $builderPage && !isset($pageRequest['admincafe_route']), 'Custom menu destination resolves through the WordPress page query');
@@ -181,4 +181,4 @@ Settings::update(['menu_page_id' => 0]);
 wp_set_current_user(0);
 $denied = rest_do_request(new WP_REST_Request('GET', '/admincafe/v1/manage/products'));
 ac_check($denied->get_status() >= 400, 'Guest cannot read management data');
-echo "Integration: $passed checks passed; WP " . get_bloginfo('version') . ', Woo ' . WC_VERSION . "; real HPOS via SQLite test database.\n";
+echo "Integration: $passed checks passed; WP " . get_bloginfo('version') . ', Woo ' . WC_VERSION . "; real HPOS disposable integration database.\n";

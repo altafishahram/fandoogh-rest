@@ -1,7 +1,7 @@
 <?php
-namespace AdminCafe\Localization;
+namespace FandooghRest\Localization;
 
-use AdminCafe\Core\Settings;
+use FandooghRest\Core\Settings;
 
 defined('ABSPATH') || exit;
 
@@ -16,10 +16,12 @@ final class Language
     {
         add_filter('determine_locale', [self::class, 'requestLocale'], 99);
         add_filter('locale', [self::class, 'requestLocale'], 99);
+        add_filter('gettext_fandoogh-rest', [self::class, 'gettext'], 20, 3);
+        // Third-party integrations may still translate strings using the legacy domain.
         add_filter('gettext_admincafe', [self::class, 'gettext'], 20, 3);
         add_filter('get_available_languages', static function (array $locales): array {
             foreach (self::supported() as $language) {
-                if (is_file(ADMINCAFE_PATH . 'languages/checkout/core/' . $language['locale'] . '.mo')) { $locales[] = $language['locale']; }
+                if (is_file(FANDOOGH_REST_PATH . 'languages/checkout/core/' . $language['locale'] . '.mo')) { $locales[] = $language['locale']; }
             }
             return array_values(array_unique($locales));
         });
@@ -167,7 +169,7 @@ final class Language
     private static function readCatalog(string $relative): array
     {
         if (!isset(self::$catalogs[$relative])) {
-            $path = ADMINCAFE_PATH . $relative;
+            $path = FANDOOGH_REST_PATH . $relative;
             $data = is_file($path) ? json_decode((string) file_get_contents($path), true) : [];
             self::$catalogs[$relative] = is_array($data) ? $data : [];
         }
@@ -204,7 +206,7 @@ final class Language
         if (!$type) { return $file; }
         if ($domain === 'default' && preg_match('/^(admin-|ms-)/', basename($file))) { return $file; }
         $name = $domain === 'woocommerce' ? 'woocommerce-' . $locale . '.mo' : $locale . '.mo';
-        $candidate = ADMINCAFE_PATH . 'languages/checkout/' . $type . '/' . $name;
+        $candidate = FANDOOGH_REST_PATH . 'languages/checkout/' . $type . '/' . $name;
         return is_readable($candidate) ? $candidate : $file;
     }
 
@@ -216,7 +218,7 @@ final class Language
         $name = basename($file);
         $prefix = ($domain === 'woocommerce' ? 'woocommerce-' : '') . self::locale(self::current()) . '-';
         if (!str_starts_with($name, $prefix) || !str_ends_with($name, '.json')) { return $file; }
-        $candidate = ADMINCAFE_PATH . 'languages/checkout/' . $type . '/' . $name;
+        $candidate = FANDOOGH_REST_PATH . 'languages/checkout/' . $type . '/' . $name;
         return is_readable($candidate) ? $candidate : $file;
     }
 
@@ -225,7 +227,7 @@ final class Language
         if (!self::isCustomerRequest()) { return; }
         $code = self::current();
         $locale = self::locale($code);
-        $file = ADMINCAFE_PATH . 'languages/checkout/woocommerce/woocommerce-' . $locale . '.mo';
+        $file = FANDOOGH_REST_PATH . 'languages/checkout/woocommerce/woocommerce-' . $locale . '.mo';
         $installed = WP_LANG_DIR . '/plugins/woocommerce-' . $locale . '.mo';
         if (is_file($file) && !is_file($installed)) { load_textdomain('woocommerce', $file, $locale); }
     }

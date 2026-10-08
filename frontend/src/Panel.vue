@@ -32,7 +32,7 @@ export default {
       <div class="ac-brand">
         <span class="ac-logo">{{ t("آ") }}</span>
         <div>
-          <strong>{{ t("ادمین کافه") }}</strong>
+          <strong>{{ t("رستوران فندوق") }}</strong>
           <small>{{ t("مدیریت با طعم آرامش") }}</small>
         </div>
       </div>

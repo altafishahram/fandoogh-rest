@@ -70,7 +70,7 @@ export default {
           <label
             >{{ t("صفحه مقصد منو")
             }}<select v-model="settings.menu_page_id">
-              <option :value="0">{{ t("صفحه مستقل ادمین کافه") }}</option>
+              <option :value="0">{{ t("صفحه مستقل رستوران فندوق") }}</option>
               <option v-for="p in bootstrap.pages" :value="p.id">
                 {{ p.title }}
               </option>

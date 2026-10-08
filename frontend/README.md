@@ -1,8 +1,8 @@
-# AdminCafe UI
+# Fandoogh Rest UI
 
 Vue 3 SFCs, Vite and scoped, prefixed Tailwind utilities. All handwritten styles are restricted to `.admincafe-root`; Tailwind preflight is disabled. Vazirmatn Arabic font files are bundled locally under the SIL Open Font License (`FONT-LICENSE.txt`).
 
-Run `npm ci`, `npm test`, `npm run build`. Build creates `../assets/menu.js`, `panel.js`, `admincafe.css`, shared chunks and local fonts. `npm run dev` serves the explicit demo menu at `/` and demo management at `/panel.html`. Demo data is activated only by boolean `config.demo === true`; production failures are always surfaced.
+Run `npm ci`, `npm test`, `npm run build`. Build creates `../assets/menu.js`, `panel.js`, `fandoogh-rest.css`, shared chunks and local fonts. `npm run dev` serves the explicit demo menu at `/` and demo management at `/panel.html`. Demo data is activated only by boolean `config.demo === true`; production failures are always surfaced.
 
 Entry files only mount components. `Menu.vue` / `useMenu.js` handle the public menu and table workflow. `Panel.vue` / `usePanel.js` coordinate management, with page SFCs in `pages/`. `api.js` is the REST boundary; `domain.js` holds independently tested rules. `state.js` shares category/cart state between builder roots, with table-specific cart storage. `i18n.js` lists Persian source messages and reads translations from `config.strings`.
 

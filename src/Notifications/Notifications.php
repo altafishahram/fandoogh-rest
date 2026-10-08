@@ -1,9 +1,9 @@
 <?php
-namespace AdminCafe\Notifications;
+namespace FandooghRest\Notifications;
 
-use AdminCafe\Core\Settings;
-use AdminCafe\Localization\Language;
-use AdminCafe\Rest\Management;
+use FandooghRest\Core\Settings;
+use FandooghRest\Localization\Language;
+use FandooghRest\Rest\Management;
 use Minishlink\WebPush\Subscription;
 use Minishlink\WebPush\VAPID;
 use Minishlink\WebPush\WebPush;
@@ -29,11 +29,11 @@ final class Notifications
     {
         $reason = '';
         if (!is_ssl()) {
-            $reason = __('Push notifications require HTTPS.', 'admincafe');
+            $reason = __('Push notifications require HTTPS.', 'fandoogh-rest');
         } elseif (!class_exists(WebPush::class)) {
-            $reason = __('The Web Push dependency is missing. Install the packaged release.', 'admincafe');
+            $reason = __('The Web Push dependency is missing. Install the packaged release.', 'fandoogh-rest');
         } elseif (!extension_loaded('openssl') || !extension_loaded('curl') || !extension_loaded('mbstring')) {
-            $reason = __('Enable the PHP openssl, curl and mbstring extensions for push notifications.', 'admincafe');
+            $reason = __('Enable the PHP openssl, curl and mbstring extensions for push notifications.', 'fandoogh-rest');
         }
         $keys = get_option('admincafe_vapid', []);
         if (!$reason && empty($keys['publicKey'])) {
@@ -43,7 +43,7 @@ final class Notifications
                     $keys = get_option('admincafe_vapid', []);
                 }
             } catch (\Throwable $error) {
-                $reason = __('The server could not generate push credentials.', 'admincafe');
+                $reason = __('The server could not generate push credentials.', 'fandoogh-rest');
             }
         }
         return ['public_key' => $keys['publicKey'] ?? '', 'available' => $reason === '', 'reason' => $reason];
@@ -138,11 +138,11 @@ final class Notifications
         }
         $keys = get_option('admincafe_vapid');
         $payload = [
-            'title' => $event['title'] ?? __('AdminCafe test notification', 'admincafe'),
-            'body' => $event['body'] ?? __('Notifications are working on this device.', 'admincafe'),
+            'title' => $event['title'] ?? __('Fandoogh Rest test notification', 'fandoogh-rest'),
+            'body' => $event['body'] ?? __('Notifications are working on this device.', 'fandoogh-rest'),
             'tag' => 'admincafe-' . ($eventId ?: 'test'),
             'url' => Settings::panelUrl() . ($event ? '#orders/' . (int) $event['order_id'] : '#notifications'),
-            'icon' => ADMINCAFE_URL . 'assets/icon-192.png',
+            'icon' => FANDOOGH_REST_URL . 'assets/icon-192.png',
         ];
         try {
             $sender = new WebPush(['VAPID' => ['subject' => home_url('/'), 'publicKey' => $keys['publicKey'], 'privateKey' => $keys['privateKey']]], ['TTL' => 3600, 'urgency' => 'high'], 10);
@@ -150,7 +150,7 @@ final class Notifications
             if ($report->isSubscriptionExpired()) {
                 unset($devices[$deviceKey]);
             } elseif (!$report->isSuccess()) {
-                $devices[$deviceKey]['last_error'] = __('The browser push service could not deliver the notification.', 'admincafe');
+                $devices[$deviceKey]['last_error'] = __('The browser push service could not deliver the notification.', 'fandoogh-rest');
                 if ($attempt < 3) {
                     self::queue($eventId, $userId, $deviceKey, $attempt + 1);
                 }
@@ -159,7 +159,7 @@ final class Notifications
                 $devices[$deviceKey]['last_sent'] = gmdate(DATE_ATOM);
             }
         } catch (\Throwable $error) {
-            $devices[$deviceKey]['last_error'] = __('Push delivery failed. Check outbound network access and PHP extensions.', 'admincafe');
+            $devices[$deviceKey]['last_error'] = __('Push delivery failed. Check outbound network access and PHP extensions.', 'fandoogh-rest');
             if ($attempt < 3) {
                 self::queue($eventId, $userId, $deviceKey, $attempt + 1);
             }
@@ -190,7 +190,7 @@ final class Notifications
     {
         $ids = $request->get_param('ids');
         if (!is_array($ids) || count($ids) > 100) {
-            return new \WP_Error('admincafe_events', __('Supply up to 100 notification IDs.', 'admincafe'), ['status' => 400]);
+            return new \WP_Error('admincafe_events', __('Supply up to 100 notification IDs.', 'fandoogh-rest'), ['status' => 400]);
         }
         global $wpdb;
         foreach (array_unique(array_map('absint', $ids)) as $id) {
@@ -211,7 +211,7 @@ final class Notifications
         $public = is_array($keys) ? $decode($keys['p256dh'] ?? '') : false;
         $auth = is_array($keys) ? $decode($keys['auth'] ?? '') : false;
         if (!$url || ($url['scheme'] ?? '') !== 'https' || !$allowed || isset($url['user']) || isset($url['pass']) || isset($url['fragment']) || (($url['port'] ?? 443) !== 443) || strlen($endpoint) > 2048 || !$public || strlen($public) !== 65 || ord($public[0]) !== 4 || !$auth || strlen($auth) !== 16) {
-            return new \WP_Error('admincafe_subscription', __('Invalid browser push subscription.', 'admincafe'), ['status' => 400]);
+            return new \WP_Error('admincafe_subscription', __('Invalid browser push subscription.', 'fandoogh-rest'), ['status' => 400]);
         }
         return true;
     }
@@ -220,7 +220,7 @@ final class Notifications
     {
         $input = $request->get_json_params();
         if (!is_array($input) || !is_array($input['subscription'] ?? null)) {
-            return new \WP_Error('admincafe_subscription', __('A browser subscription is required.', 'admincafe'), ['status' => 400]);
+            return new \WP_Error('admincafe_subscription', __('A browser subscription is required.', 'fandoogh-rest'), ['status' => 400]);
         }
         $valid = self::validateSubscription($input['subscription']);
         if (is_wp_error($valid)) {
@@ -233,14 +233,14 @@ final class Notifications
         $devices = (array) get_user_meta(get_current_user_id(), '_admincafe_push_devices', true);
         $key = hash('sha256', $input['subscription']['endpoint']);
         if (!isset($devices[$key]) && count($devices) >= 10) {
-            return new \WP_Error('admincafe_device_limit', __('Remove an old device before adding another.', 'admincafe'), ['status' => 409]);
+            return new \WP_Error('admincafe_device_limit', __('Remove an old device before adding another.', 'fandoogh-rest'), ['status' => 409]);
         }
         $channels = $input['channels'] ?? ['table', 'counter', 'pickup', 'delivery'];
         if (!is_array($channels)) {
-            return new \WP_Error('admincafe_channels', __('Choose valid notification channels.', 'admincafe'), ['status' => 400]);
+            return new \WP_Error('admincafe_channels', __('Choose valid notification channels.', 'fandoogh-rest'), ['status' => 400]);
         }
         if (array_filter($channels, static fn($channel): bool => !is_string($channel) || !in_array($channel, ['table', 'counter', 'pickup', 'delivery'], true))) {
-            return new \WP_Error('admincafe_channels', __('Choose valid notification channels.', 'admincafe'), ['status' => 400]);
+            return new \WP_Error('admincafe_channels', __('Choose valid notification channels.', 'fandoogh-rest'), ['status' => 400]);
         }
         $devices[$key] = [
             'subscription' => ['endpoint' => $input['subscription']['endpoint'], 'keys' => array_intersect_key($input['subscription']['keys'], ['p256dh' => true, 'auth' => true]), 'contentEncoding' => 'aes128gcm'],
@@ -275,16 +275,16 @@ final class Notifications
         $key = (string) $request->get_param('id');
         $channels = $request->get_param('channels');
         if (!is_array($channels) || array_filter($channels, static fn($channel): bool => !is_string($channel) || !in_array($channel, ['table', 'counter', 'pickup', 'delivery'], true))) {
-            return new \WP_Error('admincafe_channels', __('Choose valid notification channels.', 'admincafe'), ['status' => 400]);
+            return new \WP_Error('admincafe_channels', __('Choose valid notification channels.', 'fandoogh-rest'), ['status' => 400]);
         }
         $devices = (array) get_user_meta(get_current_user_id(), '_admincafe_push_devices', true);
         if (!isset($devices[$key])) {
-            return new \WP_Error('admincafe_device', __('Device not found.', 'admincafe'), ['status' => 404]);
+            return new \WP_Error('admincafe_device', __('Device not found.', 'fandoogh-rest'), ['status' => 404]);
         }
         $previous = $devices;
         $devices[$key]['channels'] = array_values(array_unique($channels));
         if (!update_user_meta(get_current_user_id(), '_admincafe_push_devices', $devices, $previous) && $devices !== $previous) {
-            return new \WP_Error('admincafe_device_busy', __('Device settings changed. Refresh and try again.', 'admincafe'), ['status' => 409]);
+            return new \WP_Error('admincafe_device_busy', __('Device settings changed. Refresh and try again.', 'fandoogh-rest'), ['status' => 409]);
         }
         return ['updated' => true];
     }
@@ -297,7 +297,7 @@ final class Notifications
         }
         $devices = (array) get_user_meta(get_current_user_id(), '_admincafe_push_devices', true);
         if (!$devices) {
-            return new \WP_Error('admincafe_no_device', __('Enable notifications on this device first.', 'admincafe'), ['status' => 400]);
+            return new \WP_Error('admincafe_no_device', __('Enable notifications on this device first.', 'fandoogh-rest'), ['status' => 400]);
         }
         foreach ($devices as $key => $device) {
             self::queue(0, get_current_user_id(), $key, 0);

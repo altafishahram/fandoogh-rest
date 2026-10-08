@@ -1,6 +1,6 @@
-# AdminCafe translation catalog.
+# Fandoogh Rest translation catalog.
 msgid ""
-msgstr "Project-Id-Version: AdminCafe 1.3.0\nReport-Msgid-Bugs-To: \nPOT-Creation-Date: 2026-10-08 00:00+0000\nPO-Revision-Date: 2026-10-08 00:00+0000\nLast-Translator: AdminCafe\nLanguage-Team: English\nLanguage: en_US\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=(n != 1);\nX-Domain: admincafe\n"
+msgstr "Project-Id-Version: Fandoogh Rest 1.3.1\nReport-Msgid-Bugs-To: \nPOT-Creation-Date: 2026-10-08 00:00+0000\nPO-Revision-Date: 2026-10-08 00:00+0000\nLast-Translator: Fandoogh Rest\nLanguage-Team: English\nLanguage: en_US\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=(n != 1);\nX-Domain: fandoogh-rest\n"
 
 #: frontend/src/i18n.js:5 resources/ui-strings.php:5
 msgid "+ سفارش صندوق"
@@ -29,50 +29,6 @@ msgstr "A valid email is required."
 #: src/Menu/Catalog.php:166
 msgid "A variation ID is required."
 msgstr "A variation ID is required."
-
-#: src/Core/Plugin.php:32
-msgid "AdminCafe"
-msgstr "AdminCafe"
-
-#: templates/login.php:5
-msgid "AdminCafe / WORKSPACE"
-msgstr "AdminCafe / WORKSPACE"
-
-#: src/Commerce/Checkout.php:309
-msgid "AdminCafe checkout notification failed."
-msgstr "AdminCafe checkout notification failed."
-
-#: src/Commerce/Orders.php:351
-msgid "AdminCafe manager refund"
-msgstr "AdminCafe manager refund"
-
-#: resources/builder-block.js:21 resources/builder-block.js:6 src/Integrations/MenuWidget.php:9
-msgid "AdminCafe menu"
-msgstr "AdminCafe menu"
-
-#: src/Commerce/Orders.php:230
-msgid "AdminCafe order notification failed."
-msgstr "AdminCafe order notification failed."
-
-#: src/Commerce/Checkout.php:324
-msgid "AdminCafe payment notification failed."
-msgstr "AdminCafe payment notification failed."
-
-#: admincafe.php:48
-msgid "AdminCafe requires PHP 8.2+ and WooCommerce 9.0+. Please activate a compatible WooCommerce installation."
-msgstr "AdminCafe requires PHP 8.2+ and WooCommerce 9.0+. Please activate a compatible WooCommerce installation."
-
-#: src/Core/Installation.php:11
-msgid "AdminCafe requires WooCommerce and PHP 8.2 or newer."
-msgstr "AdminCafe requires WooCommerce and PHP 8.2 or newer."
-
-#: src/Commerce/Orders.php:369
-msgid "AdminCafe stage notification failed."
-msgstr "AdminCafe stage notification failed."
-
-#: src/Notifications/Notifications.php:141
-msgid "AdminCafe test notification"
-msgstr "AdminCafe test notification"
 
 #: src/Commerce/Orders.php:57
 msgid "An item is unavailable."
@@ -168,8 +124,8 @@ msgid "Choose an image attachment."
 msgstr "Choose an image attachment."
 
 #: src/Rest/Management.php:170
-msgid "Choose an operational AdminCafe role."
-msgstr "Choose an operational AdminCafe role."
+msgid "Choose an operational Fandoogh Rest role."
+msgstr "Choose an operational Fandoogh Rest role."
 
 #: src/Commerce/Orders.php:32
 msgid "Choose between 1 and 100 items."
@@ -211,6 +167,10 @@ msgstr "Create simple products here; configure variable products in WooCommerce.
 msgid "Cross-site order requests are not allowed."
 msgstr "Cross-site order requests are not allowed."
 
+#: fandoogh-rest.php:31
+msgid "Deactivate the old AdminCafe plugin before activating Fandoogh Rest."
+msgstr "Deactivate the old AdminCafe plugin before activating Fandoogh Rest."
+
 #: src/Notifications/Notifications.php:282
 msgid "Device not found."
 msgstr "Device not found."
@@ -246,6 +206,50 @@ msgstr "Every product must belong to this category."
 #: src/Appearance/CssCompiler.php:337
 msgid "External resources and executable CSS are not allowed."
 msgstr "External resources and executable CSS are not allowed."
+
+#: src/Core/Plugin.php:36 src/Core/Plugin.php:37 src/Core/Routes.php:70
+msgid "Fandoogh Rest"
+msgstr "Fandoogh Rest"
+
+#: templates/login.php:5
+msgid "Fandoogh Rest / WORKSPACE"
+msgstr "Fandoogh Rest / WORKSPACE"
+
+#: src/Commerce/Checkout.php:309
+msgid "Fandoogh Rest checkout notification failed."
+msgstr "Fandoogh Rest checkout notification failed."
+
+#: src/Commerce/Orders.php:351
+msgid "Fandoogh Rest manager refund"
+msgstr "Fandoogh Rest manager refund"
+
+#: resources/builder-block.js:21 resources/builder-block.js:6 src/Integrations/MenuWidget.php:9
+msgid "Fandoogh Rest menu"
+msgstr "Fandoogh Rest menu"
+
+#: src/Commerce/Orders.php:230
+msgid "Fandoogh Rest order notification failed."
+msgstr "Fandoogh Rest order notification failed."
+
+#: src/Commerce/Checkout.php:324
+msgid "Fandoogh Rest payment notification failed."
+msgstr "Fandoogh Rest payment notification failed."
+
+#: fandoogh-rest.php:84
+msgid "Fandoogh Rest requires PHP 8.2+ and WooCommerce 9.0+. Please activate a compatible WooCommerce installation."
+msgstr "Fandoogh Rest requires PHP 8.2+ and WooCommerce 9.0+. Please activate a compatible WooCommerce installation."
+
+#: src/Core/Installation.php:11
+msgid "Fandoogh Rest requires WooCommerce and PHP 8.2 or newer."
+msgstr "Fandoogh Rest requires WooCommerce and PHP 8.2 or newer."
+
+#: src/Commerce/Orders.php:369
+msgid "Fandoogh Rest stage notification failed."
+msgstr "Fandoogh Rest stage notification failed."
+
+#: src/Notifications/Notifications.php:141
+msgid "Fandoogh Rest test notification"
+msgstr "Fandoogh Rest test notification"
 
 #: src/Import/Reader.php:16
 msgid "File must be smaller than 5 MB."
@@ -425,7 +429,7 @@ msgstr "Only CSV and XLSX files are supported."
 msgid "Only valid JPEG, PNG, or WebP images are supported."
 msgstr "Only valid JPEG, PNG, or WebP images are supported."
 
-#: src/Core/Plugin.php:33
+#: src/Core/Plugin.php:37
 msgid "Open restaurant panel"
 msgstr "Open restaurant panel"
 
@@ -537,7 +541,7 @@ msgstr "Restaurant manager"
 msgid "Restaurant menu"
 msgstr "Restaurant menu"
 
-#: src/Core/Plugin.php:33
+#: src/Core/Plugin.php:37
 msgid "Restaurant operations are available in your dedicated panel."
 msgstr "Restaurant operations are available in your dedicated panel."
 
@@ -578,8 +582,8 @@ msgid "Sign in to panel"
 msgstr "Sign in to panel"
 
 #: templates/login.php:3
-msgid "Sign in | AdminCafe"
-msgstr "Sign in | AdminCafe"
+msgid "Sign in | Fandoogh Rest"
+msgstr "Sign in | Fandoogh Rest"
 
 #: src/Rest/Management.php:140
 msgid "Supply a category and product IDs."
@@ -937,10 +941,6 @@ msgstr "Preparation starts after staff approval."
 msgid "آیکون"
 msgstr "Icon"
 
-#: frontend/src/i18n.js:15 resources/ui-strings.php:15
-msgid "ادمین کافه"
-msgstr "AdminCafe"
-
 #: frontend/src/i18n.js:16 resources/ui-strings.php:16
 msgid "ارث‌بری از تنظیمات"
 msgstr "Inherit settings"
@@ -1141,6 +1141,10 @@ msgstr "Connected devices"
 msgid "ذخیره تنظیمات"
 msgstr "Save settings"
 
+#: frontend/src/i18n.js:15 resources/ui-strings.php:15
+msgid "رستوران فندوق"
+msgstr "Fandoogh Rest"
+
 #: frontend/src/i18n.js:66 resources/ui-strings.php:68
 msgid "رنگ QR"
 msgstr "QR color"
@@ -1165,13 +1169,13 @@ msgstr "Your cart is empty."
 msgid "سفارشی در این وضعیت وجود ندارد."
 msgstr "No orders have this status."
 
-#: frontend/src/i18n.js:72 resources/ui-strings.php:74
-msgid "سفارش‌های ادمین کافه"
-msgstr "AdminCafe orders"
-
 #: frontend/src/i18n.js:73 resources/ui-strings.php:75
 msgid "سفارش‌های تازه"
 msgstr "New orders"
+
+#: frontend/src/i18n.js:72 resources/ui-strings.php:74
+msgid "سفارش‌های رستوران فندوق"
+msgstr "Fandoogh Rest orders"
 
 #: frontend/src/i18n.js:74 resources/ui-strings.php:76
 msgid "سفارش‌گیری"
@@ -1194,8 +1198,8 @@ msgid "صفحه قبل"
 msgstr "Previous page"
 
 #: frontend/src/i18n.js:79 resources/ui-strings.php:81
-msgid "صفحه مستقل ادمین کافه"
-msgstr "Standalone AdminCafe page"
+msgid "صفحه مستقل رستوران فندوق"
+msgstr "Standalone Fandoogh Rest page"
 
 #: frontend/src/i18n.js:80 resources/ui-strings.php:82
 msgid "صفحه مقصد منو"

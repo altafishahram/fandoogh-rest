@@ -1,5 +1,5 @@
 <?php
-namespace AdminCafe\Core;
+namespace FandooghRest\Core;
 
 defined('ABSPATH') || exit;
 
@@ -9,11 +9,11 @@ final class Currency
     public function register(): void
     {
         add_filter('woocommerce_currencies', static function (array $currencies): array {
-            $currencies['IRT'] = __('Toman', 'admincafe');
+            $currencies['IRT'] = __('Toman', 'fandoogh-rest');
             return $currencies;
         });
         add_filter('woocommerce_currency_symbol', static function (string $symbol, string $code): string {
-            return $code === 'IRT' ? __('Toman', 'admincafe') : $symbol;
+            return $code === 'IRT' ? __('Toman', 'fandoogh-rest') : $symbol;
         }, 10, 2);
     }
 }

@@ -1,0 +1,142 @@
+name: CI
+
+on:
+  push:
+    branches: [main, 'feat/**', 'fix/**', 'chore/**', 'docs/**']
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: PHP ${{ matrix.php }} / build and unit tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.2', '8.3']
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: curl, gd, intl, mbstring, openssl, zip
+          tools: composer:v2
+          coverage: none
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12'
+      - name: Repository and dependency checks
+        run: |
+          python scripts/repository-audit.py
+          composer validate --strict
+          composer install --no-dev --prefer-dist --no-interaction --optimize-autoloader
+          composer check-platform-reqs --no-dev
+          composer audit --no-dev
+          npm --prefix frontend ci
+          npm --prefix frontend audit --omit=dev
+      - name: PHP syntax and behavior
+        run: |
+          find src templates scripts tests -name '*.php' -print0 | xargs -0 -n1 php -l
+          php -l fandoogh-rest.php
+          php -l admincafe.php
+          php -l uninstall.php
+          php tests/backend.php
+          php tests/commerce.php
+          php tests/translation.php
+          php tests/appearance.php
+          php tests/branding.php
+          php tests/branding.php legacy
+          php tests/branding.php conflict
+      - name: Frontend and language checks
+        run: |
+          npm --prefix frontend test
+          npm --prefix frontend run build
+          node scripts/stage.mjs
+          php scripts/icons.php
+          python languages/build_catalog.py
+          python languages/build_customer_catalog.py
+          python tests/localization.py
+          python tests/customer_localization.py
+          git diff --exit-code -- languages resources
+      - name: Reproducible distribution archives
+        run: |
+          php scripts/package.php
+          php scripts/source-package.php
+          php scripts/verify-package.php
+          cd dist
+          sha256sum *.zip > SHA256SUMS
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: matrix.php == '8.3'
+        with:
+          name: fandoogh-rest-${{ github.sha }}
+          path: dist/
+          if-no-files-found: error
+          retention-days: 30
+
+  integration:
+    name: WordPress / WooCommerce / MySQL HPOS
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      WP_VERSION: '7.1.3'
+      WOOCOMMERCE_VERSION: '11.2.0'
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: ci-only
+          MYSQL_ROOT_HOST: '%'
+          MYSQL_DATABASE: fandoogh_ci
+        ports: ['3306:3306']
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # v2
+        with:
+          php-version: '8.3'
+          extensions: curl, gd, intl, mbstring, mysqli, openssl, zip
+          tools: composer:v2, wp-cli
+          coverage: none
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12'
+      - name: Build installable plugin
+        run: |
+          composer install --no-dev --prefer-dist --no-interaction --optimize-autoloader
+          npm --prefix frontend ci
+          npm --prefix frontend run build
+          node scripts/stage.mjs
+          php scripts/icons.php
+          python languages/build_catalog.py
+          python languages/build_customer_catalog.py
+          php scripts/package.php
+      - name: Disposable real WordPress integration
+        run: bash scripts/ci-integration.sh

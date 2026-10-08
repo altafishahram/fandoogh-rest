@@ -1,5 +1,5 @@
 <?php
-namespace AdminCafe\Core;
+namespace FandooghRest\Core;
 
 defined('ABSPATH') || exit;
 
@@ -41,14 +41,14 @@ final class Routes
         }
         status_header(200);
         if ($route === 'qr') {
-            $table = \AdminCafe\Tables\Tables::findByToken((string) get_query_var('admincafe_token'));
+            $table = \FandooghRest\Tables\Tables::findByToken((string) get_query_var('admincafe_token'));
             if (!$table || empty($table['enabled'])) {
                 status_header(404);
-                wp_die(esc_html__('This table menu is unavailable.', 'admincafe'), '', ['response' => 404]);
+                wp_die(esc_html__('This table menu is unavailable.', 'fandoogh-rest'), '', ['response' => 404]);
             }
             nocache_headers();
             $arguments = ['table' => $table['token']];
-            if (\AdminCafe\Localization\Language::valid($_GET['lang'] ?? null)) { $arguments['lang'] = $_GET['lang']; }
+            if (\FandooghRest\Localization\Language::valid($_GET['lang'] ?? null)) { $arguments['lang'] = $_GET['lang']; }
             wp_safe_redirect(add_query_arg($arguments, Settings::menuUrl()), 302);
             exit;
         }
@@ -57,7 +57,7 @@ final class Routes
             header('Service-Worker-Allowed: ' . wp_parse_url(Settings::panelUrl(), PHP_URL_PATH));
             header('Cache-Control: no-cache');
             header('X-Content-Type-Options: nosniff');
-            $worker = ADMINCAFE_PATH . 'public/sw.js';
+            $worker = FANDOOGH_REST_PATH . 'public/sw.js';
             if (is_file($worker)) {
                 readfile($worker);
             }
@@ -67,13 +67,13 @@ final class Routes
             header('Content-Type: application/manifest+json; charset=utf-8');
             header('Cache-Control: no-cache');
             echo wp_json_encode([
-                'id' => Settings::panelUrl(), 'name' => Settings::get('restaurant_name') . ' — AdminCafe', 'short_name' => 'AdminCafe',
+                'id' => Settings::panelUrl(), 'name' => Settings::get('restaurant_name') . ' — ' . __('Fandoogh Rest', 'fandoogh-rest'), 'short_name' => __('Fandoogh Rest', 'fandoogh-rest'),
                 'description' => 'Restaurant operations panel', 'lang' => 'fa', 'dir' => 'rtl', 'display' => 'standalone',
                 'start_url' => Settings::panelUrl(), 'scope' => Settings::panelUrl(),
                 'theme_color' => Settings::get('accent'), 'background_color' => Settings::get('background'),
                 'icons' => [
-                    ['src' => ADMINCAFE_URL . 'assets/icon-192.png', 'sizes' => '192x192', 'type' => 'image/png', 'purpose' => 'any'],
-                    ['src' => ADMINCAFE_URL . 'assets/icon-512.png', 'sizes' => '512x512', 'type' => 'image/png', 'purpose' => 'any maskable'],
+                    ['src' => FANDOOGH_REST_URL . 'assets/icon-192.png', 'sizes' => '192x192', 'type' => 'image/png', 'purpose' => 'any'],
+                    ['src' => FANDOOGH_REST_URL . 'assets/icon-512.png', 'sizes' => '512x512', 'type' => 'image/png', 'purpose' => 'any maskable'],
                 ],
             ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
             exit;
@@ -83,14 +83,14 @@ final class Routes
         if ($route === 'panel') {
             $this->panelLogin();
             if (!Access::can('admincafe_manage_orders')) {
-                wp_die(esc_html__('You do not have access to this restaurant panel.', 'admincafe'), '', ['response' => 403]);
+                wp_die(esc_html__('You do not have access to this restaurant panel.', 'fandoogh-rest'), '', ['response' => 403]);
             }
             Assets::enqueue('panel');
         } else {
             Assets::enqueue('menu');
         }
         $panel = $route === 'panel';
-        require ADMINCAFE_PATH . 'templates/app.php';
+        require FANDOOGH_REST_PATH . 'templates/app.php';
         exit;
     }
 
@@ -117,7 +117,7 @@ final class Routes
                 }
             }
             if (!wp_verify_nonce($nonce, 'admincafe_login') || !Security::sameOrigin($request) || is_wp_error($limit)) {
-                $error = __('Please refresh the page or wait a few minutes before trying again.', 'admincafe');
+                $error = __('Please refresh the page or wait a few minutes before trying again.', 'fandoogh-rest');
             } else {
                 $user = wp_signon([
                     'user_login' => sanitize_text_field(wp_unslash($_POST['username'] ?? '')),
@@ -128,14 +128,14 @@ final class Routes
                     if (!is_wp_error($user)) {
                         wp_clear_auth_cookie();
                     }
-                    $error = __('Login was unsuccessful. Check your restaurant account credentials.', 'admincafe');
+                    $error = __('Login was unsuccessful. Check your restaurant account credentials.', 'fandoogh-rest');
                 } else {
                     wp_safe_redirect(Settings::panelUrl());
                     exit;
                 }
             }
         }
-        require ADMINCAFE_PATH . 'templates/login.php';
+        require FANDOOGH_REST_PATH . 'templates/login.php';
         exit;
     }
 }

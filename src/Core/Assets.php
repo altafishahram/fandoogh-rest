@@ -1,7 +1,7 @@
 <?php
-namespace AdminCafe\Core;
+namespace FandooghRest\Core;
 
-use AdminCafe\Localization\Language;
+use FandooghRest\Localization\Language;
 
 defined('ABSPATH') || exit;
 
@@ -20,8 +20,8 @@ final class Assets
 
     public static function enqueue(string $app = 'menu'): void
     {
-        wp_enqueue_style('admincafe', ADMINCAFE_URL . 'assets/admincafe.css', [], ADMINCAFE_VERSION);
-        wp_enqueue_script('admincafe-' . $app, ADMINCAFE_URL . 'assets/' . $app . '.js', [], ADMINCAFE_VERSION, true);
+        wp_enqueue_style('admincafe', FANDOOGH_REST_URL . 'assets/fandoogh-rest.css', [], FANDOOGH_REST_VERSION);
+        wp_enqueue_script('admincafe-' . $app, FANDOOGH_REST_URL . 'assets/' . $app . '.js', [], FANDOOGH_REST_VERSION, true);
     }
 
     public static function config(array $extra = [], string $app = 'menu'): array
@@ -31,12 +31,12 @@ final class Assets
             'apiBase' => esc_url_raw(rest_url('admincafe/v1/')),
             'nonce' => is_user_logged_in() ? wp_create_nonce('wp_rest') : '',
             'menuUrl' => Settings::menuUrl(), 'panelUrl' => Settings::panelUrl(),
-            'assetUrl' => ADMINCAFE_URL . 'assets/', 'locale' => Language::htmlLocale($language),
+            'assetUrl' => FANDOOGH_REST_URL . 'assets/', 'locale' => Language::htmlLocale($language),
             'language' => $language, 'direction' => Language::direction($language), 'languages' => Language::descriptors(),
             'defaultLanguage' => Settings::get('default_language', 'fa'), 'enabledLanguages' => Language::enabled(),
             'tableToken' => isset($_GET['table']) ? sanitize_text_field(wp_unslash($_GET['table'])) : '',
             'component' => 'menu', 'viewMode' => 'auto',
-            'appearance' => $app === 'menu' ? \AdminCafe\Appearance\Appearance::publicSettings(Settings::all()) : [],
+            'appearance' => $app === 'menu' ? \FandooghRest\Appearance\Appearance::publicSettings(Settings::all()) : [],
             'manifestUrl' => Settings::panelUrl() . 'manifest.webmanifest',
             'serviceWorkerUrl' => Settings::panelUrl() . 'sw.js',
             'strings' => $app === 'panel' ? Language::panelStrings() : Language::strings($language),

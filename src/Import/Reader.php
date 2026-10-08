@@ -1,5 +1,5 @@
 <?php
-namespace AdminCafe\Import;
+namespace FandooghRest\Import;
 
 defined('ABSPATH') || exit;
 
@@ -226,6 +226,6 @@ final class Reader
 
     private static function error(string $message): \WP_Error
     {
-        return new \WP_Error('admincafe_import_file', __($message, 'admincafe'), ['status' => 400]);
+        return new \WP_Error('admincafe_import_file', __($message, 'fandoogh-rest'), ['status' => 400]);
     }
 }

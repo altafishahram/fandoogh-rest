@@ -1,6 +1,6 @@
 <?php
 /** Standalone behavior tests: php tests/backend.php (no WordPress database needed). */
-namespace AdminCafe\Core {
+namespace FandooghRest\Core {
     final class Settings {
         public static array $values = [];
         public static function get($key, $default = null) { return self::$values[$key] ?? $default; }
@@ -91,11 +91,11 @@ namespace {
         $GLOBALS['checks']++;
         if (!$condition) { throw new RuntimeException($message); }
     }
-    use AdminCafe\Tables\Tables;
-    use AdminCafe\Core\Settings;
-    use AdminCafe\Menu\Catalog;
-    use AdminCafe\Rest\Management;
-    use AdminCafe\Reports\Reports;
+    use FandooghRest\Tables\Tables;
+    use FandooghRest\Core\Settings;
+    use FandooghRest\Menu\Catalog;
+    use FandooghRest\Rest\Management;
+    use FandooghRest\Reports\Reports;
     check(is_wp_error(Tables::save(['label' => ''])), 'Empty table label rejected');
     check(is_wp_error(Tables::save(['label' => 'A', 'mode' => 'invalid'])), 'Invalid mode rejected');
     $table = Tables::save(['label' => 'A', 'mode' => 'order']);
@@ -209,7 +209,7 @@ namespace {
     }];
     $report = Reports::summary(7);
     check($report['revenue'] === 80.0, 'Report subtracts refunded revenue');
-    check($report['order_count'] === 1 && $report['pending_count'] === 1, 'Report only counts AdminCafe orders');
+    check($report['order_count'] === 1 && $report['pending_count'] === 1, 'Report only counts Fandoogh Rest orders');
     check(count($report['daily']) === 7 && $report['currency_symbol'] === '$', 'Daily calendar and decoded currency');
     $orders = [new class {
         public function get_meta($key) { return $key === '_admincafe_channel' ? 'table' : 'cancelled'; }

@@ -1,5 +1,5 @@
 <?php
-namespace AdminCafe\Core;
+namespace FandooghRest\Core;
 
 defined('ABSPATH') || exit;
 
@@ -53,12 +53,12 @@ final class Security
     public static function publicPermission(\WP_REST_Request $request): bool|\WP_Error
     {
         if (!self::sameOrigin($request)) {
-            return new \WP_Error('admincafe_origin', __('Cross-site order requests are not allowed.', 'admincafe'), ['status' => 403]);
+            return new \WP_Error('admincafe_origin', __('Cross-site order requests are not allowed.', 'fandoogh-rest'), ['status' => 403]);
         }
         $expected = self::token();
         $supplied = (string) $request->get_header('x-admincafe-token');
         if (!$expected || !$supplied || !hash_equals($expected, $supplied)) {
-            return new \WP_Error('admincafe_csrf', __('Your session has expired. Reload the menu and try again.', 'admincafe'), ['status' => 403]);
+            return new \WP_Error('admincafe_csrf', __('Your session has expired. Reload the menu and try again.', 'fandoogh-rest'), ['status' => 403]);
         }
         return true;
     }
@@ -76,7 +76,7 @@ final class Security
             $until = time() + $seconds;
         }
         if ($count >= $limit) {
-            return new \WP_Error('admincafe_rate_limit', __('Too many requests. Please wait and try again.', 'admincafe'), ['status' => 429, 'retry_after' => max(1, $until - time())]);
+            return new \WP_Error('admincafe_rate_limit', __('Too many requests. Please wait and try again.', 'fandoogh-rest'), ['status' => 429, 'retry_after' => max(1, $until - time())]);
         }
         set_transient($key, ['count' => $count + 1, 'until' => $until], max(1, $until - time()));
         return true;

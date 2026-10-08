@@ -1,5 +1,5 @@
 <?php
-namespace AdminCafe\Core;
+namespace FandooghRest\Core;
 
 defined('ABSPATH') || exit;
 
@@ -10,10 +10,10 @@ final class Access
     public static function install(): void
     {
         $roles = [
-            'admincafe_manager' => ['name' => __('Restaurant manager', 'admincafe'), 'caps' => self::CAPS],
-            'admincafe_staff' => ['name' => __('Restaurant staff', 'admincafe'), 'caps' => ['admincafe_manage_orders', 'admincafe_manage_tables', 'admincafe_receive_notifications']],
-            'admincafe_kitchen' => ['name' => __('Kitchen', 'admincafe'), 'caps' => ['admincafe_manage_orders', 'admincafe_receive_notifications']],
-            'admincafe_cashier' => ['name' => __('Cashier', 'admincafe'), 'caps' => ['admincafe_manage_orders', 'admincafe_view_reports', 'admincafe_receive_notifications']],
+            'admincafe_manager' => ['name' => __('Restaurant manager', 'fandoogh-rest'), 'caps' => self::CAPS],
+            'admincafe_staff' => ['name' => __('Restaurant staff', 'fandoogh-rest'), 'caps' => ['admincafe_manage_orders', 'admincafe_manage_tables', 'admincafe_receive_notifications']],
+            'admincafe_kitchen' => ['name' => __('Kitchen', 'fandoogh-rest'), 'caps' => ['admincafe_manage_orders', 'admincafe_receive_notifications']],
+            'admincafe_cashier' => ['name' => __('Cashier', 'fandoogh-rest'), 'caps' => ['admincafe_manage_orders', 'admincafe_view_reports', 'admincafe_receive_notifications']],
         ];
         foreach ($roles as $key => $definition) {
             $role = get_role($key) ?: add_role($key, $definition['name'], ['read' => true]);

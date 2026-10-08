@@ -1,5 +1,5 @@
 <?php
-namespace AdminCafe\Translation;
+namespace FandooghRest\Translation;
 defined('ABSPATH') || exit;
 final class Queue
 {
@@ -72,7 +72,7 @@ final class Queue
     }
     public static function inScope(string $scope,int $id): bool
     {
-        $selected=(array)\AdminCafe\Core\Settings::get('menu_category_ids',[]);
+        $selected=(array)\FandooghRest\Core\Settings::get('menu_category_ids',[]);
         if ($scope==='category') {
             return !$selected||in_array($id,array_map('intval',$selected),true);
         }
@@ -350,11 +350,11 @@ final class Queue
             $row['name']=json_decode($row['payload'],true)['name']??'';
             unset($row['payload']);
             $row['message']=match($row['error']) {
-                'translation_budget'=>__('The daily translation character limit has been reached.', 'admincafe'),
-                'translation_credential'=>__('Check the translation API credential and Google project permissions.', 'admincafe'),
-                'translation_transient','timeout'=>__('Translation temporarily failed. Retry this item.', 'admincafe'),
-                'length','response','translation_response'=>__('The translation response did not meet the content limits.', 'admincafe'),
-                default=>__('Automatic translation could not be completed.', 'admincafe'),
+                'translation_budget'=>__('The daily translation character limit has been reached.', 'fandoogh-rest'),
+                'translation_credential'=>__('Check the translation API credential and Google project permissions.', 'fandoogh-rest'),
+                'translation_transient','timeout'=>__('Translation temporarily failed. Retry this item.', 'fandoogh-rest'),
+                'length','response','translation_response'=>__('The translation response did not meet the content limits.', 'fandoogh-rest'),
+                default=>__('Automatic translation could not be completed.', 'fandoogh-rest'),
             }
             ;
             $problems[]=$row;

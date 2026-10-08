@@ -1,5 +1,5 @@
 <?php
-namespace AdminCafe\Translation;
+namespace FandooghRest\Translation;
 defined('ABSPATH') || exit;
 final class Config
 {
@@ -24,8 +24,8 @@ final class Config
     }
     public static function credential(): string
     {
-        if (defined('ADMINCAFE_GOOGLE_TRANSLATE_API_KEY')) {
-            return (string)ADMINCAFE_GOOGLE_TRANSLATE_API_KEY;
+        if (defined('FANDOOGH_REST_GOOGLE_TRANSLATE_API_KEY')) {
+            return (string)FANDOOGH_REST_GOOGLE_TRANSLATE_API_KEY;
         }
         if (!function_exists('openssl_decrypt')) {
             return '';
@@ -60,10 +60,10 @@ final class Config
     {
         $c=self::raw();
         unset($c['secret']);
-        return $c+['configured'=>self::credential() !== '', 'provider'=>'google', 'credential_source'=>defined('ADMINCAFE_GOOGLE_TRANSLATE_API_KEY') ? 'constant' : (self::credential() !== '' ? 'stored':'none')];
+        return $c+['configured'=>self::credential() !== '', 'provider'=>'google', 'credential_source'=>defined('FANDOOGH_REST_GOOGLE_TRANSLATE_API_KEY') ? 'constant' : (self::credential() !== '' ? 'stored':'none')];
     }
     public static function targets(): array {
-        return array_values(array_intersect(self::raw()['target_languages'], (array)\AdminCafe\Core\Settings::get('enabled_languages', ['fa','en','zh','tr'])));
+        return array_values(array_intersect(self::raw()['target_languages'], (array)\FandooghRest\Core\Settings::get('enabled_languages', ['fa','en','zh','tr'])));
     }
     public static function update(array $input): array|\WP_Error
     {
@@ -89,7 +89,7 @@ final class Config
                 $c[$key]=$value;
             }
         }
-        if (defined('ADMINCAFE_GOOGLE_TRANSLATE_API_KEY') && (!empty($input['remove_key'])||!empty($input['api_key']))) {
+        if (defined('FANDOOGH_REST_GOOGLE_TRANSLATE_API_KEY') && (!empty($input['remove_key'])||!empty($input['api_key']))) {
             return self::invalid();
         }
         if (!empty($input['remove_key'])) {
@@ -107,10 +107,10 @@ final class Config
             }
             $c['secret']=base64_encode(wp_json_encode(['iv'=>base64_encode($iv),'tag'=>base64_encode($tag),'data'=>base64_encode($cipher)]));
         }
-        if ($c['enabled'] && !(defined('ADMINCAFE_GOOGLE_TRANSLATE_API_KEY') ? (string)ADMINCAFE_GOOGLE_TRANSLATE_API_KEY : (!empty($input['api_key'])?$input['api_key']:(!empty($input['remove_key'])?'':self::credential())))) {
+        if ($c['enabled'] && !(defined('FANDOOGH_REST_GOOGLE_TRANSLATE_API_KEY') ? (string)FANDOOGH_REST_GOOGLE_TRANSLATE_API_KEY : (!empty($input['api_key'])?$input['api_key']:(!empty($input['remove_key'])?'':self::credential())))) {
             return self::invalid();
         }
-        if ($c['enabled']&&!array_intersect($c['target_languages'],(array)\AdminCafe\Core\Settings::get('enabled_languages',['fa','en','zh','tr']))) {
+        if ($c['enabled']&&!array_intersect($c['target_languages'],(array)\FandooghRest\Core\Settings::get('enabled_languages',['fa','en','zh','tr']))) {
             return self::invalid();
         }
         if ($c!==$before) {
@@ -120,6 +120,6 @@ final class Config
         return self::read();
     }
     private static function invalid(): \WP_Error {
-        return new \WP_Error('admincafe_translation_config',__('Invalid translation settings.', 'admincafe'),['status'=>400]);
+        return new \WP_Error('admincafe_translation_config',__('Invalid translation settings.', 'fandoogh-rest'),['status'=>400]);
     }
 }

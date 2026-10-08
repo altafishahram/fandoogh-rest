@@ -3,7 +3,8 @@
 defined('WP_UNINSTALL_PLUGIN') || exit;
 
 // Explicit opt-in for plugin-specific data only. WooCommerce business records are never removed.
-if (!defined('ADMINCAFE_REMOVE_DATA') || ADMINCAFE_REMOVE_DATA !== true) {
+$removeData = defined('FANDOOGH_REST_REMOVE_DATA') ? FANDOOGH_REST_REMOVE_DATA : (defined('ADMINCAFE_REMOVE_DATA') ? ADMINCAFE_REMOVE_DATA : false);
+if ($removeData !== true) {
     return;
 }
 global $wpdb;

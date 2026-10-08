@@ -3,11 +3,11 @@
 $_SERVER['HTTP_HOST']='127.0.0.1:8093'; $_SERVER['REQUEST_URI']='/';
 if (!defined('ABSPATH')) { require $argv[1]??__DIR__.'/../.tools/site/wordpress/wp-load.php'; }
 if (get_option('admincafe_test_environment')!=='local-disposable') { throw new RuntimeException('Disposable environment required.'); }
-use AdminCafe\Translation\Config;
-use AdminCafe\Translation\Provider;
-use AdminCafe\Translation\Queue;
-use AdminCafe\Translation\Source;
-use AdminCafe\Core\Settings;
+use FandooghRest\Translation\Config;
+use FandooghRest\Translation\Provider;
+use FandooghRest\Translation\Queue;
+use FandooghRest\Translation\Source;
+use FandooghRest\Core\Settings;
 $passed=0;
 function ac_translation_check(bool $value,string $label): void { global $passed; if (!$value) { throw new RuntimeException('FAIL after '.$passed.': '.$label); } $passed++; }
 $block=static fn()=>new WP_Error('blocked','Test blocks all HTTP.'); add_filter('pre_http_request',$block,PHP_INT_MAX);

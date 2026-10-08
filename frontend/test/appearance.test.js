@@ -152,9 +152,10 @@ test("appearance preview debounces server validation, discards stale responses a
     "CompiledMenuCss",
     "setTimeout",
     "clearTimeout",
+    "document",
     "const {computed,inject,ref,watch,onUnmounted,shallowRef}=Vue;" +
       script +
-      "; return {safeCss,error,validating};",
+      "; return {safeCss,error,validating,prepareFrame};",
   );
   const state = setup(
     runtime,
@@ -166,7 +167,30 @@ test("appearance preview debounces server validation, discards stale responses a
       return 1;
     },
     () => {},
+    {
+      querySelectorAll(selector) {
+        if (selector === 'link[rel="stylesheet"]') {
+          return ["fandoogh-rest.css", "admincafe.css", "theme.css"].map(
+            (file) => ({
+              href: `https://cafe.test/assets/${file}`,
+              cloneNode: () => file,
+            }),
+          );
+        }
+        return [];
+      },
+    },
   );
+  const copiedStyles = [];
+  state.prepareFrame({
+    target: {
+      contentDocument: {
+        head: { appendChild: (sheet) => copiedStyles.push(sheet) },
+        getElementById: () => ({}),
+      },
+    },
+  });
+  assert.deepEqual(copiedStyles, ["fandoogh-rest.css", "admincafe.css"]);
   assert.equal(requests.length, 0);
   const first = scheduled();
   assert.equal(requests[0].path, "/manage/appearance/preview");
