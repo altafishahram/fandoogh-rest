@@ -1,0 +1,14 @@
+{
+  "name": "admincafe/admincafe",
+  "description": "WooCommerce restaurant operations and digital menus",
+  "type": "wordpress-plugin",
+  "license": "GPL-2.0-or-later",
+  "require": {
+    "php": ">=8.2",
+    "minishlink/web-push": "^11.0",
+    "guzzlehttp/guzzle": "^7.9",
+    "php-http/guzzle7-adapter": "^1.1"
+  },
+  "autoload": {"psr-4": {"AdminCafe\\": "src/"}},
+  "config": {"sort-packages": true, "allow-plugins": {"php-http/discovery": true}, "platform": {"php": "8.2.0"}}
+}

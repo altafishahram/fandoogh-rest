@@ -1,0 +1,50 @@
+{
+  "translation-revision-date": "2026-10-06 00:00+0000",
+  "generator": "AdminCafe",
+  "domain": "messages",
+  "locale_data": {
+    "messages": {
+      "": {
+        "domain": "messages",
+        "lang": "en_US",
+        "plural-forms": "nplurals=2; plural=(n != 1);"
+      },
+      "AdminCafe menu": [
+        "AdminCafe menu"
+      ],
+      "Restaurant menu": [
+        "Restaurant menu"
+      ],
+      "Component": [
+        "Component"
+      ],
+      "Complete menu": [
+        "Complete menu"
+      ],
+      "Category navigation": [
+        "Category navigation"
+      ],
+      "Product cards": [
+        "Product cards"
+      ],
+      "Order basket": [
+        "Order basket"
+      ],
+      "Category ID (0 for all)": [
+        "Category ID (0 for all)"
+      ],
+      "Ordering": [
+        "Ordering"
+      ],
+      "Follow restaurant settings": [
+        "Follow restaurant settings"
+      ],
+      "View menu only": [
+        "View menu only"
+      ],
+      "The live restaurant menu appears on the published page. Products and ordering follow restaurant settings.": [
+        "The live restaurant menu appears on the published page. Products and ordering follow restaurant settings."
+      ]
+    }
+  }
+}

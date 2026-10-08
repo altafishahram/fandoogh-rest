@@ -1,0 +1,415 @@
+# AdminCafe customer interface. The management panel stays Persian.
+msgid ""
+msgstr "Project-Id-Version: AdminCafe 1.2.0\nLanguage: zh_CN\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=1; plural=0;\n"
+
+#: resources/customer-server-strings.json
+msgid "A unique request ID is required."
+msgstr "请提供唯一的请求编号。"
+
+#: resources/customer-server-strings.json
+msgid "An item is unavailable."
+msgstr "其中一项暂时售罄。"
+
+#: resources/customer-server-strings.json
+msgid "An item list is required."
+msgstr "请提供订单商品列表。"
+
+#: resources/customer-server-strings.json
+msgid "Choose between 1 and 100 items."
+msgstr "请选择 1 至 100 项。"
+
+#: resources/customer-server-strings.json
+msgid "Choose pickup or delivery from the restaurant menu before checkout."
+msgstr "结账前请在餐厅菜单中选择自取或配送。"
+
+#: resources/customer-server-strings.json
+msgid "Cross-site order requests are not allowed."
+msgstr "不允许来自其他网站的订单请求。"
+
+#: resources/customer-server-strings.json
+msgid "Enable browser JavaScript to use the menu and panel."
+msgstr "请启用浏览器的 JavaScript 以使用菜单。"
+
+#: resources/customer-server-strings.json
+msgid "Invalid checkout channel."
+msgstr "配送方式无效。"
+
+#: resources/customer-server-strings.json
+msgid "Invalid item."
+msgstr "订单项无效。"
+
+#: resources/customer-server-strings.json
+msgid "Invalid product or quantity."
+msgstr "商品或数量无效。"
+
+#: resources/customer-server-strings.json
+msgid "Menu"
+msgstr "菜单"
+
+#: resources/customer-server-strings.json
+msgid "Order not found."
+msgstr "未找到订单。"
+
+#: resources/customer-server-strings.json
+msgid "Product not found."
+msgstr "未找到商品。"
+
+#: resources/customer-server-strings.json
+msgid "Request ID already used for different items."
+msgstr "此请求编号已用于其他订单内容。"
+
+#: resources/customer-server-strings.json
+msgid "Requested quantity is unavailable."
+msgstr "所选数量超过库存。"
+
+#: resources/customer-server-strings.json
+msgid "Table ordering is unavailable."
+msgstr "餐桌点单暂不可用。"
+
+#: resources/customer-server-strings.json
+msgid "Table unavailable."
+msgstr "此餐桌暂不可用。"
+
+#: resources/customer-server-strings.json
+msgid "This ordering channel is unavailable."
+msgstr "此点单方式暂不可用。"
+
+#: resources/customer-server-strings.json
+msgid "This request is being processed."
+msgstr "此请求正在处理中。"
+
+#: resources/customer-server-strings.json
+msgid "This request needs staff review before retrying. Please contact the restaurant."
+msgstr "重试前需要工作人员核查此请求。请联系餐厅。"
+
+#: resources/customer-server-strings.json
+msgid "This table menu is unavailable."
+msgstr "此餐桌的菜单暂不可用。"
+
+#: resources/customer-server-strings.json
+msgid "This table supports menu viewing only."
+msgstr "此餐桌仅支持查看菜单。"
+
+#: resources/customer-server-strings.json
+msgid "Toman"
+msgstr "托曼"
+
+#: resources/customer-server-strings.json
+msgid "Too many requests. Please wait and try again."
+msgstr "请求过于频繁。请稍后重试。"
+
+#: resources/customer-server-strings.json
+msgid "Unable to create the order. Please try again."
+msgstr "无法创建订单。请重试。"
+
+#: resources/customer-server-strings.json
+msgid "Unsupported customer language."
+msgstr "不支持所选语言。"
+
+#: resources/customer-server-strings.json
+msgid "Your session has expired. Reload the menu and try again."
+msgstr "会话已过期。请重新加载菜单后再试。"
+
+#: frontend/src/customer-i18n.js
+msgid "{count} انتخاب شما"
+msgstr "已选 {count} 件"
+
+#: frontend/src/customer-i18n.js
+msgid "آ"
+msgstr "咖"
+
+#: frontend/src/customer-i18n.js
+msgid "آماده تحویل"
+msgstr "可取餐"
+
+#: frontend/src/customer-i18n.js
+msgid "آماده‌سازی پس از تأیید کارکنان شروع می‌شود."
+msgstr "员工确认后开始制作。"
+
+#: frontend/src/customer-i18n.js
+msgid "ادامه و پرداخت"
+msgstr "继续结账"
+
+#: frontend/src/customer-i18n.js
+msgid "ارتباط با سرور ناموفق بود"
+msgstr "无法连接服务器"
+
+#: frontend/src/customer-i18n.js
+msgid "ارسال با پیک"
+msgstr "配送"
+
+#: frontend/src/customer-i18n.js
+msgid "ارسال برای تأیید"
+msgstr "提交确认"
+
+#: frontend/src/customer-i18n.js
+msgid "از عطر اولین قهوه تا شیرینی آخرین لقمه."
+msgstr "从第一缕咖啡香到最后一口甜蜜。"
+
+#: frontend/src/customer-i18n.js
+msgid "افزایش {name}"
+msgstr "增加 {name}"
+
+#: frontend/src/customer-i18n.js
+msgid "افزودن به انتخاب‌ها"
+msgstr "加入购物车"
+
+#: frontend/src/customer-i18n.js
+msgid "افزودن به سبد ووکامرس ناموفق بود"
+msgstr "无法更新商店购物车"
+
+#: frontend/src/customer-i18n.js
+msgid "انتخاب امروز شما چیست؟"
+msgstr "今天想选什么？"
+
+#: frontend/src/customer-i18n.js
+msgid "انتخاب نوع"
+msgstr "选择规格"
+
+#: frontend/src/customer-i18n.js
+msgid "انتخاب کنید"
+msgstr "请选择"
+
+#: frontend/src/customer-i18n.js
+msgid "انتخاب‌های شما"
+msgstr "您的选择"
+
+#: frontend/src/customer-i18n.js
+msgid "اینجا، برای لحظه‌های خوب شما."
+msgstr "为您的美好时光而来。"
+
+#: frontend/src/customer-i18n.js
+msgid "با آرامش انتخاب کنید، با عشق آماده می‌کنیم."
+msgstr "慢慢挑选，我们用心准备。"
+
+#: frontend/src/customer-i18n.js
+msgid "با عشق آماده می‌کنیم"
+msgstr "用心制作"
+
+#: frontend/src/customer-i18n.js
+msgid "بستن"
+msgstr "关闭"
+
+#: frontend/src/customer-i18n.js
+msgid "بستن خطا"
+msgstr "关闭错误提示"
+
+#: frontend/src/customer-i18n.js
+msgid "تأیید شد"
+msgstr "已确认"
+
+#: frontend/src/customer-i18n.js
+msgid "تحویل حضوری"
+msgstr "到店自取"
+
+#: frontend/src/customer-i18n.js
+msgid "تحویل شد"
+msgstr "已送达"
+
+#: frontend/src/customer-i18n.js
+msgid "توضیحات سفارش"
+msgstr "订单备注"
+
+#: frontend/src/customer-i18n.js
+msgid "جزئیات محصول"
+msgstr "商品详情"
+
+#: frontend/src/customer-i18n.js
+msgid "جستجو در منو…"
+msgstr "搜索菜单…"
+
+#: frontend/src/customer-i18n.js
+msgid "جستجوی محصولات"
+msgstr "搜索商品"
+
+#: frontend/src/customer-i18n.js
+msgid "جمع انتخاب‌ها"
+msgstr "商品小计"
+
+#: frontend/src/customer-i18n.js
+msgid "خوش آمدید"
+msgstr "欢迎光临"
+
+#: frontend/src/customer-i18n.js
+msgid "در حال آماده‌سازی"
+msgstr "制作中"
+
+#: frontend/src/customer-i18n.js
+msgid "در حال ثبت…"
+msgstr "正在提交…"
+
+#: frontend/src/customer-i18n.js
+msgid "در حال حاضر ناموجود"
+msgstr "当前暂无供应"
+
+#: frontend/src/customer-i18n.js
+msgid "دریافت سبد ووکامرس ناموفق بود"
+msgstr "无法加载商店购物车"
+
+#: frontend/src/customer-i18n.js
+msgid "دسته‌بندی منو"
+msgstr "菜单分类"
+
+#: frontend/src/customer-i18n.js
+msgid "زبان منو"
+msgstr "菜单语言"
+
+#: frontend/src/customer-i18n.js
+msgid "سبد سفارش"
+msgstr "订单购物车"
+
+#: frontend/src/customer-i18n.js
+msgid "سبد شما"
+msgstr "您的购物车"
+
+#: frontend/src/customer-i18n.js
+msgid "سبد شما خالی است."
+msgstr "您的购物车为空。"
+
+#: frontend/src/customer-i18n.js
+msgid "سرو در {table}"
+msgstr "送至 {table}"
+
+#: frontend/src/customer-i18n.js
+msgid "سفارش {number} ثبت شد"
+msgstr "订单 {number} 已收到"
+
+#: resources/customer-server-strings.json
+msgid "سفارش شما برای تأیید کارکنان ارسال شد"
+msgstr "您的订单已发送，等待工作人员确认"
+
+#: resources/customer-server-strings.json
+msgid "سفارش‌گیری موقتاً متوقف است"
+msgstr "暂时停止接受订单"
+
+#: resources/customer-server-strings.json
+msgid "طعم خوب، لحظه‌های بهتر"
+msgstr "美味与美好时光"
+
+#: frontend/src/customer-i18n.js
+msgid "طعم مورد علاقه‌تان را پیدا کنید"
+msgstr "找到您喜爱的口味"
+
+#: frontend/src/customer-i18n.js
+msgid "فضای کافه"
+msgstr "咖啡馆环境"
+
+#: resources/customer-server-strings.json
+msgid "فعلاً ناموجود"
+msgstr "暂时售罄"
+
+#: frontend/src/customer-i18n.js
+msgid "فونت سفارشی بارگذاری نشد؛ فونت پیش‌فرض فعال است."
+msgstr "自定义字体无法加载，已使用默认字体。"
+
+#: frontend/src/customer-i18n.js
+msgid "قهوه، گفتگو، لحظه‌های خوب"
+msgstr "咖啡、交流与美好时光"
+
+#: frontend/src/customer-i18n.js
+msgid "لطفاً یک گزینه انتخاب کنید"
+msgstr "请选择规格"
+
+#: frontend/src/customer-i18n.js
+msgid "لغو شد"
+msgstr "已取消"
+
+#: frontend/src/customer-i18n.js
+msgid "مثلاً بدون شکر…"
+msgstr "例如：不加糖…"
+
+#: frontend/src/customer-i18n.js
+msgid "محصولی با این انتخاب پیدا نشد."
+msgstr "没有符合选择的商品。"
+
+#: frontend/src/customer-i18n.js
+msgid "مشاهده {count} انتخاب"
+msgstr "查看 {count} 件商品"
+
+#: frontend/src/customer-i18n.js
+msgid "منتظر تأیید کارکنان"
+msgstr "等待员工确认"
+
+#: frontend/src/customer-i18n.js
+msgid "منوی تازه در حال آماده شدن است…"
+msgstr "正在准备菜单…"
+
+#: frontend/src/customer-i18n.js
+msgid "منوی کافه"
+msgstr "咖啡馆菜单"
+
+#: frontend/src/customer-i18n.js
+msgid "نام شما (اختیاری)"
+msgstr "您的姓名（选填）"
+
+#: frontend/src/customer-i18n.js
+msgid "ناموجود"
+msgstr "暂无供应"
+
+#: frontend/src/customer-i18n.js
+msgid "نوع سفارش"
+msgstr "订单类型"
+
+#: frontend/src/customer-i18n.js
+msgid "هزینه ارسال، مالیات و پرداخت در صفحه امن فروشگاه محاسبه می‌شود."
+msgstr "配送费、税费及付款将在安全结账页面计算。"
+
+#: frontend/src/customer-i18n.js
+msgid "هنوز چیزی انتخاب نکرده‌اید."
+msgstr "您尚未选择商品。"
+
+#: frontend/src/customer-i18n.js
+msgid "وضعیت: {stage}"
+msgstr "状态：{stage}"
+
+#: frontend/src/customer-i18n.js
+msgid "پاسخ سرور معتبر نیست"
+msgstr "服务器响应无效"
+
+#: frontend/src/customer-i18n.js
+msgid "پرداخت واقعی در پیش‌نمایش در دسترس نیست."
+msgstr "演示中无法进行真实付款。"
+
+#: frontend/src/customer-i18n.js
+msgid "پس از تأیید کارکنان، سفارش آماده می‌شود. پرداخت با صندوق."
+msgstr "员工确认后制作，请在收银台付款。"
+
+#: frontend/src/customer-i18n.js
+msgid "پنل مدیریت ←"
+msgstr "管理面板 →"
+
+#: frontend/src/customer-i18n.js
+msgid "پیش‌نمایش نمایشی • سفارش و پرداخت واقعی انجام نمی‌شود"
+msgstr "演示预览 • 不会产生真实订单或付款"
+
+#: frontend/src/customer-i18n.js
+msgid "کافه"
+msgstr "咖啡馆"
+
+#: frontend/src/customer-i18n.js
+msgid "کاهش {name}"
+msgstr "减少 {name}"
+
+#: frontend/src/customer-i18n.js
+msgid "کمی تا یک حال خوب"
+msgstr "美好时光即将到来"
+
+#: frontend/src/customer-i18n.js
+msgid "یک انتخاب خوش‌طعم"
+msgstr "美味之选"
+
+#: frontend/src/customer-i18n.js
+msgid "یک مکث کوچک، یک حال خوب"
+msgstr "小憩片刻，享受美好"
+
+#: frontend/src/customer-i18n.js
+msgid "◷ {count} دقیقه آماده‌سازی"
+msgstr "◷ 约 {count} 分钟准备"
+
+#: frontend/src/customer-i18n.js
+msgid "✦ دانه‌های تازه"
+msgstr "✦ 新鲜咖啡豆"
+
+#: frontend/src/customer-i18n.js
+msgid "✦ همه"
+msgstr "✦ 全部"

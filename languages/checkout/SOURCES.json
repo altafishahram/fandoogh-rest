@@ -1,0 +1,54 @@
+{
+    "downloaded": "2026-10-07",
+    "license": "GPL-2.0-or-later",
+    "packs": [
+        {
+            "component": "core",
+            "version": "7.1.2",
+            "locale": "fa_IR",
+            "source": "https://downloads.wordpress.org/translation/core/7.1.2/fa_IR.zip",
+            "sha256": "1687c63423f549e1b84cc1a60ff9bb26abe450640fdba0db3657e4718a87d513",
+            "files": 71
+        },
+        {
+            "component": "core",
+            "version": "7.1.2",
+            "locale": "zh_CN",
+            "source": "https://downloads.wordpress.org/translation/core/7.1.2/zh_CN.zip",
+            "sha256": "dfae6e5c279b05e80966babdb37be08f2f2c252a5548d78b3a543c22d498ec13",
+            "files": 71
+        },
+        {
+            "component": "core",
+            "version": "7.1.2",
+            "locale": "tr_TR",
+            "source": "https://downloads.wordpress.org/translation/core/7.1.2/tr_TR.zip",
+            "sha256": "3fd4ede2569c94e116a5205b9c2ece53516fb12d093d05be84a18c3174840fd4",
+            "files": 71
+        },
+        {
+            "component": "woocommerce",
+            "version": "11.1.2",
+            "locale": "fa_IR",
+            "source": "https://downloads.wordpress.org/translation/plugin/woocommerce/11.1.2/fa_IR.zip",
+            "sha256": "871546831d33b08f48fc241867aa382c4a0bca3f6085b6652671552228c772ba",
+            "files": 234
+        },
+        {
+            "component": "woocommerce",
+            "version": "11.1.2",
+            "locale": "zh_CN",
+            "source": "https://downloads.wordpress.org/translation/plugin/woocommerce/11.1.2/zh_CN.zip",
+            "sha256": "722b739b59de968f4ed5906930ab03473c5c8fb527e3a525d16af8c90f6dccea",
+            "files": 234
+        },
+        {
+            "component": "woocommerce",
+            "version": "11.1.2",
+            "locale": "tr_TR",
+            "source": "https://downloads.wordpress.org/translation/plugin/woocommerce/11.1.2/tr_TR.zip",
+            "sha256": "592b8446ab84fa352f2a5bfc04f3646358e0968059151572eb6f0bfda73fff3c",
+            "files": 234
+        }
+    ]
+}

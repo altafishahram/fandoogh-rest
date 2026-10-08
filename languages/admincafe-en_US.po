@@ -1,0 +1,1510 @@
+# AdminCafe translation catalog.
+msgid ""
+msgstr "Project-Id-Version: AdminCafe 1.3.0\nReport-Msgid-Bugs-To: \nPOT-Creation-Date: 2026-10-08 00:00+0000\nPO-Revision-Date: 2026-10-08 00:00+0000\nLast-Translator: AdminCafe\nLanguage-Team: English\nLanguage: en_US\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=(n != 1);\nX-Domain: admincafe\n"
+
+#: frontend/src/i18n.js:5 resources/ui-strings.php:5
+msgid "+ سفارش صندوق"
+msgstr "+ Counter order"
+
+#: src/Appearance/CssCompiler.php:179
+msgid "A CSS rule requires a declaration block."
+msgstr "A CSS rule requires a declaration block."
+
+#: src/Notifications/Notifications.php:223
+msgid "A browser subscription is required."
+msgstr "A browser subscription is required."
+
+#: src/Import/Reader.php:53
+msgid "A file can contain at most 2000 product rows."
+msgstr "A file can contain at most 2000 product rows."
+
+#: src/Commerce/Orders.php:97
+msgid "A unique request ID is required."
+msgstr "A unique request ID is required."
+
+#: src/Rest/Management.php:175
+msgid "A valid email is required."
+msgstr "A valid email is required."
+
+#: src/Menu/Catalog.php:166
+msgid "A variation ID is required."
+msgstr "A variation ID is required."
+
+#: src/Core/Plugin.php:32
+msgid "AdminCafe"
+msgstr "AdminCafe"
+
+#: templates/login.php:5
+msgid "AdminCafe / WORKSPACE"
+msgstr "AdminCafe / WORKSPACE"
+
+#: src/Commerce/Checkout.php:309
+msgid "AdminCafe checkout notification failed."
+msgstr "AdminCafe checkout notification failed."
+
+#: src/Commerce/Orders.php:351
+msgid "AdminCafe manager refund"
+msgstr "AdminCafe manager refund"
+
+#: resources/builder-block.js:21 resources/builder-block.js:6 src/Integrations/MenuWidget.php:9
+msgid "AdminCafe menu"
+msgstr "AdminCafe menu"
+
+#: src/Commerce/Orders.php:230
+msgid "AdminCafe order notification failed."
+msgstr "AdminCafe order notification failed."
+
+#: src/Commerce/Checkout.php:324
+msgid "AdminCafe payment notification failed."
+msgstr "AdminCafe payment notification failed."
+
+#: admincafe.php:48
+msgid "AdminCafe requires PHP 8.2+ and WooCommerce 9.0+. Please activate a compatible WooCommerce installation."
+msgstr "AdminCafe requires PHP 8.2+ and WooCommerce 9.0+. Please activate a compatible WooCommerce installation."
+
+#: src/Core/Installation.php:11
+msgid "AdminCafe requires WooCommerce and PHP 8.2 or newer."
+msgstr "AdminCafe requires WooCommerce and PHP 8.2 or newer."
+
+#: src/Commerce/Orders.php:369
+msgid "AdminCafe stage notification failed."
+msgstr "AdminCafe stage notification failed."
+
+#: src/Notifications/Notifications.php:141
+msgid "AdminCafe test notification"
+msgstr "AdminCafe test notification"
+
+#: src/Commerce/Orders.php:57
+msgid "An item is unavailable."
+msgstr "An item is unavailable."
+
+#: src/Commerce/Orders.php:93
+msgid "An item list is required."
+msgstr "An item list is required."
+
+#: src/Translation/GoogleProvider.php:64 src/Translation/Queue.php:357
+msgid "Automatic translation could not be completed."
+msgstr "Automatic translation could not be completed."
+
+#: src/Appearance/CssCompiler.php:51
+msgid "CSS escapes, HTML and control characters are not allowed."
+msgstr "CSS escapes, HTML and control characters are not allowed."
+
+#: src/Appearance/Appearance.php:57 src/Appearance/CssCompiler.php:41
+msgid "CSS exceeds the field limit."
+msgstr "CSS exceeds the field limit."
+
+#: src/Appearance/CssCompiler.php:101
+msgid "CSS is too complex."
+msgstr "CSS is too complex."
+
+#: src/Appearance/CssCompiler.php:134
+msgid "CSS is too deeply nested."
+msgstr "CSS is too deeply nested."
+
+#: src/Appearance/CssCompiler.php:287
+msgid "CSS property values cannot be empty."
+msgstr "CSS property values cannot be empty."
+
+#: src/Appearance/Appearance.php:76
+#, php-format
+msgid "CSS setting \"%1$s\": %2$s"
+msgstr "CSS setting \"%1$s\": %2$s"
+
+#: src/Core/Access.php:16 src/Rest/Management.php:90
+msgid "Cashier"
+msgstr "Cashier"
+
+#: src/Commerce/Orders.php:319
+msgid "Cashier permission is required."
+msgstr "Cashier permission is required."
+
+#: src/Rest/Ordering.php:221
+msgid "Cashier permission required."
+msgstr "Cashier permission required."
+
+#: src/Menu/Catalog.php:199
+msgid "Categories must be an array."
+msgstr "Categories must be an array."
+
+#: resources/builder-block.js:15 src/Integrations/MenuWidget.php:21
+msgid "Category ID (0 for all)"
+msgstr "Category ID (0 for all)"
+
+#: src/Rest/Management.php:122
+msgid "Category name is required."
+msgstr "Category name is required."
+
+#: resources/builder-block.js:12 src/Integrations/MenuWidget.php:19
+msgid "Category navigation"
+msgstr "Category navigation"
+
+#: src/Menu/Catalog.php:203 src/Rest/Management.php:120 src/Rest/Management.php:61
+msgid "Category not found."
+msgstr "Category not found."
+
+#: src/Translation/Queue.php:354
+msgid "Check the translation API credential and Google project permissions."
+msgstr "Check the translation API credential and Google project permissions."
+
+#: src/Menu/Catalog.php:176
+msgid "Choice price must be a non-negative number."
+msgstr "Choice price must be a non-negative number."
+
+#: src/Core/Settings.php:128
+msgid "Choose a supported WooCommerce currency."
+msgstr "Choose a supported WooCommerce currency."
+
+#: src/Appearance/Appearance.php:35
+msgid "Choose a supported menu theme."
+msgstr "Choose a supported menu theme."
+
+#: src/Core/Settings.php:85
+msgid "Choose a valid, unreserved page address."
+msgstr "Choose a valid, unreserved page address."
+
+#: src/Menu/Catalog.php:195 src/Rest/Management.php:125
+msgid "Choose an image attachment."
+msgstr "Choose an image attachment."
+
+#: src/Rest/Management.php:170
+msgid "Choose an operational AdminCafe role."
+msgstr "Choose an operational AdminCafe role."
+
+#: src/Commerce/Orders.php:32
+msgid "Choose between 1 and 100 items."
+msgstr "Choose between 1 and 100 items."
+
+#: src/Import/Importer.php:62
+msgid "Choose columns from the uploaded file."
+msgstr "Choose columns from the uploaded file."
+
+#: src/Commerce/Checkout.php:104
+msgid "Choose pickup or delivery from the restaurant menu before checkout."
+msgstr "Choose pickup or delivery from the restaurant menu before checkout."
+
+#: src/Appearance/Appearance.php:50
+msgid "Choose supported CSS editor fields."
+msgstr "Choose supported CSS editor fields."
+
+#: src/Core/Settings.php:75 src/Core/Settings.php:80
+msgid "Choose supported customer languages."
+msgstr "Choose supported customer languages."
+
+#: src/Notifications/Notifications.php:240 src/Notifications/Notifications.php:243 src/Notifications/Notifications.php:278
+msgid "Choose valid notification channels."
+msgstr "Choose valid notification channels."
+
+#: resources/builder-block.js:12 src/Integrations/MenuWidget.php:19
+msgid "Complete menu"
+msgstr "Complete menu"
+
+#: resources/builder-block.js:11 src/Integrations/MenuWidget.php:18
+msgid "Component"
+msgstr "Component"
+
+#: src/Menu/Catalog.php:134
+msgid "Create simple products here; configure variable products in WooCommerce."
+msgstr "Create simple products here; configure variable products in WooCommerce."
+
+#: src/Core/Security.php:56
+msgid "Cross-site order requests are not allowed."
+msgstr "Cross-site order requests are not allowed."
+
+#: src/Notifications/Notifications.php:282
+msgid "Device not found."
+msgstr "Device not found."
+
+#: src/Notifications/Notifications.php:287
+msgid "Device settings changed. Refresh and try again."
+msgstr "Device settings changed. Refresh and try again."
+
+#: templates/app.php:23
+msgid "Enable browser JavaScript to use the menu and panel."
+msgstr "Enable browser JavaScript to use the menu and panel."
+
+#: src/Notifications/Notifications.php:300
+msgid "Enable notifications on this device first."
+msgstr "Enable notifications on this device first."
+
+#: src/Import/Reader.php:114
+msgid "Enable the PHP ZIP extension to import XLSX files."
+msgstr "Enable the PHP ZIP extension to import XLSX files."
+
+#: src/Notifications/Notifications.php:36
+msgid "Enable the PHP openssl, curl and mbstring extensions for push notifications."
+msgstr "Enable the PHP openssl, curl and mbstring extensions for push notifications."
+
+#: src/Menu/Catalog.php:155 src/Menu/Catalog.php:170
+msgid "Every choice must belong to this product and appear once."
+msgstr "Every choice must belong to this product and appear once."
+
+#: src/Rest/Management.php:144
+msgid "Every product must belong to this category."
+msgstr "Every product must belong to this category."
+
+#: src/Appearance/CssCompiler.php:337
+msgid "External resources and executable CSS are not allowed."
+msgstr "External resources and executable CSS are not allowed."
+
+#: src/Import/Reader.php:16
+msgid "File must be smaller than 5 MB."
+msgstr "File must be smaller than 5 MB."
+
+#: resources/builder-block.js:17 src/Integrations/MenuWidget.php:24
+msgid "Follow restaurant settings"
+msgstr "Follow restaurant settings"
+
+#: src/Rest/Management.php:203
+msgid "Image must be smaller than 5 MB."
+msgstr "Image must be smaller than 5 MB."
+
+#: src/Appearance/CssCompiler.php:311
+msgid "Image-bearing or unknown properties cannot use CSS variables."
+msgstr "Image-bearing or unknown properties cannot use CSS variables."
+
+#: src/Appearance/CssCompiler.php:77
+msgid "Invalid CSS string."
+msgstr "Invalid CSS string."
+
+#: src/Import/Reader.php:175
+msgid "Invalid Excel cell reference."
+msgstr "Invalid Excel cell reference."
+
+#: src/Import/Reader.php:118
+msgid "Invalid XLSX file."
+msgstr "Invalid XLSX file."
+
+#: src/Notifications/Notifications.php:214
+msgid "Invalid browser push subscription."
+msgstr "Invalid browser push subscription."
+
+#: src/Rest/Management.php:118
+msgid "Invalid category field."
+msgstr "Invalid category field."
+
+#: src/Rest/Management.php:124
+msgid "Invalid category parent."
+msgstr "Invalid category parent."
+
+#: src/Rest/Ordering.php:193
+msgid "Invalid channel."
+msgstr "Invalid channel."
+
+#: src/Commerce/Checkout.php:49
+msgid "Invalid checkout channel."
+msgstr "Invalid checkout channel."
+
+#: src/Menu/Catalog.php:174
+msgid "Invalid choice field."
+msgstr "Invalid choice field."
+
+#: src/Core/Settings.php:190 src/Menu/Catalog.php:101 src/Menu/Catalog.php:151 src/Menu/Catalog.php:153 src/Menu/Catalog.php:94 src/Menu/Catalog.php:97
+msgid "Invalid content translations."
+msgstr "Invalid content translations."
+
+#: src/Import/Importer.php:51
+msgid "Invalid import request."
+msgstr "Invalid import request."
+
+#: src/Commerce/Orders.php:40
+msgid "Invalid item."
+msgstr "Invalid item."
+
+#: src/Commerce/Orders.php:325
+msgid "Invalid payment action."
+msgstr "Invalid payment action."
+
+#: src/Menu/Catalog.php:130
+#, php-format
+msgid "Invalid product field: %s"
+msgstr "Invalid product field: %s"
+
+#: src/Commerce/Orders.php:46
+msgid "Invalid product or quantity."
+msgstr "Invalid product or quantity."
+
+#: src/Menu/Catalog.php:192
+msgid "Invalid product status."
+msgstr "Invalid product status."
+
+#: src/Appearance/CssCompiler.php:292
+msgid "Invalid punctuation in CSS value."
+msgstr "Invalid punctuation in CSS value."
+
+#: src/Core/Settings.php:65 src/Core/Settings.php:68 src/Core/Settings.php:71
+msgid "Invalid setting value."
+msgstr "Invalid setting value."
+
+#: src/Rest/Management.php:167
+msgid "Invalid staff field."
+msgstr "Invalid staff field."
+
+#: src/Commerce/Orders.php:294
+msgid "Invalid stage transition."
+msgstr "Invalid stage transition."
+
+#: src/Rest/Ordering.php:181
+msgid "Invalid stage."
+msgstr "Invalid stage."
+
+#: src/Tables/Tables.php:35
+msgid "Invalid table field."
+msgstr "Invalid table field."
+
+#: src/Tables/Tables.php:42
+msgid "Invalid table mode."
+msgstr "Invalid table mode."
+
+#: src/Translation/Config.php:123 src/Translation/Module.php:83 src/Translation/Module.php:91
+msgid "Invalid translation settings."
+msgstr "Invalid translation settings."
+
+#: src/Import/Reader.php:155
+msgid "Invalid worksheet path."
+msgstr "Invalid worksheet path."
+
+#: src/Core/Access.php:15 src/Rest/Management.php:90
+msgid "Kitchen"
+msgstr "Kitchen"
+
+#: src/Core/Routes.php:131
+msgid "Login was unsuccessful. Check your restaurant account credentials."
+msgstr "Login was unsuccessful. Check your restaurant account credentials."
+
+#: templates/app.php:13
+msgid "Management panel"
+msgstr "Management panel"
+
+#: src/Commerce/Orders.php:322
+msgid "Manager permission is required."
+msgstr "Manager permission is required."
+
+#: src/Import/Importer.php:67
+msgid "Map the product name column."
+msgstr "Map the product name column."
+
+#: templates/app.php:13
+msgid "Menu"
+msgstr "Menu"
+
+#: templates/login.php:5
+msgid "Menu and order management"
+msgstr "Menu and order management"
+
+#: src/Core/Settings.php:146
+msgid "Menu and panel addresses must be different."
+msgstr "Menu and panel addresses must be different."
+
+#: src/Appearance/CssCompiler.php:141
+msgid "Nested CSS declarations are not allowed."
+msgstr "Nested CSS declarations are not allowed."
+
+#: src/Commerce/Orders.php:337
+msgid "No paid balance to refund."
+msgstr "No paid balance to refund."
+
+#: src/Notifications/Notifications.php:142
+msgid "Notifications are working on this device."
+msgstr "Notifications are working on this device."
+
+#: src/Commerce/Orders.php:332
+#, php-format
+msgid "Offline settlement recorded by user %d."
+msgstr "Offline settlement recorded by user %d."
+
+#: src/Appearance/CssCompiler.php:188
+msgid "Only @media and @supports rules are allowed."
+msgstr "Only @media and @supports rules are allowed."
+
+#: src/Import/Importer.php:31
+msgid "Only CSV and XLSX files are supported."
+msgstr "Only CSV and XLSX files are supported."
+
+#: src/Rest/Management.php:207
+msgid "Only valid JPEG, PNG, or WebP images are supported."
+msgstr "Only valid JPEG, PNG, or WebP images are supported."
+
+#: src/Core/Plugin.php:33
+msgid "Open restaurant panel"
+msgstr "Open restaurant panel"
+
+#: resources/builder-block.js:13 src/Integrations/MenuWidget.php:19
+msgid "Order basket"
+msgstr "Order basket"
+
+#: src/Rest/Ordering.php:153 src/Rest/Ordering.php:157 src/Rest/Ordering.php:172
+msgid "Order not found."
+msgstr "Order not found."
+
+#: src/Rest/Ordering.php:27
+msgid "Order permission required."
+msgstr "Order permission required."
+
+#: resources/builder-block.js:16 src/Integrations/MenuWidget.php:23
+msgid "Ordering"
+msgstr "Ordering"
+
+#: templates/login.php:10
+msgid "Password"
+msgstr "Password"
+
+#: src/Rest/Management.php:184
+msgid "Password must contain at least 12 characters."
+msgstr "Password must contain at least 12 characters."
+
+#: src/Commerce/Orders.php:312
+msgid "Payment must be confirmed before accepting this online order."
+msgstr "Payment must be confirmed before accepting this online order."
+
+#: src/Core/Routes.php:120
+msgid "Please refresh the page or wait a few minutes before trying again."
+msgstr "Please refresh the page or wait a few minutes before trying again."
+
+#: src/Import/Reader.php:222
+msgid "Price must be a non-negative number, blank, or unavailable."
+msgstr "Price must be a non-negative number, blank, or unavailable."
+
+#: src/Menu/Catalog.php:188
+msgid "Price must be a non-negative number."
+msgstr "Price must be a non-negative number."
+
+#: resources/builder-block.js:13 src/Integrations/MenuWidget.php:19
+msgid "Product cards"
+msgstr "Product cards"
+
+#: src/Import/Reader.php:48
+msgid "Product cell data exceeds the 2 MB safety limit."
+msgstr "Product cell data exceeds the 2 MB safety limit."
+
+#: src/Import/Importer.php:136 src/Menu/Catalog.php:184
+msgid "Product name is required."
+msgstr "Product name is required."
+
+#: src/Menu/Catalog.php:138 src/Menu/Catalog.php:51 src/Rest/Management.php:49
+msgid "Product not found."
+msgstr "Product not found."
+
+#: src/Notifications/Notifications.php:162
+msgid "Push delivery failed. Check outbound network access and PHP extensions."
+msgstr "Push delivery failed. Check outbound network access and PHP extensions."
+
+#: src/Rest/Management.php:100
+msgid "Push is not configured."
+msgstr "Push is not configured."
+
+#: src/Notifications/Notifications.php:32
+msgid "Push notifications require HTTPS."
+msgstr "Push notifications require HTTPS."
+
+#: frontend/src/i18n.js:6 resources/ui-strings.php:6
+msgid "QR منوی عمومی / PNG"
+msgstr "Public menu QR / PNG"
+
+#: frontend/src/i18n.js:7 resources/ui-strings.php:7
+msgid "QR منوی عمومی / SVG"
+msgstr "Public menu QR / SVG"
+
+#: src/Commerce/Orders.php:344
+msgid "Refund through the gateway dashboard first; automatic refunds are unavailable."
+msgstr "Refund through the gateway dashboard first; automatic refunds are unavailable."
+
+#: templates/login.php:11
+msgid "Remember me"
+msgstr "Remember me"
+
+#: src/Notifications/Notifications.php:236
+msgid "Remove an old device before adding another."
+msgstr "Remove an old device before adding another."
+
+#: src/Commerce/Orders.php:110
+msgid "Request ID already used for different items."
+msgstr "Request ID already used for different items."
+
+#: src/Commerce/Orders.php:62
+msgid "Requested quantity is unavailable."
+msgstr "Requested quantity is unavailable."
+
+#: templates/login.php:12
+msgid "Reset password"
+msgstr "Reset password"
+
+#: src/Core/Access.php:13 src/Rest/Management.php:90
+msgid "Restaurant manager"
+msgstr "Restaurant manager"
+
+#: resources/builder-block.js:10 src/Integrations/MenuWidget.php:16
+msgid "Restaurant menu"
+msgstr "Restaurant menu"
+
+#: src/Core/Plugin.php:33
+msgid "Restaurant operations are available in your dedicated panel."
+msgstr "Restaurant operations are available in your dedicated panel."
+
+#: src/Core/Access.php:14 src/Rest/Management.php:90
+msgid "Restaurant staff"
+msgstr "Restaurant staff"
+
+#: src/Appearance/CssCompiler.php:245
+msgid "Root selectors cannot target sibling elements."
+msgstr "Root selectors cannot target sibling elements."
+
+#: src/Import/Reader.php:69
+msgid "Save the CSV file with UTF-8 encoding."
+msgstr "Save the CSV file with UTF-8 encoding."
+
+#: src/Core/Settings.php:110
+msgid "Select a published WordPress page."
+msgstr "Select a published WordPress page."
+
+#: src/Core/Settings.php:105
+msgid "Select an image from the media library."
+msgstr "Select an image from the media library."
+
+#: src/Rest/Management.php:29
+msgid "Send a JSON object."
+msgstr "Send a JSON object."
+
+#: src/Appearance/Module.php:37
+msgid "Send an appearance settings object."
+msgstr "Send an appearance settings object."
+
+#: src/Rest/Management.php:19
+msgid "Sign in again to continue."
+msgstr "Sign in again to continue."
+
+#: templates/login.php:11
+msgid "Sign in to panel"
+msgstr "Sign in to panel"
+
+#: templates/login.php:3
+msgid "Sign in | AdminCafe"
+msgstr "Sign in | AdminCafe"
+
+#: src/Rest/Management.php:140
+msgid "Supply a category and product IDs."
+msgstr "Supply a category and product IDs."
+
+#: src/Menu/Catalog.php:163
+msgid "Supply existing choices of this variable product."
+msgstr "Supply existing choices of this variable product."
+
+#: src/Notifications/Notifications.php:193
+msgid "Supply up to 100 notification IDs."
+msgstr "Supply up to 100 notification IDs."
+
+#: src/Tables/Tables.php:45
+msgid "Table label must contain 1–100 characters."
+msgstr "Table label must contain 1–100 characters."
+
+#: src/Tables/Tables.php:40 src/Tables/Tables.php:59
+msgid "Table not found."
+msgstr "Table not found."
+
+#: src/Commerce/Orders.php:82
+msgid "Table ordering is unavailable."
+msgstr "Table ordering is unavailable."
+
+#: src/Tables/Tables.php:27
+msgid "Table unavailable."
+msgstr "Table unavailable."
+
+#: src/Import/Reader.php:106
+msgid "The Excel workbook contains invalid XML."
+msgstr "The Excel workbook contains invalid XML."
+
+#: src/Notifications/Notifications.php:34
+msgid "The Web Push dependency is missing. Install the packaged release."
+msgstr "The Web Push dependency is missing. Install the packaged release."
+
+#: src/Notifications/Notifications.php:153
+msgid "The browser push service could not deliver the notification."
+msgstr "The browser push service could not deliver the notification."
+
+#: src/Appearance/Appearance.php:67
+msgid "The combined CSS exceeds 30000 bytes."
+msgstr "The combined CSS exceeds 30000 bytes."
+
+#: src/Appearance/Appearance.php:41
+msgid "The custom CSS switch must be a boolean."
+msgstr "The custom CSS switch must be a boolean."
+
+#: src/Translation/Queue.php:353
+msgid "The daily translation character limit has been reached."
+msgstr "The daily translation character limit has been reached."
+
+#: src/Import/Importer.php:195
+msgid "The database could not start a safe import transaction."
+msgstr "The database could not start a safe import transaction."
+
+#: src/Core/Settings.php:143
+msgid "The default language must be enabled."
+msgstr "The default language must be enabled."
+
+#: src/Import/Reader.php:129
+msgid "The expanded workbook is too large."
+msgstr "The expanded workbook is too large."
+
+#: src/Import/Reader.php:88
+msgid "The file exceeds the row or column limit."
+msgstr "The file exceeds the row or column limit."
+
+#: src/Import/Reader.php:21
+msgid "The file is empty."
+msgstr "The file is empty."
+
+#: src/Import/Reader.php:25
+msgid "The file must contain at most 40 columns."
+msgstr "The file must contain at most 40 columns."
+
+#: src/Import/Reader.php:163
+msgid "The first worksheet could not be read."
+msgstr "The first worksheet could not be read."
+
+#: resources/builder-block.js:22
+msgid "The live restaurant menu appears on the published page. Products and ordering follow restaurant settings."
+msgstr "The live restaurant menu appears on the published page. Products and ordering follow restaurant settings."
+
+#: src/Import/Importer.php:71
+msgid "The mapping cannot change after importing starts."
+msgstr "The mapping cannot change after importing starts."
+
+#: src/Import/Importer.php:56 src/Import/Importer.php:86
+msgid "The preview has expired. Upload the file again."
+msgstr "The preview has expired. Upload the file again."
+
+#: src/Import/Importer.php:206
+msgid "The product could not be imported safely."
+msgstr "The product could not be imported safely."
+
+#: src/Notifications/Notifications.php:46
+msgid "The server could not generate push credentials."
+msgstr "The server could not generate push credentials."
+
+#: src/Translation/Queue.php:356
+msgid "The translation response did not meet the content limits."
+msgstr "The translation response did not meet the content limits."
+
+#: src/Import/Reader.php:123
+msgid "The workbook contains too many files."
+msgstr "The workbook contains too many files."
+
+#: src/Import/Reader.php:168
+msgid "The workbook exceeds 2000 product rows."
+msgstr "The workbook exceeds 2000 product rows."
+
+#: src/Import/Reader.php:182
+msgid "The workbook exceeds 40 columns."
+msgstr "The workbook exceeds 40 columns."
+
+#: src/Import/Reader.php:147
+msgid "The workbook has no sheets."
+msgstr "The workbook has no sheets."
+
+#: src/Import/Reader.php:143
+msgid "The workbook is missing its sheet definitions."
+msgstr "The workbook is missing its sheet definitions."
+
+#: src/Appearance/CssCompiler.php:282
+msgid "This CSS property is not allowed."
+msgstr "This CSS property is not allowed."
+
+#: src/Import/Importer.php:146
+msgid "This SKU already exists."
+msgstr "This SKU already exists."
+
+#: src/Rest/Management.php:168
+msgid "This account cannot be changed from the panel."
+msgstr "This account cannot be changed from the panel."
+
+#: src/Rest/Management.php:193
+msgid "This account cannot be removed from the panel."
+msgstr "This account cannot be removed from the panel."
+
+#: src/Core/Settings.php:89
+msgid "This address is already used by a WordPress page."
+msgstr "This address is already used by a WordPress page."
+
+#: src/Import/Importer.php:80 src/Import/Importer.php:96
+msgid "This import is already processing."
+msgstr "This import is already processing."
+
+#: src/Commerce/Orders.php:329
+msgid "This order cannot be settled."
+msgstr "This order cannot be settled."
+
+#: src/Rest/Ordering.php:244
+msgid "This order is being updated. Retry shortly."
+msgstr "This order is being updated. Retry shortly."
+
+#: src/Commerce/Checkout.php:78
+msgid "This ordering channel is unavailable."
+msgstr "This ordering channel is unavailable."
+
+#: src/Commerce/Orders.php:150 src/Commerce/Orders.php:163
+msgid "This request is being processed."
+msgstr "This request is being processed."
+
+#: src/Commerce/Orders.php:146
+msgid "This request needs staff review before retrying. Please contact the restaurant."
+msgstr "This request needs staff review before retrying. Please contact the restaurant."
+
+#: src/Core/Routes.php:47
+msgid "This table menu is unavailable."
+msgstr "This table menu is unavailable."
+
+#: src/Commerce/Orders.php:89
+msgid "This table supports menu viewing only."
+msgstr "This table supports menu viewing only."
+
+#: src/Integrations/MenuWidget.php:25
+msgid "This widget cannot enable an ordering channel disabled by the manager."
+msgstr "This widget cannot enable an ordering channel disabled by the manager."
+
+#: src/Core/Currency.php:12 src/Core/Currency.php:16
+msgid "Toman"
+msgstr "Toman"
+
+#: src/Appearance/CssCompiler.php:315
+msgid "Too many CSS declarations."
+msgstr "Too many CSS declarations."
+
+#: src/Appearance/CssCompiler.php:175
+msgid "Too many CSS rules."
+msgstr "Too many CSS rules."
+
+#: src/Appearance/CssCompiler.php:156
+msgid "Too many nested responsive rules."
+msgstr "Too many nested responsive rules."
+
+#: src/Core/Security.php:79
+msgid "Too many requests. Please wait and try again."
+msgstr "Too many requests. Please wait and try again."
+
+#: src/Translation/Module.php:73
+msgid "Translation management is not permitted."
+msgstr "Translation management is not permitted."
+
+#: src/Translation/Queue.php:355
+msgid "Translation temporarily failed. Retry this item."
+msgstr "Translation temporarily failed. Retry this item."
+
+#: src/Commerce/Orders.php:224
+msgid "Unable to create the order. Please try again."
+msgstr "Unable to create the order. Please try again."
+
+#: src/Appearance/CssCompiler.php:138 src/Appearance/CssCompiler.php:148
+msgid "Unbalanced CSS parentheses."
+msgstr "Unbalanced CSS parentheses."
+
+#: src/Appearance/CssCompiler.php:163
+msgid "Unclosed CSS block."
+msgstr "Unclosed CSS block."
+
+#: src/Appearance/CssCompiler.php:63
+msgid "Unclosed CSS comment."
+msgstr "Unclosed CSS comment."
+
+#: src/Appearance/CssCompiler.php:196
+msgid "Unclosed CSS declaration block."
+msgstr "Unclosed CSS declaration block."
+
+#: src/Appearance/CssCompiler.php:82
+msgid "Unclosed CSS string."
+msgstr "Unclosed CSS string."
+
+#: src/Appearance/CssCompiler.php:169
+msgid "Unexpected CSS closing brace."
+msgstr "Unexpected CSS closing brace."
+
+#: src/Appearance/CssCompiler.php:70
+msgid "Unexpected CSS comment terminator."
+msgstr "Unexpected CSS comment terminator."
+
+#: src/Import/Reader.php:99
+msgid "Unsafe or oversized Excel XML."
+msgstr "Unsafe or oversized Excel XML."
+
+#: src/Appearance/CssCompiler.php:341
+msgid "Unsupported CSS function."
+msgstr "Unsupported CSS function."
+
+#: src/Appearance/CssCompiler.php:223
+msgid "Unsupported CSS selector."
+msgstr "Unsupported CSS selector."
+
+#: src/Appearance/CssCompiler.php:330
+msgid "Unsupported CSS value."
+msgstr "Unsupported CSS value."
+
+#: src/Commerce/Checkout.php:41
+msgid "Unsupported customer language."
+msgstr "Unsupported customer language."
+
+#: src/Menu/Catalog.php:141
+msgid "Unsupported product type."
+msgstr "Unsupported product type."
+
+#: src/Import/Importer.php:27
+msgid "Upload a CSV or XLSX file."
+msgstr "Upload a CSV or XLSX file."
+
+#: src/Rest/Management.php:202
+msgid "Upload a valid image."
+msgstr "Upload a valid image."
+
+#: src/Appearance/CssCompiler.php:279
+msgid "Use CSS property: value declarations."
+msgstr "Use CSS property: value declarations."
+
+#: src/Import/Reader.php:65
+msgid "Use a UTF-8 CSV file."
+msgstr "Use a UTF-8 CSV file."
+
+#: src/Core/Settings.php:135
+msgid "Use a font file hosted on this site."
+msgstr "Use a font file hosted on this site."
+
+#: src/Core/Settings.php:94
+msgid "Use a valid hexadecimal color."
+msgstr "Use a valid hexadecimal color."
+
+#: src/Appearance/CssCompiler.php:236
+msgid "Use selectors relative to menu elements."
+msgstr "Use selectors relative to menu elements."
+
+#: src/Rest/Management.php:180
+msgid "Username and email are required."
+msgstr "Username and email are required."
+
+#: templates/login.php:9
+msgid "Username or email"
+msgstr "Username or email"
+
+#: templates/login.php:12
+msgid "View menu"
+msgstr "View menu"
+
+#: resources/builder-block.js:17 src/Integrations/MenuWidget.php:24
+msgid "View menu only"
+msgstr "View menu only"
+
+#: templates/login.php:5
+msgid "Welcome to your restaurant panel"
+msgstr "Welcome to your restaurant panel"
+
+#: src/Rest/Management.php:39
+msgid "You do not have access to the panel."
+msgstr "You do not have access to the panel."
+
+#: src/Core/Routes.php:86
+msgid "You do not have access to this restaurant panel."
+msgstr "You do not have access to this restaurant panel."
+
+#: src/Rest/Management.php:21
+msgid "You do not have permission."
+msgstr "You do not have permission."
+
+#: src/Core/Security.php:61
+msgid "Your session has expired. Reload the menu and try again."
+msgstr "Your session has expired. Reload the menu and try again."
+
+#: frontend/src/i18n.js:8 resources/ui-strings.php:8
+msgid "آ"
+msgstr "A"
+
+#: frontend/src/i18n.js:9 resources/ui-strings.php:9
+msgid "آدرس"
+msgstr "Address"
+
+#: frontend/src/i18n.js:10 resources/ui-strings.php:10
+msgid "آدرس فونت سفارشی"
+msgstr "Custom font URL"
+
+#: frontend/src/i18n.js:11 resources/ui-strings.php:11
+msgid "آماده شد"
+msgstr "Ready"
+
+#: frontend/src/i18n.js:12 resources/ui-strings.php:12
+msgid "آماده‌سازی (دقیقه)"
+msgstr "Preparation time (minutes)"
+
+#: frontend/src/i18n.js:13 resources/ui-strings.php:13
+msgid "آماده‌سازی پس از تأیید کارکنان شروع می‌شود."
+msgstr "Preparation starts after staff approval."
+
+#: frontend/src/i18n.js:14 resources/ui-strings.php:14
+msgid "آیکون"
+msgstr "Icon"
+
+#: frontend/src/i18n.js:15 resources/ui-strings.php:15
+msgid "ادمین کافه"
+msgstr "AdminCafe"
+
+#: frontend/src/i18n.js:16 resources/ui-strings.php:16
+msgid "ارث‌بری از تنظیمات"
+msgstr "Inherit settings"
+
+#: frontend/src/i18n.js:17 resources/ui-strings.php:17
+msgid "ارسال آزمایشی"
+msgstr "Send test"
+
+#: frontend/src/i18n.js:18 resources/ui-strings.php:18
+msgid "ارسال با پیک"
+msgstr "Delivery"
+
+#: frontend/src/i18n.js:19 resources/ui-strings.php:19
+msgid "از عطر اولین قهوه تا شیرینی آخرین لقمه."
+msgstr "From the aroma of your first coffee to the sweetness of your last bite."
+
+#: frontend/src/i18n.js:20 resources/ui-strings.php:20
+msgid "اسلاگ مدیریت"
+msgstr "Panel slug"
+
+#: frontend/src/i18n.js:21 resources/ui-strings.php:21
+msgid "اسلاگ منو"
+msgstr "Menu slug"
+
+#: frontend/src/i18n.js:22 resources/ui-strings.php:22
+msgid "اسپرسو، شیر و وانیل طبیعی"
+msgstr "Espresso, milk, and natural vanilla"
+
+#: frontend/src/i18n.js:23 resources/ui-strings.php:23
+msgid "اعلان تازه‌ای ندارید."
+msgstr "You have no new notifications."
+
+#: frontend/src/i18n.js:24 resources/ui-strings.php:24
+msgid "اعمال واردسازی"
+msgstr "Apply import"
+
+#: frontend/src/i18n.js:25 resources/ui-strings.php:25
+msgid "افزودن به انتخاب‌ها"
+msgstr "Add to selection"
+
+#: frontend/src/i18n.js:26 resources/ui-strings.php:26
+msgid "افزودن محصول"
+msgstr "Add product"
+
+#: frontend/src/i18n.js:27 resources/ui-strings.php:27
+msgid "انتخاب امروز شما چیست؟"
+msgstr "What will you choose today?"
+
+#: frontend/src/i18n.js:28 resources/ui-strings.php:28
+msgid "انتخاب ستون"
+msgstr "Select column"
+
+#: frontend/src/i18n.js:29 resources/ui-strings.php:29
+msgid "انتخاب محصول"
+msgstr "Select product"
+
+#: frontend/src/i18n.js:30 resources/ui-strings.php:30
+msgid "انتخاب نوع"
+msgstr "Select variation"
+
+#: frontend/src/i18n.js:31 resources/ui-strings.php:31
+msgid "انتخاب کنید"
+msgstr "Select"
+
+#: frontend/src/i18n.js:32 resources/ui-strings.php:32
+msgid "انتخاب گزینه"
+msgstr "Select option"
+
+#: frontend/src/i18n.js:33 resources/ui-strings.php:33
+msgid "انتخاب‌های شما"
+msgstr "Your selections"
+
+#: frontend/src/i18n.js:34 resources/ui-strings.php:34
+msgid "اندازه QR"
+msgstr "QR size"
+
+#: frontend/src/i18n.js:35 resources/ui-strings.php:35
+msgid "ایجاد و به‌روزرسانی با SKU"
+msgstr "Create and update by SKU"
+
+#: frontend/src/i18n.js:36 resources/ui-strings.php:36
+msgid "ایمیل"
+msgstr "Email"
+
+#: frontend/src/i18n.js:37 resources/ui-strings.php:37
+msgid "با عشق آماده می‌کنیم"
+msgstr "Prepared with love"
+
+#: frontend/src/i18n.js:38 resources/ui-strings.php:38
+msgid "باز کردن لینک میز ↗"
+msgstr "Open table link ↗"
+
+#: frontend/src/i18n.js:39 resources/ui-strings.php:39
+msgid "بازپرداخت"
+msgstr "Refund"
+
+#: frontend/src/i18n.js:40 resources/ui-strings.php:40
+msgid "بدون والد"
+msgstr "No parent"
+
+#: frontend/src/i18n.js:41 resources/ui-strings.php:42
+msgid "برای تغییر ترتیب این دسته، کارت‌ها را بکشید. روی موبایل از دکمه‌های\n      جابه‌جایی استفاده کنید."
+msgstr "Drag the cards to reorder this category. On mobile, use the\n      move buttons."
+
+#: frontend/src/i18n.js:42 resources/ui-strings.php:44
+msgid "برچسب نمایش (اختیاری)"
+msgstr "Display label (optional)"
+
+#: frontend/src/i18n.js:43 resources/ui-strings.php:45
+msgid "تأیید سفارش"
+msgstr "Accept order"
+
+#: frontend/src/i18n.js:44 resources/ui-strings.php:46
+msgid "تحویل حضوری"
+msgstr "Pickup"
+
+#: frontend/src/i18n.js:45 resources/ui-strings.php:47
+msgid "تحویل شد"
+msgstr "Delivered"
+
+#: frontend/src/i18n.js:46 resources/ui-strings.php:48
+msgid "تصویر"
+msgstr "Image"
+
+#: frontend/src/i18n.js:47 resources/ui-strings.php:49
+msgid "تعداد سفارش"
+msgstr "Order count"
+
+#: frontend/src/i18n.js:48 resources/ui-strings.php:50
+msgid "تغییر واحد پول، مبلغ قیمت‌های موجود را تبدیل نمی‌کند. پیش از ذخیره، قیمت‌ها را بررسی کنید."
+msgstr "Changing the currency does not convert existing price amounts. Review prices before saving."
+
+#: frontend/src/i18n.js:49 resources/ui-strings.php:51
+msgid "تلفن"
+msgstr "Phone"
+
+#: frontend/src/i18n.js:50 resources/ui-strings.php:52
+msgid "تلفن مشتری"
+msgstr "Customer phone"
+
+#: frontend/src/i18n.js:51 resources/ui-strings.php:53
+msgid "توضیحات"
+msgstr "Description"
+
+#: frontend/src/i18n.js:52 resources/ui-strings.php:54
+msgid "توضیحات سفارش"
+msgstr "Order notes"
+
+#: frontend/src/i18n.js:53 resources/ui-strings.php:55
+msgid "ثبت تسویه"
+msgstr "Record settlement"
+
+#: frontend/src/i18n.js:54 resources/ui-strings.php:56
+msgid "جزئیات"
+msgstr "Details"
+
+#: frontend/src/i18n.js:55 resources/ui-strings.php:57
+msgid "جمع انتخاب‌ها"
+msgstr "Selection total"
+
+#: frontend/src/i18n.js:56 resources/ui-strings.php:58
+msgid "حالت"
+msgstr "Mode"
+
+#: frontend/src/i18n.js:57 resources/ui-strings.php:59
+msgid "حالت پیش‌فرض میز"
+msgstr "Default table mode"
+
+#: frontend/src/i18n.js:58 resources/ui-strings.php:60
+msgid "حذف"
+msgstr "Delete"
+
+#: frontend/src/i18n.js:59 resources/ui-strings.php:61
+msgid "خروج از مدیریت"
+msgstr "Sign out"
+
+#: frontend/src/i18n.js:60 resources/ui-strings.php:62
+msgid "در حال ارتباط با کافه…"
+msgstr "Connecting to the cafe…"
+
+#: frontend/src/i18n.js:61 resources/ui-strings.php:63
+msgid "درآمد پرداخت‌شده"
+msgstr "Paid revenue"
+
+#: frontend/src/i18n.js:62 resources/ui-strings.php:64
+msgid "دسته والد"
+msgstr "Parent category"
+
+#: frontend/src/i18n.js:63 resources/ui-strings.php:65
+msgid "دسته‌بندی‌ها"
+msgstr "Categories"
+
+#: frontend/src/i18n.js:64 resources/ui-strings.php:66
+msgid "دستگاه‌های متصل"
+msgstr "Connected devices"
+
+#: frontend/src/i18n.js:65 resources/ui-strings.php:67
+msgid "ذخیره تنظیمات"
+msgstr "Save settings"
+
+#: frontend/src/i18n.js:66 resources/ui-strings.php:68
+msgid "رنگ QR"
+msgstr "QR color"
+
+#: frontend/src/i18n.js:67 resources/ui-strings.php:69
+msgid "روش واردسازی"
+msgstr "Import mode"
+
+#: frontend/src/i18n.js:68 resources/ui-strings.php:70
+msgid "ساعات کاری"
+msgstr "Opening hours"
+
+#: frontend/src/i18n.js:69 resources/ui-strings.php:71
+msgid "سبد شما"
+msgstr "Your cart"
+
+#: frontend/src/i18n.js:70 resources/ui-strings.php:72
+msgid "سبد شما خالی است."
+msgstr "Your cart is empty."
+
+#: frontend/src/i18n.js:71 resources/ui-strings.php:73
+msgid "سفارشی در این وضعیت وجود ندارد."
+msgstr "No orders have this status."
+
+#: frontend/src/i18n.js:72 resources/ui-strings.php:74
+msgid "سفارش‌های ادمین کافه"
+msgstr "AdminCafe orders"
+
+#: frontend/src/i18n.js:73 resources/ui-strings.php:75
+msgid "سفارش‌های تازه"
+msgstr "New orders"
+
+#: frontend/src/i18n.js:74 resources/ui-strings.php:76
+msgid "سفارش‌گیری"
+msgstr "Ordering"
+
+#: frontend/src/i18n.js:75 resources/ui-strings.php:77
+msgid "شروع آماده‌سازی"
+msgstr "Start preparation"
+
+#: frontend/src/i18n.js:76 resources/ui-strings.php:78
+msgid "شعار"
+msgstr "Tagline"
+
+#: frontend/src/i18n.js:77 resources/ui-strings.php:79
+msgid "صفحه بعد"
+msgstr "Next page"
+
+#: frontend/src/i18n.js:78 resources/ui-strings.php:80
+msgid "صفحه قبل"
+msgstr "Previous page"
+
+#: frontend/src/i18n.js:79 resources/ui-strings.php:81
+msgid "صفحه مستقل ادمین کافه"
+msgstr "Standalone AdminCafe page"
+
+#: frontend/src/i18n.js:80 resources/ui-strings.php:82
+msgid "صفحه مقصد منو"
+msgstr "Menu destination page"
+
+#: frontend/src/i18n.js:81 resources/ui-strings.php:83
+msgid "طعم مورد علاقه‌تان را پیدا کنید"
+msgstr "Find your favorite flavor"
+
+#: frontend/src/i18n.js:82 resources/ui-strings.php:84
+msgid "ظاهر منو"
+msgstr "Menu appearance"
+
+#: frontend/src/i18n.js:83 resources/ui-strings.php:85
+msgid "علامت‌گذاری خوانده‌شده"
+msgstr "Mark as read"
+
+#: frontend/src/i18n.js:84 resources/ui-strings.php:86
+msgid "فایل CSV یا XLSX را انتخاب کنید، ستون‌ها را تطبیق دهید و سپس اعمال کنید."
+msgstr "Select a CSV or XLSX file, map its columns, then apply the import."
+
+#: frontend/src/i18n.js:85 resources/ui-strings.php:87
+msgid "فروش روزانه"
+msgstr "Daily sales"
+
+#: frontend/src/i18n.js:86 resources/ui-strings.php:88
+msgid "فعال‌سازی روی این دستگاه"
+msgstr "Enable on this device"
+
+#: frontend/src/i18n.js:87 resources/ui-strings.php:89
+msgid "فقط ایجاد محصولات جدید"
+msgstr "Create new products only"
+
+#: frontend/src/i18n.js:88 resources/ui-strings.php:90
+msgid "فقط منو"
+msgstr "Menu only"
+
+#: frontend/src/i18n.js:89 resources/ui-strings.php:91
+msgid "فقط نمایش منو"
+msgstr "View menu only"
+
+#: frontend/src/i18n.js:90 resources/ui-strings.php:92
+msgid "فهرست"
+msgstr "List"
+
+#: frontend/src/i18n.js:91 resources/ui-strings.php:93
+msgid "فونت"
+msgstr "Font"
+
+#: frontend/src/i18n.js:92 resources/ui-strings.php:94
+msgid "قطع اتصال"
+msgstr "Disconnect"
+
+#: frontend/src/i18n.js:93 resources/ui-strings.php:95
+msgid "قهوه، گفتگو، لحظه‌های خوب"
+msgstr "Coffee, conversation, good moments"
+
+#: frontend/src/i18n.js:94 resources/ui-strings.php:96
+msgid "قیمت"
+msgstr "Price"
+
+#: frontend/src/i18n.js:95 resources/ui-strings.php:97
+msgid "قیمت اصلی"
+msgstr "Regular price"
+
+#: frontend/src/i18n.js:96 resources/ui-strings.php:98
+msgid "قیمت حراج"
+msgstr "Sale price"
+
+#: frontend/src/i18n.js:97 resources/ui-strings.php:99
+msgid "لاته وانیل"
+msgstr "Vanilla latte"
+
+#: frontend/src/i18n.js:98 resources/ui-strings.php:100
+msgid "لغو"
+msgstr "Cancel"
+
+#: frontend/src/i18n.js:99 resources/ui-strings.php:101
+msgid "لوگو"
+msgstr "Logo"
+
+#: frontend/src/i18n.js:100 resources/ui-strings.php:102
+msgid "محبوب‌ترین انتخاب‌ها"
+msgstr "Most popular selections"
+
+#: frontend/src/i18n.js:101 resources/ui-strings.php:103
+msgid "محصولی با این انتخاب پیدا نشد."
+msgstr "No products match this selection."
+
+#: frontend/src/i18n.js:102 resources/ui-strings.php:104
+msgid "محیط نمایشی • اطلاعات نمونه است"
+msgstr "Demo • Sample data"
+
+#: frontend/src/i18n.js:103 resources/ui-strings.php:105
+msgid "مدیریت با طعم آرامش"
+msgstr "Manage with peace of mind"
+
+#: frontend/src/i18n.js:104 resources/ui-strings.php:106
+msgid "مشاهده منوی کافه ↗"
+msgstr "View cafe menu ↗"
+
+#: frontend/src/i18n.js:105 resources/ui-strings.php:107
+msgid "مشاهده همه ←"
+msgstr "View all ←"
+
+#: frontend/src/i18n.js:106 resources/ui-strings.php:108
+msgid "منتظر رسیدگی"
+msgstr "Awaiting attention"
+
+#: frontend/src/i18n.js:107 resources/ui-strings.php:109
+msgid "منو و سفارش"
+msgstr "Menu and ordering"
+
+#: frontend/src/i18n.js:108 resources/ui-strings.php:110
+msgid "منوی تازه در حال آماده شدن است…"
+msgstr "A fresh menu is on its way…"
+
+#: frontend/src/i18n.js:109 resources/ui-strings.php:111
+msgid "منوی شما، در چند دقیقه"
+msgstr "Your menu, in minutes"
+
+#: frontend/src/i18n.js:110 resources/ui-strings.php:112
+msgid "منوی مشتری ←"
+msgstr "Customer menu ←"
+
+#: frontend/src/i18n.js:111 resources/ui-strings.php:113
+msgid "منوی کافه"
+msgstr "Cafe menu"
+
+#: frontend/src/i18n.js:112 resources/ui-strings.php:114
+msgid "موجود"
+msgstr "Available"
+
+#: frontend/src/i18n.js:113 resources/ui-strings.php:115
+msgid "میز فعال"
+msgstr "Table enabled"
+
+#: frontend/src/i18n.js:114 resources/ui-strings.php:116
+msgid "نام"
+msgstr "Name"
+
+#: frontend/src/i18n.js:115 resources/ui-strings.php:117
+msgid "نام شما (اختیاری)"
+msgstr "Your name (optional)"
+
+#: frontend/src/i18n.js:116 resources/ui-strings.php:118
+msgid "نام مشتری"
+msgstr "Customer name"
+
+#: frontend/src/i18n.js:117 resources/ui-strings.php:119
+msgid "نام میز"
+msgstr "Table name"
+
+#: frontend/src/i18n.js:118 resources/ui-strings.php:120
+msgid "نام نمایشی"
+msgstr "Display name"
+
+#: frontend/src/i18n.js:119 resources/ui-strings.php:121
+msgid "نام کاربری"
+msgstr "Username"
+
+#: frontend/src/i18n.js:120 resources/ui-strings.php:122
+msgid "نام کافه"
+msgstr "Cafe name"
+
+#: frontend/src/i18n.js:121 resources/ui-strings.php:123
+msgid "ناموجود"
+msgstr "Unavailable"
+
+#: frontend/src/i18n.js:122 resources/ui-strings.php:124
+msgid "نشانی تحویل"
+msgstr "Delivery address"
+
+#: frontend/src/i18n.js:123 resources/ui-strings.php:125
+msgid "نقش"
+msgstr "Role"
+
+#: frontend/src/i18n.js:124 resources/ui-strings.php:126
+msgid "نمایش در منو"
+msgstr "Show in menu"
+
+#: frontend/src/i18n.js:125 resources/ui-strings.php:127
+msgid "نوع سفارش"
+msgstr "Order type"
+
+#: frontend/src/i18n.js:126 resources/ui-strings.php:128
+msgid "هر سفارش، یک مهمان"
+msgstr "Every order, a guest"
+
+#: frontend/src/i18n.js:127 resources/ui-strings.php:129
+msgid "همه دسته‌ها"
+msgstr "All categories"
+
+#: frontend/src/i18n.js:128 resources/ui-strings.php:130
+msgid "همه وضعیت‌ها"
+msgstr "All statuses"
+
+#: frontend/src/i18n.js:129 resources/ui-strings.php:131
+msgid "همیشه در جریان باشید"
+msgstr "Stay informed"
+
+#: frontend/src/i18n.js:130 resources/ui-strings.php:132
+msgid "هنوز داده‌ای ثبت نشده است."
+msgstr "No data has been recorded yet."
+
+#: frontend/src/i18n.js:131 resources/ui-strings.php:133
+msgid "هنوز موردی ثبت نشده است. با دکمه افزودن، اولین مورد را بسازید."
+msgstr "Nothing has been added yet. Use the add button to create the first item."
+
+#: frontend/src/i18n.js:132 resources/ui-strings.php:134
+msgid "هنوز چیزی انتخاب نکرده‌اید."
+msgstr "You have not selected anything yet."
+
+#: frontend/src/i18n.js:133 resources/ui-strings.php:135
+msgid "هویت و مسیرهای کافه"
+msgstr "Cafe identity and URLs"
+
+#: frontend/src/i18n.js:134 resources/ui-strings.php:136
+msgid "واحد پول"
+msgstr "Currency"
+
+#: frontend/src/i18n.js:135 resources/ui-strings.php:137
+msgid "واحد پول فروشگاه"
+msgstr "Store currency"
+
+#: frontend/src/i18n.js:136 resources/ui-strings.php:138
+msgid "واردسازی محصولات"
+msgstr "Import products"
+
+#: frontend/src/i18n.js:137 resources/ui-strings.php:139
+msgid "ویرایش"
+msgstr "Edit"
+
+#: frontend/src/i18n.js:138 resources/ui-strings.php:140
+msgid "پس از کسر بازپرداخت‌ها"
+msgstr "After deducting refunds"
+
+#: frontend/src/i18n.js:139 resources/ui-strings.php:141
+msgid "پنل مدیریت ←"
+msgstr "Management panel ←"
+
+#: frontend/src/i18n.js:140 resources/ui-strings.php:142
+msgid "پیام‌های مشتری"
+msgstr "Customer messages"
+
+#: frontend/src/i18n.js:141 resources/ui-strings.php:143
+msgid "پیش‌نمایش زنده"
+msgstr "Live preview"
+
+#: frontend/src/i18n.js:142 resources/ui-strings.php:144
+msgid "پیش‌نمایش نمایشی • سفارش و پرداخت واقعی انجام نمی‌شود"
+msgstr "Demo preview • No real orders or payments are processed"
+
+#: frontend/src/i18n.js:143 resources/ui-strings.php:145
+msgid "چیدمان"
+msgstr "Layout"
+
+#: frontend/src/i18n.js:144 resources/ui-strings.php:146
+msgid "کارت"
+msgstr "Card"
+
+#: frontend/src/i18n.js:145 resources/ui-strings.php:147
+msgid "کاور"
+msgstr "Cover"
+
+#: frontend/src/i18n.js:146 resources/ui-strings.php:148
+msgid "کمی تا یک حال خوب"
+msgstr "A little closer to feeling good"
+
+#: frontend/src/i18n.js:147 resources/ui-strings.php:149
+msgid "گذرواژه"
+msgstr "Password"
+
+#: frontend/src/i18n.js:148 resources/ui-strings.php:150
+msgid "گزینه‌های محصول"
+msgstr "Product variations"
+
+#: frontend/src/i18n.js:149 resources/ui-strings.php:151
+msgid "یادداشت"
+msgstr "Note"
+
+#: frontend/src/i18n.js:150 resources/ui-strings.php:152
+msgid "یک انتخاب خوش‌طعم"
+msgstr "A delicious choice"
+
+#: frontend/src/i18n.js:151 resources/ui-strings.php:153
+msgid "۳۰ روز اخیر"
+msgstr "Last 30 days"
+
+#: frontend/src/i18n.js:152 resources/ui-strings.php:154
+msgid "۷ روز اخیر"
+msgstr "Last 7 days"
+
+#: frontend/src/i18n.js:153 resources/ui-strings.php:155
+msgid "۹۰ روز اخیر"
+msgstr "Last 90 days"
+
+#: frontend/src/i18n.js:154 resources/ui-strings.php:156
+msgid "↥ انتخاب فایل"
+msgstr "↥ Select file"
+
+#: frontend/src/i18n.js:155 resources/ui-strings.php:157
+msgid "☕ قهوه گرم"
+msgstr "☕ Hot coffee"
+
+#: frontend/src/i18n.js:156 resources/ui-strings.php:158
+msgid "✦ دانه‌های تازه"
+msgstr "✦ Fresh beans"
+
+#: frontend/src/i18n.js:157 resources/ui-strings.php:159
+msgid "✦ همه"
+msgstr "✦ All"

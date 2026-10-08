@@ -1,0 +1,50 @@
+{
+  "translation-revision-date": "2026-10-06 00:00+0000",
+  "generator": "AdminCafe",
+  "domain": "messages",
+  "locale_data": {
+    "messages": {
+      "": {
+        "domain": "messages",
+        "lang": "fa_IR",
+        "plural-forms": "nplurals=2; plural=(n > 1);"
+      },
+      "AdminCafe menu": [
+        "منوی ادمین‌کافه"
+      ],
+      "Restaurant menu": [
+        "منوی رستوران"
+      ],
+      "Component": [
+        "بخش"
+      ],
+      "Complete menu": [
+        "منوی کامل"
+      ],
+      "Category navigation": [
+        "ناوبری دسته‌بندی‌ها"
+      ],
+      "Product cards": [
+        "کارت‌های محصولات"
+      ],
+      "Order basket": [
+        "سبد سفارش"
+      ],
+      "Category ID (0 for all)": [
+        "شناسه دسته‌بندی (۰ برای همه)"
+      ],
+      "Ordering": [
+        "سفارش‌گیری"
+      ],
+      "Follow restaurant settings": [
+        "پیروی از تنظیمات رستوران"
+      ],
+      "View menu only": [
+        "فقط نمایش منو"
+      ],
+      "The live restaurant menu appears on the published page. Products and ordering follow restaurant settings.": [
+        "منوی زنده رستوران در صفحه منتشر شده نمایش داده می‌شود. محصولات و سفارش‌گیری از تنظیمات رستوران پیروی می‌کنند."
+      ]
+    }
+  }
+}

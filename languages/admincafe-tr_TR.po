@@ -1,0 +1,415 @@
+# AdminCafe customer interface. The management panel stays Persian.
+msgid ""
+msgstr "Project-Id-Version: AdminCafe 1.2.0\nLanguage: tr_TR\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: resources/customer-server-strings.json
+msgid "A unique request ID is required."
+msgstr "Benzersiz bir istek kimliği gerekli."
+
+#: resources/customer-server-strings.json
+msgid "An item is unavailable."
+msgstr "Ürünlerden biri şu anda mevcut değil."
+
+#: resources/customer-server-strings.json
+msgid "An item list is required."
+msgstr "Sipariş ürün listesi gerekli."
+
+#: resources/customer-server-strings.json
+msgid "Choose between 1 and 100 items."
+msgstr "1 ile 100 arasında ürün seçin."
+
+#: resources/customer-server-strings.json
+msgid "Choose pickup or delivery from the restaurant menu before checkout."
+msgstr "Ödemeden önce restoran menüsünden gel-al veya teslimat seçin."
+
+#: resources/customer-server-strings.json
+msgid "Cross-site order requests are not allowed."
+msgstr "Başka bir siteden sipariş isteğine izin verilmiyor."
+
+#: resources/customer-server-strings.json
+msgid "Enable browser JavaScript to use the menu and panel."
+msgstr "Menüyü kullanmak için tarayıcınızda JavaScript'i etkinleştirin."
+
+#: resources/customer-server-strings.json
+msgid "Invalid checkout channel."
+msgstr "Sipariş teslim şekli geçersiz."
+
+#: resources/customer-server-strings.json
+msgid "Invalid item."
+msgstr "Geçersiz sipariş kalemi."
+
+#: resources/customer-server-strings.json
+msgid "Invalid product or quantity."
+msgstr "Ürün veya miktar geçersiz."
+
+#: resources/customer-server-strings.json
+msgid "Menu"
+msgstr "Menü"
+
+#: resources/customer-server-strings.json
+msgid "Order not found."
+msgstr "Sipariş bulunamadı."
+
+#: resources/customer-server-strings.json
+msgid "Product not found."
+msgstr "Ürün bulunamadı."
+
+#: resources/customer-server-strings.json
+msgid "Request ID already used for different items."
+msgstr "Bu istek kimliği farklı bir sipariş için kullanılmış."
+
+#: resources/customer-server-strings.json
+msgid "Requested quantity is unavailable."
+msgstr "İstenen miktar stokta yok."
+
+#: resources/customer-server-strings.json
+msgid "Table ordering is unavailable."
+msgstr "Masadan sipariş verme şu anda kullanılamıyor."
+
+#: resources/customer-server-strings.json
+msgid "Table unavailable."
+msgstr "Bu masa şu anda kullanılamıyor."
+
+#: resources/customer-server-strings.json
+msgid "This ordering channel is unavailable."
+msgstr "Bu sipariş yöntemi şu anda kullanılamıyor."
+
+#: resources/customer-server-strings.json
+msgid "This request is being processed."
+msgstr "Bu istek işleniyor."
+
+#: resources/customer-server-strings.json
+msgid "This request needs staff review before retrying. Please contact the restaurant."
+msgstr "Tekrar denemeden önce bu istek personel tarafından incelenmeli. Lütfen restoranla iletişime geçin."
+
+#: resources/customer-server-strings.json
+msgid "This table menu is unavailable."
+msgstr "Bu masanın menüsü şu anda kullanılamıyor."
+
+#: resources/customer-server-strings.json
+msgid "This table supports menu viewing only."
+msgstr "Bu masada yalnızca menü görüntülenebilir."
+
+#: resources/customer-server-strings.json
+msgid "Toman"
+msgstr "Toman"
+
+#: resources/customer-server-strings.json
+msgid "Too many requests. Please wait and try again."
+msgstr "Çok fazla istek gönderildi. Lütfen bekleyip tekrar deneyin."
+
+#: resources/customer-server-strings.json
+msgid "Unable to create the order. Please try again."
+msgstr "Sipariş oluşturulamadı. Lütfen tekrar deneyin."
+
+#: resources/customer-server-strings.json
+msgid "Unsupported customer language."
+msgstr "Seçilen dil desteklenmiyor."
+
+#: resources/customer-server-strings.json
+msgid "Your session has expired. Reload the menu and try again."
+msgstr "Oturumunuzun süresi doldu. Menüyü yenileyip tekrar deneyin."
+
+#: frontend/src/customer-i18n.js
+msgid "{count} انتخاب شما"
+msgstr "Seçtiğiniz {count} ürün"
+
+#: frontend/src/customer-i18n.js
+msgid "آ"
+msgstr "A"
+
+#: frontend/src/customer-i18n.js
+msgid "آماده تحویل"
+msgstr "Hazır"
+
+#: frontend/src/customer-i18n.js
+msgid "آماده‌سازی پس از تأیید کارکنان شروع می‌شود."
+msgstr "Hazırlık personel onayından sonra başlar."
+
+#: frontend/src/customer-i18n.js
+msgid "ادامه و پرداخت"
+msgstr "Ödemeye devam et"
+
+#: frontend/src/customer-i18n.js
+msgid "ارتباط با سرور ناموفق بود"
+msgstr "Sunucuya bağlanılamadı"
+
+#: frontend/src/customer-i18n.js
+msgid "ارسال با پیک"
+msgstr "Teslimat"
+
+#: frontend/src/customer-i18n.js
+msgid "ارسال برای تأیید"
+msgstr "Onaya gönder"
+
+#: frontend/src/customer-i18n.js
+msgid "از عطر اولین قهوه تا شیرینی آخرین لقمه."
+msgstr "İlk kahvenin kokusundan son tatlı lokmaya."
+
+#: frontend/src/customer-i18n.js
+msgid "افزایش {name}"
+msgstr "{name} artır"
+
+#: frontend/src/customer-i18n.js
+msgid "افزودن به انتخاب‌ها"
+msgstr "Sepete ekle"
+
+#: frontend/src/customer-i18n.js
+msgid "افزودن به سبد ووکامرس ناموفق بود"
+msgstr "Mağaza sepeti güncellenemedi"
+
+#: frontend/src/customer-i18n.js
+msgid "انتخاب امروز شما چیست؟"
+msgstr "Bugün ne seçersiniz?"
+
+#: frontend/src/customer-i18n.js
+msgid "انتخاب نوع"
+msgstr "Seçenek seçin"
+
+#: frontend/src/customer-i18n.js
+msgid "انتخاب کنید"
+msgstr "Lütfen seçin"
+
+#: frontend/src/customer-i18n.js
+msgid "انتخاب‌های شما"
+msgstr "Seçimleriniz"
+
+#: frontend/src/customer-i18n.js
+msgid "اینجا، برای لحظه‌های خوب شما."
+msgstr "Güzel anlarınız için buradayız."
+
+#: frontend/src/customer-i18n.js
+msgid "با آرامش انتخاب کنید، با عشق آماده می‌کنیم."
+msgstr "Rahatça seçin, özenle hazırlayalım."
+
+#: frontend/src/customer-i18n.js
+msgid "با عشق آماده می‌کنیم"
+msgstr "Özenle hazırlıyoruz"
+
+#: frontend/src/customer-i18n.js
+msgid "بستن"
+msgstr "Kapat"
+
+#: frontend/src/customer-i18n.js
+msgid "بستن خطا"
+msgstr "Hatayı kapat"
+
+#: frontend/src/customer-i18n.js
+msgid "تأیید شد"
+msgstr "Onaylandı"
+
+#: frontend/src/customer-i18n.js
+msgid "تحویل حضوری"
+msgstr "Gel-al"
+
+#: frontend/src/customer-i18n.js
+msgid "تحویل شد"
+msgstr "Teslim edildi"
+
+#: frontend/src/customer-i18n.js
+msgid "توضیحات سفارش"
+msgstr "Sipariş notu"
+
+#: frontend/src/customer-i18n.js
+msgid "جزئیات محصول"
+msgstr "Ürün ayrıntıları"
+
+#: frontend/src/customer-i18n.js
+msgid "جستجو در منو…"
+msgstr "Menüde ara…"
+
+#: frontend/src/customer-i18n.js
+msgid "جستجوی محصولات"
+msgstr "Ürün ara"
+
+#: frontend/src/customer-i18n.js
+msgid "جمع انتخاب‌ها"
+msgstr "Ürün ara toplamı"
+
+#: frontend/src/customer-i18n.js
+msgid "خوش آمدید"
+msgstr "Hoş geldiniz"
+
+#: frontend/src/customer-i18n.js
+msgid "در حال آماده‌سازی"
+msgstr "Hazırlanıyor"
+
+#: frontend/src/customer-i18n.js
+msgid "در حال ثبت…"
+msgstr "Gönderiliyor…"
+
+#: frontend/src/customer-i18n.js
+msgid "در حال حاضر ناموجود"
+msgstr "Şu anda mevcut değil"
+
+#: frontend/src/customer-i18n.js
+msgid "دریافت سبد ووکامرس ناموفق بود"
+msgstr "Mağaza sepeti yüklenemedi"
+
+#: frontend/src/customer-i18n.js
+msgid "دسته‌بندی منو"
+msgstr "Menü kategorileri"
+
+#: frontend/src/customer-i18n.js
+msgid "زبان منو"
+msgstr "Menü dili"
+
+#: frontend/src/customer-i18n.js
+msgid "سبد سفارش"
+msgstr "Sipariş sepeti"
+
+#: frontend/src/customer-i18n.js
+msgid "سبد شما"
+msgstr "Sepetiniz"
+
+#: frontend/src/customer-i18n.js
+msgid "سبد شما خالی است."
+msgstr "Sepetiniz boş."
+
+#: frontend/src/customer-i18n.js
+msgid "سرو در {table}"
+msgstr "{table} için servis"
+
+#: frontend/src/customer-i18n.js
+msgid "سفارش {number} ثبت شد"
+msgstr "{number} numaralı sipariş alındı"
+
+#: resources/customer-server-strings.json
+msgid "سفارش شما برای تأیید کارکنان ارسال شد"
+msgstr "Siparişiniz personel onayı için gönderildi"
+
+#: resources/customer-server-strings.json
+msgid "سفارش‌گیری موقتاً متوقف است"
+msgstr "Sipariş alımı geçici olarak durduruldu"
+
+#: resources/customer-server-strings.json
+msgid "طعم خوب، لحظه‌های بهتر"
+msgstr "Güzel lezzetler, daha güzel anlar"
+
+#: frontend/src/customer-i18n.js
+msgid "طعم مورد علاقه‌تان را پیدا کنید"
+msgstr "Sevdiğiniz lezzeti bulun"
+
+#: frontend/src/customer-i18n.js
+msgid "فضای کافه"
+msgstr "Kafe ortamı"
+
+#: resources/customer-server-strings.json
+msgid "فعلاً ناموجود"
+msgstr "Şu anda mevcut değil"
+
+#: frontend/src/customer-i18n.js
+msgid "فونت سفارشی بارگذاری نشد؛ فونت پیش‌فرض فعال است."
+msgstr "Özel yazı tipi yüklenemedi; varsayılan yazı tipi kullanılıyor."
+
+#: frontend/src/customer-i18n.js
+msgid "قهوه، گفتگو، لحظه‌های خوب"
+msgstr "Kahve, sohbet, güzel anlar"
+
+#: frontend/src/customer-i18n.js
+msgid "لطفاً یک گزینه انتخاب کنید"
+msgstr "Lütfen bir seçenek seçin"
+
+#: frontend/src/customer-i18n.js
+msgid "لغو شد"
+msgstr "İptal edildi"
+
+#: frontend/src/customer-i18n.js
+msgid "مثلاً بدون شکر…"
+msgstr "Örneğin, şekersiz…"
+
+#: frontend/src/customer-i18n.js
+msgid "محصولی با این انتخاب پیدا نشد."
+msgstr "Seçiminize uygun ürün bulunamadı."
+
+#: frontend/src/customer-i18n.js
+msgid "مشاهده {count} انتخاب"
+msgstr "{count} ürünü görüntüle"
+
+#: frontend/src/customer-i18n.js
+msgid "منتظر تأیید کارکنان"
+msgstr "Personel onayı bekleniyor"
+
+#: frontend/src/customer-i18n.js
+msgid "منوی تازه در حال آماده شدن است…"
+msgstr "Menü hazırlanıyor…"
+
+#: frontend/src/customer-i18n.js
+msgid "منوی کافه"
+msgstr "Kafe menüsü"
+
+#: frontend/src/customer-i18n.js
+msgid "نام شما (اختیاری)"
+msgstr "Adınız (isteğe bağlı)"
+
+#: frontend/src/customer-i18n.js
+msgid "ناموجود"
+msgstr "Mevcut değil"
+
+#: frontend/src/customer-i18n.js
+msgid "نوع سفارش"
+msgstr "Sipariş türü"
+
+#: frontend/src/customer-i18n.js
+msgid "هزینه ارسال، مالیات و پرداخت در صفحه امن فروشگاه محاسبه می‌شود."
+msgstr "Teslimat, vergi ve ödeme güvenli ödeme sayfasında hesaplanır."
+
+#: frontend/src/customer-i18n.js
+msgid "هنوز چیزی انتخاب نکرده‌اید."
+msgstr "Henüz bir ürün seçmediniz."
+
+#: frontend/src/customer-i18n.js
+msgid "وضعیت: {stage}"
+msgstr "Durum: {stage}"
+
+#: frontend/src/customer-i18n.js
+msgid "پاسخ سرور معتبر نیست"
+msgstr "Sunucu yanıtı geçersiz"
+
+#: frontend/src/customer-i18n.js
+msgid "پرداخت واقعی در پیش‌نمایش در دسترس نیست."
+msgstr "Bu önizlemede gerçek ödeme yapılamaz."
+
+#: frontend/src/customer-i18n.js
+msgid "پس از تأیید کارکنان، سفارش آماده می‌شود. پرداخت با صندوق."
+msgstr "Personel onayından sonra hazırlanır. Kasada ödeme yapın."
+
+#: frontend/src/customer-i18n.js
+msgid "پنل مدیریت ←"
+msgstr "Yönetim paneli →"
+
+#: frontend/src/customer-i18n.js
+msgid "پیش‌نمایش نمایشی • سفارش و پرداخت واقعی انجام نمی‌شود"
+msgstr "Demo önizleme • gerçek sipariş veya ödeme yapılmaz"
+
+#: frontend/src/customer-i18n.js
+msgid "کافه"
+msgstr "Kafe"
+
+#: frontend/src/customer-i18n.js
+msgid "کاهش {name}"
+msgstr "{name} azalt"
+
+#: frontend/src/customer-i18n.js
+msgid "کمی تا یک حال خوب"
+msgstr "Güzel anlar çok yakın"
+
+#: frontend/src/customer-i18n.js
+msgid "یک انتخاب خوش‌طعم"
+msgstr "Lezzetli bir seçim"
+
+#: frontend/src/customer-i18n.js
+msgid "یک مکث کوچک، یک حال خوب"
+msgstr "Küçük bir mola, güzel bir an"
+
+#: frontend/src/customer-i18n.js
+msgid "◷ {count} دقیقه آماده‌سازی"
+msgstr "◷ {count} dakika hazırlık"
+
+#: frontend/src/customer-i18n.js
+msgid "✦ دانه‌های تازه"
+msgstr "✦ Taze çekirdekler"
+
+#: frontend/src/customer-i18n.js
+msgid "✦ همه"
+msgstr "✦ Tümü"

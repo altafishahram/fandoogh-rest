@@ -1,0 +1,63 @@
+<?php
+namespace AdminCafe\Tables;
+
+use AdminCafe\Core\Settings;
+
+final class Tables
+{
+    public function register(): void {}
+    public static function all(): array
+    {
+        return array_values(array_map(static function ($table) {
+            $table['url'] = home_url('/cafe-qr/' . rawurlencode($table['token']));
+            return $table;
+        }, (array) get_option('admincafe_tables', [])));
+    }
+    public static function findByToken(string $token): ?array
+    {
+        if (!preg_match('/^[a-f0-9]{48}$/D', $token)) { return null; }
+        foreach (self::all() as $table) {
+            if (hash_equals($table['token'], $token)) { return $table; }
+        }
+        return null;
+    }
+    public static function context(string $token): array|\WP_Error
+    {
+        $table = self::findByToken($token);
+        if (!$table || !$table['enabled']) { return new \WP_Error('table_not_found', __('Table unavailable.', 'admincafe'), ['status' => 404]); }
+        $mode = $table['mode'] === 'inherit' ? Settings::get('table_default_mode', 'menu') : $table['mode'];
+        return ['id' => $table['id'], 'label' => $table['label'], 'token' => $token, 'mode' => $mode,
+            'can_order' => $mode === 'order' && (bool) Settings::get('dine_in_enabled', false) && !Settings::get('ordering_paused', false)];
+    }
+    public static function save(array $input, int $id = 0): array|\WP_Error
+    {
+        foreach (['label', 'mode', 'enabled'] as $key) {
+            if (isset($input[$key]) && !is_scalar($input[$key])) { return new \WP_Error('invalid_table', __('Invalid table field.', 'admincafe'), ['status' => 400]); }
+        }
+        $tables = self::all();
+        $index = null;
+        foreach ($tables as $key => $table) { if ($table['id'] === $id) { $index = $key; break; } }
+        if ($id && $index === null) { return new \WP_Error('table_not_found', __('Table not found.', 'admincafe'), ['status' => 404]); }
+        if (isset($input['mode']) && !in_array($input['mode'], ['inherit', 'menu', 'order'], true)) {
+            return new \WP_Error('invalid_mode', __('Invalid table mode.', 'admincafe'), ['status' => 400]);
+        }
+        $label = sanitize_text_field($input['label'] ?? ($index !== null ? $tables[$index]['label'] : ''));
+        if ($label === '' || mb_strlen($label) > 100) { return new \WP_Error('invalid_label', __('Table label must contain 1–100 characters.', 'admincafe'), ['status' => 400]); }
+        $table = $index !== null ? $tables[$index] : ['id' => max(array_merge([0], array_column($tables, 'id'))) + 1, 'token' => bin2hex(random_bytes(24)), 'mode' => 'inherit', 'enabled' => true];
+        $table['label'] = $label;
+        if (isset($input['mode'])) { $table['mode'] = $input['mode']; }
+        if (array_key_exists('enabled', $input)) { $table['enabled'] = rest_sanitize_boolean($input['enabled']); }
+        $table['url'] = home_url('/cafe-qr/' . $table['token']);
+        if ($index === null) { $tables[] = $table; } else { $tables[$index] = $table; }
+        update_option('admincafe_tables', $tables, false);
+        return $table;
+    }
+    public static function delete(int $id): array|\WP_Error
+    {
+        $tables = self::all();
+        $filtered = array_values(array_filter($tables, fn($table) => $table['id'] !== $id));
+        if (count($filtered) === count($tables)) { return new \WP_Error('table_not_found', __('Table not found.', 'admincafe'), ['status' => 404]); }
+        update_option('admincafe_tables', $filtered, false);
+        return ['deleted' => true];
+    }
+}

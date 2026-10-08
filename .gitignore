@@ -1,0 +1,37 @@
+/frontend/node_modules/
+/.tools/
+/tests/runtime/
+/dist/
+/vendor/
+/frontend/.vite/
+*.log
+
+# Generated bundles, local screenshots and build caches.
+/assets/
+/frontend/qa/
+/frontend/coverage/
+__pycache__/
+*.py[cod]
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Never publish site databases, local configuration or credentials.
+.env
+.env.*
+!.env.example
+wp-config.php
+wp-config-*.php
+*.sqlite
+*.sqlite3
+*.db
+*.sql
+*.sql.gz
+*.pem
+*.key
+*.p12
+*.pfx
+auth.json
+.npmrc
+*.zip
