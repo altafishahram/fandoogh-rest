@@ -8,7 +8,7 @@
  * Requires PHP: 8.2
  * Requires Plugins: woocommerce
  * WC requires at least: 9.0
- * WC tested up to: 11.1
+ * WC tested up to: 11.2
  * Author: Fandoogh Rest
  * License: GPL-2.0-or-later
  * Text Domain: fandoogh-rest

@@ -62,13 +62,14 @@ Inspect advisory reports and affected paths; a passing build is not an audit.
 CI runs PHP 8.2/8.3 standalone suites, Node 24 renderer/domain tests, translation
 catalog checks, builds and package verification. A separate PHP 8.3/MySQL 8 job
 installs WordPress and WooCommerce in `$RUNNER_TEMP`, enables real HPOS, blocks
-mail and executes all six database suites sequentially. Its script refuses to run
+mail and executes seven database suites sequentially. Its script refuses to run
 outside a GitHub Actions temporary directory and creates the required disposable
 marker. Local database runners also refuse a database without that marker.
 
-The integration job downloads the current stable WordPress and WooCommerce and
-prints exact installed versions. This intentionally catches ecosystem changes;
-reproduction requires those versions from its log. ZIP determinism applies to
+The integration job pins WordPress and WooCommerce versions in its environment
+and prints exact installed versions. Change these pins in a reviewed PR so an
+upstream release cannot silently change a historical test environment. Reproduction
+uses the workflow's pins and its runtime log. ZIP determinism applies to
 identical inputs and toolchain, not arbitrary versions of ZIP/zlib/dependencies.
 
 Never point these tests at production. They create products, staff, orders and

@@ -12,7 +12,7 @@ if [[ -e "$site" ]]; then
   exit 1
 fi
 mkdir -p "$site"
-wp --path="$site" core download
+wp --path="$site" core download --version="${WP_VERSION:?Pinned WP_VERSION is required}"
 wp --path="$site" config create --dbname=fandoogh_ci --dbuser=root --dbpass=ci-only --dbhost=127.0.0.1:3306
 wp --path="$site" config set DISABLE_WP_CRON true --raw
 wp --path="$site" core install --url=http://127.0.0.1:8093 --title='Disposable Fandoogh Rest CI' --admin_user=ci-admin --admin_password=ci-disposable-password --admin_email=ci@example.invalid --skip-email
@@ -21,7 +21,7 @@ cat > "$site/wp-content/mu-plugins/ci-isolation.php" <<'PHP'
 <?php
 add_filter('pre_wp_mail', '__return_true');
 PHP
-wp --path="$site" plugin install woocommerce --activate
+wp --path="$site" plugin install woocommerce --version="${WOOCOMMERCE_VERSION:?Pinned WOOCOMMERCE_VERSION is required}" --activate
 wp --path="$site" option update woocommerce_currency IRT
 wp --path="$site" option update woocommerce_default_country IR
 wp --path="$site" rewrite structure '/%postname%/'

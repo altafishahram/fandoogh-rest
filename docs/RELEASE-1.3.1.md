@@ -42,10 +42,10 @@ do not present historical browser/provider checks as newly executed.
 CI checks syntax, PHP behavior and three bootstrap compatibility modes,
 Node renderer/domain tests, locale keys/placeholders/catalogs, source publication
 audit, dependency advisories, tracked generated-file consistency and deterministic
-installable/source archives. Its separate MySQL job installs official stable
-WordPress/WooCommerce, prints exact versions, enables HPOS and runs six integration
-suites sequentially. Until its run completes, that job is configured coverage,
-not a passing result. Workflow runs and artifact names identify the source commit.
+installable/source archives. Its separate MySQL job installs pinned official
+WordPress/WooCommerce versions, prints exact versions, enables HPOS and runs seven
+integration suites sequentially. Workflow runs and artifact names identify the
+source commit. Fresh passing results are recorded in [VALIDATION.md](VALIDATION.md).
 
 Release packages exclude credentials, databases, local tools and screenshots.
 Identical inputs/toolchain reproduce archive ordering, timestamps and permissions;

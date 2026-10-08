@@ -39,3 +39,13 @@ Automatic content translation is implemented as an optional module and is disabl
 ## Publication 1.3.1
 
 The table above is the imported 1.3.0 validation record. Branding and repository changes in 1.3.1 require fresh checks; GitHub workflow runs provide separate evidence. Earlier browser/provider results are not claimed as newly repeated. Persistent contracts remain backward compatible; multi-branch support is not implemented.
+
+### Fresh publication checks — 2026-10-08
+
+Source commit `386a71feb5e281ce2e7ba5146d3e1f70a5dd531e` passed [pull-request CI](https://github.com/altafishahram/fandoogh-rest/actions/runs/37828995135) and its corresponding push CI. PHP 8.2 and 8.3 jobs both passed PHP syntax, 199 standalone behavior assertions, three bootstrap compatibility scenarios, 30 Node frontend tests, dependency advisories, generated-file consistency and deterministic install/source archive verification. Catalog checks verified 754 operational MO values, 24 Jed strings, 206 Chinese/Turkish customer MO values and official language-pack/key/placeholder parity.
+
+The real MySQL 8 HPOS job used WordPress 7.1.3 and WooCommerce 11.2.0. Seven sequential suites passed: base integration (58), multilingual (91), commerce language (64), translation (39), translation security (40), appearance security (179), and branding (17): 488 database checks in total. These verified versions are now explicit CI pins; changing them requires a reviewed source change.
+
+Local PHP 8.3.35 / WordPress 7.1.2 / WooCommerce 11.1.2 / SQLite HPOS also passed the same seven suites. Before deactivating the old plugin and installing Fandoogh Rest, an ignored private snapshot captured settings, QR table identities, seven existing products, 36 existing orders and user roles. The after-activation snapshot matched exactly. This migration comparison preceded tests that intentionally create more fixtures and orders.
+
+Actual multilingual integration exposed a renamed gettext-domain hook that still used only the old domain. Commit `386a71f` registers both domains; the existing transition regression now passes on SQLite and MySQL. Translation provider HTTP remains blocked/mocked. Passing MySQL CRUD integration is not a claim of simultaneous production-load, live gateway, browser Push or provider quality verification.
