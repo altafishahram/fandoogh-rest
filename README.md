@@ -4,7 +4,7 @@ A Persian-first WordPress/WooCommerce plugin for restaurant menus and operations
 WooCommerce owns products, inventory, orders and payments. The plugin adds a
 customer menu, staff panel, tables, localized content, imports and notifications.
 
-**Development version: 1.4.0.** Multi-branch menus and operations share one
+**Version: 1.4.0.** Multi-branch menus and operations share one
 WooCommerce store, payment gateway and currency. Each branch has independent
 products, categories, tables, customer translations and appearance.
 See [multi-branch setup and boundaries](docs/MULTIBRANCH-PLAN.md).
@@ -15,7 +15,7 @@ See [multi-branch setup and boundaries](docs/MULTIBRANCH-PLAN.md).
 - [Release notes and compatibility](CHANGELOG.md)
 - [Security reporting](SECURITY.md)
 - [Historical validation](docs/VALIDATION.md)
-- [Multi-branch candidate validation](docs/VALIDATION-1.4.0.md)
+- [Multi-branch validation](docs/VALIDATION-1.4.0.md)
 
 ## Install
 
