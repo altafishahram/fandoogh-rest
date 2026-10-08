@@ -6,6 +6,7 @@ Fandoogh Rest is a PSR-4 PHP plugin with isolated Vue 3 applications built by Vi
 
 | Module | Responsibility |
 |---|---|
+| `Branches` | Stable branch registry, request-local context, explicit employee assignments and server ownership boundaries |
 | `Core` | Bootstrap, installation/version upgrades, roles, validated settings, routes, assets, guest session security and currency extension |
 | `Localization` | Four customer language contexts, isolated Persian operations, shared UI catalogs and official checkout language pack fallbacks |
 | `Translation` | Optional background Persian content translation, provider adapters, private credential configuration, field provenance and guarded job processing |
@@ -23,6 +24,14 @@ Fandoogh Rest is a PSR-4 PHP plugin with isolated Vue 3 applications built by Vi
 Each PHP module exposes `register()` for hook registration. `Core/Plugin.php` is the composition root. Vue menu and panel have separate entries; functional logic lives in composables, pure display/domain helpers and individual page components. Production never enables the development mock adapter implicitly.
 
 Appearance stores a preset identifier and editable CSS maps inside general settings. A bounded server tokenizer/compiler validates the supported CSS grammar and scopes every output selector; raw editor maps are excluded from customer bootstrap. Initial page configuration exposes an appearance-only whitelist so the entry language dialog uses the saved design before any product request. Draft preview uses the same parser through a capability/nonce-protected route, without option writes. Its sample canvas is teleported into a sandboxed same-origin iframe with separate viewport, stylesheet, compiled preview scope and FontFace cache, so responsive rules run against the selected preview width. Five frontend theme token sets share the public and preview renderers; picking a preset changes palette defaults, while content, layout, fonts, typography and custom CSS remain editable.
+
+## Branch context
+
+`Branches::runFor` restores context in `finally`; REST dispatch restores it after both success and denied requests. Explicit query/header/body branch selections must agree. Product variations inherit parent ownership. Legacy unassigned products/categories/orders/tables belong to branch 1; new writes stamp `_fandoogh_branch_id`. Settings remain canonical in the legacy default option; additional branches store independent settings in `fandoogh_branches`. Shared keys are whitelisted.
+
+Scoped SQL product filters apply before pagination, and native HPOS order meta queries enforce branch boundaries. QR tokens resolve table ownership globally before reading that branch settings. Translation jobs persist branch identity, restore it in workers and expose only the current branch jobs; global provider configuration is central-only. Event rows carry branch identity, and Push delivery rechecks employee membership at delivery time.
+
+Customer carts are keyed by site, branch and table; panel switches invalidate in-flight callbacks and suspend page children until the new bootstrap completes. Classic and Store API guards bind the native cart/session/items/checkout draft to one branch, protect old draft items before Woo synchronizes them, and require consent to replace another branch cart. Order branch name/address snapshots are immutable. Collection-level Woo shipping zones/taxes/gateway configuration remains shared; dedicated branch shipping is not yet provided.
 
 ## Data and flow
 

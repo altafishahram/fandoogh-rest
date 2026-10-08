@@ -1,34 +1,33 @@
-# Multi-branch design — planned, not implemented
+# Multi-branch operations — 1.4.0 implementation
 
-This document records the accepted design for the next development stage. Fandoogh Rest 1.3.1 remains a single-branch plugin. Publishing this plan does not enable multi-branch ordering.
+## Model
 
-## Confirmed requirements
+One WordPress/WooCommerce store shares a payment gateway, merchant account, currency, tax rules and shipping configuration. Branches have separate Woo products/categories, native prices/stock, tables/QR tokens, menu appearance, languages/content, ordering switches, operational orders/reports and staff access. Equivalent foods use separate products per branch. Woo SKUs stay globally unique. Variations inherit parent ownership.
 
-- One restaurant brand, one reference website, one WordPress installation and one WooCommerce store.
-- One shared payment gateway and merchant account; one store currency.
-- The reference website introduces branches and links to their individual menus. It can be built with Elementor or another site builder.
-- Branches may have completely different food products, categories, images, descriptions and customer translations.
-- Each branch owns its prices, WooCommerce inventory, tables, QR identities, appearance, business hours and enabled ordering channels.
-- Customer languages remain Persian, English, simplified Chinese and Turkish. The operations panel remains Persian.
-- A collection manager can access all branches. Branch managers and operational staff access only assigned branches and permitted functions.
-- Orders, reports and Windows/mobile notifications must be scoped to the appropriate branch.
+The reference website remains a normal WordPress/builder page. Link to `/menu/{branch-slug}/`, select a builder menu page per branch, or render `[fandoogh_rest_branches]` for enabled branch links. Existing `/menu/` and QR routes resolve the default branch. Menu shortcodes, the Gutenberg block and Elementor widget accept a branch ID or slug. Separate branch embeds on one page have isolated carts and CSS scopes.
 
-## Proposed implementation boundaries
+## Administration
 
-Introduce a `Branches` module and an explicit validated branch context. Each saleable WooCommerce product belongs to one branch; variations inherit their parent branch. Copying a product to another branch creates an independent WooCommerce product, preserving native price, stock reservation and refund behavior. Category membership and display order also require a branch boundary.
+Site administrators are collection managers. They create/rename/disable branches and assign employees to one or multiple branches. Existing operational roles/caps remain intact; legacy staff belong to branch 1. Branch managers cannot broaden assignments or change shared currency/routes/translation credentials. Every management request requires validated branch identity and the relevant nonce/capability. Foreign product/category/table/order/media IDs, parent categories, reorder lists and resumable import tokens are rejected. Product queries enforce ownership before pagination.
 
-The active WooCommerce cart and each resulting order belong to exactly one branch. Validate product ownership, table ownership and ordering availability again on the server for add-to-cart, cart changes and both classic/Store API checkout. A branch switch with a populated cart requires a clear customer decision. Preserve branch attribution on the order and its operational events even after branch names or addresses change.
+Disabling prevents public menus and new orders without deleting history. Assigned staff retain authenticated management access; the central panel can reenable branches even when all branches are disabled. Staff selectors hide disabled branches; an authenticated `/cafe-panel/?branch_id=ID` can still open assigned history.
 
-Branch authorization must cover reads and writes, including direct object IDs, imports, uploads, reports, staff assignment, tracking and notification delivery. A client-side branch selector is not an authorization mechanism. Shared credentials must never be returned through a branch settings API.
+## Commerce and asynchronous work
 
-QR table tokens resolve the branch on the server. Product rendering remains shared by standalone menus, shortcodes, blocks and Elementor. Proposed routes are `/branches` and `/menu/{branch-slug}`; choose conflict-free rewrites and retain old routes as aliases for the default branch.
+One native Woo cart/checkout belongs to one branch. Ownership persists on cart items/session and is revalidated on classic/Store API adds, quantity updates and checkout. Stale tabs and reassigned products are rejected. Foreign checkout drafts are rejected before Woo synchronizes their line items. Explicit customer consent is required to replace a populated foreign cart. Detached checkout references leave existing orders and their native stock/payment lifecycle intact.
 
-## Upgrade and acceptance criteria
+Order branch ID/name/address snapshots are immutable. QR tokens resolve table ownership before reading that branch's menu-only/order policy. Event lists/reads and Push workers check employee branch membership. Translation jobs persist branch identity, restore context after work and update only that branch's content. Provider credentials/quota remain shared and redacted.
 
-- Migrate existing settings, products, table tokens, employees and operational records into a default branch without changing WooCommerce product/order IDs or QR tokens.
-- Keep merchant credentials and currency at collection level; scope delivery regions, charges and fulfillment choices to each branch.
-- Test cross-branch denial for every management/guest endpoint and notification channel.
-- Test checkout branch validation through both classic and Store API paths, including stale carts and concurrent tabs.
-- Test independent prices/stock, reservation cancellation and refund restoration through WooCommerce APIs.
-- Test existing QR links, page-builder embeds, four languages and saved custom CSS after migration.
-- Release multi-branch support through a separate feature pull request and versioned migration after these checks pass.
+## Upgrade and limits
+
+Existing unassigned records resolve to branch 1 without changing IDs, prices, orders or table tokens. New records have explicit ownership. Legacy staff assignments migrate once. Default settings remain canonical in `admincafe_settings`; additional settings live in `fandoogh_branches`. Events and translation jobs gain indexed branch ownership. Upgrade refreshes rewrite rules.
+
+Public `/checkout` clients now supply `branch_id`; table QR ownership is authoritative. Back up before upgrading. Older code does not enforce branch boundaries: downgrading after multi-branch writes requires restoring the matching database, rather than just replacing PHP files.
+
+Deferred: branch-specific shipping regions/rates, geographic delivery selection, structured automatic opening-hour scheduling, product duplication tools and collection-wide consolidated analytics. Shipping/tax/gateway configuration stays shared native Woo. Hours remain per-branch display text. Elementor is implemented but not tested against a live Elementor installation in this stage. Live payment, HTTPS device Push and concurrent reservation load tests remain deployment validation.
+
+## Verification
+
+Run database suites sequentially on a disposable marked database. `wp-branches-core.php` checks branch selection/assignments/context/shared-setting permissions/disabled recovery. `wp-branches-commerce.php` dispatches actual Woo Store API routes and checks QR, stock restoration, immutable drafts, direct order IDs, reports/events and Push recipient denial. `wp-branches-content.php` checks independent same-name categories, foreign content/import IDs, four-language guest menus, builder CSS and translation workers.
+
+GitHub CI runs these on MySQL HPOS with native reservations enabled. Local SQLite checks exclude MySQL-only reservation SQL; they cannot substitute for the CI result.
