@@ -1,8 +1,8 @@
 <?php
-namespace AdminCafe\Core;
+namespace FandooghRest\Core;
 
-use AdminCafe\Localization\Language;
-use AdminCafe\Appearance\Appearance;
+use FandooghRest\Localization\Language;
+use FandooghRest\Appearance\Appearance;
 
 defined('ABSPATH') || exit;
 
@@ -62,36 +62,36 @@ final class Settings
                 continue;
             }
             if (!in_array($key, ['messages', 'menu_category_ids', 'enabled_languages'], true) && !is_scalar($value) && $value !== null) {
-                return new \WP_Error('admincafe_setting_type', __('Invalid setting value.', 'admincafe'), ['status' => 400]);
+                return new \WP_Error('admincafe_setting_type', __('Invalid setting value.', 'fandoogh-rest'), ['status' => 400]);
             }
             if (in_array($key, ['messages', 'menu_category_ids', 'enabled_languages'], true) && !is_array($value)) {
-                return new \WP_Error('admincafe_setting_type', __('Invalid setting value.', 'admincafe'), ['status' => 400]);
+                return new \WP_Error('admincafe_setting_type', __('Invalid setting value.', 'fandoogh-rest'), ['status' => 400]);
             }
             if (is_array($value) && array_filter($value, static fn($item): bool => !is_scalar($item))) {
-                return new \WP_Error('admincafe_setting_type', __('Invalid setting value.', 'admincafe'), ['status' => 400]);
+                return new \WP_Error('admincafe_setting_type', __('Invalid setting value.', 'fandoogh-rest'), ['status' => 400]);
             }
             if ($key === 'enabled_languages') {
                 if (!$value || count($value) > 4 || array_filter($value, static fn($code): bool => !is_string($code) || !isset(Language::supported()[$code]))) {
-                    return new \WP_Error('admincafe_languages', __('Choose supported customer languages.', 'admincafe'), ['status' => 400]);
+                    return new \WP_Error('admincafe_languages', __('Choose supported customer languages.', 'fandoogh-rest'), ['status' => 400]);
                 }
                 $value = array_values(array_unique($value));
             } elseif ($key === 'default_language') {
                 if (!is_string($value) || !isset(Language::supported()[$value])) {
-                    return new \WP_Error('admincafe_languages', __('Choose supported customer languages.', 'admincafe'), ['status' => 400]);
+                    return new \WP_Error('admincafe_languages', __('Choose supported customer languages.', 'fandoogh-rest'), ['status' => 400]);
                 }
             } elseif (in_array($key, ['menu_slug', 'panel_slug'], true)) {
                 $value = sanitize_title((string) $value);
                 if (!$value || strpos($value, '/') !== false || in_array($value, ['wp-admin', 'wp-login', 'wp-json', 'cafe-qr', 'feed', 'checkout', 'cart'], true)) {
-                    return new \WP_Error('admincafe_slug', __('Choose a valid, unreserved page address.', 'admincafe'), ['status' => 400]);
+                    return new \WP_Error('admincafe_slug', __('Choose a valid, unreserved page address.', 'fandoogh-rest'), ['status' => 400]);
                 }
                 $page = get_page_by_path($value);
                 if ($page && !($key === 'menu_slug' && (int) ($input['menu_page_id'] ?? $settings['menu_page_id']) === (int) $page->ID)) {
-                    return new \WP_Error('admincafe_slug_conflict', __('This address is already used by a WordPress page.', 'admincafe'), ['status' => 409]);
+                    return new \WP_Error('admincafe_slug_conflict', __('This address is already used by a WordPress page.', 'fandoogh-rest'), ['status' => 409]);
                 }
             } elseif (in_array($key, ['accent', 'category_background', 'background', 'qr_color'], true)) {
                 $value = sanitize_hex_color((string) $value);
                 if (!$value) {
-                    return new \WP_Error('admincafe_color', __('Use a valid hexadecimal color.', 'admincafe'), ['status' => 400]);
+                    return new \WP_Error('admincafe_color', __('Use a valid hexadecimal color.', 'fandoogh-rest'), ['status' => 400]);
                 }
             } elseif (in_array($key, ['dine_in_enabled', 'pickup_enabled', 'delivery_enabled', 'ordering_paused', 'notification_sound'], true)) {
                 $value = rest_sanitize_boolean($value);
@@ -102,12 +102,12 @@ final class Settings
             } elseif (in_array($key, ['logo_id', 'cover_id'], true)) {
                 $value = absint($value);
                 if ($value && !wp_attachment_is_image($value)) {
-                    return new \WP_Error('admincafe_image', __('Select an image from the media library.', 'admincafe'), ['status' => 400]);
+                    return new \WP_Error('admincafe_image', __('Select an image from the media library.', 'fandoogh-rest'), ['status' => 400]);
                 }
             } elseif ($key === 'menu_page_id') {
                 $value = absint($value);
                 if ($value && (get_post_type($value) !== 'page' || get_post_status($value) !== 'publish')) {
-                    return new \WP_Error('admincafe_page', __('Select a published WordPress page.', 'admincafe'), ['status' => 400]);
+                    return new \WP_Error('admincafe_page', __('Select a published WordPress page.', 'fandoogh-rest'), ['status' => 400]);
                 }
             } elseif ($key === 'menu_category_ids') {
                 $value = array_values(array_unique(array_filter(array_map('absint', (array) $value), static fn(int $id): bool => term_exists($id, 'product_cat') !== null && term_exists($id, 'product_cat') !== 0)));
@@ -125,14 +125,14 @@ final class Settings
             } elseif ($key === 'currency_code') {
                 $value = strtoupper(sanitize_text_field((string) $value));
                 if (!array_key_exists($value, get_woocommerce_currencies())) {
-                    return new \WP_Error('admincafe_currency', __('Choose a supported WooCommerce currency.', 'admincafe'), ['status' => 400]);
+                    return new \WP_Error('admincafe_currency', __('Choose a supported WooCommerce currency.', 'fandoogh-rest'), ['status' => 400]);
                 }
             } elseif ($key === 'font_family') {
                 $value = in_array($value, ['Vazirmatn', 'IRANSans', 'Dana', 'system'], true) ? $value : 'Vazirmatn';
             } elseif ($key === 'custom_font_url') {
                 $value = esc_url_raw((string) $value);
                 if ($value && (wp_parse_url($value, PHP_URL_HOST) !== wp_parse_url(home_url(), PHP_URL_HOST) || !preg_match('/\.(woff2?|ttf|otf)$/i', (string) wp_parse_url($value, PHP_URL_PATH)))) {
-                    return new \WP_Error('admincafe_font', __('Use a font file hosted on this site.', 'admincafe'), ['status' => 400]);
+                    return new \WP_Error('admincafe_font', __('Use a font file hosted on this site.', 'fandoogh-rest'), ['status' => 400]);
                 }
             } else {
                 $value = sanitize_textarea_field(mb_substr((string) $value, 0, $key === 'restaurant_address' ? 1000 : 300));
@@ -140,10 +140,10 @@ final class Settings
             $settings[$key] = $value;
         }
         if (!in_array($settings['default_language'], $settings['enabled_languages'], true)) {
-            return new \WP_Error('admincafe_languages', __('The default language must be enabled.', 'admincafe'), ['status' => 400]);
+            return new \WP_Error('admincafe_languages', __('The default language must be enabled.', 'fandoogh-rest'), ['status' => 400]);
         }
         if ($settings['menu_slug'] === $settings['panel_slug']) {
-            return new \WP_Error('admincafe_slug_conflict', __('Menu and panel addresses must be different.', 'admincafe'), ['status' => 400]);
+            return new \WP_Error('admincafe_slug_conflict', __('Menu and panel addresses must be different.', 'fandoogh-rest'), ['status' => 400]);
         }
         $old = self::all();
         update_option('admincafe_settings', $settings, false);
@@ -187,7 +187,7 @@ final class Settings
 
     private static function sanitizeTranslations(mixed $input, array $stored): array|\WP_Error
     {
-        $error = static fn() => new \WP_Error('admincafe_translations', __('Invalid content translations.', 'admincafe'), ['status' => 400]);
+        $error = static fn() => new \WP_Error('admincafe_translations', __('Invalid content translations.', 'fandoogh-rest'), ['status' => 400]);
         if (!is_array($input) || count($input) > 3) { return $error(); }
         foreach ($input as $language => $fields) {
             if (!in_array($language, ['en', 'zh', 'tr'], true) || !is_array($fields) || count($fields) > 5) { return $error(); }

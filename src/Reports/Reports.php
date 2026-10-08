@@ -1,5 +1,5 @@
 <?php
-namespace AdminCafe\Reports;
+namespace FandooghRest\Reports;
 
 final class Reports
 {

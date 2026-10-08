@@ -1,5 +1,5 @@
 <?php
-namespace AdminCafe\Appearance;
+namespace FandooghRest\Appearance;
 
 defined('ABSPATH') || exit;
 

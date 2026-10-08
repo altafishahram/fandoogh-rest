@@ -2,7 +2,7 @@
 /** Standalone tokenizer/scoping regression: php tests/appearance.php */
 define('ABSPATH', __DIR__);
 require __DIR__ . '/../src/Appearance/CssCompiler.php';
-use AdminCafe\Appearance\CssCompiler;
+use FandooghRest\Appearance\CssCompiler;
 $checks = 0;
 function check(bool $condition, string $label): void { global $checks; if (!$condition) { throw new RuntimeException($label); } $checks++; }
 $scope = '.ac-appearance-preview';

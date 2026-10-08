@@ -8,7 +8,7 @@ export function loadMenuFont(settings, targetDocument) {
     cache = new Map();
     documents.set(targetDocument, cache);
   }
-  const family = settings.font_family || "AdminCafeCustom";
+  const family = settings.font_family || "FandooghRestCustom";
   const key = `${family}:${url}`;
   if (!cache.has(key)) {
     const font = new Font(family, `url(${JSON.stringify(url)})`);

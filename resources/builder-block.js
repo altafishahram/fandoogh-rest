@@ -1,9 +1,9 @@
 (function (blocks, element, components, editor, i18n) {
     'use strict';
     const el = element.createElement;
-    const t = (message) => i18n.__(message, 'admincafe');
+    const t = (message) => i18n.__(message, 'fandoogh-rest');
     blocks.registerBlockType('admincafe/menu', {
-        title: t('AdminCafe menu'), icon: 'food', category: 'widgets',
+        title: t('Fandoogh Rest menu'), icon: 'food', category: 'widgets',
         attributes: { component: { type: 'string', default: 'menu' }, category: { type: 'number', default: 0 }, mode: { type: 'string', default: 'auto' } },
         edit: function (props) {
             return el('div', editor.useBlockProps(),
@@ -18,9 +18,9 @@
                     ], onChange: value => props.setAttributes({ mode: value }) })
                 )),
                 el('div', { style: { padding: '28px', border: '1px solid #e9ddd0', borderRadius: '16px', background: '#faf8f5' } },
-                    el('strong', {}, t('AdminCafe menu')),
+                    el('strong', {}, t('Fandoogh Rest menu')),
                     el('p', {}, t('The live restaurant menu appears on the published page. Products and ordering follow restaurant settings.')),
-                    el('code', {}, '[admincafe_' + props.attributes.component + ']')
+                    el('code', {}, '[fandoogh_rest_' + props.attributes.component + ']')
                 )
             );
         },

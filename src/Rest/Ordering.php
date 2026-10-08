@@ -1,14 +1,14 @@
 <?php
 
-namespace AdminCafe\Rest;
+namespace FandooghRest\Rest;
 
-use AdminCafe\Commerce\Orders;
-use AdminCafe\Commerce\Checkout;
-use AdminCafe\Core\Settings;
-use AdminCafe\Core\Security;
-use AdminCafe\Menu\Catalog;
-use AdminCafe\Tables\Tables;
-use AdminCafe\Localization\Language;
+use FandooghRest\Commerce\Orders;
+use FandooghRest\Commerce\Checkout;
+use FandooghRest\Core\Settings;
+use FandooghRest\Core\Security;
+use FandooghRest\Menu\Catalog;
+use FandooghRest\Tables\Tables;
+use FandooghRest\Localization\Language;
 
 final class Ordering
 {
@@ -24,7 +24,7 @@ final class Ordering
             return current_user_can('admincafe_manage_orders')
                 && wp_verify_nonce($r->get_header('X-WP-Nonce'), 'wp_rest')
                 ? true
-                : new \WP_Error('forbidden', __('Order permission required.', 'admincafe'), ['status' => 403]);
+                : new \WP_Error('forbidden', __('Order permission required.', 'fandoogh-rest'), ['status' => 403]);
         };
         register_rest_route('admincafe/v1', '/bootstrap', [
             'methods' => 'GET',
@@ -150,11 +150,11 @@ final class Ordering
         }
         $token = (string) $r->get_param('token');
         if (!preg_match('/^[a-f0-9]{64}$/D', $token)) {
-            return new \WP_Error('not_found', __('Order not found.', 'admincafe'), ['status' => 404]);
+            return new \WP_Error('not_found', __('Order not found.', 'fandoogh-rest'), ['status' => 404]);
         }
         $orders = wc_get_orders(['limit' => 1, 'meta_query' => [['key' => '_admincafe_tracking_hash', 'value' => hash('sha256', $token)]]]);
         if (!$orders) {
-            return new \WP_Error('not_found', __('Order not found.', 'admincafe'), ['status' => 404]);
+            return new \WP_Error('not_found', __('Order not found.', 'fandoogh-rest'), ['status' => 404]);
         }
         $order = $orders[0];
         return $this->response([
@@ -169,7 +169,7 @@ final class Ordering
         $order = wc_get_order(absint($r['id']));
         return $order instanceof \WC_Order && $order->get_meta('_admincafe_channel')
             ? $order
-            : new \WP_Error('not_found', __('Order not found.', 'admincafe'), ['status' => 404]);
+            : new \WP_Error('not_found', __('Order not found.', 'fandoogh-rest'), ['status' => 404]);
     }
 
     public function listing(\WP_REST_Request $r): \WP_REST_Response|\WP_Error
@@ -178,7 +178,7 @@ final class Ordering
         if ($r->get_param('stage')) {
             $stage = sanitize_key($r->get_param('stage'));
             if (!array_key_exists($stage, Orders::transitions())) {
-                return new \WP_Error('stage', __('Invalid stage.', 'admincafe'), ['status' => 400]);
+                return new \WP_Error('stage', __('Invalid stage.', 'fandoogh-rest'), ['status' => 400]);
             }
             $query[] = ['key' => '_admincafe_stage', 'value' => $stage];
         }
@@ -190,7 +190,7 @@ final class Ordering
                 'pickup',
                 'delivery'
             ], true)) {
-                return new \WP_Error('channel', __('Invalid channel.', 'admincafe'), ['status' => 400]);
+                return new \WP_Error('channel', __('Invalid channel.', 'fandoogh-rest'), ['status' => 400]);
             }
             $query[] = ['key' => '_admincafe_channel', 'value' => $channel];
         }
@@ -218,7 +218,7 @@ final class Ordering
     {
         $user = wp_get_current_user();
         if (!current_user_can('admincafe_manage_settings') && !in_array('admincafe_cashier', $user->roles, true)) {
-            return new \WP_Error('cashier', __('Cashier permission required.', 'admincafe'), ['status' => 403]);
+            return new \WP_Error('cashier', __('Cashier permission required.', 'fandoogh-rest'), ['status' => 403]);
         }
         $data = Orders::create((array) $r->get_json_params(), true);
         return is_wp_error($data) ? $data : $this->response($data);
@@ -241,7 +241,7 @@ final class Ordering
         // Serialize settlement/refund requests so a double click cannot pay or refund twice.
         $lockTime = time();
         if (!add_option($lock, $lockTime, '', false)) {
-            return new \WP_Error('order_busy', __('This order is being updated. Retry shortly.', 'admincafe'), ['status' => 409]);
+            return new \WP_Error('order_busy', __('This order is being updated. Retry shortly.', 'fandoogh-rest'), ['status' => 409]);
         }
         try {
             $order = wc_get_order($order->get_id());

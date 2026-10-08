@@ -1,9 +1,9 @@
 <?php
 /** Standalone provider/configuration regressions. No HTTP requests or database. */
-namespace AdminCafe\Translation {
+namespace FandooghRest\Translation {
     final class Queue { public static int $characters=0; public static bool $allow=true; public static function reserve(int $n): bool { self::$characters+=$n; return self::$allow; } }
 }
-namespace AdminCafe\Core { final class Settings { public static function get($key,$fallback=null) { return $fallback; } } }
+namespace FandooghRest\Core { final class Settings { public static function get($key,$fallback=null) { return $fallback; } } }
 namespace {
     define('ABSPATH',__DIR__.'/');
     class WP_Error {
@@ -30,10 +30,10 @@ namespace {
     require __DIR__.'/../src/Translation/Provider.php';
     require __DIR__.'/../src/Translation/GoogleProvider.php';
     require __DIR__.'/../src/Translation/Source.php';
-    use AdminCafe\Translation\Config;
-    use AdminCafe\Translation\GoogleProvider;
-    use AdminCafe\Translation\Queue;
-    use AdminCafe\Translation\Source;
+    use FandooghRest\Translation\Config;
+    use FandooghRest\Translation\GoogleProvider;
+    use FandooghRest\Translation\Queue;
+    use FandooghRest\Translation\Source;
     $checks=0;
     function check(bool $condition,string $label): void { global $checks; if (!$condition) { throw new RuntimeException('FAIL '.$label); } $checks++; }
     check(Config::read()['configured']===false,'unconfigured default');

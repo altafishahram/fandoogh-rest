@@ -14,12 +14,12 @@ if (get_option('admincafe_test_environment') !== 'local-disposable') {
     exit(1);
 }
 
-use AdminCafe\Translation\Config;
-use AdminCafe\Translation\GoogleProvider;
-use AdminCafe\Translation\Module;
-use AdminCafe\Translation\Provider;
-use AdminCafe\Translation\Queue;
-use AdminCafe\Translation\Source;
+use FandooghRest\Translation\Config;
+use FandooghRest\Translation\GoogleProvider;
+use FandooghRest\Translation\Module;
+use FandooghRest\Translation\Provider;
+use FandooghRest\Translation\Queue;
+use FandooghRest\Translation\Source;
 
 if (!class_exists(Module::class)) {
     fwrite(STDERR, "Sync the translation module before running.\n");

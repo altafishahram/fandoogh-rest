@@ -1,8 +1,8 @@
-# AdminCafe architecture and development
+# Fandoogh Rest architecture and development
 
 ## Boundaries
 
-AdminCafe is a PSR-4 PHP plugin with isolated Vue 3 applications built by Vite and styled with scoped Tailwind/CSS. WooCommerce is required and owns products, taxonomy, inventory, money, carts, order items, refunds and payment status. AdminCafe adds operational metadata and presentation rather than duplicate food/order post types.
+Fandoogh Rest is a PSR-4 PHP plugin with isolated Vue 3 applications built by Vite and styled with scoped Tailwind/CSS. WooCommerce is required and owns products, taxonomy, inventory, money, carts, order items, refunds and payment status. Fandoogh Rest adds operational metadata and presentation rather than duplicate food/order post types.
 
 | Module | Responsibility |
 |---|---|
@@ -32,7 +32,7 @@ Table requests are bound to a Woo guest session plus an opaque table token. CSRF
 
 Operational states are `awaiting_approval → accepted → preparing → ready → delivered`, with allowed cancellation transitions. Financial status is independent: approval is not payment, and cancellation is not a refund. Online orders require paid confirmation or an explicitly permitted offline method before acceptance. Staff mutation locks protect duplicate settlement/refund calls.
 
-Online clients fill Woo's Store API cart, select pickup/delivery through the protected AdminCafe API, and navigate to native Woo checkout. Both classic and Store API checkout enforce current channel settings. Pickup shipping suppression is session-scoped; products are not globally changed to virtual.
+Online clients fill Woo's Store API cart, select pickup/delivery through the protected Fandoogh Rest API, and navigate to native Woo checkout. Both classic and Store API checkout enforce current channel settings. Pickup shipping suppression is session-scoped; products are not globally changed to virtual.
 
 Events live in `{$wpdb->prefix}admincafe_events`; reads live in `admincafe_event_reads`. New-order event keys deduplicate both panel and Push deliveries. Browser device subscriptions belong to a user, require notification capability at delivery and are revoked on logout. Action Scheduler retries sending up to three times, with WP-Cron fallback. Events expire after 90 days; request ledgers remain for deduplication.
 
@@ -42,7 +42,7 @@ Namespace: `admincafe/v1`. Management writes require a signed-in WordPress cooki
 
 Use Woo CRUD/query APIs for business data and prepared statements for the add-on's event/lease storage. All request shapes and enumerations are bounded/validated. Media accepts only genuine JPEG/PNG/WebP up to 5MB/40 megapixels. XLSX is parsed without extraction, DTD/entities or cached formulas; expanded archives/XML/rows/cells are bounded. Push endpoints are allowlisted browser provider hosts, HTTPS port 443, with strict encryption key lengths.
 
-API/panel responses are no-store; the service worker has no fetch/cache handler. It does not cache credentials/customer orders. Scope is the panel path. Page caching/CDN rules still need to exclude cart, checkout, panel, QR and AdminCafe REST routes on deployment. Actual WordPress hardening, backup, HTTPS and gateway setup belong to the host/site configuration.
+API/panel responses are no-store; the service worker has no fetch/cache handler. It does not cache credentials/customer orders. Scope is the panel path. Page caching/CDN rules still need to exclude cart, checkout, panel, QR and Fandoogh Rest REST routes on deployment. Actual WordPress hardening, backup, HTTPS and gateway setup belong to the host/site configuration.
 
 ## Extension points
 
@@ -63,7 +63,7 @@ Only public menu/order routes, native Woo cart/checkout and corresponding Store 
 
 `frontend/src/customer-i18n.js` is the customer UI source, staged into `resources/customer-strings.json`; server validation text lives in `customer-server-strings.json`. `languages/build_customer_catalog.py` builds Chinese/Turkish customer PO/MO assets. The Persian operational and legacy English catalogs use `languages/build_catalog.py`. Official core/Woo MO and JS packs are bundled as data under `languages/checkout`; URLs, component versions, checksums and license are recorded in `SOURCES.json`. Installed/custom language packs take precedence. These UI catalogs do not require remote translation. Optional automatic content translation is a separate module, disabled until configured; public menu rendering reads stored content and never calls the provider.
 
-Automatic translation uses a provider interface with a Google Cloud Translation Basic v2 adapter. Its fixed HTTPS endpoint receives only plain Persian display text, with explicit source/target and NMT model; API key authentication is server-side. Private configuration is separate from `admincafe_settings`; redacted management responses cannot reveal its encrypted credential. An optional `ADMINCAFE_GOOGLE_TRANSLATE_API_KEY` constant takes precedence. Queue entries contain source identifiers/fingerprints and safe error codes, never credentials or customer data. Action Scheduler runs work asynchronously, with WP-Cron fallback.
+Automatic translation uses a provider interface with a Google Cloud Translation Basic v2 adapter. Its fixed HTTPS endpoint receives only plain Persian display text, with explicit source/target and NMT model; API key authentication is server-side. Private configuration is separate from `admincafe_settings`; redacted management responses cannot reveal its encrypted credential. An optional `FANDOOGH_REST_GOOGLE_TRANSLATE_API_KEY` constant takes precedence. Queue entries contain source identifiers/fingerprints and safe error codes, never credentials or customer data. Action Scheduler runs work asynchronously, with WP-Cron fallback.
 
 Canonical source changes invalidate stale work; unchanged source avoids translation on price/stock updates. Stored generated-output provenance distinguishes machine fields from manual corrections. The `admincafe_translation_manual_input` action records explicit manual intent, including empty fields removed by display-map sanitization. Workers reread source/provenance before writing and avoid overriding manual changes made while a network request is in flight. Existing Woo IDs, monetary fields, stock and immutable order snapshots remain unchanged. See `docs/TRANSLATION.md` for setup, consumption limits and credential rotation.
 
@@ -94,4 +94,8 @@ Automated coverage includes catalog validation, staff restrictions, table policy
 
 ## Licenses
 
-AdminCafe is GPL-2.0-or-later. Vazirmatn is packaged under SIL OFL; proprietary IRANSans/Dana are user supplied. Composer dependencies retain their own licenses. No generated test site or third-party commercial font is included in the release ZIP.
+Fandoogh Rest is GPL-2.0-or-later. Vazirmatn is packaged under SIL OFL; proprietary IRANSans/Dana are user supplied. Composer dependencies retain their own licenses. No generated test site or third-party commercial font is included in the release ZIP.
+
+## Publication compatibility
+
+Version 1.3.1 uses PHP namespace FandooghRest and bootstrap/constants FANDOOGH_REST_*. Stored admincafe identifiers, REST namespace, request token header, block names and CSS scopes remain stable. New fandoogh_rest_* shortcodes coexist with original admincafe_* shortcodes. Old ADMINCAFE_GOOGLE_TRANSLATE_API_KEY and ADMINCAFE_REMOVE_DATA configuration names remain supported fallbacks. Multi-branch support is planned and not implemented.

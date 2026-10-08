@@ -17,7 +17,7 @@ export default {
       <article>
         <small>{{ t("تعداد سفارش") }}</small>
         <h2>{{ reports.order_count || 0 }}</h2>
-        <span>{{ t("سفارش‌های ادمین کافه") }}</span>
+        <span>{{ t("سفارش‌های رستوران فندوق") }}</span>
       </article>
       <article>
         <small>{{ t("منتظر رسیدگی") }}</small>

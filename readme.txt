@@ -1,17 +1,17 @@
-=== AdminCafe ===
+=== Fandoogh Rest ===
 Tags: restaurant, digital menu, woocommerce, qr, rtl
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 8.2
 Requires Plugins: woocommerce
-Stable tag: 1.3.0
+Stable tag: 1.3.1
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 WooCommerce digital menus and a dedicated restaurant operations panel with Persian RTL, table approval, native online checkout and QR codes.
 
 == Description ==
-AdminCafe uses WooCommerce products, categories, inventory and orders as the single data source. The dedicated /cafe-panel/ handles menu editing, table requests, cashier orders, reports, staff permissions, imports, appearance and notifications.
+Fandoogh Rest uses WooCommerce products, categories, inventory and orders as the single data source. The dedicated /cafe-panel/ handles menu editing, table requests, cashier orders, reports, staff permissions, imports, appearance and notifications.
 
 The menu works as a standalone /menu/ route or as shared components in WordPress, Elementor and shortcode-compatible builders. Menu-only QR codes work without creating tables or enabling orders. Table orders require staff approval before preparation. Pickup and delivery use the native WooCommerce cart, checkout and payment gateways.
 
@@ -21,7 +21,7 @@ Choose from five menu designs and customize cards, food/language dialogs, catego
 
 == Installation ==
 1. Activate WooCommerce 9.0+ on WordPress 6.5+ and PHP 8.2+.
-2. Upload and activate the AdminCafe ZIP.
+2. Upload and activate the Fandoogh Rest ZIP.
 3. Open /cafe-panel/ as a site administrator.
 4. Configure the menu, food products, staff and ordering modes.
 5. Configure native WooCommerce gateway/shipping/checkout pages before enabling online orders.
@@ -36,7 +36,7 @@ No. Products, prices, stock, carts and orders belong to WooCommerce.
 No. The standalone menu route is provided. A custom published page can also be selected and built with the Gutenberg block, Elementor widget or shortcodes.
 
 = Which shortcodes are available? =
-[admincafe_menu], [admincafe_categories], [admincafe_products category="12"], [admincafe_cart]. Use mode="menu" for a display-only component. Server ordering settings remain authoritative.
+[fandoogh_rest_menu], [fandoogh_rest_categories], [fandoogh_rest_products category="12"], [fandoogh_rest_cart]. Original admincafe_* aliases remain supported. Use mode="menu" for a display-only component. Server ordering settings remain authoritative.
 
 = Does changing currency convert prices? =
 No. The currency selector changes the WooCommerce currency; monetary numbers remain unchanged. Verify gateway compatibility with IRT/Toman or any selected currency.
@@ -48,9 +48,12 @@ Yes, after configuring the optional Google Cloud Translation Basic connection in
 Web Push requires HTTPS, browser/OS support, user permission and working server-side outgoing HTTPS/cron. iOS/iPadOS web apps require Home Screen installation. In-panel notifications remain available without Push. No offline ordering is provided.
 
 = Does uninstall erase food and order data? =
-No. Normal uninstall preserves data. Optional ADMINCAFE_REMOVE_DATA only removes AdminCafe-specific settings, roles and events; WooCommerce products/orders remain.
+No. Normal uninstall preserves data. Optional FANDOOGH_REST_REMOVE_DATA only removes Fandoogh Rest-specific settings, roles and events; WooCommerce products/orders remain.
 
 == Changelog ==
+= 1.3.1 =
+Fandoogh Rest branding, compatible legacy identifiers and shortcodes, documented Git workflow, CI and reproducible packages. Multi-branch support remains planned.
+
 = 1.3.0 =
 Five selectable menu designs, validated and scoped custom CSS editors for menu elements, and an isolated responsive appearance preview. Appearance also applies to the entry language dialog and builder components.
 

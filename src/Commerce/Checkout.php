@@ -1,10 +1,10 @@
 <?php
 
-namespace AdminCafe\Commerce;
+namespace FandooghRest\Commerce;
 
-use AdminCafe\Core\Settings;
-use AdminCafe\Menu\Catalog;
-use AdminCafe\Localization\Language;
+use FandooghRest\Core\Settings;
+use FandooghRest\Menu\Catalog;
+use FandooghRest\Localization\Language;
 
 final class Checkout
 {
@@ -38,7 +38,7 @@ final class Checkout
     public static function language(mixed $value = null): string|\WP_Error
     {
         if ($value !== null && (!is_string($value) || !in_array($value, Language::enabled(), true))) {
-            return new \WP_Error('language', __('Unsupported customer language.', 'admincafe'), ['status' => 400]);
+            return new \WP_Error('language', __('Unsupported customer language.', 'fandoogh-rest'), ['status' => 400]);
         }
         return Language::resolve($value);
     }
@@ -46,7 +46,7 @@ final class Checkout
     public static function choose(string $channel, mixed $language = null): array|\WP_Error
     {
         if (!in_array($channel, ['pickup', 'delivery'], true)) {
-            return new \WP_Error('channel', __('Invalid checkout channel.', 'admincafe'), ['status' => 400]);
+            return new \WP_Error('channel', __('Invalid checkout channel.', 'fandoogh-rest'), ['status' => 400]);
         }
         $error = self::allowed($channel);
         if (is_wp_error($error)) {
@@ -75,7 +75,7 @@ final class Checkout
             return true;
         }
         if (!in_array($channel, ['pickup', 'delivery'], true) || Settings::get('ordering_paused') || !Settings::get($channel . '_enabled')) {
-            return new \WP_Error('channel_disabled', __('This ordering channel is unavailable.', 'admincafe'), ['status' => 403]);
+            return new \WP_Error('channel_disabled', __('This ordering channel is unavailable.', 'fandoogh-rest'), ['status' => 403]);
         }
         return true;
     }
@@ -101,7 +101,7 @@ final class Checkout
                 if (in_array((int) $item['product_id'], $visible, true)) {
                     return new \WP_Error(
                         'channel_required',
-                        __('Choose pickup or delivery from the restaurant menu before checkout.', 'admincafe'),
+                        __('Choose pickup or delivery from the restaurant menu before checkout.', 'fandoogh-rest'),
                         ['status' => 403]
                     );
                 }
@@ -306,7 +306,7 @@ final class Checkout
         try {
             do_action('admincafe_order_created', $id);
         } catch (\Throwable $error) {
-            wc_get_logger()->error(__('AdminCafe checkout notification failed.', 'admincafe'), ['source' => 'admincafe']);
+            wc_get_logger()->error(__('Fandoogh Rest checkout notification failed.', 'fandoogh-rest'), ['source' => 'admincafe']);
         }
     }
 
@@ -321,7 +321,7 @@ final class Checkout
             try {
                 do_action('admincafe_order_paid', $id);
             } catch (\Throwable $error) {
-                wc_get_logger()->error(__('AdminCafe payment notification failed.', 'admincafe'), ['source' => 'admincafe']);
+                wc_get_logger()->error(__('Fandoogh Rest payment notification failed.', 'fandoogh-rest'), ['source' => 'admincafe']);
             }
         }
     }

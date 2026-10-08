@@ -1,6 +1,6 @@
 {
-  "name": "admincafe-ui",
-  "version": "1.3.0",
+  "name": "fandoogh-rest-ui",
+  "version": "1.3.1",
   "type": "module",
   "private": true,
   "scripts": {

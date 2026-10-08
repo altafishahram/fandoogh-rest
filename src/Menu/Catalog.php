@@ -1,7 +1,7 @@
 <?php
-namespace AdminCafe\Menu;
+namespace FandooghRest\Menu;
 
-use AdminCafe\Core\Settings;
+use FandooghRest\Core\Settings;
 
 final class Catalog
 {
@@ -48,7 +48,7 @@ final class Catalog
     public static function product(int $id): array|\WP_Error
     {
         $product = wc_get_product($id);
-        return $product ? self::serialize($product) : new \WP_Error('product_not_found', __('Product not found.', 'admincafe'), ['status' => 404]);
+        return $product ? self::serialize($product) : new \WP_Error('product_not_found', __('Product not found.', 'fandoogh-rest'), ['status' => 404]);
     }
 
     public static function serialize($product, ?string $language = null): array
@@ -91,14 +91,14 @@ final class Catalog
     /** Strict nested-map validation, reusable by category REST writes before any mutation. */
     public static function validateTranslations(mixed $input, array $fields = ['name', 'description', 'short_description']): array|\WP_Error
     {
-        if (!is_array($input) || count($input) > 3) { return new \WP_Error('invalid_translations', __('Invalid content translations.', 'admincafe'), ['status' => 400]); }
+        if (!is_array($input) || count($input) > 3) { return new \WP_Error('invalid_translations', __('Invalid content translations.', 'fandoogh-rest'), ['status' => 400]); }
         $result = [];
         foreach ($input as $language => $values) {
-            if (!in_array($language, ['en', 'zh', 'tr'], true) || !is_array($values) || count($values) > count($fields)) { return new \WP_Error('invalid_translations', __('Invalid content translations.', 'admincafe'), ['status' => 400]); }
+            if (!in_array($language, ['en', 'zh', 'tr'], true) || !is_array($values) || count($values) > count($fields)) { return new \WP_Error('invalid_translations', __('Invalid content translations.', 'fandoogh-rest'), ['status' => 400]); }
             $result[$language] = [];
             foreach ($values as $field => $value) {
                 $maximum = $field === 'name' ? 250 : ($field === 'short_description' ? 5000 : 20000);
-                if (!in_array($field, $fields, true) || !is_string($value) || mb_strlen($value) > $maximum) { return new \WP_Error('invalid_translations', __('Invalid content translations.', 'admincafe'), ['status' => 400]); }
+                if (!in_array($field, $fields, true) || !is_string($value) || mb_strlen($value) > $maximum) { return new \WP_Error('invalid_translations', __('Invalid content translations.', 'fandoogh-rest'), ['status' => 400]); }
                 $result[$language][$field] = $field === 'name' ? sanitize_text_field($value) : sanitize_textarea_field(wp_strip_all_tags($value));
             }
         }
@@ -127,18 +127,18 @@ final class Catalog
     {
         foreach (['name', 'description', 'short_description', 'sku', 'price', 'regular_price', 'sale_price', 'image_id', 'order', 'status', 'available', 'visible'] as $field) {
             if (array_key_exists($field, $input) && !is_scalar($input[$field]) && $input[$field] !== null) {
-                return new \WP_Error('invalid_field', sprintf(__('Invalid product field: %s', 'admincafe'), $field), ['status' => 400]);
+                return new \WP_Error('invalid_field', sprintf(__('Invalid product field: %s', 'fandoogh-rest'), $field), ['status' => 400]);
             }
         }
         if (!$id && isset($input['type']) && $input['type'] !== 'simple') {
-            return new \WP_Error('unsupported_product', __('Create simple products here; configure variable products in WooCommerce.', 'admincafe'), ['status' => 400]);
+            return new \WP_Error('unsupported_product', __('Create simple products here; configure variable products in WooCommerce.', 'fandoogh-rest'), ['status' => 400]);
         }
         $product = $id ? wc_get_product($id) : new \WC_Product_Simple();
         if (!$product) {
-            return new \WP_Error('product_not_found', __('Product not found.', 'admincafe'), ['status' => 404]);
+            return new \WP_Error('product_not_found', __('Product not found.', 'fandoogh-rest'), ['status' => 404]);
         }
         if (!in_array($product->get_type(), ['simple', 'variable', 'variation'], true)) {
-            return new \WP_Error('unsupported_product', __('Unsupported product type.', 'admincafe'), ['status' => 400]);
+            return new \WP_Error('unsupported_product', __('Unsupported product type.', 'fandoogh-rest'), ['status' => 400]);
         }
         $translation_patch = null;
         if (array_key_exists('translations', $input)) {
@@ -148,11 +148,11 @@ final class Catalog
         $variation_updates = [];
         $seen_variations = [];
         if (array_key_exists('variation_translations', $input)) {
-            if (!$product->is_type('variable') || !is_array($input['variation_translations']) || count($input['variation_translations']) > 200) { return new \WP_Error('invalid_translations', __('Invalid content translations.', 'admincafe'), ['status' => 400]); }
+            if (!$product->is_type('variable') || !is_array($input['variation_translations']) || count($input['variation_translations']) > 200) { return new \WP_Error('invalid_translations', __('Invalid content translations.', 'fandoogh-rest'), ['status' => 400]); }
             foreach ($input['variation_translations'] as $variation_id => $map) {
-                if (!preg_match('/^[1-9][0-9]*$/D', (string) $variation_id)) { return new \WP_Error('invalid_translations', __('Invalid content translations.', 'admincafe'), ['status' => 400]); }
+                if (!preg_match('/^[1-9][0-9]*$/D', (string) $variation_id)) { return new \WP_Error('invalid_translations', __('Invalid content translations.', 'fandoogh-rest'), ['status' => 400]); }
                 $variant = wc_get_product((int) $variation_id);
-                if (!$variant || !$variant->is_type('variation') || $variant->get_parent_id() !== $product->get_id()) { return new \WP_Error('invalid_variation', __('Every choice must belong to this product and appear once.', 'admincafe'), ['status' => 400]); }
+                if (!$variant || !$variant->is_type('variation') || $variant->get_parent_id() !== $product->get_id()) { return new \WP_Error('invalid_variation', __('Every choice must belong to this product and appear once.', 'fandoogh-rest'), ['status' => 400]); }
                 $checked = self::validateTranslations($map);
                 if (is_wp_error($checked)) { return $checked; }
                 $variation_updates[(int) $variation_id] = ['translations' => $checked];
@@ -160,20 +160,20 @@ final class Catalog
         }
         if (array_key_exists('variations', $input)) {
             if (!$product->is_type('variable') || !is_array($input['variations']) || count($input['variations']) > 200) {
-                return new \WP_Error('invalid_variations', __('Supply existing choices of this variable product.', 'admincafe'), ['status' => 400]);
+                return new \WP_Error('invalid_variations', __('Supply existing choices of this variable product.', 'fandoogh-rest'), ['status' => 400]);
             }
             foreach ($input['variations'] as $row) {
-                if (!is_array($row) || empty($row['id']) || !is_scalar($row['id'])) { return new \WP_Error('invalid_variation', __('A variation ID is required.', 'admincafe'), ['status' => 400]); }
+                if (!is_array($row) || empty($row['id']) || !is_scalar($row['id'])) { return new \WP_Error('invalid_variation', __('A variation ID is required.', 'fandoogh-rest'), ['status' => 400]); }
                 $variation_id = absint($row['id']);
                 $variation = wc_get_product($variation_id);
                 if (!$variation || !$variation->is_type('variation') || $variation->get_parent_id() !== $product->get_id() || isset($seen_variations[$variation_id])) {
-                    return new \WP_Error('invalid_variation', __('Every choice must belong to this product and appear once.', 'admincafe'), ['status' => 400]);
+                    return new \WP_Error('invalid_variation', __('Every choice must belong to this product and appear once.', 'fandoogh-rest'), ['status' => 400]);
                 }
                 $fields = array_intersect_key($row, array_flip(['price', 'regular_price', 'sale_price', 'available']));
                 foreach ($fields as $key => $value) {
-                    if (!is_scalar($value) && $value !== null) { return new \WP_Error('invalid_variation', __('Invalid choice field.', 'admincafe'), ['status' => 400]); }
+                    if (!is_scalar($value) && $value !== null) { return new \WP_Error('invalid_variation', __('Invalid choice field.', 'fandoogh-rest'), ['status' => 400]); }
                     if ($key !== 'available' && $value !== '' && (!is_numeric($value) || !is_finite((float) $value) || (float) $value < 0)) {
-                        return new \WP_Error('invalid_price', __('Choice price must be a non-negative number.', 'admincafe'), ['status' => 400]);
+                        return new \WP_Error('invalid_price', __('Choice price must be a non-negative number.', 'fandoogh-rest'), ['status' => 400]);
                     }
                 }
                 $seen_variations[$variation_id] = true;
@@ -181,26 +181,26 @@ final class Catalog
             }
         }
         if (!$id && empty(trim((string) ($input['name'] ?? '')))) {
-            return new \WP_Error('invalid_name', __('Product name is required.', 'admincafe'), ['status' => 400]);
+            return new \WP_Error('invalid_name', __('Product name is required.', 'fandoogh-rest'), ['status' => 400]);
         }
         foreach (['price', 'regular_price', 'sale_price'] as $field) {
             if (isset($input[$field]) && $input[$field] !== '' && (!is_numeric($input[$field]) || !is_finite((float) $input[$field]) || (float) $input[$field] < 0)) {
-                return new \WP_Error('invalid_price', __('Price must be a non-negative number.', 'admincafe'), ['status' => 400]);
+                return new \WP_Error('invalid_price', __('Price must be a non-negative number.', 'fandoogh-rest'), ['status' => 400]);
             }
         }
         if (isset($input['status']) && !in_array($input['status'], ['publish', 'draft', 'private'], true)) {
-            return new \WP_Error('invalid_status', __('Invalid product status.', 'admincafe'), ['status' => 400]);
+            return new \WP_Error('invalid_status', __('Invalid product status.', 'fandoogh-rest'), ['status' => 400]);
         }
         if (isset($input['image_id']) && (int) $input['image_id'] !== 0 && !wp_attachment_is_image(absint($input['image_id']))) {
-            return new \WP_Error('invalid_image', __('Choose an image attachment.', 'admincafe'), ['status' => 400]);
+            return new \WP_Error('invalid_image', __('Choose an image attachment.', 'fandoogh-rest'), ['status' => 400]);
         }
         if (isset($input['category_ids'])) {
             if (!is_array($input['category_ids'])) {
-                return new \WP_Error('invalid_categories', __('Categories must be an array.', 'admincafe'), ['status' => 400]);
+                return new \WP_Error('invalid_categories', __('Categories must be an array.', 'fandoogh-rest'), ['status' => 400]);
             }
             foreach ($input['category_ids'] as $term) {
                 if (!term_exists(absint($term), 'product_cat')) {
-                    return new \WP_Error('invalid_category', __('Category not found.', 'admincafe'), ['status' => 400]);
+                    return new \WP_Error('invalid_category', __('Category not found.', 'fandoogh-rest'), ['status' => 400]);
                 }
             }
         }

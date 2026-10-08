@@ -12,7 +12,7 @@ export default defineConfig({
         entryFileNames: "[name].js",
         chunkFileNames: "chunks/[name]-[hash].js",
         assetFileNames: (a) =>
-          a.name?.endsWith(".css") ? "admincafe.css" : "[name]-[hash][extname]",
+          a.name?.endsWith(".css") ? "fandoogh-rest.css" : "[name]-[hash][extname]",
       },
     },
   },

@@ -1,11 +1,11 @@
 <?php
 // Run with `php tests/commerce.php`; tests exercise server rules without WordPress.
-namespace AdminCafe\Core {
+namespace FandooghRest\Core {
     final class Settings { public static array $data=[]; public static function get($key) { return self::$data[$key]??false; } }
     final class Security { public static function sessionKey() { return 'test-session'; } }
 }
-namespace AdminCafe\Tables { final class Tables { public static function context($token) { return ['token'=>$token,'can_order'=>true]; } } }
-namespace AdminCafe\Localization {
+namespace FandooghRest\Tables { final class Tables { public static function context($token) { return ['token'=>$token,'can_order'=>true]; } } }
+namespace FandooghRest\Localization {
     final class Language {
         public static string $selected='fa'; public static bool $customer=true;
         public static array $codes=['fa','en','zh','tr'];
@@ -15,7 +15,7 @@ namespace AdminCafe\Localization {
         public static function isCustomerRequest() { return self::$customer; }
     }
 }
-namespace AdminCafe\Menu {
+namespace FandooghRest\Menu {
     final class Catalog {
         public static function menu($language=null): array { return ['products'=>[['id'=>1],['id'=>2]],'categories'=>[]]; }
         public static function localizedName($product,$language) { return $language.':'.$product->get_name(); }
@@ -124,8 +124,8 @@ namespace {
     require __DIR__.'/../src/Rest/Ordering.php';
     $checks=0;
     function check($ok,$message) { $GLOBALS['checks']++; if (!$ok) throw new \RuntimeException($message); }
-    use AdminCafe\Commerce\Orders;
-    use AdminCafe\Commerce\Checkout;
+    use FandooghRest\Commerce\Orders;
+    use FandooghRest\Commerce\Checkout;
     check(!is_wp_error(Orders::validateItems([['product_id'=>1,'quantity'=>2]])),'Published zero-price product is orderable');
     check(is_wp_error(Orders::validateItems([['product_id'=>99,'quantity'=>1]])),'Hidden products rejected');
     check(is_wp_error(Orders::validateItems([['product_id'=>1,'quantity'=>1.5]])),'Fractional quantity rejected');
@@ -139,9 +139,9 @@ namespace {
     check(!in_array('preparing',Orders::transitions()['awaiting_approval'],true),'Kitchen requires staff approval');
     check(Orders::transitions()['cancelled']===[],'Cancelled requests cannot resume');
     check(is_wp_error(Checkout::allowed('pickup')),'Pickup disabled by default');
-    \AdminCafe\Core\Settings::$data=['pickup_enabled'=>true];
+    \FandooghRest\Core\Settings::$data=['pickup_enabled'=>true];
     check(Checkout::allowed('pickup')===true,'Enabled pickup allowed');
-    \AdminCafe\Core\Settings::$data['ordering_paused']=true;
+    \FandooghRest\Core\Settings::$data['ordering_paused']=true;
     check(is_wp_error(Checkout::allowed('pickup')),'Pause authoritative at checkout');
     check(is_wp_error(Checkout::allowed('invalid')),'Unknown channel rejected');
     $wc=(object)['session'=>new class {
@@ -152,14 +152,14 @@ namespace {
         public array $items=[['product_id'=>1,'variation_id'=>0,'quantity'=>1]];
         public function get_cart() { return $this->items; }
     }];
-    \AdminCafe\Core\Settings::$data=[];
+    \FandooghRest\Core\Settings::$data=[];
     check(is_wp_error(Checkout::cartError()),'Visible menu products cannot bypass ordering switches through direct checkout');
     $wc->cart->items=[['product_id'=>99,'variation_id'=>0,'quantity'=>1]];
     check(Checkout::cartError()===true,'Unrelated ordinary Woo product checkout remains available');
     $wc->cart->items=[['product_id'=>1,'variation_id'=>0,'quantity'=>1]];
     $products[1]->stock=true;
     $wc->session->data['admincafe_channel']='pickup';
-    \AdminCafe\Core\Settings::$data=['pickup_enabled'=>true];
+    \FandooghRest\Core\Settings::$data=['pickup_enabled'=>true];
     check(Checkout::cartError()===true,'Selected enabled pickup cart allowed');
     $test_order=new WC_Order();
     $checkout=new Checkout();
@@ -176,7 +176,7 @@ namespace {
     $checkout->placed(42);
     check(count($logged_errors)===1,'Checkout notification event remains deduplicated');
     $throw_notification=false;
-    \AdminCafe\Core\Settings::$data=['dine_in_enabled'=>true];
+    \FandooghRest\Core\Settings::$data=['dine_in_enabled'=>true];
     $input=['request_id'=>'request-1234567890','table_token'=>'table-token','items'=>[['product_id'=>1,'quantity'=>1]]];
     $scope=hash('sha256','test-session|table-token|'.$input['request_id']);
     $fingerprint=hash('sha256',wp_json_encode([$input['items'],'','']));
@@ -192,11 +192,11 @@ namespace {
     check(Orders::create($input)['tracking_token']===$token,'Persisted complete request recovers original tracking token');
     $retryLanguage=$input; $retryLanguage['language']='en';
     check(Orders::create($retryLanguage)['tracking_token']===$token,'Display language change does not duplicate or conflict with financial order');
-    \AdminCafe\Localization\Language::remember('fa');
+    \FandooghRest\Localization\Language::remember('fa');
     check($options[$marker]['order_id']===42,'Recovered request mapping persisted');
     $changed=$input; $changed['items'][0]['quantity']=2;
     check(Orders::create($changed)->code==='request_conflict','Idempotency request cannot change payload');
-    $ordering=new \AdminCafe\Rest\Ordering();
+    $ordering=new \FandooghRest\Rest\Ordering();
     $options['admincafe_order_lock_42']=time();
     check(is_wp_error($ordering->update(new WP_REST_Request(['id'=>42]))),'Active order lock denies concurrent mutation');
     $options['admincafe_order_lock_42']=time()-600;
@@ -205,11 +205,11 @@ namespace {
     check(is_wp_error(Checkout::language(['en'])),'Reject malformed language object');
     check(is_wp_error(Checkout::language('en<script>')),'Reject unrecognized customer language');
     check(Checkout::language('zh')==='zh','Accept enabled Chinese language');
-    \AdminCafe\Localization\Language::$codes=['fa','en'];
+    \FandooghRest\Localization\Language::$codes=['fa','en'];
     check(is_wp_error(Checkout::language('tr')),'Reject disabled supported language');
-    \AdminCafe\Localization\Language::$codes=['fa','en','zh','tr'];
+    \FandooghRest\Localization\Language::$codes=['fa','en','zh','tr'];
     $wc->session->data['admincafe_channel']='pickup';
-    \AdminCafe\Localization\Language::remember('tr');
+    \FandooghRest\Localization\Language::remember('tr');
     $line=new WC_Order_Item_Product($products[1]);
     $checkout->lineItem($line,'cart-key',['data'=>$products[1]],$test_order);
     check($line->get_meta('_admincafe_localized_name')==='tr:Canonical 1','Classic checkout snapshots localized line name');
@@ -235,7 +235,7 @@ namespace {
     check($response->data['items'][0]['variation']===[] && count($response->data['items'][0]['item_data'])===1,'Blocks translated variant hides redundant option rows and keeps custom data');
     Orders::snapshotItem($variantLine,$products[3],'fa');
     check($variantLine->get_meta('_admincafe_variant_keys')==='','Switching checkout draft back to Persian clears outdated suppression snapshot');
-    \AdminCafe\Localization\Language::$customer=false;
+    \FandooghRest\Localization\Language::$customer=false;
     check($checkout->cartItemName('Canonical 1',['data'=>$products[1]],'key')==='Canonical 1','Admin context does not translate customer cart names');
     check($checkout->orderItemName('Canonical 1',$line)==='Canonical 1','Panel or notification context preserves canonical order names');
     echo "Commerce rules: {$checks} assertions passed.\n";

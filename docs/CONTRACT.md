@@ -1,17 +1,14 @@
-# AdminCafe implementation contract
+# Fandoogh Rest implementation contract
 
-This file coordinates module ownership. All PHP is namespaced `AdminCafe`, PSR-4 under `src/`. Minimum PHP 8.2; WordPress 6.5; WooCommerce 9.0. No food/order CPT: WooCommerce is the only product/order store, via CRUD APIs, compatible with HPOS.
+This file coordinates module ownership. All PHP is namespaced `FandooghRest`, PSR-4 under `src/`. Minimum PHP 8.2; WordPress 6.5; WooCommerce 9.0. No food/order CPT: WooCommerce is the only product/order store, via CRUD APIs, compatible with HPOS.
 
-## Ownership
+## Module boundaries
 
-- Root: plugin bootstrap, Core (Settings, Access, Assets, Routes, Installation), Notifications, Import, Integrations (Elementor/Gutenberg/shortcodes), packaging, docs, integration tests.
-- backend agent: Menu/Catalog.php, Tables/Tables.php, Reports/Reports.php, Rest/Management.php and their unit tests.
-- commerce agent: Commerce/Orders.php, Commerce/Checkout.php, Rest/Ordering.php and their unit tests.
-- frontend agent: frontend/ including package.json, Vite, Vue UI, tests and preview, plus public/sw.js.
+PHP modules own domain behavior; Core/Plugin.php composes them. Frontend presentation belongs in frontend/, and shared contracts remain versioned here. Coordinate changes to API shapes, persisted identifiers and checkout behavior across the affected modules.
 
-Do not modify another owner's files without coordinating. Register module hooks via public `register(): void`. REST namespace `admincafe/v1`; WordPress JSON errors. PHP root constants ADMINCAFE_VERSION, ADMINCAFE_FILE, ADMINCAFE_PATH, ADMINCAFE_URL. All admin routes require login, X-WP-Nonce and fine-grained capabilities. No WC consumer secrets in browser. Public POST requires same-origin validation, WC session / guest CSRF token from fresh bootstrap, throttling, idempotency for ordering.
+Register module hooks via public `register(): void`. REST namespace `admincafe/v1`; WordPress JSON errors. PHP root constants FANDOOGH_REST_VERSION, FANDOOGH_REST_FILE, FANDOOGH_REST_PATH, FANDOOGH_REST_URL. All admin routes require login, X-WP-Nonce and fine-grained capabilities. No WC consumer secrets in browser. Public POST requires same-origin validation, WC session / guest CSRF token from fresh bootstrap, throttling, idempotency for ordering.
 
-## Shared Core APIs (root writes these)
+## Shared Core APIs
 
 - `Core\Settings::defaults(): array`, `::all(): array`, `::get(string $key, mixed $default=null): mixed`, `::update(array $input): array|\WP_Error`, `::publicSettings(): array`, `::menuUrl(): string`, `::panelUrl(): string`.
 - Settings keys: restaurant_name, tagline, logo_id, cover_id, menu_slug (`menu`), panel_slug (`cafe-panel`), menu_page_id (0 = standalone), dine_in_enabled (false), pickup_enabled (false), delivery_enabled (false), ordering_paused (false), table_default_mode (`menu` or `order`), accent (`#c87545`), category_background (`#f3ede5`), background (`#faf8f5`), font_family (`Vazirmatn`), custom_font_url, currency_label (empty = WC label), title_size_mobile (18), title_size_desktop (22), description_size_mobile (13), description_size_desktop (14), price_size_mobile (16), price_size_desktop (18), title_weight (700), description_weight (400), price_weight (700), layout (`grid` or `list`), restaurant_phone, restaurant_address, hours_text, preparation_minutes (20), notification_sound (true), messages {unavailable, closed, order_received}, menu_category_ids (empty = all), qr_color (`#242424`), qr_size (512).
@@ -19,7 +16,7 @@ Do not modify another owner's files without coordinating. Register module hooks 
 - `Core\Access` registers `admincafe_manager`, `admincafe_staff`, `admincafe_kitchen`, `admincafe_cashier` roles and caps: `admincafe_manage_menu`, `admincafe_manage_orders`, `admincafe_manage_settings`, `admincafe_manage_tables`, `admincafe_view_reports`, `admincafe_manage_staff`, `admincafe_receive_notifications`. `::can(string $cap): bool`. Managers/admin have all; staff orders/tables/notifications; kitchen orders/notifications; cashier orders/reports/notifications.
 - `Core\Security::publicPermission(\WP_REST_Request $request): bool|\WP_Error`, `::throttle(string $bucket,int $limit,int $seconds): bool|\WP_Error` implemented by root. Public writes send X-AdminCafe-Token (session token supplied by bootstrap).
 
-## Menu and management APIs (backend)
+## Menu and management APIs
 
 - `Menu\Catalog::menu(): array` => `{products:[], categories:[]}`. Product public schema: id, type, name, description (plain text), short_description (plain text), price (decimal string), regular_price, sale_price, currency, currency_symbol, image (URL), image_id, available (bool), sku, category_ids[], order (int), variations[] {id,name,price,available,attributes}. Product metadata `_admincafe_visible` defaults yes. Category: id,name,parent,image,icon,order. Only published visible products in selected categories.
 - `::saveProduct(array $input,int $id=0): array|WP_Error`; `::product(int $id): array|WP_Error`; saves WC CRUD, supported simple products and existing variations; menus include variable choices.
@@ -32,7 +29,7 @@ Do not modify another owner's files without coordinating. Register module hooks 
 - GET /manage/reports => {revenue,order_count,pending_count,top_products:[],daily:[],currency_symbol} filter days (default 7), only AdminCafe orders; paid revenue excludes refunded amounts, WC query APIs.
 - GET/POST /manage/staff ; PATCH/DELETE /manage/staff/{id}; manager users can only assign AdminCafe operational roles and cannot modify admins/themselves critically; POST /manage/media multipart file => {id,url} with size/mime validation.
 
-## Commerce APIs (commerce)
+## Commerce APIs
 
 - GET /bootstrap?table={token} => {settings (public),products,categories,context (null or table),ordering:{dine_in,pickup,delivery,paused},csrf_token,menu_url,checkout_url,currency_symbol,wc_store_api_url,wc_nonce}. No cache. Root handles through Ordering or companion.
 - POST /orders/table => {table_token,items:[{product_id,variation_id?,quantity}],name?,note?,request_id}. Reply {id,number,stage,total,currency_symbol,tracking_token}. Table/global server switches are authoritative. Resolve prices on server; validate products/variants/stock; no client totals. Status `on-hold` (offline settlement); `_admincafe_stage=awaiting_approval`; `_admincafe_channel=table`; table token/label metadata. Staff approval must precede preparation. Stage separate from financial status.
@@ -75,3 +72,7 @@ The provider interface is `Translation/Provider::translate(array $texts,string $
 PHP outputs `<div class="admincafe-root" data-admincafe-app="menu|panel" data-admincafe-config="{escaped JSON}"></div>`. Config {apiBase,nonce,menuUrl,panelUrl,assetUrl,tableToken,component:`menu|categories|products|cart`,categoryId?,viewMode?:`auto|menu`,locale:`fa-IR`,demo?:bool}. Multiple mount roots share menu/cart state. GET /bootstrap fresh guest tokens; REST management X-WP-Nonce. Built entries `assets/menu.js`, `assets/panel.js`, `assets/admincafe.css`; local font assets (Vazirmatn if available license bundled). CSS scoped to .admincafe-root, no global Tailwind reset pollution. Bundle QR generator for browser SVG/PNG download. Builder shortcode blocks and Elementor widget wrapper same app entry. Public app persisted table selection localStorage, Woo cart server-backed through Store API; no API consumer keys. Demo preview with explicit mock API adapter, production never fabricates orders.
 
 Default module security: escape PHP output, validate and whitelist REST input, sanitized image uploads only; no external image sideloading; capabilities always server-side; guest rate-limit shared-IP-conscious; guests cannot access management endpoints; idempotency tokens cannot be replayed across tables/sessions. Inline prices and drag-drop call real management endpoints. Accessibility: RTL, keyboard menus/dialogs, focus restoration, descriptive labels, empty/loading/error states.
+
+## Branding compatibility and future branches
+
+Version 1.3.1 uses the FandooghRest namespace, fandoogh-rest text domain and fandoogh-rest.php entry point. Existing lowercase admincafe identifiers remain compatibility contracts for persisted data, routes, roles, callbacks, CSS and saved integrations. Legacy PHP namespaces/constants and shortcodes retain compatibility bridges. See docs/RELEASE-1.3.1.md for installation migration and docs/MULTIBRANCH-PLAN.md for the accepted future design; multi-branch support is not implemented in this release.

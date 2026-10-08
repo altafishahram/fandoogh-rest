@@ -1,5 +1,5 @@
 <?php
-namespace AdminCafe\Translation;
+namespace FandooghRest\Translation;
 defined('ABSPATH') || exit;
 final class Source
 {
@@ -25,7 +25,7 @@ final class Source
             $translations=(array)get_term_meta($id,'_admincafe_translations',true);
         }
         elseif ($scope==='settings') {
-            $s=\AdminCafe\Core\Settings::all();
+            $s=\FandooghRest\Core\Settings::all();
             $fields=[];
             foreach (['restaurant_name','tagline','restaurant_address','hours_text'] as $key) {
                 $fields[$key]=(string)$s[$key];

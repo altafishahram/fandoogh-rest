@@ -1,5 +1,5 @@
 <?php
-namespace AdminCafe\Translation;
+namespace FandooghRest\Translation;
 defined('ABSPATH') || exit;
 final class GoogleProvider implements Provider
 {
@@ -61,6 +61,6 @@ final class GoogleProvider implements Provider
         return $chunks;
     }
     public static function error(string $code): \WP_Error {
-        return new \WP_Error('translation_'.$code,__('Automatic translation could not be completed.', 'admincafe'),['retryable'=>$code==='transient']);
+        return new \WP_Error('translation_'.$code,__('Automatic translation could not be completed.', 'fandoogh-rest'),['retryable'=>$code==='transient']);
     }
 }

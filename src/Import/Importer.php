@@ -1,8 +1,8 @@
 <?php
-namespace AdminCafe\Import;
+namespace FandooghRest\Import;
 
-use AdminCafe\Menu\Catalog;
-use AdminCafe\Rest\Management;
+use FandooghRest\Menu\Catalog;
+use FandooghRest\Rest\Management;
 
 defined('ABSPATH') || exit;
 
@@ -24,11 +24,11 @@ final class Importer
     {
         $file = $request->get_file_params()['file'] ?? null;
         if (!is_array($file) || (int) ($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK || !is_uploaded_file($file['tmp_name'] ?? '')) {
-            return new \WP_Error('admincafe_import_upload', __('Upload a CSV or XLSX file.', 'admincafe'), ['status' => 400]);
+            return new \WP_Error('admincafe_import_upload', __('Upload a CSV or XLSX file.', 'fandoogh-rest'), ['status' => 400]);
         }
         $extension = strtolower(pathinfo((string) $file['name'], PATHINFO_EXTENSION));
         if (!in_array($extension, ['csv', 'xlsx'], true)) {
-            return new \WP_Error('admincafe_import_upload', __('Only CSV and XLSX files are supported.', 'admincafe'), ['status' => 400]);
+            return new \WP_Error('admincafe_import_upload', __('Only CSV and XLSX files are supported.', 'fandoogh-rest'), ['status' => 400]);
         }
         $data = Reader::read($file['tmp_name'], $extension);
         if (is_wp_error($data)) {
@@ -48,27 +48,27 @@ final class Importer
         $mapping = $request->get_param('mapping');
         $mode = $request->get_param('mode') ?: 'upsert';
         if (!is_string($token) || !preg_match('/^[a-f0-9]{48}$/D', $token) || !is_array($mapping) || !in_array($mode, ['upsert', 'create'], true)) {
-            return new \WP_Error('admincafe_import_request', __('Invalid import request.', 'admincafe'), ['status' => 400]);
+            return new \WP_Error('admincafe_import_request', __('Invalid import request.', 'fandoogh-rest'), ['status' => 400]);
         }
         $key = 'ac_import_' . hash('sha256', $token);
         $data = get_transient($key);
         if (!is_array($data) || $data['user'] !== get_current_user_id()) {
-            return new \WP_Error('admincafe_import_expired', __('The preview has expired. Upload the file again.', 'admincafe'), ['status' => 410]);
+            return new \WP_Error('admincafe_import_expired', __('The preview has expired. Upload the file again.', 'fandoogh-rest'), ['status' => 410]);
         }
         $indexes = [];
         foreach (['name', 'description', 'price', 'sku', 'category', 'status'] as $field) {
             $column = $mapping[$field] ?? '';
             if (!is_string($column) || ($column !== '' && !in_array($column, $data['columns'], true))) {
-                return new \WP_Error('admincafe_import_mapping', __('Choose columns from the uploaded file.', 'admincafe'), ['status' => 400]);
+                return new \WP_Error('admincafe_import_mapping', __('Choose columns from the uploaded file.', 'fandoogh-rest'), ['status' => 400]);
             }
             $indexes[$field] = $column === '' ? null : array_search($column, $data['columns'], true);
         }
         if ($indexes['name'] === null) {
-            return new \WP_Error('admincafe_import_mapping', __('Map the product name column.', 'admincafe'), ['status' => 400]);
+            return new \WP_Error('admincafe_import_mapping', __('Map the product name column.', 'fandoogh-rest'), ['status' => 400]);
         }
         $fingerprint = hash('sha256', wp_json_encode([$indexes, $mode]));
         if (isset($data['fingerprint']) && $data['fingerprint'] !== $fingerprint) {
-            return new \WP_Error('admincafe_import_mapping', __('The mapping cannot change after importing starts.', 'admincafe'), ['status' => 409]);
+            return new \WP_Error('admincafe_import_mapping', __('The mapping cannot change after importing starts.', 'fandoogh-rest'), ['status' => 409]);
         }
         $lock = $key . '_lock';
         $locked = get_option($lock);
@@ -77,13 +77,13 @@ final class Importer
         }
         $lease = ['owner' => bin2hex(random_bytes(16)), 'created' => microtime(true)];
         if (!add_option($lock, $lease, '', false)) {
-            return new \WP_Error('admincafe_import_busy', __('This import is already processing.', 'admincafe'), ['status' => 409]);
+            return new \WP_Error('admincafe_import_busy', __('This import is already processing.', 'fandoogh-rest'), ['status' => 409]);
         }
         try {
             // A concurrent batch may have advanced the checkpoint while we waited.
             $data = get_transient($key);
             if (!is_array($data) || $data['user'] !== get_current_user_id() || (isset($data['fingerprint']) && $data['fingerprint'] !== $fingerprint)) {
-                return new \WP_Error('admincafe_import_expired', __('The preview has expired. Upload the file again.', 'admincafe'), ['status' => 410]);
+                return new \WP_Error('admincafe_import_expired', __('The preview has expired. Upload the file again.', 'fandoogh-rest'), ['status' => 410]);
             }
             $data['fingerprint'] = $fingerprint;
             $end = min(count($data['rows']), $data['cursor'] + 75);
@@ -93,7 +93,7 @@ final class Importer
                 global $wpdb;
                 $renewed = $wpdb->query($wpdb->prepare("UPDATE {$wpdb->options} SET option_value=%s WHERE option_name=%s AND option_value=%s", maybe_serialize($nextLease), $lock, maybe_serialize($lease)));
                 if ($renewed !== 1) {
-                    return new \WP_Error('admincafe_import_busy', __('This import is already processing.', 'admincafe'), ['status' => 409]);
+                    return new \WP_Error('admincafe_import_busy', __('This import is already processing.', 'fandoogh-rest'), ['status' => 409]);
                 }
                 $lease = $nextLease;
                 wp_cache_delete($lock, 'options');
@@ -133,7 +133,7 @@ final class Importer
     private function row(array $values, string $mode, string $rowKey): string|\WP_Error
     {
         if (trim((string) $values['name']) === '') {
-            return new \WP_Error('admincafe_import_name', __('Product name is required.', 'admincafe'));
+            return new \WP_Error('admincafe_import_name', __('Product name is required.', 'fandoogh-rest'));
         }
         // A successful row can be retried without creating another product.
         $previous = get_posts(['post_type' => 'product', 'post_status' => ['publish', 'draft', 'private'], 'fields' => 'ids', 'posts_per_page' => 1, 'meta_key' => '_admincafe_import_row', 'meta_value' => $rowKey]);
@@ -143,7 +143,7 @@ final class Importer
         $sku = sanitize_text_field((string) ($values['sku'] ?? ''));
         $id = $sku ? wc_get_product_id_by_sku($sku) : 0;
         if ($id && $mode === 'create') {
-            return new \WP_Error('admincafe_import_duplicate', __('This SKU already exists.', 'admincafe'));
+            return new \WP_Error('admincafe_import_duplicate', __('This SKU already exists.', 'fandoogh-rest'));
         }
         $input = ['name' => $values['name'], 'visible' => true];
         if ($sku !== '') {
@@ -192,7 +192,7 @@ final class Importer
         }
         global $wpdb;
         if ($wpdb->query('START TRANSACTION') === false) {
-            return new \WP_Error('admincafe_import_database', __('The database could not start a safe import transaction.', 'admincafe'));
+            return new \WP_Error('admincafe_import_database', __('The database could not start a safe import transaction.', 'fandoogh-rest'));
         }
         try {
             $result = Catalog::saveProduct($input, $id, $rowKey);
@@ -203,7 +203,7 @@ final class Importer
             $wpdb->query('COMMIT');
         } catch (\Throwable $error) {
             $wpdb->query('ROLLBACK');
-            return new \WP_Error('admincafe_import_database', __('The product could not be imported safely.', 'admincafe'));
+            return new \WP_Error('admincafe_import_database', __('The product could not be imported safely.', 'fandoogh-rest'));
         }
         return $id ? 'updated' : 'created';
     }

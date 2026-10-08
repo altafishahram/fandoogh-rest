@@ -6,7 +6,7 @@ scope = runpy.run_path(str(ROOT / 'languages/build_customer_catalog.py'))
 catalogs = scope['catalogs']
 checked = 0
 for code, locale in [('zh', 'zh_CN'), ('tr', 'tr_TR')]:
-    with (ROOT / f'languages/admincafe-{locale}.mo').open('rb') as stream:
+    with (ROOT / f'languages/fandoogh-rest-{locale}.mo').open('rb') as stream:
         catalog = gettext.GNUTranslations(stream)
     for key, value in catalogs[code].items():
         assert catalog.gettext(key) == value

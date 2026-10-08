@@ -1,5 +1,5 @@
 <?php
-namespace AdminCafe\Translation;
+namespace FandooghRest\Translation;
 defined('ABSPATH') || exit;
 final class Module
 {
@@ -70,7 +70,7 @@ final class Module
     public static function permission($request): bool|\WP_Error
     {
         if (!current_user_can('admincafe_manage_settings')||!wp_verify_nonce((string)$request->get_header('X-WP-Nonce'),'wp_rest')) {
-            return new \WP_Error('admincafe_translation_forbidden',__('Translation management is not permitted.', 'admincafe'),['status'=>403]);
+            return new \WP_Error('admincafe_translation_forbidden',__('Translation management is not permitted.', 'fandoogh-rest'),['status'=>403]);
         }
         return true;
     }
@@ -80,7 +80,7 @@ final class Module
         register_rest_route('admincafe/v1','/manage/translation/settings',[
         ['methods'=>'GET','permission_callback'=>$permission,'callback'=>static fn()=>Config::read()],
         ['methods'=>'POST','permission_callback'=>$permission,'callback'=>static function ($r) {
-            $input=$r->get_json_params(); return is_array($input)?Config::update($input):new \WP_Error('admincafe_translation_input',__('Invalid translation settings.', 'admincafe'),['status'=>400]);
+            $input=$r->get_json_params(); return is_array($input)?Config::update($input):new \WP_Error('admincafe_translation_input',__('Invalid translation settings.', 'fandoogh-rest'),['status'=>400]);
         }
         ],
         ]);
@@ -88,7 +88,7 @@ final class Module
         register_rest_route('admincafe/v1','/manage/translation/run',['methods'=>'POST','permission_callback'=>$permission,'callback'=>static fn()=>Queue::run()]);
         register_rest_route('admincafe/v1','/manage/translation/retry',['methods'=>'POST','permission_callback'=>$permission,'callback'=>static function ($r) {
             $ids=$r->get_param('ids')??[]; if (!is_array($ids)||count($ids)>100||array_filter($ids,static fn($id)=>!is_int($id)||$id<1)) {
-                return new \WP_Error('admincafe_translation_input',__('Invalid translation settings.', 'admincafe'),['status'=>400]);
+                return new \WP_Error('admincafe_translation_input',__('Invalid translation settings.', 'fandoogh-rest'),['status'=>400]);
             }
             return Queue::retry($ids);
         }

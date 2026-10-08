@@ -14,7 +14,7 @@
   "آماده‌سازی (دقیقه)": "Preparation time (minutes)",
   "آماده‌سازی پس از تأیید کارکنان شروع می‌شود.": "Preparation starts after staff approval.",
   "آیکون": "Icon",
-  "ادمین کافه": "AdminCafe",
+  "رستوران فندوق": "Fandoogh Rest",
   "ارث‌بری از تنظیمات": "Inherit settings",
   "ارسال آزمایشی": "Send test",
   "ارسال با پیک": "Delivery",
@@ -68,14 +68,14 @@
   "سبد شما": "Your cart",
   "سبد شما خالی است.": "Your cart is empty.",
   "سفارشی در این وضعیت وجود ندارد.": "No orders have this status.",
-  "سفارش‌های ادمین کافه": "AdminCafe orders",
+  "سفارش‌های رستوران فندوق": "Fandoogh Rest orders",
   "سفارش‌های تازه": "New orders",
   "سفارش‌گیری": "Ordering",
   "شروع آماده‌سازی": "Start preparation",
   "شعار": "Tagline",
   "صفحه بعد": "Next page",
   "صفحه قبل": "Previous page",
-  "صفحه مستقل ادمین کافه": "Standalone AdminCafe page",
+  "صفحه مستقل رستوران فندوق": "Standalone Fandoogh Rest page",
   "صفحه مقصد منو": "Menu destination page",
   "طعم مورد علاقه‌تان را پیدا کنید": "Find your favorite flavor",
   "ظاهر منو": "Menu appearance",
@@ -151,5 +151,6 @@
   "↥ انتخاب فایل": "↥ Select file",
   "☕ قهوه گرم": "☕ Hot coffee",
   "✦ دانه‌های تازه": "✦ Fresh beans",
-  "✦ همه": "✦ All"
+  "✦ همه": "✦ All",
+  "Deactivate the old AdminCafe plugin before activating Fandoogh Rest.": "Deactivate the old AdminCafe plugin before activating Fandoogh Rest."
 }

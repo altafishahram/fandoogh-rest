@@ -1,7 +1,7 @@
 <?php
-namespace AdminCafe\Integrations;
+namespace FandooghRest\Integrations;
 
-use AdminCafe\Core\Assets;
+use FandooghRest\Core\Assets;
 
 defined('ABSPATH') || exit;
 
@@ -11,6 +11,7 @@ final class Builders
     {
         foreach (['admincafe_menu' => 'menu', 'admincafe_categories' => 'categories', 'admincafe_products' => 'products', 'admincafe_cart' => 'cart'] as $name => $component) {
             add_shortcode($name, fn($attributes = []) => $this->shortcode((array) $attributes, $component));
+            add_shortcode(str_replace('admincafe_', 'fandoogh_rest_', $name), fn($attributes = []) => $this->shortcode((array) $attributes, $component));
         }
         add_action('init', [$this, 'block']);
         add_action('elementor/widgets/register', static function ($manager): void {
@@ -38,8 +39,8 @@ final class Builders
 
     public function block(): void
     {
-        wp_register_script('admincafe-block', ADMINCAFE_URL . 'assets/builder-block.js', ['wp-blocks', 'wp-element', 'wp-components', 'wp-block-editor', 'wp-i18n'], ADMINCAFE_VERSION, true);
-        wp_set_script_translations('admincafe-block', 'admincafe', ADMINCAFE_PATH . 'languages');
+        wp_register_script('admincafe-block', FANDOOGH_REST_URL . 'assets/builder-block.js', ['wp-blocks', 'wp-element', 'wp-components', 'wp-block-editor', 'wp-i18n'], FANDOOGH_REST_VERSION, true);
+        wp_set_script_translations('admincafe-block', 'fandoogh-rest', FANDOOGH_REST_PATH . 'languages');
         register_block_type('admincafe/menu', [
             'api_version' => 3,
             'editor_script' => 'admincafe-block',

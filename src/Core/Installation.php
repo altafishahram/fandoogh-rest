@@ -1,5 +1,5 @@
 <?php
-namespace AdminCafe\Core;
+namespace FandooghRest\Core;
 
 defined('ABSPATH') || exit;
 
@@ -8,7 +8,7 @@ final class Installation
     public static function activate(): void
     {
         if (!class_exists('WooCommerce') || version_compare(PHP_VERSION, '8.2', '<')) {
-            wp_die(esc_html__('AdminCafe requires WooCommerce and PHP 8.2 or newer.', 'admincafe'));
+            wp_die(esc_html__('Fandoogh Rest requires WooCommerce and PHP 8.2 or newer.', 'fandoogh-rest'));
         }
         self::upgrade();
         Routes::rewrites();
@@ -17,7 +17,7 @@ final class Installation
 
     public static function upgrade(): void
     {
-        if (get_option('admincafe_db_version') === ADMINCAFE_VERSION) {
+        if (get_option('admincafe_db_version') === FANDOOGH_REST_VERSION) {
             return;
         }
         Access::install();
@@ -43,7 +43,7 @@ final class Installation
             PRIMARY KEY  (event_id,user_id),
             KEY user_id (user_id)
         ) $charset;");
-        update_option('admincafe_db_version', ADMINCAFE_VERSION, false);
+        update_option('admincafe_db_version', FANDOOGH_REST_VERSION, false);
         if (!wp_next_scheduled('admincafe_cleanup')) {
             wp_schedule_event(time() + DAY_IN_SECONDS, 'daily', 'admincafe_cleanup');
         }
@@ -51,7 +51,7 @@ final class Installation
 
     public static function deactivate(): void
     {
-        \AdminCafe\Translation\Module::deactivate();
+        \FandooghRest\Translation\Module::deactivate();
         wp_clear_scheduled_hook('admincafe_cleanup');
         wp_clear_scheduled_hook('admincafe_send_push');
         if (function_exists('as_unschedule_all_actions')) {
