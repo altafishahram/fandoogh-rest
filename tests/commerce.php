@@ -4,7 +4,7 @@ namespace FandooghRest\Core {
     final class Settings { public static array $data=[]; public static function get($key) { return self::$data[$key]??false; } }
     final class Security { public static function sessionKey() { return 'test-session'; } }
 }
-namespace FandooghRest\Tables { final class Tables { public static function context($token) { return ['token'=>$token,'can_order'=>true]; } } }
+namespace FandooghRest\Tables { final class Tables { public static function context($token) { return ['token'=>$token,'can_order'=>true,'branch_id'=>1]; } } }
 namespace FandooghRest\Localization {
     final class Language {
         public static string $selected='fa'; public static bool $customer=true;
@@ -23,6 +23,7 @@ namespace FandooghRest\Menu {
     }
 }
 namespace {
+    require __DIR__ . '/branch-double.php';
     function __($message, $domain = '') { return $message; }
     class WP_Error { public function __construct(public string $code,public string $message,public array $data=[]) {} }
     function absint($v) { return abs((int)$v); }
@@ -154,6 +155,7 @@ namespace {
     }];
     \FandooghRest\Core\Settings::$data=[];
     check(is_wp_error(Checkout::cartError()),'Visible menu products cannot bypass ordering switches through direct checkout');
+    $products[99]=new TestProduct(99);
     $wc->cart->items=[['product_id'=>99,'variation_id'=>0,'quantity'=>1]];
     check(Checkout::cartError()===true,'Unrelated ordinary Woo product checkout remains available');
     $wc->cart->items=[['product_id'=>1,'variation_id'=>0,'quantity'=>1]];
@@ -178,7 +180,7 @@ namespace {
     $throw_notification=false;
     \FandooghRest\Core\Settings::$data=['dine_in_enabled'=>true];
     $input=['request_id'=>'request-1234567890','table_token'=>'table-token','items'=>[['product_id'=>1,'quantity'=>1]]];
-    $scope=hash('sha256','test-session|table-token|'.$input['request_id']);
+    $scope=hash('sha256','1|test-session|table-token|'.$input['request_id']);
     $fingerprint=hash('sha256',wp_json_encode([$input['items'],'','']));
     $marker='admincafe_request_'.$scope; $token=str_repeat('a',64);
     $options[$marker]=['fingerprint'=>$fingerprint,'created'=>time()-120,'token'=>$token];
@@ -209,6 +211,7 @@ namespace {
     check(is_wp_error(Checkout::language('tr')),'Reject disabled supported language');
     \FandooghRest\Localization\Language::$codes=['fa','en','zh','tr'];
     $wc->session->data['admincafe_channel']='pickup';
+    \FandooghRest\Core\Settings::$data['pickup_enabled']=true;
     \FandooghRest\Localization\Language::remember('tr');
     $line=new WC_Order_Item_Product($products[1]);
     $checkout->lineItem($line,'cart-key',['data'=>$products[1]],$test_order);

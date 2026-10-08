@@ -4,6 +4,7 @@ namespace FandooghRest\Notifications;
 use FandooghRest\Core\Settings;
 use FandooghRest\Localization\Language;
 use FandooghRest\Rest\Management;
+use FandooghRest\Branches\Branches;
 use Minishlink\WebPush\Subscription;
 use Minishlink\WebPush\VAPID;
 use Minishlink\WebPush\WebPush;
@@ -77,17 +78,19 @@ final class Notifications
         }
         global $wpdb;
         $channel = (string) $order->get_meta('_admincafe_channel');
+        $branchId = Branches::orderBranch($order);
         $channels = ['table' => Language::staffText('Table'), 'counter' => Language::staffText('Counter'), 'pickup' => Language::staffText('Pickup'), 'delivery' => Language::staffText('Delivery')];
         $title = sprintf(Language::staffText('New order #%s'), $order->get_order_number());
         $body = ($channels[$channel] ?? $channel) . ($channel === 'table' ? ' · ' . sanitize_text_field($order->get_meta('_admincafe_table_label')) : '');
         $key = 'new:' . $id;
         // A UNIQUE event key makes repeated Woo callbacks harmless.
-        $inserted = $wpdb->query($wpdb->prepare("INSERT IGNORE INTO {$wpdb->prefix}admincafe_events (event_key,order_id,channel,title,body,created_at) VALUES (%s,%d,%s,%s,%s,%s)", $key, $id, $channel, $title, $body, current_time('mysql', true)));
+        $inserted = $wpdb->query($wpdb->prepare("INSERT IGNORE INTO {$wpdb->prefix}admincafe_events (event_key,order_id,branch_id,channel,title,body,created_at) VALUES (%s,%d,%d,%s,%s,%s,%s)", $key, $id, $branchId, $channel, $title, $body, current_time('mysql', true)));
         if (!$inserted) {
             return;
         }
         $eventId = (int) $wpdb->insert_id;
         foreach (get_users(['capability' => 'admincafe_receive_notifications', 'fields' => 'ID']) as $userId) {
+            if (!Branches::canAccess($branchId, (int) $userId)) { continue; }
             foreach ((array) get_user_meta((int) $userId, '_admincafe_push_devices', true) as $deviceKey => $device) {
                 if (in_array($channel, $device['channels'] ?? ['table', 'counter', 'pickup', 'delivery'], true)) {
                     self::queue($eventId, (int) $userId, (string) $deviceKey, 0);
@@ -127,6 +130,7 @@ final class Notifications
         if ($eventId && !$event) {
             return;
         }
+        if ($event && !Branches::canAccess((int) $event['branch_id'], $userId)) { return; }
         if ($event && !in_array($event['channel'], $device['channels'] ?? ['table', 'counter', 'pickup', 'delivery'], true)) {
             return;
         }
@@ -141,7 +145,10 @@ final class Notifications
             'title' => $event['title'] ?? __('Fandoogh Rest test notification', 'fandoogh-rest'),
             'body' => $event['body'] ?? __('Notifications are working on this device.', 'fandoogh-rest'),
             'tag' => 'admincafe-' . ($eventId ?: 'test'),
-            'url' => Settings::panelUrl() . ($event ? '#orders/' . (int) $event['order_id'] : '#notifications'),
+            'url' => $event
+                ? add_query_arg('branch_id', (int) $event['branch_id'], Branches::runFor((int) $event['branch_id'], static fn() => Settings::panelUrl())) . '#orders/' . (int) $event['order_id']
+                : Settings::panelUrl() . '#notifications',
+            'branch_id' => $event ? (int) $event['branch_id'] : null,
             'icon' => FANDOOGH_REST_URL . 'assets/icon-192.png',
         ];
         try {
@@ -173,28 +180,31 @@ final class Notifications
         global $wpdb;
         $userId = get_current_user_id();
         $after = absint($request->get_param('after'));
-        $events = $wpdb->get_results($wpdb->prepare("SELECT e.*, IF(r.event_id IS NULL,0,1) AS `read` FROM {$wpdb->prefix}admincafe_events e LEFT JOIN {$wpdb->prefix}admincafe_event_reads r ON e.id=r.event_id AND r.user_id=%d WHERE e.id>%d ORDER BY e.id DESC LIMIT 100", $userId, $after), ARRAY_A);
+        if (!Branches::canAccess(Branches::current(), $userId)) { return ['events' => [], 'unread' => 0, 'push' => self::pushStatus()]; }
+        $events = $wpdb->get_results($wpdb->prepare("SELECT e.*, IF(r.event_id IS NULL,0,1) AS `read` FROM {$wpdb->prefix}admincafe_events e LEFT JOIN {$wpdb->prefix}admincafe_event_reads r ON e.id=r.event_id AND r.user_id=%d WHERE e.id>%d AND e.branch_id=%d ORDER BY e.id DESC LIMIT 100", $userId, $after, Branches::current()), ARRAY_A);
         foreach ($events as &$event) {
             $event['id'] = (int) $event['id'];
             $event['order_id'] = (int) $event['order_id'];
+            $event['branch_id'] = (int) $event['branch_id'];
             $event['read'] = (bool) $event['read'];
             $event['created_at'] = str_replace(' ', 'T', $event['created_at']) . 'Z';
             unset($event['event_key']);
         }
         unset($event);
-        $unread = (int) $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM {$wpdb->prefix}admincafe_events e LEFT JOIN {$wpdb->prefix}admincafe_event_reads r ON e.id=r.event_id AND r.user_id=%d WHERE r.event_id IS NULL", $userId));
+        $unread = (int) $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM {$wpdb->prefix}admincafe_events e LEFT JOIN {$wpdb->prefix}admincafe_event_reads r ON e.id=r.event_id AND r.user_id=%d WHERE r.event_id IS NULL AND e.branch_id=%d", $userId, Branches::current()));
         return ['events' => $events, 'unread' => $unread, 'push' => self::pushStatus()];
     }
 
     public function markRead(\WP_REST_Request $request): array|\WP_Error
     {
+        if (!Branches::canAccess(Branches::current())) { return new \WP_Error('forbidden', __('Notification permission required.', 'fandoogh-rest'), ['status' => 403]); }
         $ids = $request->get_param('ids');
         if (!is_array($ids) || count($ids) > 100) {
             return new \WP_Error('admincafe_events', __('Supply up to 100 notification IDs.', 'fandoogh-rest'), ['status' => 400]);
         }
         global $wpdb;
         foreach (array_unique(array_map('absint', $ids)) as $id) {
-            $wpdb->query($wpdb->prepare("INSERT IGNORE INTO {$wpdb->prefix}admincafe_event_reads (event_id,user_id) SELECT id,%d FROM {$wpdb->prefix}admincafe_events WHERE id=%d", get_current_user_id(), $id));
+            $wpdb->query($wpdb->prepare("INSERT IGNORE INTO {$wpdb->prefix}admincafe_event_reads (event_id,user_id) SELECT id,%d FROM {$wpdb->prefix}admincafe_events WHERE id=%d AND branch_id=%d", get_current_user_id(), $id, Branches::current()));
         }
         return ['read' => true];
     }

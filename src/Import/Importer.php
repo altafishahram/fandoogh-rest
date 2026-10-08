@@ -3,6 +3,7 @@ namespace FandooghRest\Import;
 
 use FandooghRest\Menu\Catalog;
 use FandooghRest\Rest\Management;
+use FandooghRest\Branches\Branches;
 
 defined('ABSPATH') || exit;
 
@@ -36,6 +37,7 @@ final class Importer
         }
         $token = bin2hex(random_bytes(24));
         $data['user'] = get_current_user_id();
+        $data['branch_id'] = Branches::current();
         $data['cursor'] = 0;
         $data['result'] = ['created' => 0, 'updated' => 0, 'skipped' => 0, 'errors' => []];
         set_transient('ac_import_' . hash('sha256', $token), $data, 30 * MINUTE_IN_SECONDS);
@@ -52,7 +54,7 @@ final class Importer
         }
         $key = 'ac_import_' . hash('sha256', $token);
         $data = get_transient($key);
-        if (!is_array($data) || $data['user'] !== get_current_user_id()) {
+        if (!is_array($data) || $data['user'] !== get_current_user_id() || (int) ($data['branch_id'] ?? Branches::defaultId()) !== Branches::current()) {
             return new \WP_Error('admincafe_import_expired', __('The preview has expired. Upload the file again.', 'fandoogh-rest'), ['status' => 410]);
         }
         $indexes = [];
@@ -82,7 +84,7 @@ final class Importer
         try {
             // A concurrent batch may have advanced the checkpoint while we waited.
             $data = get_transient($key);
-            if (!is_array($data) || $data['user'] !== get_current_user_id() || (isset($data['fingerprint']) && $data['fingerprint'] !== $fingerprint)) {
+            if (!is_array($data) || $data['user'] !== get_current_user_id() || (int) ($data['branch_id'] ?? Branches::defaultId()) !== Branches::current() || (isset($data['fingerprint']) && $data['fingerprint'] !== $fingerprint)) {
                 return new \WP_Error('admincafe_import_expired', __('The preview has expired. Upload the file again.', 'fandoogh-rest'), ['status' => 410]);
             }
             $data['fingerprint'] = $fingerprint;
@@ -142,6 +144,9 @@ final class Importer
         }
         $sku = sanitize_text_field((string) ($values['sku'] ?? ''));
         $id = $sku ? wc_get_product_id_by_sku($sku) : 0;
+        if ($id && Branches::productBranch($id) !== Branches::current()) {
+            return new \WP_Error('admincafe_import_duplicate', __('Use a unique SKU for this branch.', 'fandoogh-rest'));
+        }
         if ($id && $mode === 'create') {
             return new \WP_Error('admincafe_import_duplicate', __('This SKU already exists.', 'fandoogh-rest'));
         }
@@ -179,9 +184,19 @@ final class Importer
                 if (!$name) {
                     continue;
                 }
-                $term = term_exists($name, 'product_cat');
+                $terms = get_terms(['taxonomy' => 'product_cat', 'hide_empty' => false, 'name' => $name]);
+                $term = null;
+                if (!is_wp_error($terms)) {
+                    foreach ($terms as $candidate) {
+                        if (Branches::categoryBranch((int) $candidate->term_id) === Branches::current()) { $term = ['term_id' => $candidate->term_id]; break; }
+                    }
+                }
                 if (!$term) {
-                    $term = wp_insert_term($name, 'product_cat');
+                    $term = wp_insert_term($name, 'product_cat', ['slug' => sanitize_title($name) . '-b' . Branches::current()]);
+                    if (!is_wp_error($term)) {
+                        update_term_meta((int) $term['term_id'], '_fandoogh_branch_id', Branches::current());
+                        do_action('edited_product_cat', (int) $term['term_id']);
+                    }
                 }
                 if (is_wp_error($term)) {
                     return $term;

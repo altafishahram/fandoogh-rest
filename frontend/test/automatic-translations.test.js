@@ -105,6 +105,7 @@ test("automatic translation UI renders redacted key state, failed items and cost
     Vue.createSSRApp({
       setup: () => ({
         ...controller,
+        canManage: true,
         counts: Vue.computed(() => controller.status.value.counts),
       }),
       render,
@@ -117,4 +118,18 @@ test("automatic translation UI renders redacted key state, failed items and cost
   assert.match(html, /سه برابر/);
   assert.match(html, /مصرف امروز/);
   assert.doesNotMatch(html, /must-never-be-retained/);
+  const branchHtml = await renderToString(
+    Vue.createSSRApp({
+      setup: () => ({
+        ...controller,
+        canManage: false,
+        counts: Vue.computed(() => controller.status.value.counts),
+      }),
+      render,
+    }),
+  );
+  assert.match(branchHtml, /<fieldset disabled/);
+  assert.doesNotMatch(branchHtml, /ذخیره تنظیمات ترجمه/);
+  assert.match(branchHtml, /ترجمه غذاها، دسته‌ها و اطلاعات موجود/);
+  assert.match(branchHtml, /تلاش دوباره برای موارد ناموفق/);
 });

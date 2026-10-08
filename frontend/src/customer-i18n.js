@@ -5,6 +5,13 @@ export const languages = [
   { code: "tr", name: "Türkçe", html_locale: "tr-TR", direction: "ltr" },
 ];
 const rows = [
+  ["شعبه", "Branch", "分店", "Şube"],
+  [
+    "سبد پرداخت مربوط به شعبه دیگری است. آن را پاک کرده و با سفارش این شعبه جایگزین کنیم؟",
+    "The checkout cart belongs to another branch. Clear it and replace it with this branch’s order?",
+    "结算购物车属于另一家分店。清空并替换为本分店的订单吗？",
+    "Ödeme sepeti başka bir şubeye ait. Silip bu şubenin siparişiyle değiştirelim mi?",
+  ],
   ["آ", "A", "咖", "A"],
   ["کافه", "Cafe", "咖啡馆", "Kafe"],
   ["خوش آمدید", "Welcome", "欢迎光临", "Hoş geldiniz"],

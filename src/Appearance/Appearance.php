@@ -5,7 +5,7 @@ defined('ABSPATH') || exit;
 
 final class Appearance
 {
-    public const MENU_SCOPE = '.admincafe-root[data-admincafe-app="menu"] .ac-menu';
+    public const MENU_SCOPE = '.admincafe-root[data-admincafe-app="menu"][data-fandoogh-branch="1"] .ac-menu';
     public const PREVIEW_SCOPE = '.admincafe-root .ac-menu.ac-appearance-preview';
     public const THEMES = ['cafe', 'minimal', 'midnight', 'garden', 'bistro'];
     public const SELECTORS = [
@@ -24,6 +24,11 @@ final class Appearance
             'custom_css_enabled' => true,
             'custom_css' => array_fill_keys(array_merge(['general'], array_keys(self::SELECTORS)), ''),
         ];
+    }
+
+    public static function menuScope(): string
+    {
+        return '.admincafe-root[data-admincafe-app="menu"][data-fandoogh-branch="' . \FandooghRest\Branches\Branches::current() . '"] .ac-menu';
     }
 
     /** Validate complete appearance state. Raw editable strings are stored only in private settings. */

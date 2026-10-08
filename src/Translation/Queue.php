@@ -1,6 +1,7 @@
 <?php
 namespace FandooghRest\Translation;
 defined('ABSPATH') || exit;
+use FandooghRest\Branches\Branches;
 final class Queue
 {
     public static function table(): string {
@@ -9,7 +10,7 @@ final class Queue
     }
     public static function install(): void
     {
-        if (get_option('admincafe_translation_schema')==='1') {
+        if (get_option('admincafe_translation_schema')==='2') {
             return;
         }
         global $wpdb;
@@ -19,6 +20,7 @@ final class Queue
         dbDelta("CREATE TABLE $table (
             id bigint unsigned NOT NULL AUTO_INCREMENT,
             job_key varchar(64) NOT NULL,
+            branch_id bigint unsigned NOT NULL DEFAULT 1,
             scope varchar(16) NOT NULL,
             item_id bigint unsigned NOT NULL,
             source_hash varchar(64) NOT NULL,
@@ -30,9 +32,10 @@ final class Queue
             updated_at datetime NOT NULL,
             PRIMARY KEY  (id),
             UNIQUE KEY job_key (job_key),
-            KEY status (status)
+            KEY status (status),
+            KEY branch_status (branch_id,status)
         ) $charset;");
-        update_option('admincafe_translation_schema','1',false);
+        update_option('admincafe_translation_schema','2',false);
     }
     public static function schedule(string $hook,array $args,int $delay=0): void
     {
@@ -43,7 +46,22 @@ final class Queue
             wp_schedule_single_event(time()+$delay,$hook,$args);
         }
     }
+    public static function branchFor(string $scope, int $id): int
+    {
+        return match ($scope) {
+            'product' => Branches::productBranch($id),
+            'category' => Branches::categoryBranch($id),
+            'settings' => $id > 0 ? $id : Branches::defaultId(),
+            default => 0,
+        };
+    }
     public static function enqueue(string $scope,int $id): int
+    {
+        $branch = self::branchFor($scope, $id);
+        if (!($branchData = Branches::get($branch)) || !$branchData['enabled']) { return 0; }
+        return Branches::runFor($branch, static fn(): int => self::enqueueInBranch($scope, $id));
+    }
+    private static function enqueueInBranch(string $scope,int $id): int
     {
         $config=Config::read();
         $source=Source::read($scope,$id);
@@ -61,8 +79,8 @@ final class Queue
         elseif (!metadata_exists($scope==='category'?'term':'post',$id,Source::MANUAL)) {
             add_metadata($scope==='category'?'term':'post',$id,Source::MANUAL,[],true);
         }
-        $key=hash('sha256',$scope.':'.$id.':'.$source['hash'].':'.$config['version'].':'.implode(',',Config::targets()));
-        $inserted=$wpdb->query($wpdb->prepare('INSERT IGNORE INTO '.self::table().' (job_key,scope,item_id,source_hash,config_version,payload,updated_at) VALUES (%s,%s,%d,%s,%s,%s,%s)',$key,$scope,$id,$source['hash'],$config['version'],wp_json_encode(['name'=>$source['name']]),gmdate('Y-m-d H:i:s')));
+        $key=hash('sha256',$scope.':'.Branches::current().':'.$id.':'.$source['hash'].':'.$config['version'].':'.implode(',',Config::targets()));
+        $inserted=$wpdb->query($wpdb->prepare('INSERT IGNORE INTO '.self::table().' (job_key,branch_id,scope,item_id,source_hash,config_version,payload,updated_at) VALUES (%s,%d,%s,%d,%s,%s,%s,%s)',$key,Branches::current(),$scope,$id,$source['hash'],$config['version'],wp_json_encode(['name'=>$source['name']]),gmdate('Y-m-d H:i:s')));
         if ($inserted!==1||!$wpdb->insert_id) {
             return 0;
         }
@@ -72,6 +90,9 @@ final class Queue
     }
     public static function inScope(string $scope,int $id): bool
     {
+        if (self::branchFor($scope, $id) !== Branches::current()) { return false; }
+        $branch = Branches::get(Branches::current());
+        if (!$branch || !$branch['enabled']) { return false; }
         $selected=(array)\FandooghRest\Core\Settings::get('menu_category_ids',[]);
         if ($scope==='category') {
             return !$selected||in_array($id,array_map('intval',$selected),true);
@@ -150,11 +171,13 @@ final class Queue
             return;
         }
         global $wpdb;
+        $previousBranch = Branches::current();
         try {
             $job=$wpdb->get_row($wpdb->prepare('SELECT * FROM '.self::table().' WHERE id=%d',$id),ARRAY_A);
             if (!$job||!in_array($job['status'],['queued','running'],true)) {
                 return;
             }
+            Branches::setCurrent((int) $job['branch_id']);
             $scope=$job['scope'];
             $item=(int)$job['item_id'];
             $source=Source::read($scope,$item);
@@ -263,10 +286,16 @@ final class Queue
             self::finish($id,'failed','internal');
         }
         finally {
+            Branches::setCurrent($previousBranch);
             self::unlock('job'.$id,$lock);
         }
     }
-    public static function scan(int $page=1,string $scope='product'): void
+    public static function scan(int $page=1,string $scope='product',int $branch=0): void
+    {
+        $branch = $branch ?: Branches::defaultId();
+        Branches::runFor($branch, static fn() => self::scanInBranch($page, $scope, $branch));
+    }
+    private static function scanInBranch(int $page,string $scope,int $branch): void
     {
         if (!Config::read()['enabled']) {
             return;
@@ -274,13 +303,13 @@ final class Queue
         if ($scope==='product') {
             $query=new \WP_Query(['post_type'=>['product','product_variation'],'post_status'=>'publish','posts_per_page'=>25,'paged'=>$page,'orderby'=>'ID','order'=>'ASC','fields'=>'ids','no_found_rows'=>true]);
             foreach ($query->posts as $id) {
-                self::enqueue('product',(int)$id);
+                if (Branches::productBranch((int) $id) === $branch) { self::enqueue('product',(int)$id); }
             }
             if (count($query->posts)===25) {
-                self::schedule('admincafe_translation_scan',[$page+1,'product'],1);
+                self::schedule('admincafe_translation_scan',[$page+1,'product',$branch],1);
             }
             else {
-                self::schedule('admincafe_translation_scan',[1,'category'],1);
+                self::schedule('admincafe_translation_scan',[1,'category',$branch],1);
             }
         }
         elseif ($scope==='category') {
@@ -289,25 +318,26 @@ final class Queue
                 return;
             }
             foreach ($terms as $term) {
-                self::enqueue('category',$term->term_id);
+                if (Branches::categoryBranch((int) $term->term_id) === $branch) { self::enqueue('category',$term->term_id); }
             }
             if (count($terms)===25) {
-                self::schedule('admincafe_translation_scan',[$page+1,'category'],1);
+                self::schedule('admincafe_translation_scan',[$page+1,'category',$branch],1);
             }
             else {
-                self::enqueue('settings',0);
+                self::enqueue('settings',$branch === Branches::defaultId() ? 0 : $branch);
             }
         }
     }
     public static function run(): array {
-        self::schedule('admincafe_translation_scan',[1]);
+        self::schedule('admincafe_translation_scan',[1,'product',Branches::current()]);
         return ['queued'=>0,'scan_queued'=>true];
     }
     public static function retry(array $ids=[]): array
     {
         self::install();
         global $wpdb;
-        $where=$ids?' AND id IN ('.implode(',',array_map('intval',$ids)).')':'';
+        $where=' AND branch_id='.Branches::current();
+        $where.=$ids?' AND id IN ('.implode(',',array_map('intval',$ids)).')':'';
         $jobs=$wpdb->get_results('SELECT id FROM '.self::table()." WHERE status='failed' $where ORDER BY id LIMIT 100",ARRAY_A);
         $count=0;
         foreach ($jobs as $job) {
@@ -335,17 +365,17 @@ final class Queue
         self::install();
         global $wpdb;
         $counts=array_fill_keys(['queued','running','completed','failed','skipped'],0);
-        foreach ($wpdb->get_results('SELECT status,COUNT(*) AS total FROM '.self::table().' GROUP BY status',ARRAY_A) as $row) {
+        foreach ($wpdb->get_results('SELECT status,COUNT(*) AS total FROM '.self::table().' WHERE branch_id='.Branches::current().' GROUP BY status',ARRAY_A) as $row) {
             $counts[$row['status']]=(int)$row['total'];
         }
-        $jobs=$wpdb->get_results('SELECT id,scope,item_id,status,attempts,error,updated_at,payload FROM '.self::table().' ORDER BY id DESC LIMIT 30',ARRAY_A);
+        $jobs=$wpdb->get_results('SELECT id,scope,item_id,status,attempts,error,updated_at,payload FROM '.self::table().' WHERE branch_id='.Branches::current().' ORDER BY id DESC LIMIT 30',ARRAY_A);
         $problems=[];
         foreach ($jobs as &$job) {
             $job['name']=json_decode($job['payload'],true)['name']??'';
             unset($job['payload']);
         }
         unset($job);
-        $failed=$wpdb->get_results('SELECT id,scope,item_id,error,payload FROM '.self::table()." WHERE status='failed' ORDER BY id DESC LIMIT 30",ARRAY_A);
+        $failed=$wpdb->get_results('SELECT id,scope,item_id,error,payload FROM '.self::table()." WHERE status='failed' AND branch_id=".Branches::current()." ORDER BY id DESC LIMIT 30",ARRAY_A);
         foreach ($failed as $row) {
             $row['name']=json_decode($row['payload'],true)['name']??'';
             unset($row['payload']);

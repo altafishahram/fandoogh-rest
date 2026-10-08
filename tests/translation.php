@@ -5,6 +5,7 @@ namespace FandooghRest\Translation {
 }
 namespace FandooghRest\Core { final class Settings { public static function get($key,$fallback=null) { return $fallback; } } }
 namespace {
+    require __DIR__ . '/branch-double.php';
     define('ABSPATH',__DIR__.'/');
     class WP_Error {
         public function __construct(private string $code,private string $message,private array $data=[]) {}

@@ -3,7 +3,7 @@
  * Plugin Name: رستوران فندوق
  * Plugin URI: https://github.com/altafishahram/fandoogh-rest
  * Description: A Persian-first restaurant menu and independent operations panel powered by WooCommerce.
- * Version: 1.3.1
+ * Version: 1.4.0
  * Requires at least: 6.5
  * Requires PHP: 8.2
  * Requires Plugins: woocommerce
@@ -34,7 +34,7 @@ if ($fandooghLegacyConflict) {
 }
 unset($fandooghActivePlugins, $fandooghActivePlugin, $fandooghLegacyConflict);
 
-define('FANDOOGH_REST_VERSION', '1.3.1');
+define('FANDOOGH_REST_VERSION', '1.4.0');
 define('FANDOOGH_REST_FILE', defined('FANDOOGH_REST_LEGACY_ENTRY') ? FANDOOGH_REST_LEGACY_ENTRY : __FILE__);
 define('FANDOOGH_REST_PATH', plugin_dir_path(__FILE__));
 define('FANDOOGH_REST_URL', plugin_dir_url(__FILE__));

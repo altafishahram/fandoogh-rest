@@ -5,17 +5,33 @@ namespace FandooghRest\Commerce;
 use FandooghRest\Core\Settings;
 use FandooghRest\Menu\Catalog;
 use FandooghRest\Localization\Language;
+use FandooghRest\Branches\Branches;
+use FandooghRest\Tables\Tables;
 
 final class Checkout
 {
+    private static ?int $storeBranch = null;
+    private static array $storeContexts = [];
     public function register(): void
     {
+        add_filter('woocommerce_add_to_cart_validation', [$this, 'addValidation'], 20, 6);
+        add_filter('woocommerce_update_cart_validation', [$this, 'quantityValidation'], 20, 4);
+        add_filter('woocommerce_add_cart_item_data', [$this, 'bindItem'], 20, 4);
+        add_filter('woocommerce_add_cart_item', [$this, 'bindAddedItem'], 20, 2);
+        add_filter('woocommerce_get_cart_item_from_session', [$this, 'restoreItem'], 20, 3);
+        add_action('woocommerce_store_api_validate_add_to_cart', [$this, 'storeAddValidation'], 20, 2);
+        add_action('woocommerce_store_api_validate_cart_item', [$this, 'storeItemValidation'], 20, 2);
+        add_filter('rest_request_before_callbacks', [$this, 'storeRequestValidation'], 15, 3);
+        add_filter('rest_request_after_callbacks', [$this, 'restoreStoreContext'], 99, 3);
         add_filter('woocommerce_cart_needs_shipping', [$this, 'needsShipping'], 100);
         add_filter('woocommerce_cart_needs_shipping_address', [$this, 'needsShipping'], 100);
         add_action('woocommerce_after_checkout_validation', [$this, 'classicValidation'], 10, 2);
         add_action('woocommerce_checkout_create_order', [$this, 'decorate'], 10, 2);
+        add_action('woocommerce_resume_order', [$this, 'resumeValidation'], 5, 1);
         add_action('woocommerce_checkout_order_processed', [$this, 'placed'], 20, 1);
         add_action('woocommerce_store_api_checkout_update_order_from_request', [$this, 'storeValidation'], 10, 2);
+        add_action('woocommerce_store_api_checkout_order_created', [$this, 'storeDraftCreated'], 10, 1);
+        add_action('woocommerce_store_api_checkout_update_order_meta', [$this, 'storeDraftCreated'], 10, 1);
         add_action('woocommerce_store_api_checkout_order_processed', [$this, 'storePlaced'], 20, 1);
         add_action('woocommerce_payment_complete', [$this, 'paid'], 20, 1);
         add_filter('woocommerce_cart_item_name', [$this, 'cartItemName'], 20, 3);
@@ -43,7 +59,188 @@ final class Checkout
         return Language::resolve($value);
     }
 
-    public static function choose(string $channel, mixed $language = null): array|\WP_Error
+    /** Resolve public ownership from a real branch or a stable server-side QR identity. */
+    public static function resolveBranch(array $input, bool $required = true): int|\WP_Error
+    {
+        $id = $input['branch_id'] ?? null;
+        if ($id !== null && ((!is_int($id) && !is_string($id)) || !preg_match('/^[1-9][0-9]*$/D', (string) $id))) {
+            return new \WP_Error('branch', __('Choose a valid branch.', 'fandoogh-rest'), ['status' => 400]);
+        }
+        $token = $input['table_token'] ?? $input['table'] ?? null;
+        if ($token !== null && $token !== '') {
+            if (!is_string($token)) { return self::branchError(); }
+            $table = Tables::context($token);
+            if (is_wp_error($table)) { return $table; }
+            if ($id !== null && (int) $id !== (int) $table['branch_id']) { return self::branchError(); }
+            $id = $table['branch_id'];
+        }
+        if ($id === null && $required) {
+            return new \WP_Error('branch_required', __('Choose a branch before ordering.', 'fandoogh-rest'), ['status' => 400]);
+        }
+        $id = $id === null ? Branches::current() : (int) $id;
+        $branch = Branches::get($id);
+        return $branch && $branch['enabled'] ? $id : new \WP_Error('branch_disabled', __('This branch is unavailable.', 'fandoogh-rest'), ['status' => 403]);
+    }
+
+    public static function cartBranch(): int
+    {
+        if (function_exists('WC') && WC()->session) {
+            $id = (int) WC()->session->get('admincafe_branch_id', 0);
+            if ($id) { return $id; }
+        }
+        // Unattributed legacy sessions belong to the migrated default branch.
+        return Branches::defaultId();
+    }
+
+    private static function requestedBranch(): ?int
+    {
+        if (self::$storeBranch !== null) { return self::$storeBranch; }
+        if (!isset($_REQUEST['branch_id'])) { return null; }
+        $id = wp_unslash($_REQUEST['branch_id']);
+        return is_scalar($id) && preg_match('/^[1-9][0-9]*$/D', (string) $id) ? (int) $id : 0;
+    }
+
+    private static function branchError(): \WP_Error
+    {
+        return new \WP_Error('cart_branch_conflict', __('All cart items and checkout must belong to the selected branch. Return to its menu or confirm replacing your cart.', 'fandoogh-rest'), ['status' => 409]);
+    }
+
+    private static function addError(\WC_Product $product, ?int $requested = null): bool|\WP_Error
+    {
+        $id = $requested ?? self::requestedBranch() ?? self::cartBranch();
+        if (Branches::productBranch($product) !== $id) { return self::branchError(); }
+        if (WC()->cart && !WC()->cart->is_empty() && self::cartBranch() !== $id) { return self::branchError(); }
+        foreach (WC()->cart ? WC()->cart->get_cart() : [] as $item) {
+            $existing = wc_get_product((int) (($item['variation_id'] ?? 0) ?: $item['product_id']));
+            if (!$existing || Branches::productBranch($existing) !== $id || (int) ($item['_fandoogh_branch_id'] ?? Branches::defaultId()) !== $id) { return self::branchError(); }
+        }
+        return Branches::runFor($id, static function () {
+            $allowed = self::allowed(self::cartBranch() === Branches::current() ? self::channel() : '');
+            if (is_wp_error($allowed)) { return $allowed; }
+            if (Settings::get('ordering_paused')) { return new \WP_Error('closed', __('Ordering is unavailable.', 'fandoogh-rest'), ['status' => 403]); }
+            return true;
+        });
+    }
+
+    public function addValidation(bool $valid, int $productId, $quantity, int $variationId = 0, array $variations = [], array $data = []): bool
+    {
+        $product = wc_get_product($variationId ?: $productId);
+        $error = $product ? self::addError($product) : self::branchError();
+        if (is_wp_error($error)) { wc_add_notice($error->get_error_message(), 'error'); return false; }
+        return $valid;
+    }
+
+    public function quantityValidation(bool $valid, string $key, array $item, $quantity): bool
+    {
+        if ((float) $quantity <= 0) { return $valid; }
+        $error = self::cartError();
+        if (is_wp_error($error)) { wc_add_notice($error->get_error_message(), 'error'); return false; }
+        return $valid;
+    }
+
+    public function bindItem(array $data, int $productId, int $variationId = 0, $quantity = 1): array
+    {
+        $product = wc_get_product($variationId ?: $productId);
+        if ($product) {
+            $error = self::addError($product);
+            if (is_wp_error($error)) { throw new \Exception($error->get_error_message()); }
+            $data['_fandoogh_branch_id'] = Branches::productBranch($product);
+            if (WC()->session && (!WC()->cart || WC()->cart->is_empty())) {
+                if (self::cartBranch() !== $data['_fandoogh_branch_id']) { WC()->session->set('admincafe_channel', null); }
+                WC()->session->set('admincafe_branch_id', $data['_fandoogh_branch_id']);
+            }
+        }
+        return $data;
+    }
+
+    public function restoreItem(array $item, array $values, string $key): array
+    {
+        $item['_fandoogh_branch_id'] = (int) ($values['_fandoogh_branch_id'] ?? Branches::defaultId());
+        return $item;
+    }
+
+    private static function storeThrow(bool|\WP_Error $error): void
+    {
+        if (is_wp_error($error)) { throw new \Automattic\WooCommerce\StoreApi\Exceptions\RouteException($error->get_error_code(), $error->get_error_message(), (int) ($error->get_error_data()['status'] ?? 409)); }
+    }
+
+    /** Store API adds directly to cart contents, bypassing add_cart_item_data. */
+    public function bindAddedItem(array $item, string $key): array
+    {
+        $product = wc_get_product((int) (($item['variation_id'] ?? 0) ?: $item['product_id']));
+        if ($product) {
+            $item['_fandoogh_branch_id'] = Branches::productBranch($product);
+            if (WC()->session && WC()->cart && count(WC()->cart->get_cart()) <= 1) {
+                WC()->session->set('admincafe_branch_id', $item['_fandoogh_branch_id']);
+            }
+        }
+        return $item;
+    }
+
+    public function storeAddValidation(\WC_Product $product, array $request): void
+    {
+        self::storeThrow(self::addError($product));
+        if (WC()->session && WC()->cart && WC()->cart->is_empty()) {
+            if (self::cartBranch() !== Branches::productBranch($product)) { WC()->session->set('admincafe_channel', null); }
+            WC()->session->set('admincafe_branch_id', Branches::productBranch($product));
+        }
+    }
+
+    public function storeItemValidation(\WC_Product $product, array $item): void
+    {
+        if (Branches::productBranch($product) !== self::cartBranch() || (int) ($item['_fandoogh_branch_id'] ?? Branches::defaultId()) !== self::cartBranch()) {
+            self::storeThrow(self::branchError());
+        }
+        self::storeThrow(self::cartError());
+    }
+
+    public function storeRequestValidation($response, $handler, \WP_REST_Request $request)
+    {
+        if (!preg_match('#^/wc/store/v[0-9]+/(?:cart|checkout)(?:/|$)#', $request->get_route())) { return $response; }
+        self::$storeContexts[] = [self::$storeBranch, Branches::current()];
+        self::$storeBranch = null;
+        if ($response !== null) { return $response; }
+        if (!WC()->session || !WC()->cart) { wc_load_cart(); }
+        $param = $request->get_param('branch_id');
+        if ($param !== null) {
+            $id = self::resolveBranch(['branch_id' => $param]);
+            if (is_wp_error($id)) { return $id; }
+            // Bind validated request identity for add-to-cart and checkout hooks.
+            self::$storeBranch = $id;
+            if (WC()->cart && !WC()->cart->is_empty() && $id !== self::cartBranch()) { return self::branchError(); }
+        }
+        if (preg_match('#/(?:checkout|cart/update-item)$#', $request->get_route())) {
+            $error = self::cartError();
+            if (is_wp_error($error)) { return $error; }
+            if (str_ends_with($request->get_route(), '/checkout') && WC()->session) {
+                $draft = wc_get_order((int) WC()->session->get('store_api_draft_order', 0));
+                if ($draft && Branches::orderBranch($draft) !== self::cartBranch()) { return self::branchError(); }
+            }
+        }
+        $context = self::$storeBranch ?? self::cartBranch();
+        $branch = Branches::get($context);
+        if (!$branch || !$branch['enabled']) { return self::branchError(); }
+        Branches::setCurrent($context);
+        return $response;
+    }
+
+    public function restoreStoreContext($response, $handler, \WP_REST_Request $request)
+    {
+        if (preg_match('#^/wc/store/v[0-9]+/(?:cart|checkout)(?:/|$)#', $request->get_route()) && self::$storeContexts) {
+            [$previous, $branch] = array_pop(self::$storeContexts);
+            self::$storeBranch = $previous;
+            Branches::setCurrent($branch);
+        }
+        return $response;
+    }
+
+    public static function choose(string $channel, mixed $language = null, ?int $branchId = null, bool $replace = false): array|\WP_Error
+    {
+        $branchId = $branchId ?? Branches::current();
+        return Branches::runFor($branchId, static fn() => self::chooseInBranch($channel, $language, $replace));
+    }
+
+    private static function chooseInBranch(string $channel, mixed $language, bool $replace): array|\WP_Error
     {
         if (!in_array($channel, ['pickup', 'delivery'], true)) {
             return new \WP_Error('channel', __('Invalid checkout channel.', 'fandoogh-rest'), ['status' => 400]);
@@ -59,6 +256,22 @@ final class Checkout
         if (is_wp_error($language)) {
             return $language;
         }
+        $previous = self::cartBranch();
+        if (WC()->cart && !WC()->cart->is_empty() && $previous !== Branches::current()) {
+            if (!$replace) {
+                return new \WP_Error('cart_branch_conflict', __('Your cart belongs to another branch. Confirm replacing it to continue.', 'fandoogh-rest'), ['status' => 409, 'branch_id' => $previous]);
+            }
+            WC()->cart->empty_cart();
+        }
+        WC()->session->set('admincafe_branch_id', Branches::current());
+        // Detach the customer's prior branch checkout references. Preserve the orders
+        // themselves and their native payment/stock lifecycle.
+        foreach (['store_api_draft_order', 'order_awaiting_payment'] as $key) {
+            $previousOrder = wc_get_order((int) WC()->session->get($key, 0));
+            if ($previousOrder && Branches::orderBranch($previousOrder) !== Branches::current()) {
+                WC()->session->set($key, null);
+            }
+        }
         Language::remember($language);
         WC()->session->set('admincafe_channel', $channel);
         WC()->session->set_customer_session_cookie(true);
@@ -66,11 +279,15 @@ final class Checkout
             WC()->cart->calculate_shipping();
             WC()->cart->calculate_totals();
         }
-        return ['url' => add_query_arg('lang', $language, wc_get_checkout_url())];
+        return ['branch_id' => Branches::current(), 'url' => add_query_arg(['lang' => $language, 'branch_id' => Branches::current()], wc_get_checkout_url())];
     }
 
     public static function allowed(string $channel): bool|\WP_Error
     {
+        $branch = Branches::get(Branches::current());
+        if (!$branch || !$branch['enabled']) {
+            return new \WP_Error('branch_disabled', __('This branch is unavailable.', 'fandoogh-rest'), ['status' => 403]);
+        }
         if ($channel === '') {
             return true;
         }
@@ -87,6 +304,14 @@ final class Checkout
 
     public static function cartError(): bool|\WP_Error
     {
+        $branchId = self::cartBranch();
+        $requested = self::requestedBranch();
+        if ($requested !== null && $requested !== $branchId) { return self::branchError(); }
+        return Branches::runFor($branchId, static fn() => self::cartErrorInBranch());
+    }
+
+    private static function cartErrorInBranch(): bool|\WP_Error
+    {
         $channel = self::channel();
         $allowed = self::allowed($channel);
         if (is_wp_error($allowed)) {
@@ -94,6 +319,13 @@ final class Checkout
         }
         if (!WC()->cart) {
             return true;
+        }
+        foreach (WC()->cart->get_cart() as $item) {
+            $product = wc_get_product((int) (($item['variation_id'] ?? 0) ?: $item['product_id']));
+            if (!$product || Branches::productBranch($product) !== Branches::current()
+                || (int) ($item['_fandoogh_branch_id'] ?? Branches::defaultId()) !== Branches::current()) {
+                return self::branchError();
+            }
         }
         if (!$channel) {
             $visible = array_column(Catalog::menu()['products'], 'id');
@@ -128,12 +360,39 @@ final class Checkout
         }
     }
 
+    public function resumeValidation(int $orderId): void
+    {
+        $order = wc_get_order($orderId);
+        if ($order && Branches::orderBranch($order) !== self::cartBranch()) { throw new \Exception(self::branchError()->get_error_message()); }
+    }
+
+    public function storeDraftCreated(\WC_Order $order): void
+    {
+        self::storeThrow(self::cartError());
+        if ($order->get_meta('_fandoogh_branch_id') && Branches::orderBranch($order) !== self::cartBranch()) {
+            self::storeThrow(self::branchError());
+        }
+        Branches::runFor(self::cartBranch(), static fn() => Orders::snapshotBranch($order));
+        $order->save();
+    }
+
     public function decorate(\WC_Order $order, array $data = []): void
+    {
+        Branches::runFor(self::cartBranch(), fn() => $this->decorateInBranch($order, $data));
+    }
+
+    private function decorateInBranch(\WC_Order $order, array $data = []): void
     {
         $channel = self::channel();
         if (!$channel) {
             return;
         }
+        $branchId = self::cartBranch();
+        $error = self::cartError();
+        if (is_wp_error($error) || ($order->get_meta('_fandoogh_branch_id') && Branches::orderBranch($order) !== $branchId)) {
+            throw new \Exception(is_wp_error($error) ? $error->get_error_message() : self::branchError()->get_error_message());
+        }
+        Branches::runFor($branchId, static fn() => Orders::snapshotBranch($order));
         $order->update_meta_data('_admincafe_channel', $channel);
         $order->update_meta_data('_admincafe_stage', 'awaiting_approval');
         $language = Language::resolve();

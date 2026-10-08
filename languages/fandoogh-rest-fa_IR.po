@@ -1,6 +1,6 @@
 # Fandoogh Rest translation catalog.
 msgid ""
-msgstr "Project-Id-Version: Fandoogh Rest 1.3.1\nReport-Msgid-Bugs-To: \nPOT-Creation-Date: 2026-10-08 00:00+0000\nPO-Revision-Date: 2026-10-08 00:00+0000\nLast-Translator: Fandoogh Rest\nLanguage-Team: Persian\nLanguage: fa_IR\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=(n > 1);\nX-Domain: fandoogh-rest\n"
+msgstr "Project-Id-Version: Fandoogh Rest 1.4.0\nReport-Msgid-Bugs-To: \nPOT-Creation-Date: 2026-10-09 00:00+0000\nPO-Revision-Date: 2026-10-09 00:00+0000\nLast-Translator: Fandoogh Rest\nLanguage-Team: Persian\nLanguage: fa_IR\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=(n > 1);\nX-Domain: fandoogh-rest\n"
 
 #: frontend/src/i18n.js:5 resources/ui-strings.php:5
 msgid "+ سفارش صندوق"
@@ -10,7 +10,7 @@ msgstr "+ سفارش صندوق"
 msgid "A CSS rule requires a declaration block."
 msgstr "برای هر انتخابگر، ویژگی‌ها را داخل آکولاد بنویسید."
 
-#: src/Notifications/Notifications.php:223
+#: src/Notifications/Notifications.php:233
 msgid "A browser subscription is required."
 msgstr "اشتراک اعلان مرورگر الزامی است."
 
@@ -18,35 +18,55 @@ msgstr "اشتراک اعلان مرورگر الزامی است."
 msgid "A file can contain at most 2000 product rows."
 msgstr "هر فایل می‌تواند حداکثر ۲۰۰۰ ردیف محصول داشته باشد."
 
-#: src/Commerce/Orders.php:97
+#: src/Commerce/Orders.php:119
 msgid "A unique request ID is required."
 msgstr "شناسه یکتای درخواست الزامی است."
 
-#: src/Rest/Management.php:175
+#: src/Rest/Management.php:198
 msgid "A valid email is required."
 msgstr "ایمیل معتبر الزامی است."
 
-#: src/Menu/Catalog.php:166
+#: src/Menu/Catalog.php:174
 msgid "A variation ID is required."
 msgstr "شناسه تنوع محصول الزامی است."
 
-#: src/Commerce/Orders.php:57
+#: src/Commerce/Checkout.php:105
+msgid "All cart items and checkout must belong to the selected branch. Return to its menu or confirm replacing your cart."
+msgstr "همهٔ غذاها و پرداخت باید مربوط به شعبهٔ انتخاب‌شده باشند. به منوی آن شعبه برگردید یا جایگزینی سبد را تأیید کنید."
+
+#: src/Commerce/Orders.php:51
+msgid "All items must belong to the selected branch."
+msgstr "همهٔ غذاها باید متعلق به شعبهٔ انتخاب‌شده باشند."
+
+#: src/Commerce/Orders.php:61
 msgid "An item is unavailable."
 msgstr "یکی از محصولات موجود نیست."
 
-#: src/Commerce/Orders.php:93
+#: src/Commerce/Orders.php:115
 msgid "An item list is required."
 msgstr "فهرست محصولات الزامی است."
 
-#: src/Translation/GoogleProvider.php:64 src/Translation/Queue.php:357
+#: src/Translation/GoogleProvider.php:64 src/Translation/Queue.php:387
 msgid "Automatic translation could not be completed."
 msgstr "ترجمه خودکار کامل نشد؛ اتصال، کلید و سهمیه سرویس را بررسی کنید."
+
+#: resources/builder-block.js:16 src/Integrations/MenuWidget.php:22
+msgid "Branch ID or slug (empty for current branch)"
+msgstr "شناسه یا آدرس شعبه (خالی برای شعبهٔ فعلی)"
+
+#: src/Branches/Module.php:61
+msgid "Branch is unavailable."
+msgstr "این شعبه در دسترس نیست."
+
+#: src/Branches/Branches.php:103 src/Rest/Management.php:191
+msgid "Branch not found."
+msgstr "شعبه پیدا نشد."
 
 #: src/Appearance/CssCompiler.php:51
 msgid "CSS escapes, HTML and control characters are not allowed."
 msgstr "CSS escape، کد HTML و نویسه‌های کنترلی مجاز نیستند."
 
-#: src/Appearance/Appearance.php:57 src/Appearance/CssCompiler.php:41
+#: src/Appearance/Appearance.php:62 src/Appearance/CssCompiler.php:41
 msgid "CSS exceeds the field limit."
 msgstr "متن CSS از حداکثر اندازه مجاز این باکس بیشتر است."
 
@@ -62,24 +82,24 @@ msgstr "پرانتزهای CSS بیش از حد تو در تو هستند."
 msgid "CSS property values cannot be empty."
 msgstr "مقدار ویژگی CSS نباید خالی باشد."
 
-#: src/Appearance/Appearance.php:76
+#: src/Appearance/Appearance.php:81
 #, php-format
 msgid "CSS setting \"%1$s\": %2$s"
 msgstr "تنظیم CSS «%1$s»: %2$s"
 
-#: src/Core/Access.php:16 src/Rest/Management.php:90
+#: src/Core/Access.php:16 src/Rest/Management.php:97
 msgid "Cashier"
 msgstr "صندوق‌دار"
 
-#: src/Commerce/Orders.php:319
+#: src/Commerce/Orders.php:365
 msgid "Cashier permission is required."
 msgstr "دسترسی صندوق‌دار الزامی است."
 
-#: src/Rest/Ordering.php:221
+#: src/Rest/Ordering.php:240
 msgid "Cashier permission required."
 msgstr "دسترسی صندوق‌دار الزامی است."
 
-#: src/Menu/Catalog.php:199
+#: src/Menu/Catalog.php:207
 msgid "Categories must be an array."
 msgstr "دسته‌بندی‌ها باید به صورت آرایه ارسال شوند."
 
@@ -87,7 +107,11 @@ msgstr "دسته‌بندی‌ها باید به صورت آرایه ارسال 
 msgid "Category ID (0 for all)"
 msgstr "شناسه دسته‌بندی (۰ برای همه)"
 
-#: src/Rest/Management.php:122
+#: src/Core/Settings.php:122
+msgid "Category belongs to another branch."
+msgstr "دسته‌بندی مربوط به شعبهٔ دیگری است."
+
+#: src/Rest/Management.php:131
 msgid "Category name is required."
 msgstr "نام دسته‌بندی الزامی است."
 
@@ -95,59 +119,79 @@ msgstr "نام دسته‌بندی الزامی است."
 msgid "Category navigation"
 msgstr "ناوبری دسته‌بندی‌ها"
 
-#: src/Menu/Catalog.php:203 src/Rest/Management.php:120 src/Rest/Management.php:61
+#: src/Menu/Catalog.php:211 src/Rest/Management.php:129 src/Rest/Management.php:66 src/Rest/Management.php:68
 msgid "Category not found."
 msgstr "دسته‌بندی پیدا نشد."
 
-#: src/Translation/Queue.php:354
+#: src/Translation/Queue.php:384
 msgid "Check the translation API credential and Google project permissions."
 msgstr "کلید ترجمه، فعال بودن API و دسترسی‌های پروژه گوگل را بررسی کنید."
 
-#: src/Menu/Catalog.php:176
+#: src/Menu/Catalog.php:184
 msgid "Choice price must be a non-negative number."
 msgstr "قیمت گزینه باید عددی غیرمنفی باشد."
 
-#: src/Core/Settings.php:128
+#: src/Commerce/Checkout.php:78
+msgid "Choose a branch before ordering."
+msgstr "پیش از سفارش، شعبه را انتخاب کنید."
+
+#: src/Core/Settings.php:138
 msgid "Choose a supported WooCommerce currency."
 msgstr "یک واحد پول پشتیبانی شده ووکامرس انتخاب کنید."
 
-#: src/Appearance/Appearance.php:35
+#: src/Appearance/Appearance.php:40
 msgid "Choose a supported menu theme."
 msgstr "یکی از طرح‌های آماده منو را انتخاب کنید."
 
-#: src/Core/Settings.php:85
+#: src/Branches/Branches.php:107
+msgid "Choose a valid branch name and address."
+msgstr "نام و آدرس معتبر برای شعبه انتخاب کنید."
+
+#: src/Commerce/Checkout.php:67
+msgid "Choose a valid branch."
+msgstr "یک شعبهٔ معتبر انتخاب کنید."
+
+#: src/Core/Settings.php:94
 msgid "Choose a valid, unreserved page address."
 msgstr "یک آدرس صفحه معتبر و رزرو نشده انتخاب کنید."
 
-#: src/Menu/Catalog.php:195 src/Rest/Management.php:125
+#: src/Menu/Catalog.php:203 src/Rest/Management.php:134
 msgid "Choose an image attachment."
 msgstr "یک تصویر از رسانه‌ها انتخاب کنید."
 
-#: src/Rest/Management.php:170
+#: src/Rest/Management.php:185
 msgid "Choose an operational Fandoogh Rest role."
 msgstr "یک نقش عملیاتی رستوران فندوق انتخاب کنید."
 
-#: src/Commerce/Orders.php:32
+#: src/Commerce/Orders.php:33
 msgid "Choose between 1 and 100 items."
 msgstr "بین ۱ تا ۱۰۰ محصول انتخاب کنید."
 
-#: src/Import/Importer.php:62
+#: src/Import/Importer.php:64
 msgid "Choose columns from the uploaded file."
 msgstr "ستون‌ها را از فایل بارگذاری شده انتخاب کنید."
 
-#: src/Commerce/Checkout.php:104
+#: src/Commerce/Checkout.php:336
 msgid "Choose pickup or delivery from the restaurant menu before checkout."
 msgstr "پیش از تسویه‌حساب، دریافت حضوری یا ارسال را در منوی رستوران انتخاب کنید."
 
-#: src/Appearance/Appearance.php:50
+#: src/Appearance/Appearance.php:55
 msgid "Choose supported CSS editor fields."
 msgstr "از باکس‌های تعریف‌شده برای CSS استفاده کنید."
 
-#: src/Core/Settings.php:75 src/Core/Settings.php:80
+#: src/Core/Settings.php:84 src/Core/Settings.php:89
 msgid "Choose supported customer languages."
 msgstr "زبان‌های پشتیبانی‌شدهٔ مشتری را انتخاب کنید."
 
-#: src/Notifications/Notifications.php:240 src/Notifications/Notifications.php:243 src/Notifications/Notifications.php:278
+#: src/Menu/Catalog.php:146
+msgid "Choose the product branch in the panel."
+msgstr "شعبهٔ غذا را از پنل انتخاب کنید."
+
+#: src/Rest/Management.php:188
+msgid "Choose valid branches."
+msgstr "شعبه‌های معتبر انتخاب کنید."
+
+#: src/Notifications/Notifications.php:250 src/Notifications/Notifications.php:253 src/Notifications/Notifications.php:288
 msgid "Choose valid notification channels."
 msgstr "کانال‌های اعلان معتبر انتخاب کنید."
 
@@ -159,7 +203,11 @@ msgstr "منوی کامل"
 msgid "Component"
 msgstr "بخش"
 
-#: src/Menu/Catalog.php:134
+#: src/Branches/Module.php:44 src/Branches/Module.php:54
+msgid "Conflicting branch selection."
+msgstr "انتخاب شعبه با اطلاعات درخواست همخوانی ندارد."
+
+#: src/Menu/Catalog.php:136
 msgid "Create simple products here; configure variable products in WooCommerce."
 msgstr "محصولات ساده را اینجا بسازید؛ محصولات متغیر را در ووکامرس تنظیم کنید."
 
@@ -171,11 +219,11 @@ msgstr "درخواست سفارش از سایت دیگر مجاز نیست."
 msgid "Deactivate the old AdminCafe plugin before activating Fandoogh Rest."
 msgstr "پیش از فعال کردن رستوران فندوق، افزونه قبلی AdminCafe را غیرفعال کنید."
 
-#: src/Notifications/Notifications.php:282
+#: src/Notifications/Notifications.php:292
 msgid "Device not found."
 msgstr "دستگاه پیدا نشد."
 
-#: src/Notifications/Notifications.php:287
+#: src/Notifications/Notifications.php:297
 msgid "Device settings changed. Refresh and try again."
 msgstr "تنظیمات دستگاه تغییر کرده است. صفحه را تازه‌سازی کنید و دوباره تلاش کنید."
 
@@ -183,7 +231,7 @@ msgstr "تنظیمات دستگاه تغییر کرده است. صفحه را ت
 msgid "Enable browser JavaScript to use the menu and panel."
 msgstr "برای استفاده از منو و پنل، جاوااسکریپت مرورگر را فعال کنید."
 
-#: src/Notifications/Notifications.php:300
+#: src/Notifications/Notifications.php:310
 msgid "Enable notifications on this device first."
 msgstr "ابتدا اعلان‌ها را روی این دستگاه فعال کنید."
 
@@ -191,15 +239,15 @@ msgstr "ابتدا اعلان‌ها را روی این دستگاه فعال ک
 msgid "Enable the PHP ZIP extension to import XLSX files."
 msgstr "برای ورود فایل‌های XLSX، افزونه ZIP را در PHP فعال کنید."
 
-#: src/Notifications/Notifications.php:36
+#: src/Notifications/Notifications.php:37
 msgid "Enable the PHP openssl, curl and mbstring extensions for push notifications."
 msgstr "برای اعلان‌های پوش، افزونه‌های openssl، curl و mbstring را در PHP فعال کنید."
 
-#: src/Menu/Catalog.php:155 src/Menu/Catalog.php:170
+#: src/Menu/Catalog.php:163 src/Menu/Catalog.php:178
 msgid "Every choice must belong to this product and appear once."
 msgstr "هر گزینه باید متعلق به این محصول باشد و فقط یک بار در فهرست بیاید."
 
-#: src/Rest/Management.php:144
+#: src/Rest/Management.php:158
 msgid "Every product must belong to this category."
 msgstr "همه محصولات باید متعلق به این دسته‌بندی باشند."
 
@@ -207,7 +255,7 @@ msgstr "همه محصولات باید متعلق به این دسته‌بند�
 msgid "External resources and executable CSS are not allowed."
 msgstr "منابع خارجی و CSS اجرایی مجاز نیستند."
 
-#: src/Core/Plugin.php:36 src/Core/Plugin.php:37 src/Core/Routes.php:70
+#: src/Core/Plugin.php:37 src/Core/Plugin.php:38 src/Core/Routes.php:106
 msgid "Fandoogh Rest"
 msgstr "رستوران فندوق"
 
@@ -215,23 +263,23 @@ msgstr "رستوران فندوق"
 msgid "Fandoogh Rest / WORKSPACE"
 msgstr "رستوران فندوق / فضای مدیریت"
 
-#: src/Commerce/Checkout.php:309
+#: src/Commerce/Checkout.php:568
 msgid "Fandoogh Rest checkout notification failed."
 msgstr "اعلان تسویه‌حساب رستوران فندوق ناموفق بود."
 
-#: src/Commerce/Orders.php:351
+#: src/Commerce/Orders.php:397
 msgid "Fandoogh Rest manager refund"
 msgstr "بازپرداخت توسط مدیر رستوران فندوق"
 
-#: resources/builder-block.js:21 resources/builder-block.js:6 src/Integrations/MenuWidget.php:9
+#: resources/builder-block.js:22 resources/builder-block.js:6 src/Integrations/MenuWidget.php:9
 msgid "Fandoogh Rest menu"
 msgstr "منوی رستوران فندوق"
 
-#: src/Commerce/Orders.php:230
+#: src/Commerce/Orders.php:253
 msgid "Fandoogh Rest order notification failed."
 msgstr "اعلان سفارش رستوران فندوق ناموفق بود."
 
-#: src/Commerce/Checkout.php:324
+#: src/Commerce/Checkout.php:583
 msgid "Fandoogh Rest payment notification failed."
 msgstr "اعلان پرداخت رستوران فندوق ناموفق بود."
 
@@ -243,11 +291,11 @@ msgstr "رستوران فندوق به PHP نسخه ۸٫۲ یا جدیدتر و 
 msgid "Fandoogh Rest requires WooCommerce and PHP 8.2 or newer."
 msgstr "رستوران فندوق به ووکامرس و PHP نسخه ۸٫۲ یا جدیدتر نیاز دارد."
 
-#: src/Commerce/Orders.php:369
+#: src/Commerce/Orders.php:415
 msgid "Fandoogh Rest stage notification failed."
 msgstr "اعلان مرحله سفارش رستوران فندوق ناموفق بود."
 
-#: src/Notifications/Notifications.php:141
+#: src/Notifications/Notifications.php:145
 msgid "Fandoogh Rest test notification"
 msgstr "اعلان آزمایشی رستوران فندوق"
 
@@ -255,11 +303,11 @@ msgstr "اعلان آزمایشی رستوران فندوق"
 msgid "File must be smaller than 5 MB."
 msgstr "حجم فایل باید کمتر از ۵ مگابایت باشد."
 
-#: resources/builder-block.js:17 src/Integrations/MenuWidget.php:24
+#: resources/builder-block.js:18 src/Integrations/MenuWidget.php:25
 msgid "Follow restaurant settings"
 msgstr "پیروی از تنظیمات رستوران"
 
-#: src/Rest/Management.php:203
+#: src/Rest/Management.php:227
 msgid "Image must be smaller than 5 MB."
 msgstr "حجم تصویر باید کمتر از ۵ مگابایت باشد."
 
@@ -279,56 +327,68 @@ msgstr "آدرس سلول اکسل معتبر نیست."
 msgid "Invalid XLSX file."
 msgstr "فایل XLSX معتبر نیست."
 
-#: src/Notifications/Notifications.php:214
+#: src/Branches/Branches.php:108
+msgid "Invalid branch enabled value."
+msgstr "وضعیت فعال‌بودن شعبه نامعتبر است."
+
+#: src/Branches/Branches.php:104
+msgid "Invalid branch field."
+msgstr "فیلد شعبه نامعتبر است."
+
+#: src/Branches/Module.php:40
+msgid "Invalid branch."
+msgstr "شعبه نامعتبر است."
+
+#: src/Notifications/Notifications.php:224
 msgid "Invalid browser push subscription."
 msgstr "اشتراک اعلان پوش مرورگر معتبر نیست."
 
-#: src/Rest/Management.php:118
+#: src/Rest/Management.php:127
 msgid "Invalid category field."
 msgstr "فیلد دسته‌بندی معتبر نیست."
 
-#: src/Rest/Management.php:124
+#: src/Rest/Management.php:133
 msgid "Invalid category parent."
 msgstr "دسته‌بندی والد معتبر نیست."
 
-#: src/Rest/Ordering.php:193
+#: src/Rest/Ordering.php:212
 msgid "Invalid channel."
 msgstr "کانال معتبر نیست."
 
-#: src/Commerce/Checkout.php:49
+#: src/Commerce/Checkout.php:246
 msgid "Invalid checkout channel."
 msgstr "روش دریافت سفارش معتبر نیست."
 
-#: src/Menu/Catalog.php:174
+#: src/Menu/Catalog.php:182
 msgid "Invalid choice field."
 msgstr "فیلد گزینه محصول معتبر نیست."
 
-#: src/Core/Settings.php:190 src/Menu/Catalog.php:101 src/Menu/Catalog.php:151 src/Menu/Catalog.php:153 src/Menu/Catalog.php:94 src/Menu/Catalog.php:97
+#: src/Core/Settings.php:203 src/Menu/Catalog.php:103 src/Menu/Catalog.php:159 src/Menu/Catalog.php:161 src/Menu/Catalog.php:96 src/Menu/Catalog.php:99
 msgid "Invalid content translations."
 msgstr "ترجمه‌های محتوا نامعتبر است."
 
-#: src/Import/Importer.php:51
+#: src/Import/Importer.php:53
 msgid "Invalid import request."
 msgstr "درخواست ورود اطلاعات معتبر نیست."
 
-#: src/Commerce/Orders.php:40
+#: src/Commerce/Orders.php:41
 msgid "Invalid item."
 msgstr "محصول معتبر نیست."
 
-#: src/Commerce/Orders.php:325
+#: src/Commerce/Orders.php:371
 msgid "Invalid payment action."
 msgstr "عملیات پرداخت معتبر نیست."
 
-#: src/Menu/Catalog.php:130
+#: src/Menu/Catalog.php:132
 #, php-format
 msgid "Invalid product field: %s"
 msgstr "فیلد محصول معتبر نیست: %s"
 
-#: src/Commerce/Orders.php:46
+#: src/Commerce/Orders.php:47
 msgid "Invalid product or quantity."
 msgstr "محصول یا تعداد معتبر نیست."
 
-#: src/Menu/Catalog.php:192
+#: src/Menu/Catalog.php:200
 msgid "Invalid product status."
 msgstr "وضعیت محصول معتبر نیست."
 
@@ -336,31 +396,35 @@ msgstr "وضعیت محصول معتبر نیست."
 msgid "Invalid punctuation in CSS value."
 msgstr "علامت‌گذاری مقدار ویژگی CSS معتبر نیست."
 
-#: src/Core/Settings.php:65 src/Core/Settings.php:68 src/Core/Settings.php:71
+#: src/Core/Settings.php:74 src/Core/Settings.php:77 src/Core/Settings.php:80
 msgid "Invalid setting value."
 msgstr "مقدار تنظیمات معتبر نیست."
 
-#: src/Rest/Management.php:167
+#: src/Rest/Management.php:182
 msgid "Invalid staff field."
 msgstr "فیلد کارکنان معتبر نیست."
 
-#: src/Commerce/Orders.php:294
+#: src/Commerce/Orders.php:340
 msgid "Invalid stage transition."
 msgstr "تغییر مرحله سفارش مجاز نیست."
 
-#: src/Rest/Ordering.php:181
+#: src/Rest/Ordering.php:200
 msgid "Invalid stage."
 msgstr "مرحله معتبر نیست."
 
-#: src/Tables/Tables.php:35
+#: src/Tables/Tables.php:45
 msgid "Invalid table field."
 msgstr "فیلد میز معتبر نیست."
 
-#: src/Tables/Tables.php:42
+#: src/Tables/Tables.php:52
 msgid "Invalid table mode."
 msgstr "حالت میز معتبر نیست."
 
-#: src/Translation/Config.php:123 src/Translation/Module.php:83 src/Translation/Module.php:91
+#: src/Branches/Module.php:51
+msgid "Invalid table."
+msgstr "میز نامعتبر است."
+
+#: src/Translation/Config.php:123 src/Translation/Module.php:88 src/Translation/Module.php:96
 msgid "Invalid translation settings."
 msgstr "تنظیمات ترجمه معتبر نیست. کلید سرویس و سقف مصرف را بررسی کنید."
 
@@ -368,11 +432,11 @@ msgstr "تنظیمات ترجمه معتبر نیست. کلید سرویس و س
 msgid "Invalid worksheet path."
 msgstr "مسیر کاربرگ معتبر نیست."
 
-#: src/Core/Access.php:15 src/Rest/Management.php:90
+#: src/Core/Access.php:15 src/Rest/Management.php:97
 msgid "Kitchen"
 msgstr "آشپزخانه"
 
-#: src/Core/Routes.php:131
+#: src/Core/Routes.php:167
 msgid "Login was unsuccessful. Check your restaurant account credentials."
 msgstr "ورود ناموفق بود. اطلاعات حساب رستوران را بررسی کنید."
 
@@ -380,11 +444,11 @@ msgstr "ورود ناموفق بود. اطلاعات حساب رستوران ر�
 msgid "Management panel"
 msgstr "پنل مدیریت"
 
-#: src/Commerce/Orders.php:322
+#: src/Commerce/Orders.php:368
 msgid "Manager permission is required."
 msgstr "دسترسی مدیر الزامی است."
 
-#: src/Import/Importer.php:67
+#: src/Import/Importer.php:69
 msgid "Map the product name column."
 msgstr "ستون نام محصول را مشخص کنید."
 
@@ -396,7 +460,7 @@ msgstr "منو"
 msgid "Menu and order management"
 msgstr "مدیریت منو و سفارش‌ها"
 
-#: src/Core/Settings.php:146
+#: src/Core/Settings.php:156
 msgid "Menu and panel addresses must be different."
 msgstr "آدرس منو و پنل باید متفاوت باشند."
 
@@ -404,15 +468,19 @@ msgstr "آدرس منو و پنل باید متفاوت باشند."
 msgid "Nested CSS declarations are not allowed."
 msgstr "قواعد CSS تو در تو در باکس ویژگی‌ها مجاز نیستند."
 
-#: src/Commerce/Orders.php:337
+#: src/Commerce/Orders.php:383
 msgid "No paid balance to refund."
 msgstr "مبلغ پرداخت شده‌ای برای بازپرداخت وجود ندارد."
 
-#: src/Notifications/Notifications.php:142
+#: src/Notifications/Notifications.php:200
+msgid "Notification permission required."
+msgstr "دسترسی اعلان‌ها لازم است."
+
+#: src/Notifications/Notifications.php:146
 msgid "Notifications are working on this device."
 msgstr "اعلان‌ها روی این دستگاه فعال هستند."
 
-#: src/Commerce/Orders.php:332
+#: src/Commerce/Orders.php:378
 #, php-format
 msgid "Offline settlement recorded by user %d."
 msgstr "تسویه آفلاین توسط کاربر %d ثبت شد."
@@ -421,15 +489,27 @@ msgstr "تسویه آفلاین توسط کاربر %d ثبت شد."
 msgid "Only @media and @supports rules are allowed."
 msgstr "از قواعد @ فقط @media و @supports پشتیبانی می‌شوند."
 
-#: src/Import/Importer.php:31
+#: src/Import/Importer.php:32
 msgid "Only CSV and XLSX files are supported."
 msgstr "فقط فایل‌های CSV و XLSX پشتیبانی می‌شوند."
 
-#: src/Rest/Management.php:207
+#: src/Rest/Management.php:190
+msgid "Only the collection administrator may assign branches."
+msgstr "فقط مدیر مجموعه می‌تواند شعبه‌های کارکنان را تعیین کند."
+
+#: src/Core/Settings.php:55
+msgid "Only the collection administrator may change shared settings."
+msgstr "فقط مدیر مجموعه می‌تواند تنظیمات مشترک را تغییر دهد."
+
+#: src/Translation/Module.php:87
+msgid "Only the collection manager can change the shared translation provider."
+msgstr "فقط مدیر مجموعه می‌تواند سرویس ترجمهٔ مشترک را تغییر دهد."
+
+#: src/Rest/Management.php:231
 msgid "Only valid JPEG, PNG, or WebP images are supported."
 msgstr "فقط تصاویر معتبر JPEG، PNG یا WebP پشتیبانی می‌شوند."
 
-#: src/Core/Plugin.php:37
+#: src/Core/Plugin.php:38
 msgid "Open restaurant panel"
 msgstr "باز کردن پنل رستوران"
 
@@ -437,31 +517,35 @@ msgstr "باز کردن پنل رستوران"
 msgid "Order basket"
 msgstr "سبد سفارش"
 
-#: src/Rest/Ordering.php:153 src/Rest/Ordering.php:157 src/Rest/Ordering.php:172
+#: src/Commerce/Orders.php:335 src/Rest/Ordering.php:166 src/Rest/Ordering.php:170 src/Rest/Ordering.php:174 src/Rest/Ordering.php:190
 msgid "Order not found."
 msgstr "سفارش پیدا نشد."
 
-#: src/Rest/Ordering.php:27
+#: src/Commerce/Orders.php:80 src/Rest/Ordering.php:195 src/Rest/Ordering.php:28
 msgid "Order permission required."
 msgstr "دسترسی مدیریت سفارش الزامی است."
 
-#: resources/builder-block.js:16 src/Integrations/MenuWidget.php:23
+#: resources/builder-block.js:17 src/Integrations/MenuWidget.php:24
 msgid "Ordering"
 msgstr "سفارش‌گیری"
+
+#: src/Commerce/Checkout.php:120 src/Commerce/Orders.php:89
+msgid "Ordering is unavailable."
+msgstr "سفارش‌گیری در دسترس نیست."
 
 #: templates/login.php:10
 msgid "Password"
 msgstr "رمز عبور"
 
-#: src/Rest/Management.php:184
+#: src/Rest/Management.php:207
 msgid "Password must contain at least 12 characters."
 msgstr "رمز عبور باید حداقل ۱۲ نویسه داشته باشد."
 
-#: src/Commerce/Orders.php:312
+#: src/Commerce/Orders.php:358
 msgid "Payment must be confirmed before accepting this online order."
 msgstr "پیش از پذیرش این سفارش آنلاین، پرداخت باید تأیید شود."
 
-#: src/Core/Routes.php:120
+#: src/Core/Routes.php:156
 msgid "Please refresh the page or wait a few minutes before trying again."
 msgstr "لطفاً صفحه را تازه‌سازی کنید یا چند دقیقه صبر کنید و دوباره تلاش کنید."
 
@@ -469,7 +553,7 @@ msgstr "لطفاً صفحه را تازه‌سازی کنید یا چند دقی
 msgid "Price must be a non-negative number, blank, or unavailable."
 msgstr "قیمت باید عددی غیرمنفی، خالی یا ناموجود باشد."
 
-#: src/Menu/Catalog.php:188
+#: src/Menu/Catalog.php:196
 msgid "Price must be a non-negative number."
 msgstr "قیمت باید عددی غیرمنفی باشد."
 
@@ -481,23 +565,23 @@ msgstr "کارت‌های محصولات"
 msgid "Product cell data exceeds the 2 MB safety limit."
 msgstr "حجم داده سلول‌های محصول بیش از حد ایمن ۲ مگابایت است."
 
-#: src/Import/Importer.php:136 src/Menu/Catalog.php:184
+#: src/Import/Importer.php:138 src/Menu/Catalog.php:192
 msgid "Product name is required."
 msgstr "نام محصول الزامی است."
 
-#: src/Menu/Catalog.php:138 src/Menu/Catalog.php:51 src/Rest/Management.php:49
+#: src/Menu/Catalog.php:140 src/Menu/Catalog.php:143 src/Menu/Catalog.php:52 src/Rest/Management.php:55
 msgid "Product not found."
 msgstr "محصول پیدا نشد."
 
-#: src/Notifications/Notifications.php:162
+#: src/Notifications/Notifications.php:169
 msgid "Push delivery failed. Check outbound network access and PHP extensions."
 msgstr "ارسال اعلان پوش ناموفق بود. دسترسی شبکه خروجی و افزونه‌های PHP را بررسی کنید."
 
-#: src/Rest/Management.php:100
+#: src/Rest/Management.php:107
 msgid "Push is not configured."
 msgstr "اعلان پوش تنظیم نشده است."
 
-#: src/Notifications/Notifications.php:32
+#: src/Notifications/Notifications.php:33
 msgid "Push notifications require HTTPS."
 msgstr "اعلان‌های پوش به HTTPS نیاز دارند."
 
@@ -509,7 +593,7 @@ msgstr "QR منوی عمومی / PNG"
 msgid "QR منوی عمومی / SVG"
 msgstr "QR منوی عمومی / SVG"
 
-#: src/Commerce/Orders.php:344
+#: src/Commerce/Orders.php:390
 msgid "Refund through the gateway dashboard first; automatic refunds are unavailable."
 msgstr "ابتدا از پنل درگاه پرداخت بازپرداخت کنید؛ بازپرداخت خودکار در دسترس نیست."
 
@@ -517,15 +601,15 @@ msgstr "ابتدا از پنل درگاه پرداخت بازپرداخت کنی
 msgid "Remember me"
 msgstr "مرا به خاطر بسپار"
 
-#: src/Notifications/Notifications.php:236
+#: src/Notifications/Notifications.php:246
 msgid "Remove an old device before adding another."
 msgstr "پیش از افزودن دستگاه جدید، یک دستگاه قدیمی را حذف کنید."
 
-#: src/Commerce/Orders.php:110
+#: src/Commerce/Orders.php:132
 msgid "Request ID already used for different items."
 msgstr "این شناسه درخواست قبلاً برای محصولات دیگری استفاده شده است."
 
-#: src/Commerce/Orders.php:62
+#: src/Commerce/Orders.php:66
 msgid "Requested quantity is unavailable."
 msgstr "تعداد درخواستی موجود نیست."
 
@@ -533,7 +617,11 @@ msgstr "تعداد درخواستی موجود نیست."
 msgid "Reset password"
 msgstr "بازیابی رمز عبور"
 
-#: src/Core/Access.php:13 src/Rest/Management.php:90
+#: src/Integrations/Builders.php:14
+msgid "Restaurant branches"
+msgstr "شعبه‌های رستوران"
+
+#: src/Core/Access.php:13 src/Rest/Management.php:97
 msgid "Restaurant manager"
 msgstr "مدیر رستوران"
 
@@ -541,11 +629,11 @@ msgstr "مدیر رستوران"
 msgid "Restaurant menu"
 msgstr "منوی رستوران"
 
-#: src/Core/Plugin.php:37
+#: src/Core/Plugin.php:38
 msgid "Restaurant operations are available in your dedicated panel."
 msgstr "عملیات رستوران در پنل اختصاصی شما در دسترس است."
 
-#: src/Core/Access.php:14 src/Rest/Management.php:90
+#: src/Core/Access.php:14 src/Rest/Management.php:97
 msgid "Restaurant staff"
 msgstr "کارکنان رستوران"
 
@@ -557,15 +645,15 @@ msgstr "انتخابگر ریشه منو نمی‌تواند عناصر کنار
 msgid "Save the CSV file with UTF-8 encoding."
 msgstr "فایل CSV را با کدگذاری UTF-8 ذخیره کنید."
 
-#: src/Core/Settings.php:110
+#: src/Core/Settings.php:119
 msgid "Select a published WordPress page."
 msgstr "یک صفحه منتشر شده وردپرس انتخاب کنید."
 
-#: src/Core/Settings.php:105
+#: src/Core/Settings.php:114
 msgid "Select an image from the media library."
 msgstr "یک تصویر از کتابخانه رسانه انتخاب کنید."
 
-#: src/Rest/Management.php:29
+#: src/Rest/Management.php:31
 msgid "Send a JSON object."
 msgstr "یک شیء JSON ارسال کنید."
 
@@ -573,7 +661,7 @@ msgstr "یک شیء JSON ارسال کنید."
 msgid "Send an appearance settings object."
 msgstr "ساختار تنظیمات ظاهر معتبر نیست."
 
-#: src/Rest/Management.php:19
+#: src/Rest/Management.php:20
 msgid "Sign in again to continue."
 msgstr "برای ادامه دوباره وارد شوید."
 
@@ -585,31 +673,31 @@ msgstr "ورود به پنل"
 msgid "Sign in | Fandoogh Rest"
 msgstr "ورود | رستوران فندوق"
 
-#: src/Rest/Management.php:140
+#: src/Rest/Management.php:154
 msgid "Supply a category and product IDs."
 msgstr "دسته‌بندی و شناسه محصولات را ارسال کنید."
 
-#: src/Menu/Catalog.php:163
+#: src/Menu/Catalog.php:171
 msgid "Supply existing choices of this variable product."
 msgstr "گزینه‌های موجود این محصول متغیر را ارسال کنید."
 
-#: src/Notifications/Notifications.php:193
+#: src/Notifications/Notifications.php:203
 msgid "Supply up to 100 notification IDs."
 msgstr "حداکثر ۱۰۰ شناسه اعلان ارسال کنید."
 
-#: src/Tables/Tables.php:45
+#: src/Tables/Tables.php:55
 msgid "Table label must contain 1–100 characters."
 msgstr "نام میز باید بین ۱ تا ۱۰۰ نویسه داشته باشد."
 
-#: src/Tables/Tables.php:40 src/Tables/Tables.php:59
+#: src/Tables/Tables.php:50 src/Tables/Tables.php:70
 msgid "Table not found."
 msgstr "میز پیدا نشد."
 
-#: src/Commerce/Orders.php:82
+#: src/Commerce/Orders.php:101
 msgid "Table ordering is unavailable."
 msgstr "سفارش‌گیری میز در دسترس نیست."
 
-#: src/Tables/Tables.php:27
+#: src/Tables/Tables.php:33 src/Tables/Tables.php:35
 msgid "Table unavailable."
 msgstr "میز در دسترس نیست."
 
@@ -617,31 +705,31 @@ msgstr "میز در دسترس نیست."
 msgid "The Excel workbook contains invalid XML."
 msgstr "فایل اکسل دارای XML نامعتبر است."
 
-#: src/Notifications/Notifications.php:34
+#: src/Notifications/Notifications.php:35
 msgid "The Web Push dependency is missing. Install the packaged release."
 msgstr "وابستگی Web Push موجود نیست. نسخه بسته‌بندی شده را نصب کنید."
 
-#: src/Notifications/Notifications.php:153
+#: src/Notifications/Notifications.php:160
 msgid "The browser push service could not deliver the notification."
 msgstr "سرویس پوش مرورگر نتوانست اعلان را تحویل دهد."
 
-#: src/Appearance/Appearance.php:67
+#: src/Appearance/Appearance.php:72
 msgid "The combined CSS exceeds 30000 bytes."
 msgstr "مجموع متن CSS نباید بیشتر از ۳۰٬۰۰۰ بایت باشد."
 
-#: src/Appearance/Appearance.php:41
+#: src/Appearance/Appearance.php:46
 msgid "The custom CSS switch must be a boolean."
 msgstr "وضعیت فعال‌سازی CSS اختصاصی باید روشن یا خاموش باشد."
 
-#: src/Translation/Queue.php:353
+#: src/Translation/Queue.php:383
 msgid "The daily translation character limit has been reached."
 msgstr "سقف روزانه ترجمه پر شده است؛ سقف مصرف را افزایش دهید یا روز بعد دوباره تلاش کنید."
 
-#: src/Import/Importer.php:195
+#: src/Import/Importer.php:210
 msgid "The database could not start a safe import transaction."
 msgstr "پایگاه داده نتوانست تراکنش ایمن ورود اطلاعات را آغاز کند."
 
-#: src/Core/Settings.php:143
+#: src/Core/Settings.php:153
 msgid "The default language must be enabled."
 msgstr "زبان پیش‌فرض باید فعال باشد."
 
@@ -665,27 +753,31 @@ msgstr "فایل باید حداکثر ۴۰ ستون داشته باشد."
 msgid "The first worksheet could not be read."
 msgstr "خواندن اولین کاربرگ ممکن نبود."
 
-#: resources/builder-block.js:22
+#: resources/builder-block.js:23
 msgid "The live restaurant menu appears on the published page. Products and ordering follow restaurant settings."
 msgstr "منوی زنده رستوران در صفحه منتشر شده نمایش داده می‌شود. محصولات و سفارش‌گیری از تنظیمات رستوران پیروی می‌کنند."
 
-#: src/Import/Importer.php:71
+#: src/Import/Importer.php:73
 msgid "The mapping cannot change after importing starts."
 msgstr "پس از شروع ورود اطلاعات، نگاشت ستون‌ها قابل تغییر نیست."
 
-#: src/Import/Importer.php:56 src/Import/Importer.php:86
+#: src/Import/Importer.php:58 src/Import/Importer.php:88
 msgid "The preview has expired. Upload the file again."
 msgstr "پیش‌نمایش منقضی شده است. فایل را دوباره بارگذاری کنید."
 
-#: src/Import/Importer.php:206
+#: src/Import/Importer.php:221
 msgid "The product could not be imported safely."
 msgstr "ورود ایمن محصول ممکن نشد."
 
-#: src/Notifications/Notifications.php:46
+#: src/Notifications/Notifications.php:47
 msgid "The server could not generate push credentials."
 msgstr "سرور نتوانست اطلاعات احراز هویت پوش را تولید کند."
 
-#: src/Translation/Queue.php:356
+#: src/Commerce/Orders.php:111
+msgid "The table belongs to a different branch."
+msgstr "میز مربوط به شعبهٔ دیگری است."
+
+#: src/Translation/Queue.php:386
 msgid "The translation response did not meet the content limits."
 msgstr "پاسخ ترجمه معتبر نیست یا متن آن از محدودیت طول فیلد عبور کرده است."
 
@@ -713,55 +805,67 @@ msgstr "تعریف کاربرگ‌ها در فایل اکسل موجود نیس�
 msgid "This CSS property is not allowed."
 msgstr "این ویژگی CSS مجاز نیست."
 
-#: src/Import/Importer.php:146
+#: src/Import/Importer.php:151
 msgid "This SKU already exists."
 msgstr "این شناسه کالا قبلاً وجود دارد."
 
-#: src/Rest/Management.php:168
+#: src/Rest/Management.php:183
 msgid "This account cannot be changed from the panel."
 msgstr "این حساب از پنل قابل تغییر نیست."
 
-#: src/Rest/Management.php:193
+#: src/Rest/Management.php:217
 msgid "This account cannot be removed from the panel."
 msgstr "این حساب از پنل قابل حذف نیست."
 
-#: src/Core/Settings.php:89
+#: src/Core/Settings.php:98
 msgid "This address is already used by a WordPress page."
 msgstr "این آدرس قبلاً توسط یک صفحه وردپرس استفاده شده است."
 
-#: src/Import/Importer.php:80 src/Import/Importer.php:96
+#: src/Branches/Branches.php:109
+msgid "This branch address is already used."
+msgstr "آدرس این شعبه قبلاً استفاده شده است."
+
+#: src/Commerce/Checkout.php:289 src/Commerce/Checkout.php:82
+msgid "This branch is unavailable."
+msgstr "این شعبه در دسترس نیست."
+
+#: src/Core/Assets.php:57 src/Integrations/Builders.php:49
+msgid "This branch menu is unavailable."
+msgstr "منوی این شعبه در دسترس نیست."
+
+#: src/Import/Importer.php:82 src/Import/Importer.php:98
 msgid "This import is already processing."
 msgstr "این ورود اطلاعات در حال پردازش است."
 
-#: src/Commerce/Orders.php:329
+#: src/Commerce/Orders.php:375
 msgid "This order cannot be settled."
 msgstr "این سفارش قابل تسویه نیست."
 
-#: src/Rest/Ordering.php:244
+#: src/Rest/Ordering.php:263
 msgid "This order is being updated. Retry shortly."
 msgstr "این سفارش در حال به‌روزرسانی است. کمی بعد دوباره تلاش کنید."
 
-#: src/Commerce/Checkout.php:78
+#: src/Commerce/Checkout.php:295
 msgid "This ordering channel is unavailable."
 msgstr "این روش سفارش‌گیری در دسترس نیست."
 
-#: src/Commerce/Orders.php:150 src/Commerce/Orders.php:163
+#: src/Commerce/Orders.php:172 src/Commerce/Orders.php:185
 msgid "This request is being processed."
 msgstr "این درخواست در حال پردازش است."
 
-#: src/Commerce/Orders.php:146
+#: src/Commerce/Orders.php:168
 msgid "This request needs staff review before retrying. Please contact the restaurant."
 msgstr "پیش از تلاش دوباره، این درخواست باید توسط کارکنان بررسی شود. لطفاً با رستوران تماس بگیرید."
 
-#: src/Core/Routes.php:47
+#: src/Core/Routes.php:83
 msgid "This table menu is unavailable."
 msgstr "منوی این میز در دسترس نیست."
 
-#: src/Commerce/Orders.php:89
+#: src/Commerce/Orders.php:108
 msgid "This table supports menu viewing only."
 msgstr "این میز فقط امکان مشاهده منو را دارد."
 
-#: src/Integrations/MenuWidget.php:25
+#: src/Integrations/MenuWidget.php:26
 msgid "This widget cannot enable an ordering channel disabled by the manager."
 msgstr "این ابزارک نمی‌تواند روش سفارش‌گیری غیرفعال شده توسط مدیر را فعال کند."
 
@@ -785,15 +889,15 @@ msgstr "تعداد قواعد واکنش‌گرای تو در تو بیشتر ا
 msgid "Too many requests. Please wait and try again."
 msgstr "تعداد درخواست‌ها بیش از حد مجاز است. کمی صبر کنید و دوباره تلاش کنید."
 
-#: src/Translation/Module.php:73
+#: src/Translation/Module.php:77
 msgid "Translation management is not permitted."
 msgstr "اجازه مدیریت ترجمه را ندارید؛ با حساب مجاز دوباره وارد شوید."
 
-#: src/Translation/Queue.php:355
+#: src/Translation/Queue.php:385
 msgid "Translation temporarily failed. Retry this item."
 msgstr "ترجمه موقتاً ناموفق بود؛ این مورد را دوباره امتحان کنید."
 
-#: src/Commerce/Orders.php:224
+#: src/Commerce/Orders.php:247
 msgid "Unable to create the order. Please try again."
 msgstr "ثبت سفارش ممکن نشد. لطفاً دوباره تلاش کنید."
 
@@ -841,19 +945,19 @@ msgstr "این انتخابگر CSS پشتیبانی نمی‌شود."
 msgid "Unsupported CSS value."
 msgstr "این مقدار CSS پشتیبانی نمی‌شود."
 
-#: src/Commerce/Checkout.php:41
+#: src/Commerce/Checkout.php:57
 msgid "Unsupported customer language."
 msgstr "زبان مشتری پشتیبانی نمی‌شود."
 
-#: src/Menu/Catalog.php:141
+#: src/Menu/Catalog.php:149
 msgid "Unsupported product type."
 msgstr "نوع محصول پشتیبانی نمی‌شود."
 
-#: src/Import/Importer.php:27
+#: src/Import/Importer.php:28
 msgid "Upload a CSV or XLSX file."
 msgstr "یک فایل CSV یا XLSX بارگذاری کنید."
 
-#: src/Rest/Management.php:202
+#: src/Rest/Management.php:226
 msgid "Upload a valid image."
 msgstr "یک تصویر معتبر بارگذاری کنید."
 
@@ -865,11 +969,15 @@ msgstr "هر ویژگی را به شکل property: value; بنویسید."
 msgid "Use a UTF-8 CSV file."
 msgstr "از فایل CSV با کدگذاری UTF-8 استفاده کنید."
 
-#: src/Core/Settings.php:135
+#: src/Core/Settings.php:145
 msgid "Use a font file hosted on this site."
 msgstr "از فایل فونت میزبانی شده در همین سایت استفاده کنید."
 
-#: src/Core/Settings.php:94
+#: src/Import/Importer.php:148
+msgid "Use a unique SKU for this branch."
+msgstr "برای این شعبه کد محصول یکتا وارد کنید."
+
+#: src/Core/Settings.php:103
 msgid "Use a valid hexadecimal color."
 msgstr "از رنگ هگزادسیمال معتبر استفاده کنید."
 
@@ -877,7 +985,7 @@ msgstr "از رنگ هگزادسیمال معتبر استفاده کنید."
 msgid "Use selectors relative to menu elements."
 msgstr "انتخابگرها باید به عناصر داخل منو مربوط باشند."
 
-#: src/Rest/Management.php:180
+#: src/Rest/Management.php:203
 msgid "Username and email are required."
 msgstr "نام کاربری و ایمیل الزامی هستند."
 
@@ -889,7 +997,7 @@ msgstr "نام کاربری یا ایمیل"
 msgid "View menu"
 msgstr "مشاهده منو"
 
-#: resources/builder-block.js:17 src/Integrations/MenuWidget.php:24
+#: resources/builder-block.js:18 src/Integrations/MenuWidget.php:25
 msgid "View menu only"
 msgstr "فقط نمایش منو"
 
@@ -897,17 +1005,25 @@ msgstr "فقط نمایش منو"
 msgid "Welcome to your restaurant panel"
 msgstr "به پنل مجموعه خوش آمدید"
 
-#: src/Rest/Management.php:39
+#: src/Rest/Management.php:41
 msgid "You do not have access to the panel."
 msgstr "شما به پنل دسترسی ندارید."
 
-#: src/Core/Routes.php:86
+#: src/Branches/Module.php:62 src/Rest/Management.php:23
+msgid "You do not have access to this branch."
+msgstr "به این شعبه دسترسی ندارید."
+
+#: src/Core/Routes.php:122
 msgid "You do not have access to this restaurant panel."
 msgstr "شما به پنل این رستوران دسترسی ندارید."
 
-#: src/Rest/Management.php:21
+#: src/Branches/Branches.php:101 src/Rest/Management.php:22
 msgid "You do not have permission."
 msgstr "شما دسترسی لازم را ندارید."
+
+#: src/Commerce/Checkout.php:262
+msgid "Your cart belongs to another branch. Confirm replacing it to continue."
+msgstr "سبد پرداخت مربوط به شعبهٔ دیگری است. برای ادامه، جایگزینی آن را تأیید کنید."
 
 #: src/Core/Security.php:61
 msgid "Your session has expired. Reload the menu and try again."

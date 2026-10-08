@@ -3,6 +3,7 @@ namespace FandooghRest\Core;
 
 use FandooghRest\Localization\Language;
 use FandooghRest\Appearance\Appearance;
+use FandooghRest\Branches\Branches;
 
 defined('ABSPATH') || exit;
 
@@ -29,8 +30,10 @@ final class Settings
 
     public static function all(): array
     {
-        $stored = get_option('admincafe_settings', []);
-        $settings = array_replace_recursive(self::defaults(), is_array($stored) ? $stored : []);
+        $global = (array) get_option('admincafe_settings', []);
+        $stored = array_replace(Branches::current() === Branches::defaultId() ? $global : Branches::settings(Branches::current()), array_intersect_key($global, array_flip(Branches::GLOBAL_SETTINGS)));
+        $stored = array_intersect_key($stored, self::defaults());
+        $settings = array_replace_recursive(self::defaults(), $stored);
         // Lists replace the defaults; recursive array replacement would silently re-enable languages.
         if (is_array($stored) && isset($stored['enabled_languages']) && is_array($stored['enabled_languages'])) {
             $settings['enabled_languages'] = array_values($stored['enabled_languages']);
@@ -47,6 +50,12 @@ final class Settings
     public static function update(array $input): array|\WP_Error
     {
         $settings = self::all();
+        foreach (Branches::GLOBAL_SETTINGS as $key) {
+            if (array_key_exists($key, $input) && !Branches::isCentral() && (!is_scalar($input[$key]) || (string) $input[$key] !== (string) $settings[$key])) {
+                return new \WP_Error('rest_forbidden', __('Only the collection administrator may change shared settings.', 'fandoogh-rest'), ['status' => 403]);
+            }
+            if (array_key_exists($key, $input) && is_scalar($input[$key]) && (string) $input[$key] === (string) $settings[$key]) { unset($input[$key]); }
+        }
         $appearance = Appearance::validate($input, $settings);
         if (is_wp_error($appearance)) { return $appearance; }
         $settings = array_replace($settings, $appearance);
@@ -101,7 +110,7 @@ final class Settings
                 $value = max(100, min(900, (int) round(((int) $value) / 100) * 100));
             } elseif (in_array($key, ['logo_id', 'cover_id'], true)) {
                 $value = absint($value);
-                if ($value && !wp_attachment_is_image($value)) {
+                if ($value && (!wp_attachment_is_image($value) || !Branches::ownsMedia($value))) {
                     return new \WP_Error('admincafe_image', __('Select an image from the media library.', 'fandoogh-rest'), ['status' => 400]);
                 }
             } elseif ($key === 'menu_page_id') {
@@ -110,6 +119,7 @@ final class Settings
                     return new \WP_Error('admincafe_page', __('Select a published WordPress page.', 'fandoogh-rest'), ['status' => 400]);
                 }
             } elseif ($key === 'menu_category_ids') {
+                foreach ($value as $categoryId) { if (!Branches::ownsCategory(absint($categoryId))) { return new \WP_Error('rest_forbidden', __('Category belongs to another branch.', 'fandoogh-rest'), ['status' => 403]); } }
                 $value = array_values(array_unique(array_filter(array_map('absint', (array) $value), static fn(int $id): bool => term_exists($id, 'product_cat') !== null && term_exists($id, 'product_cat') !== 0)));
             } elseif ($key === 'messages') {
                 $value = array_intersect_key((array) $value, self::defaults()['messages']);
@@ -146,8 +156,11 @@ final class Settings
             return new \WP_Error('admincafe_slug_conflict', __('Menu and panel addresses must be different.', 'fandoogh-rest'), ['status' => 400]);
         }
         $old = self::all();
-        update_option('admincafe_settings', $settings, false);
-        if (isset($input['content_translations'])) { do_action('admincafe_translation_manual_input', 'settings', 0, $input['content_translations']); }
+        Branches::saveSettings(Branches::current(), $settings);
+        $global = (array) get_option('admincafe_settings', []);
+        update_option('admincafe_settings', Branches::current() === Branches::defaultId() ? $settings : array_replace($global, array_intersect_key($settings, array_flip(Branches::GLOBAL_SETTINGS))), false);
+        do_action('fandoogh_branch_settings_updated', Branches::current());
+        if (isset($input['content_translations'])) { do_action('admincafe_translation_manual_input', 'settings', Branches::current() === Branches::defaultId() ? 0 : Branches::current(), $input['content_translations']); }
         if ($old['currency_code'] !== $settings['currency_code']) {
             update_option('woocommerce_currency', $settings['currency_code']);
         }
@@ -177,7 +190,7 @@ final class Settings
                 }
             }
         }
-        $appearance = Appearance::publicSettings($settings);
+        $appearance = Appearance::publicSettings($settings, Appearance::menuScope());
         unset($settings['panel_slug'], $settings['menu_page_id'], $settings['menu_category_ids'], $settings['content_translations'], $settings['custom_css']);
         $settings = array_replace($settings, $appearance);
         $settings['logo'] = $settings['logo_id'] ? (wp_get_attachment_image_url($settings['logo_id'], 'medium') ?: '') : '';
@@ -210,8 +223,7 @@ final class Settings
 
     public static function menuUrl(): string
     {
-        $pageId = (int) self::get('menu_page_id', 0);
-        return $pageId && get_post_status($pageId) === 'publish' ? (string) get_permalink($pageId) : home_url('/' . self::get('menu_slug') . '/');
+        return Branches::menuUrl();
     }
 
     public static function panelUrl(): string

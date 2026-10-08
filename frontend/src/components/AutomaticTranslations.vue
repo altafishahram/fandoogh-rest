@@ -1,6 +1,7 @@
 <script setup>
 import { inject, onMounted, onUnmounted, computed } from "vue";
 import { useAutomaticTranslations } from "../automatic-translations.js";
+defineProps({ canManage: { type: Boolean, default: false } });
 const { client } = inject("admincafePanel");
 const {
   settings,
@@ -57,64 +58,79 @@ onUnmounted(() => {
     <template v-else>
       <p v-if="error" class="ac-alert" role="alert">{{ error }}</p>
       <p v-if="notice" class="ac-notice" role="status">{{ notice }}</p>
-      <form @submit.prevent="save">
-        <label class="ac-check"
-          ><input
-            type="checkbox"
-            v-model="settings.enabled"
-            :disabled="busy"
-          />ترجمه خودکار پس از ذخیره فارسی</label
+      <p v-if="!canManage" class="ac-hint">
+        کلید، فعال‌سازی و سهمیه ترجمه بین شعبه‌ها مشترک است و فقط مدیر مجموعه آن
+        را تغییر می‌دهد. ترجمه و تلاش دوباره برای محتوای همین شعبه در دسترس است.
+      </p>
+      <form @submit.prevent="canManage && save()">
+        <fieldset
+          :disabled="!canManage || busy"
+          style="border: 0; padding: 0; margin: 0"
         >
-        <div class="ac-form-grid">
-          <label
-            >کلید Google Cloud Translation Basic v2<input
-              type="password"
-              v-model="apiKey"
-              dir="ltr"
-              autocomplete="new-password"
-              spellcheck="false"
-              :disabled="
-                busy || removeKey || settings.credential_source === 'constant'
-              "
-              :placeholder="
-                settings.configured
-                  ? 'کلید ذخیره شده؛ فقط برای جایگزینی وارد کنید'
-                  : 'کلید API را وارد کنید'
-              "
-          /></label>
-          <label
-            >سقف روزانه نویسه<input
-              type="number"
-              v-model.number="settings.daily_character_limit"
-              min="1"
-              max="10000000"
-              step="1"
-              required
+          <label class="ac-check"
+            ><input
+              type="checkbox"
+              v-model="settings.enabled"
               :disabled="busy"
-            /><small>مجموع نویسه‌های ارسالی برای همه زبان‌ها</small></label
+            />ترجمه خودکار پس از ذخیره فارسی</label
           >
-        </div>
-        <label
-          v-if="
-            settings.configured && settings.credential_source !== 'constant'
-          "
-          class="ac-check"
-          ><input type="checkbox" v-model="removeKey" :disabled="busy" />حذف
-          کلید ذخیره‌شده</label
-        >
-        <p v-if="removeKey" class="ac-hint">
-          با حذف کلید، ترجمه خودکار غیرفعال می‌شود.
-        </p>
-        <p v-if="settings.credential_source === 'constant'" class="ac-hint">
-          کلید در پیکربندی سرور تعریف شده است؛ تغییر یا حذف آن از همان پیکربندی
-          انجام می‌شود.
-        </p>
-        <p class="ac-hint">
-          کلید فقط در سرور نگه‌داری می‌شود و پس از ذخیره از این فرم پاک می‌شود.
-        </p>
-        <button type="submit" class="ac-btn" :disabled="busy">
-          {{ busy ? "در حال انجام…" : "ذخیره تنظیمات ترجمه" }}
-        </button>
+          <div class="ac-form-grid">
+            <label
+              >کلید Google Cloud Translation Basic v2<input
+                type="password"
+                v-model="apiKey"
+                dir="ltr"
+                autocomplete="new-password"
+                spellcheck="false"
+                :disabled="
+                  busy || removeKey || settings.credential_source === 'constant'
+                "
+                :placeholder="
+                  settings.configured
+                    ? 'کلید ذخیره شده؛ فقط برای جایگزینی وارد کنید'
+                    : 'کلید API را وارد کنید'
+                "
+            /></label>
+            <label
+              >سقف روزانه نویسه<input
+                type="number"
+                v-model.number="settings.daily_character_limit"
+                min="1"
+                max="10000000"
+                step="1"
+                required
+                :disabled="busy"
+              /><small>مجموع نویسه‌های ارسالی برای همه زبان‌ها</small></label
+            >
+          </div>
+          <label
+            v-if="
+              settings.configured && settings.credential_source !== 'constant'
+            "
+            class="ac-check"
+            ><input type="checkbox" v-model="removeKey" :disabled="busy" />حذف
+            کلید ذخیره‌شده</label
+          >
+          <p v-if="removeKey" class="ac-hint">
+            با حذف کلید، ترجمه خودکار غیرفعال می‌شود.
+          </p>
+          <p v-if="settings.credential_source === 'constant'" class="ac-hint">
+            کلید در پیکربندی سرور تعریف شده است؛ تغییر یا حذف آن از همان
+            پیکربندی انجام می‌شود.
+          </p>
+          <p class="ac-hint">
+            کلید فقط در سرور نگه‌داری می‌شود و پس از ذخیره از این فرم پاک
+            می‌شود.
+          </p>
+          <button
+            v-if="canManage"
+            type="submit"
+            class="ac-btn"
+            :disabled="busy"
+          >
+            {{ busy ? "در حال انجام…" : "ذخیره تنظیمات ترجمه" }}
+          </button>
+        </fieldset>
       </form>
       <details class="ac-translation-guide">
         <summary>راه‌اندازی سرویس و هزینه‌ها</summary>

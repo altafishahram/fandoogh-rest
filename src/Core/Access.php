@@ -53,7 +53,7 @@ final class Access
 
     public static function can(string $cap): bool
     {
-        return in_array($cap, self::CAPS, true) && current_user_can($cap);
+        return in_array($cap, self::CAPS, true) && current_user_can($cap) && \FandooghRest\Branches\Branches::canAccess(\FandooghRest\Branches\Branches::current());
     }
 
     public static function isOperationalUser(): bool

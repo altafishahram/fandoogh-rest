@@ -19,6 +19,7 @@ final class MenuWidget extends \Elementor\Widget_Base
             'options' => ['menu' => __('Complete menu', 'fandoogh-rest'), 'categories' => __('Category navigation', 'fandoogh-rest'), 'products' => __('Product cards', 'fandoogh-rest'), 'cart' => __('Order basket', 'fandoogh-rest')],
         ]);
         $this->add_control('category', ['label' => __('Category ID (0 for all)', 'fandoogh-rest'), 'type' => \Elementor\Controls_Manager::NUMBER, 'default' => 0, 'min' => 0]);
+        $this->add_control('branch', ['label' => __('Branch ID or slug (empty for current branch)', 'fandoogh-rest'), 'type' => \Elementor\Controls_Manager::TEXT, 'default' => '']);
         $this->add_control('mode', [
             'label' => __('Ordering', 'fandoogh-rest'), 'type' => \Elementor\Controls_Manager::SELECT, 'default' => 'auto',
             'options' => ['auto' => __('Follow restaurant settings', 'fandoogh-rest'), 'menu' => __('View menu only', 'fandoogh-rest')],
@@ -31,6 +32,6 @@ final class MenuWidget extends \Elementor\Widget_Base
     {
         $settings = $this->get_settings_for_display();
         $component = in_array($settings['component'] ?? '', ['menu', 'categories', 'products', 'cart'], true) ? $settings['component'] : 'menu';
-        echo (new Builders())->shortcode(['category' => absint($settings['category'] ?? 0), 'mode' => $settings['mode'] ?? 'auto'], $component);
+        echo (new Builders())->shortcode(['category' => absint($settings['category'] ?? 0), 'mode' => $settings['mode'] ?? 'auto', 'branch' => $settings['branch'] ?? ''], $component);
     }
 }

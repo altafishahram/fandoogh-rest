@@ -9,6 +9,7 @@ use FandooghRest\Core\Security;
 use FandooghRest\Menu\Catalog;
 use FandooghRest\Tables\Tables;
 use FandooghRest\Localization\Language;
+use FandooghRest\Branches\Branches;
 
 final class Ordering
 {
@@ -82,6 +83,13 @@ final class Ordering
 
     public function bootstrap(\WP_REST_Request $r): \WP_REST_Response|\WP_Error
     {
+        $branchId = Checkout::resolveBranch($r->get_params(), false);
+        if (is_wp_error($branchId)) { return $branchId; }
+        return Branches::runFor($branchId, fn() => $this->bootstrapInBranch($r));
+    }
+
+    private function bootstrapInBranch(\WP_REST_Request $r): \WP_REST_Response|\WP_Error
+    {
         $token = Security::token();
         $language = Checkout::language($r->get_param('lang'));
         if (is_wp_error($language)) {
@@ -98,6 +106,9 @@ final class Ordering
         $menu = Catalog::menu($language);
         $descriptor = Language::supported()[$language];
         return $this->response([
+            'branch_id' => Branches::current(),
+            'branch' => Branches::publicData(Branches::get(Branches::current())),
+            'branches' => array_values(array_map([Branches::class, 'publicData'], array_filter(Branches::all(), static fn($branch) => $branch['enabled']))),
             'settings' => Settings::publicSettings($language),
             'products' => $menu['products'],
             'categories' => $menu['categories'],
@@ -114,8 +125,8 @@ final class Ordering
                 'paused' => (bool) Settings::get('ordering_paused')
             ],
             'csrf_token' => $token,
-            'menu_url' => Settings::menuUrl(),
-            'checkout_url' => add_query_arg('lang', $language, wc_get_checkout_url()),
+            'menu_url' => Branches::menuUrl(),
+            'checkout_url' => add_query_arg(['lang' => $language, 'branch_id' => Branches::current()], wc_get_checkout_url()),
             'currency_symbol' => html_entity_decode(get_woocommerce_currency_symbol()),
             'wc_store_api_url' => rest_url('wc/store/v1/'),
             'wc_nonce' => wp_create_nonce('wc_store_api')
@@ -138,7 +149,9 @@ final class Ordering
         if (is_wp_error($limit)) {
             return $limit;
         }
-        $data = Checkout::choose(sanitize_key($r->get_param('channel') ?? ''), $r->get_param('language'));
+        $branchId = Checkout::resolveBranch($r->get_params());
+        if (is_wp_error($branchId)) { return $branchId; }
+        $data = Checkout::choose(sanitize_key($r->get_param('channel') ?? ''), $r->get_param('language'), $branchId, $r->get_param('replace_cart') === true);
         return is_wp_error($data) ? $data : $this->response($data);
     }
 
@@ -157,7 +170,11 @@ final class Ordering
             return new \WP_Error('not_found', __('Order not found.', 'fandoogh-rest'), ['status' => 404]);
         }
         $order = $orders[0];
+        if ($r->get_param('branch_id') !== null && (int) $r->get_param('branch_id') !== Branches::orderBranch($order)) {
+            return new \WP_Error('not_found', __('Order not found.', 'fandoogh-rest'), ['status' => 404]);
+        }
         return $this->response([
+            'branch_id' => Branches::orderBranch($order),
             'number' => $order->get_order_number(),
             'stage' => $order->get_meta('_admincafe_stage'),
             'payment_status' => $order->get_status()
@@ -168,13 +185,15 @@ final class Ordering
     {
         $order = wc_get_order(absint($r['id']));
         return $order instanceof \WC_Order && $order->get_meta('_admincafe_channel')
+            && Branches::orderBranch($order) === Branches::current() && Branches::canAccess(Branches::orderBranch($order))
             ? $order
             : new \WP_Error('not_found', __('Order not found.', 'fandoogh-rest'), ['status' => 404]);
     }
 
     public function listing(\WP_REST_Request $r): \WP_REST_Response|\WP_Error
     {
-        $query = [['key' => '_admincafe_channel', 'compare' => 'EXISTS']];
+        if (!Branches::canAccess(Branches::current())) { return new \WP_Error('forbidden', __('Order permission required.', 'fandoogh-rest'), ['status' => 403]); }
+        $query = [['key' => '_admincafe_channel', 'compare' => 'EXISTS'], Orders::branchQuery()];
         if ($r->get_param('stage')) {
             $stage = sanitize_key($r->get_param('stage'));
             if (!array_key_exists($stage, Orders::transitions())) {

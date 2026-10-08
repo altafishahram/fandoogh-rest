@@ -20,6 +20,7 @@ import { loadMenuFont } from "./menu-font.js";
 import { appearanceStyle, themeId } from "./appearance.js";
 import { loadCustomerBootstrap } from "./customer-language.js";
 import { shared } from "./state.js";
+import { branchCheckout } from "./branch-context.js";
 import {
   money,
   filterProducts,
@@ -45,7 +46,7 @@ export function useMenu(config, root) {
     channel = ref("table"),
     note = ref(""),
     name = ref(""),
-    tracking = ref(null);
+    tracking = toRef(state, "tracking");
   let poll, focus;
   const mountId = String(++languageMountId);
   state.languageGateMembers.push(mountId);
@@ -302,30 +303,34 @@ export function useMenu(config, root) {
             (state.pendingOrderId = crypto.randomUUID()),
         });
         state.cart = [];
+        persist();
         cartOpen.value = false;
-        poll = setInterval(async () => {
-          try {
-            tracking.value = {
-              ...tracking.value,
-              ...(await client.request(
-                "/orders/track?token=" +
-                  encodeURIComponent(tracking.value.tracking_token) +
-                  "&lang=" +
-                  language.value,
-              )),
-            };
-          } catch {}
-        }, 10000);
+        startTracking();
       } else {
         if (config.demo)
           throw new Error("پرداخت واقعی در پیش‌نمایش در دسترس نیست.");
-        const checkout = await client.request("/checkout", "POST", {
-          channel: channel.value,
-          language: language.value,
-        });
+        const checkout = await branchCheckout(
+          client,
+          {
+            channel: channel.value,
+            language: language.value,
+          },
+          () =>
+            window.confirm(
+              t(
+                "سبد پرداخت مربوط به شعبه دیگری است. آن را پاک کرده و با سفارش این شعبه جایگزین کنیم؟",
+              ),
+            ),
+        );
+        if (!checkout) return;
         const storeUrl = boot.value.wc_store_api_url.replace(/\/$/, "");
         const storeEndpoint = (path) =>
-          storeUrl + path + "?lang=" + encodeURIComponent(language.value);
+          storeUrl +
+          path +
+          "?lang=" +
+          encodeURIComponent(language.value) +
+          "&branch_id=" +
+          encodeURIComponent(boot.value.branch_id || config.branchId || "");
         const cartResponse = await fetch(storeEndpoint("/cart"), {
           credentials: "same-origin",
           headers: { Nonce: boot.value.wc_nonce },
@@ -392,7 +397,28 @@ export function useMenu(config, root) {
       busy.value = false;
     }
   }
+  function startTracking() {
+    clearInterval(poll);
+    if (!tracking.value?.tracking_token) return;
+    poll = setInterval(async () => {
+      try {
+        tracking.value = {
+          ...tracking.value,
+          ...(await client.request(
+            "/orders/track?token=" +
+              encodeURIComponent(tracking.value.tracking_token) +
+              "&lang=" +
+              language.value,
+          )),
+        };
+        persist();
+        if (["delivered", "cancelled"].includes(tracking.value.stage))
+          clearInterval(poll);
+      } catch {}
+    }, 10000);
+  }
   onMounted(async () => {
+    startTracking();
     if (!entered.value) return;
     await loadLanguage(language.value);
   });

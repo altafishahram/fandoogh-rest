@@ -1,6 +1,6 @@
 # Fandoogh Rest translation catalog.
 msgid ""
-msgstr "Project-Id-Version: Fandoogh Rest 1.3.1\nReport-Msgid-Bugs-To: \nPOT-Creation-Date: 2026-10-08 00:00+0000\nPO-Revision-Date: 2026-10-08 00:00+0000\nLast-Translator: Fandoogh Rest\nLanguage-Team: Persian\nLanguage: \nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=(n > 1);\nX-Domain: fandoogh-rest\n"
+msgstr "Project-Id-Version: Fandoogh Rest 1.4.0\nReport-Msgid-Bugs-To: \nPOT-Creation-Date: 2026-10-09 00:00+0000\nPO-Revision-Date: 2026-10-09 00:00+0000\nLast-Translator: Fandoogh Rest\nLanguage-Team: Persian\nLanguage: \nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=(n > 1);\nX-Domain: fandoogh-rest\n"
 
 #: frontend/src/i18n.js:5 resources/ui-strings.php:5
 msgid "+ سفارش صندوق"
@@ -10,7 +10,7 @@ msgstr ""
 msgid "A CSS rule requires a declaration block."
 msgstr ""
 
-#: src/Notifications/Notifications.php:223
+#: src/Notifications/Notifications.php:233
 msgid "A browser subscription is required."
 msgstr ""
 
@@ -18,35 +18,55 @@ msgstr ""
 msgid "A file can contain at most 2000 product rows."
 msgstr ""
 
-#: src/Commerce/Orders.php:97
+#: src/Commerce/Orders.php:119
 msgid "A unique request ID is required."
 msgstr ""
 
-#: src/Rest/Management.php:175
+#: src/Rest/Management.php:198
 msgid "A valid email is required."
 msgstr ""
 
-#: src/Menu/Catalog.php:166
+#: src/Menu/Catalog.php:174
 msgid "A variation ID is required."
 msgstr ""
 
-#: src/Commerce/Orders.php:57
+#: src/Commerce/Checkout.php:105
+msgid "All cart items and checkout must belong to the selected branch. Return to its menu or confirm replacing your cart."
+msgstr ""
+
+#: src/Commerce/Orders.php:51
+msgid "All items must belong to the selected branch."
+msgstr ""
+
+#: src/Commerce/Orders.php:61
 msgid "An item is unavailable."
 msgstr ""
 
-#: src/Commerce/Orders.php:93
+#: src/Commerce/Orders.php:115
 msgid "An item list is required."
 msgstr ""
 
-#: src/Translation/GoogleProvider.php:64 src/Translation/Queue.php:357
+#: src/Translation/GoogleProvider.php:64 src/Translation/Queue.php:387
 msgid "Automatic translation could not be completed."
+msgstr ""
+
+#: resources/builder-block.js:16 src/Integrations/MenuWidget.php:22
+msgid "Branch ID or slug (empty for current branch)"
+msgstr ""
+
+#: src/Branches/Module.php:61
+msgid "Branch is unavailable."
+msgstr ""
+
+#: src/Branches/Branches.php:103 src/Rest/Management.php:191
+msgid "Branch not found."
 msgstr ""
 
 #: src/Appearance/CssCompiler.php:51
 msgid "CSS escapes, HTML and control characters are not allowed."
 msgstr ""
 
-#: src/Appearance/Appearance.php:57 src/Appearance/CssCompiler.php:41
+#: src/Appearance/Appearance.php:62 src/Appearance/CssCompiler.php:41
 msgid "CSS exceeds the field limit."
 msgstr ""
 
@@ -62,24 +82,24 @@ msgstr ""
 msgid "CSS property values cannot be empty."
 msgstr ""
 
-#: src/Appearance/Appearance.php:76
+#: src/Appearance/Appearance.php:81
 #, php-format
 msgid "CSS setting \"%1$s\": %2$s"
 msgstr ""
 
-#: src/Core/Access.php:16 src/Rest/Management.php:90
+#: src/Core/Access.php:16 src/Rest/Management.php:97
 msgid "Cashier"
 msgstr ""
 
-#: src/Commerce/Orders.php:319
+#: src/Commerce/Orders.php:365
 msgid "Cashier permission is required."
 msgstr ""
 
-#: src/Rest/Ordering.php:221
+#: src/Rest/Ordering.php:240
 msgid "Cashier permission required."
 msgstr ""
 
-#: src/Menu/Catalog.php:199
+#: src/Menu/Catalog.php:207
 msgid "Categories must be an array."
 msgstr ""
 
@@ -87,7 +107,11 @@ msgstr ""
 msgid "Category ID (0 for all)"
 msgstr ""
 
-#: src/Rest/Management.php:122
+#: src/Core/Settings.php:122
+msgid "Category belongs to another branch."
+msgstr ""
+
+#: src/Rest/Management.php:131
 msgid "Category name is required."
 msgstr ""
 
@@ -95,59 +119,79 @@ msgstr ""
 msgid "Category navigation"
 msgstr ""
 
-#: src/Menu/Catalog.php:203 src/Rest/Management.php:120 src/Rest/Management.php:61
+#: src/Menu/Catalog.php:211 src/Rest/Management.php:129 src/Rest/Management.php:66 src/Rest/Management.php:68
 msgid "Category not found."
 msgstr ""
 
-#: src/Translation/Queue.php:354
+#: src/Translation/Queue.php:384
 msgid "Check the translation API credential and Google project permissions."
 msgstr ""
 
-#: src/Menu/Catalog.php:176
+#: src/Menu/Catalog.php:184
 msgid "Choice price must be a non-negative number."
 msgstr ""
 
-#: src/Core/Settings.php:128
+#: src/Commerce/Checkout.php:78
+msgid "Choose a branch before ordering."
+msgstr ""
+
+#: src/Core/Settings.php:138
 msgid "Choose a supported WooCommerce currency."
 msgstr ""
 
-#: src/Appearance/Appearance.php:35
+#: src/Appearance/Appearance.php:40
 msgid "Choose a supported menu theme."
 msgstr ""
 
-#: src/Core/Settings.php:85
+#: src/Branches/Branches.php:107
+msgid "Choose a valid branch name and address."
+msgstr ""
+
+#: src/Commerce/Checkout.php:67
+msgid "Choose a valid branch."
+msgstr ""
+
+#: src/Core/Settings.php:94
 msgid "Choose a valid, unreserved page address."
 msgstr ""
 
-#: src/Menu/Catalog.php:195 src/Rest/Management.php:125
+#: src/Menu/Catalog.php:203 src/Rest/Management.php:134
 msgid "Choose an image attachment."
 msgstr ""
 
-#: src/Rest/Management.php:170
+#: src/Rest/Management.php:185
 msgid "Choose an operational Fandoogh Rest role."
 msgstr ""
 
-#: src/Commerce/Orders.php:32
+#: src/Commerce/Orders.php:33
 msgid "Choose between 1 and 100 items."
 msgstr ""
 
-#: src/Import/Importer.php:62
+#: src/Import/Importer.php:64
 msgid "Choose columns from the uploaded file."
 msgstr ""
 
-#: src/Commerce/Checkout.php:104
+#: src/Commerce/Checkout.php:336
 msgid "Choose pickup or delivery from the restaurant menu before checkout."
 msgstr ""
 
-#: src/Appearance/Appearance.php:50
+#: src/Appearance/Appearance.php:55
 msgid "Choose supported CSS editor fields."
 msgstr ""
 
-#: src/Core/Settings.php:75 src/Core/Settings.php:80
+#: src/Core/Settings.php:84 src/Core/Settings.php:89
 msgid "Choose supported customer languages."
 msgstr ""
 
-#: src/Notifications/Notifications.php:240 src/Notifications/Notifications.php:243 src/Notifications/Notifications.php:278
+#: src/Menu/Catalog.php:146
+msgid "Choose the product branch in the panel."
+msgstr ""
+
+#: src/Rest/Management.php:188
+msgid "Choose valid branches."
+msgstr ""
+
+#: src/Notifications/Notifications.php:250 src/Notifications/Notifications.php:253 src/Notifications/Notifications.php:288
 msgid "Choose valid notification channels."
 msgstr ""
 
@@ -159,7 +203,11 @@ msgstr ""
 msgid "Component"
 msgstr ""
 
-#: src/Menu/Catalog.php:134
+#: src/Branches/Module.php:44 src/Branches/Module.php:54
+msgid "Conflicting branch selection."
+msgstr ""
+
+#: src/Menu/Catalog.php:136
 msgid "Create simple products here; configure variable products in WooCommerce."
 msgstr ""
 
@@ -171,11 +219,11 @@ msgstr ""
 msgid "Deactivate the old AdminCafe plugin before activating Fandoogh Rest."
 msgstr ""
 
-#: src/Notifications/Notifications.php:282
+#: src/Notifications/Notifications.php:292
 msgid "Device not found."
 msgstr ""
 
-#: src/Notifications/Notifications.php:287
+#: src/Notifications/Notifications.php:297
 msgid "Device settings changed. Refresh and try again."
 msgstr ""
 
@@ -183,7 +231,7 @@ msgstr ""
 msgid "Enable browser JavaScript to use the menu and panel."
 msgstr ""
 
-#: src/Notifications/Notifications.php:300
+#: src/Notifications/Notifications.php:310
 msgid "Enable notifications on this device first."
 msgstr ""
 
@@ -191,15 +239,15 @@ msgstr ""
 msgid "Enable the PHP ZIP extension to import XLSX files."
 msgstr ""
 
-#: src/Notifications/Notifications.php:36
+#: src/Notifications/Notifications.php:37
 msgid "Enable the PHP openssl, curl and mbstring extensions for push notifications."
 msgstr ""
 
-#: src/Menu/Catalog.php:155 src/Menu/Catalog.php:170
+#: src/Menu/Catalog.php:163 src/Menu/Catalog.php:178
 msgid "Every choice must belong to this product and appear once."
 msgstr ""
 
-#: src/Rest/Management.php:144
+#: src/Rest/Management.php:158
 msgid "Every product must belong to this category."
 msgstr ""
 
@@ -207,7 +255,7 @@ msgstr ""
 msgid "External resources and executable CSS are not allowed."
 msgstr ""
 
-#: src/Core/Plugin.php:36 src/Core/Plugin.php:37 src/Core/Routes.php:70
+#: src/Core/Plugin.php:37 src/Core/Plugin.php:38 src/Core/Routes.php:106
 msgid "Fandoogh Rest"
 msgstr ""
 
@@ -215,23 +263,23 @@ msgstr ""
 msgid "Fandoogh Rest / WORKSPACE"
 msgstr ""
 
-#: src/Commerce/Checkout.php:309
+#: src/Commerce/Checkout.php:568
 msgid "Fandoogh Rest checkout notification failed."
 msgstr ""
 
-#: src/Commerce/Orders.php:351
+#: src/Commerce/Orders.php:397
 msgid "Fandoogh Rest manager refund"
 msgstr ""
 
-#: resources/builder-block.js:21 resources/builder-block.js:6 src/Integrations/MenuWidget.php:9
+#: resources/builder-block.js:22 resources/builder-block.js:6 src/Integrations/MenuWidget.php:9
 msgid "Fandoogh Rest menu"
 msgstr ""
 
-#: src/Commerce/Orders.php:230
+#: src/Commerce/Orders.php:253
 msgid "Fandoogh Rest order notification failed."
 msgstr ""
 
-#: src/Commerce/Checkout.php:324
+#: src/Commerce/Checkout.php:583
 msgid "Fandoogh Rest payment notification failed."
 msgstr ""
 
@@ -243,11 +291,11 @@ msgstr ""
 msgid "Fandoogh Rest requires WooCommerce and PHP 8.2 or newer."
 msgstr ""
 
-#: src/Commerce/Orders.php:369
+#: src/Commerce/Orders.php:415
 msgid "Fandoogh Rest stage notification failed."
 msgstr ""
 
-#: src/Notifications/Notifications.php:141
+#: src/Notifications/Notifications.php:145
 msgid "Fandoogh Rest test notification"
 msgstr ""
 
@@ -255,11 +303,11 @@ msgstr ""
 msgid "File must be smaller than 5 MB."
 msgstr ""
 
-#: resources/builder-block.js:17 src/Integrations/MenuWidget.php:24
+#: resources/builder-block.js:18 src/Integrations/MenuWidget.php:25
 msgid "Follow restaurant settings"
 msgstr ""
 
-#: src/Rest/Management.php:203
+#: src/Rest/Management.php:227
 msgid "Image must be smaller than 5 MB."
 msgstr ""
 
@@ -279,56 +327,68 @@ msgstr ""
 msgid "Invalid XLSX file."
 msgstr ""
 
-#: src/Notifications/Notifications.php:214
+#: src/Branches/Branches.php:108
+msgid "Invalid branch enabled value."
+msgstr ""
+
+#: src/Branches/Branches.php:104
+msgid "Invalid branch field."
+msgstr ""
+
+#: src/Branches/Module.php:40
+msgid "Invalid branch."
+msgstr ""
+
+#: src/Notifications/Notifications.php:224
 msgid "Invalid browser push subscription."
 msgstr ""
 
-#: src/Rest/Management.php:118
+#: src/Rest/Management.php:127
 msgid "Invalid category field."
 msgstr ""
 
-#: src/Rest/Management.php:124
+#: src/Rest/Management.php:133
 msgid "Invalid category parent."
 msgstr ""
 
-#: src/Rest/Ordering.php:193
+#: src/Rest/Ordering.php:212
 msgid "Invalid channel."
 msgstr ""
 
-#: src/Commerce/Checkout.php:49
+#: src/Commerce/Checkout.php:246
 msgid "Invalid checkout channel."
 msgstr ""
 
-#: src/Menu/Catalog.php:174
+#: src/Menu/Catalog.php:182
 msgid "Invalid choice field."
 msgstr ""
 
-#: src/Core/Settings.php:190 src/Menu/Catalog.php:101 src/Menu/Catalog.php:151 src/Menu/Catalog.php:153 src/Menu/Catalog.php:94 src/Menu/Catalog.php:97
+#: src/Core/Settings.php:203 src/Menu/Catalog.php:103 src/Menu/Catalog.php:159 src/Menu/Catalog.php:161 src/Menu/Catalog.php:96 src/Menu/Catalog.php:99
 msgid "Invalid content translations."
 msgstr ""
 
-#: src/Import/Importer.php:51
+#: src/Import/Importer.php:53
 msgid "Invalid import request."
 msgstr ""
 
-#: src/Commerce/Orders.php:40
+#: src/Commerce/Orders.php:41
 msgid "Invalid item."
 msgstr ""
 
-#: src/Commerce/Orders.php:325
+#: src/Commerce/Orders.php:371
 msgid "Invalid payment action."
 msgstr ""
 
-#: src/Menu/Catalog.php:130
+#: src/Menu/Catalog.php:132
 #, php-format
 msgid "Invalid product field: %s"
 msgstr ""
 
-#: src/Commerce/Orders.php:46
+#: src/Commerce/Orders.php:47
 msgid "Invalid product or quantity."
 msgstr ""
 
-#: src/Menu/Catalog.php:192
+#: src/Menu/Catalog.php:200
 msgid "Invalid product status."
 msgstr ""
 
@@ -336,31 +396,35 @@ msgstr ""
 msgid "Invalid punctuation in CSS value."
 msgstr ""
 
-#: src/Core/Settings.php:65 src/Core/Settings.php:68 src/Core/Settings.php:71
+#: src/Core/Settings.php:74 src/Core/Settings.php:77 src/Core/Settings.php:80
 msgid "Invalid setting value."
 msgstr ""
 
-#: src/Rest/Management.php:167
+#: src/Rest/Management.php:182
 msgid "Invalid staff field."
 msgstr ""
 
-#: src/Commerce/Orders.php:294
+#: src/Commerce/Orders.php:340
 msgid "Invalid stage transition."
 msgstr ""
 
-#: src/Rest/Ordering.php:181
+#: src/Rest/Ordering.php:200
 msgid "Invalid stage."
 msgstr ""
 
-#: src/Tables/Tables.php:35
+#: src/Tables/Tables.php:45
 msgid "Invalid table field."
 msgstr ""
 
-#: src/Tables/Tables.php:42
+#: src/Tables/Tables.php:52
 msgid "Invalid table mode."
 msgstr ""
 
-#: src/Translation/Config.php:123 src/Translation/Module.php:83 src/Translation/Module.php:91
+#: src/Branches/Module.php:51
+msgid "Invalid table."
+msgstr ""
+
+#: src/Translation/Config.php:123 src/Translation/Module.php:88 src/Translation/Module.php:96
 msgid "Invalid translation settings."
 msgstr ""
 
@@ -368,11 +432,11 @@ msgstr ""
 msgid "Invalid worksheet path."
 msgstr ""
 
-#: src/Core/Access.php:15 src/Rest/Management.php:90
+#: src/Core/Access.php:15 src/Rest/Management.php:97
 msgid "Kitchen"
 msgstr ""
 
-#: src/Core/Routes.php:131
+#: src/Core/Routes.php:167
 msgid "Login was unsuccessful. Check your restaurant account credentials."
 msgstr ""
 
@@ -380,11 +444,11 @@ msgstr ""
 msgid "Management panel"
 msgstr ""
 
-#: src/Commerce/Orders.php:322
+#: src/Commerce/Orders.php:368
 msgid "Manager permission is required."
 msgstr ""
 
-#: src/Import/Importer.php:67
+#: src/Import/Importer.php:69
 msgid "Map the product name column."
 msgstr ""
 
@@ -396,7 +460,7 @@ msgstr ""
 msgid "Menu and order management"
 msgstr ""
 
-#: src/Core/Settings.php:146
+#: src/Core/Settings.php:156
 msgid "Menu and panel addresses must be different."
 msgstr ""
 
@@ -404,15 +468,19 @@ msgstr ""
 msgid "Nested CSS declarations are not allowed."
 msgstr ""
 
-#: src/Commerce/Orders.php:337
+#: src/Commerce/Orders.php:383
 msgid "No paid balance to refund."
 msgstr ""
 
-#: src/Notifications/Notifications.php:142
+#: src/Notifications/Notifications.php:200
+msgid "Notification permission required."
+msgstr ""
+
+#: src/Notifications/Notifications.php:146
 msgid "Notifications are working on this device."
 msgstr ""
 
-#: src/Commerce/Orders.php:332
+#: src/Commerce/Orders.php:378
 #, php-format
 msgid "Offline settlement recorded by user %d."
 msgstr ""
@@ -421,15 +489,27 @@ msgstr ""
 msgid "Only @media and @supports rules are allowed."
 msgstr ""
 
-#: src/Import/Importer.php:31
+#: src/Import/Importer.php:32
 msgid "Only CSV and XLSX files are supported."
 msgstr ""
 
-#: src/Rest/Management.php:207
+#: src/Rest/Management.php:190
+msgid "Only the collection administrator may assign branches."
+msgstr ""
+
+#: src/Core/Settings.php:55
+msgid "Only the collection administrator may change shared settings."
+msgstr ""
+
+#: src/Translation/Module.php:87
+msgid "Only the collection manager can change the shared translation provider."
+msgstr ""
+
+#: src/Rest/Management.php:231
 msgid "Only valid JPEG, PNG, or WebP images are supported."
 msgstr ""
 
-#: src/Core/Plugin.php:37
+#: src/Core/Plugin.php:38
 msgid "Open restaurant panel"
 msgstr ""
 
@@ -437,31 +517,35 @@ msgstr ""
 msgid "Order basket"
 msgstr ""
 
-#: src/Rest/Ordering.php:153 src/Rest/Ordering.php:157 src/Rest/Ordering.php:172
+#: src/Commerce/Orders.php:335 src/Rest/Ordering.php:166 src/Rest/Ordering.php:170 src/Rest/Ordering.php:174 src/Rest/Ordering.php:190
 msgid "Order not found."
 msgstr ""
 
-#: src/Rest/Ordering.php:27
+#: src/Commerce/Orders.php:80 src/Rest/Ordering.php:195 src/Rest/Ordering.php:28
 msgid "Order permission required."
 msgstr ""
 
-#: resources/builder-block.js:16 src/Integrations/MenuWidget.php:23
+#: resources/builder-block.js:17 src/Integrations/MenuWidget.php:24
 msgid "Ordering"
+msgstr ""
+
+#: src/Commerce/Checkout.php:120 src/Commerce/Orders.php:89
+msgid "Ordering is unavailable."
 msgstr ""
 
 #: templates/login.php:10
 msgid "Password"
 msgstr ""
 
-#: src/Rest/Management.php:184
+#: src/Rest/Management.php:207
 msgid "Password must contain at least 12 characters."
 msgstr ""
 
-#: src/Commerce/Orders.php:312
+#: src/Commerce/Orders.php:358
 msgid "Payment must be confirmed before accepting this online order."
 msgstr ""
 
-#: src/Core/Routes.php:120
+#: src/Core/Routes.php:156
 msgid "Please refresh the page or wait a few minutes before trying again."
 msgstr ""
 
@@ -469,7 +553,7 @@ msgstr ""
 msgid "Price must be a non-negative number, blank, or unavailable."
 msgstr ""
 
-#: src/Menu/Catalog.php:188
+#: src/Menu/Catalog.php:196
 msgid "Price must be a non-negative number."
 msgstr ""
 
@@ -481,23 +565,23 @@ msgstr ""
 msgid "Product cell data exceeds the 2 MB safety limit."
 msgstr ""
 
-#: src/Import/Importer.php:136 src/Menu/Catalog.php:184
+#: src/Import/Importer.php:138 src/Menu/Catalog.php:192
 msgid "Product name is required."
 msgstr ""
 
-#: src/Menu/Catalog.php:138 src/Menu/Catalog.php:51 src/Rest/Management.php:49
+#: src/Menu/Catalog.php:140 src/Menu/Catalog.php:143 src/Menu/Catalog.php:52 src/Rest/Management.php:55
 msgid "Product not found."
 msgstr ""
 
-#: src/Notifications/Notifications.php:162
+#: src/Notifications/Notifications.php:169
 msgid "Push delivery failed. Check outbound network access and PHP extensions."
 msgstr ""
 
-#: src/Rest/Management.php:100
+#: src/Rest/Management.php:107
 msgid "Push is not configured."
 msgstr ""
 
-#: src/Notifications/Notifications.php:32
+#: src/Notifications/Notifications.php:33
 msgid "Push notifications require HTTPS."
 msgstr ""
 
@@ -509,7 +593,7 @@ msgstr ""
 msgid "QR منوی عمومی / SVG"
 msgstr ""
 
-#: src/Commerce/Orders.php:344
+#: src/Commerce/Orders.php:390
 msgid "Refund through the gateway dashboard first; automatic refunds are unavailable."
 msgstr ""
 
@@ -517,15 +601,15 @@ msgstr ""
 msgid "Remember me"
 msgstr ""
 
-#: src/Notifications/Notifications.php:236
+#: src/Notifications/Notifications.php:246
 msgid "Remove an old device before adding another."
 msgstr ""
 
-#: src/Commerce/Orders.php:110
+#: src/Commerce/Orders.php:132
 msgid "Request ID already used for different items."
 msgstr ""
 
-#: src/Commerce/Orders.php:62
+#: src/Commerce/Orders.php:66
 msgid "Requested quantity is unavailable."
 msgstr ""
 
@@ -533,7 +617,11 @@ msgstr ""
 msgid "Reset password"
 msgstr ""
 
-#: src/Core/Access.php:13 src/Rest/Management.php:90
+#: src/Integrations/Builders.php:14
+msgid "Restaurant branches"
+msgstr ""
+
+#: src/Core/Access.php:13 src/Rest/Management.php:97
 msgid "Restaurant manager"
 msgstr ""
 
@@ -541,11 +629,11 @@ msgstr ""
 msgid "Restaurant menu"
 msgstr ""
 
-#: src/Core/Plugin.php:37
+#: src/Core/Plugin.php:38
 msgid "Restaurant operations are available in your dedicated panel."
 msgstr ""
 
-#: src/Core/Access.php:14 src/Rest/Management.php:90
+#: src/Core/Access.php:14 src/Rest/Management.php:97
 msgid "Restaurant staff"
 msgstr ""
 
@@ -557,15 +645,15 @@ msgstr ""
 msgid "Save the CSV file with UTF-8 encoding."
 msgstr ""
 
-#: src/Core/Settings.php:110
+#: src/Core/Settings.php:119
 msgid "Select a published WordPress page."
 msgstr ""
 
-#: src/Core/Settings.php:105
+#: src/Core/Settings.php:114
 msgid "Select an image from the media library."
 msgstr ""
 
-#: src/Rest/Management.php:29
+#: src/Rest/Management.php:31
 msgid "Send a JSON object."
 msgstr ""
 
@@ -573,7 +661,7 @@ msgstr ""
 msgid "Send an appearance settings object."
 msgstr ""
 
-#: src/Rest/Management.php:19
+#: src/Rest/Management.php:20
 msgid "Sign in again to continue."
 msgstr ""
 
@@ -585,31 +673,31 @@ msgstr ""
 msgid "Sign in | Fandoogh Rest"
 msgstr ""
 
-#: src/Rest/Management.php:140
+#: src/Rest/Management.php:154
 msgid "Supply a category and product IDs."
 msgstr ""
 
-#: src/Menu/Catalog.php:163
+#: src/Menu/Catalog.php:171
 msgid "Supply existing choices of this variable product."
 msgstr ""
 
-#: src/Notifications/Notifications.php:193
+#: src/Notifications/Notifications.php:203
 msgid "Supply up to 100 notification IDs."
 msgstr ""
 
-#: src/Tables/Tables.php:45
+#: src/Tables/Tables.php:55
 msgid "Table label must contain 1–100 characters."
 msgstr ""
 
-#: src/Tables/Tables.php:40 src/Tables/Tables.php:59
+#: src/Tables/Tables.php:50 src/Tables/Tables.php:70
 msgid "Table not found."
 msgstr ""
 
-#: src/Commerce/Orders.php:82
+#: src/Commerce/Orders.php:101
 msgid "Table ordering is unavailable."
 msgstr ""
 
-#: src/Tables/Tables.php:27
+#: src/Tables/Tables.php:33 src/Tables/Tables.php:35
 msgid "Table unavailable."
 msgstr ""
 
@@ -617,31 +705,31 @@ msgstr ""
 msgid "The Excel workbook contains invalid XML."
 msgstr ""
 
-#: src/Notifications/Notifications.php:34
+#: src/Notifications/Notifications.php:35
 msgid "The Web Push dependency is missing. Install the packaged release."
 msgstr ""
 
-#: src/Notifications/Notifications.php:153
+#: src/Notifications/Notifications.php:160
 msgid "The browser push service could not deliver the notification."
 msgstr ""
 
-#: src/Appearance/Appearance.php:67
+#: src/Appearance/Appearance.php:72
 msgid "The combined CSS exceeds 30000 bytes."
 msgstr ""
 
-#: src/Appearance/Appearance.php:41
+#: src/Appearance/Appearance.php:46
 msgid "The custom CSS switch must be a boolean."
 msgstr ""
 
-#: src/Translation/Queue.php:353
+#: src/Translation/Queue.php:383
 msgid "The daily translation character limit has been reached."
 msgstr ""
 
-#: src/Import/Importer.php:195
+#: src/Import/Importer.php:210
 msgid "The database could not start a safe import transaction."
 msgstr ""
 
-#: src/Core/Settings.php:143
+#: src/Core/Settings.php:153
 msgid "The default language must be enabled."
 msgstr ""
 
@@ -665,27 +753,31 @@ msgstr ""
 msgid "The first worksheet could not be read."
 msgstr ""
 
-#: resources/builder-block.js:22
+#: resources/builder-block.js:23
 msgid "The live restaurant menu appears on the published page. Products and ordering follow restaurant settings."
 msgstr ""
 
-#: src/Import/Importer.php:71
+#: src/Import/Importer.php:73
 msgid "The mapping cannot change after importing starts."
 msgstr ""
 
-#: src/Import/Importer.php:56 src/Import/Importer.php:86
+#: src/Import/Importer.php:58 src/Import/Importer.php:88
 msgid "The preview has expired. Upload the file again."
 msgstr ""
 
-#: src/Import/Importer.php:206
+#: src/Import/Importer.php:221
 msgid "The product could not be imported safely."
 msgstr ""
 
-#: src/Notifications/Notifications.php:46
+#: src/Notifications/Notifications.php:47
 msgid "The server could not generate push credentials."
 msgstr ""
 
-#: src/Translation/Queue.php:356
+#: src/Commerce/Orders.php:111
+msgid "The table belongs to a different branch."
+msgstr ""
+
+#: src/Translation/Queue.php:386
 msgid "The translation response did not meet the content limits."
 msgstr ""
 
@@ -713,55 +805,67 @@ msgstr ""
 msgid "This CSS property is not allowed."
 msgstr ""
 
-#: src/Import/Importer.php:146
+#: src/Import/Importer.php:151
 msgid "This SKU already exists."
 msgstr ""
 
-#: src/Rest/Management.php:168
+#: src/Rest/Management.php:183
 msgid "This account cannot be changed from the panel."
 msgstr ""
 
-#: src/Rest/Management.php:193
+#: src/Rest/Management.php:217
 msgid "This account cannot be removed from the panel."
 msgstr ""
 
-#: src/Core/Settings.php:89
+#: src/Core/Settings.php:98
 msgid "This address is already used by a WordPress page."
 msgstr ""
 
-#: src/Import/Importer.php:80 src/Import/Importer.php:96
+#: src/Branches/Branches.php:109
+msgid "This branch address is already used."
+msgstr ""
+
+#: src/Commerce/Checkout.php:289 src/Commerce/Checkout.php:82
+msgid "This branch is unavailable."
+msgstr ""
+
+#: src/Core/Assets.php:57 src/Integrations/Builders.php:49
+msgid "This branch menu is unavailable."
+msgstr ""
+
+#: src/Import/Importer.php:82 src/Import/Importer.php:98
 msgid "This import is already processing."
 msgstr ""
 
-#: src/Commerce/Orders.php:329
+#: src/Commerce/Orders.php:375
 msgid "This order cannot be settled."
 msgstr ""
 
-#: src/Rest/Ordering.php:244
+#: src/Rest/Ordering.php:263
 msgid "This order is being updated. Retry shortly."
 msgstr ""
 
-#: src/Commerce/Checkout.php:78
+#: src/Commerce/Checkout.php:295
 msgid "This ordering channel is unavailable."
 msgstr ""
 
-#: src/Commerce/Orders.php:150 src/Commerce/Orders.php:163
+#: src/Commerce/Orders.php:172 src/Commerce/Orders.php:185
 msgid "This request is being processed."
 msgstr ""
 
-#: src/Commerce/Orders.php:146
+#: src/Commerce/Orders.php:168
 msgid "This request needs staff review before retrying. Please contact the restaurant."
 msgstr ""
 
-#: src/Core/Routes.php:47
+#: src/Core/Routes.php:83
 msgid "This table menu is unavailable."
 msgstr ""
 
-#: src/Commerce/Orders.php:89
+#: src/Commerce/Orders.php:108
 msgid "This table supports menu viewing only."
 msgstr ""
 
-#: src/Integrations/MenuWidget.php:25
+#: src/Integrations/MenuWidget.php:26
 msgid "This widget cannot enable an ordering channel disabled by the manager."
 msgstr ""
 
@@ -785,15 +889,15 @@ msgstr ""
 msgid "Too many requests. Please wait and try again."
 msgstr ""
 
-#: src/Translation/Module.php:73
+#: src/Translation/Module.php:77
 msgid "Translation management is not permitted."
 msgstr ""
 
-#: src/Translation/Queue.php:355
+#: src/Translation/Queue.php:385
 msgid "Translation temporarily failed. Retry this item."
 msgstr ""
 
-#: src/Commerce/Orders.php:224
+#: src/Commerce/Orders.php:247
 msgid "Unable to create the order. Please try again."
 msgstr ""
 
@@ -841,19 +945,19 @@ msgstr ""
 msgid "Unsupported CSS value."
 msgstr ""
 
-#: src/Commerce/Checkout.php:41
+#: src/Commerce/Checkout.php:57
 msgid "Unsupported customer language."
 msgstr ""
 
-#: src/Menu/Catalog.php:141
+#: src/Menu/Catalog.php:149
 msgid "Unsupported product type."
 msgstr ""
 
-#: src/Import/Importer.php:27
+#: src/Import/Importer.php:28
 msgid "Upload a CSV or XLSX file."
 msgstr ""
 
-#: src/Rest/Management.php:202
+#: src/Rest/Management.php:226
 msgid "Upload a valid image."
 msgstr ""
 
@@ -865,11 +969,15 @@ msgstr ""
 msgid "Use a UTF-8 CSV file."
 msgstr ""
 
-#: src/Core/Settings.php:135
+#: src/Core/Settings.php:145
 msgid "Use a font file hosted on this site."
 msgstr ""
 
-#: src/Core/Settings.php:94
+#: src/Import/Importer.php:148
+msgid "Use a unique SKU for this branch."
+msgstr ""
+
+#: src/Core/Settings.php:103
 msgid "Use a valid hexadecimal color."
 msgstr ""
 
@@ -877,7 +985,7 @@ msgstr ""
 msgid "Use selectors relative to menu elements."
 msgstr ""
 
-#: src/Rest/Management.php:180
+#: src/Rest/Management.php:203
 msgid "Username and email are required."
 msgstr ""
 
@@ -889,7 +997,7 @@ msgstr ""
 msgid "View menu"
 msgstr ""
 
-#: resources/builder-block.js:17 src/Integrations/MenuWidget.php:24
+#: resources/builder-block.js:18 src/Integrations/MenuWidget.php:25
 msgid "View menu only"
 msgstr ""
 
@@ -897,16 +1005,24 @@ msgstr ""
 msgid "Welcome to your restaurant panel"
 msgstr ""
 
-#: src/Rest/Management.php:39
+#: src/Rest/Management.php:41
 msgid "You do not have access to the panel."
 msgstr ""
 
-#: src/Core/Routes.php:86
+#: src/Branches/Module.php:62 src/Rest/Management.php:23
+msgid "You do not have access to this branch."
+msgstr ""
+
+#: src/Core/Routes.php:122
 msgid "You do not have access to this restaurant panel."
 msgstr ""
 
-#: src/Rest/Management.php:21
+#: src/Branches/Branches.php:101 src/Rest/Management.php:22
 msgid "You do not have permission."
+msgstr ""
+
+#: src/Commerce/Checkout.php:262
+msgid "Your cart belongs to another branch. Confirm replacing it to continue."
 msgstr ""
 
 #: src/Core/Security.php:61

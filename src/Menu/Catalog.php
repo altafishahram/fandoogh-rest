@@ -2,6 +2,7 @@
 namespace FandooghRest\Menu;
 
 use FandooghRest\Core\Settings;
+use FandooghRest\Branches\Branches;
 
 final class Catalog
 {
@@ -15,7 +16,7 @@ final class Catalog
         $categories = [];
         if (!is_wp_error($terms)) {
             foreach ($terms as $term) {
-                if (!$selected || in_array((int) $term->term_id, $selected, true)) {
+                if (Branches::categoryBranch((int) $term->term_id) === Branches::current() && (!$selected || in_array((int) $term->term_id, $selected, true))) {
                     $categories[] = self::category($term, $language);
                 }
             }
@@ -23,7 +24,7 @@ final class Catalog
         usort($categories, fn($a, $b) => [$a['order'], $a['id']] <=> [$b['order'], $b['id']]);
         $products = [];
         foreach (wc_get_products(['status' => 'publish', 'limit' => -1, 'type' => ['simple', 'variable'], 'orderby' => 'menu_order', 'order' => 'ASC']) as $product) {
-            if ($product->get_meta('_admincafe_visible') === 'no' || ($selected && !array_intersect($selected, $product->get_category_ids()))) {
+            if (Branches::productBranch($product) !== Branches::current() || $product->get_meta('_admincafe_visible') === 'no' || ($selected && !array_intersect($selected, $product->get_category_ids()))) {
                 continue;
             }
             $products[] = self::serialize($product, $language);
@@ -36,7 +37,7 @@ final class Catalog
         $id = (int) $term->term_id;
         $stored_order = get_term_meta($id, '_admincafe_product_order', true);
         $translations = self::storedTranslations(get_term_meta($id, '_admincafe_translations', true), ['name']);
-        return ['id' => $id, 'name' => $language && $language !== 'fa' ? ($translations[$language]['name'] ?? $term->name) : $term->name, 'parent' => (int) $term->parent,
+        return ['id' => $id, 'branch_id' => Branches::categoryBranch($id), 'name' => $language && $language !== 'fa' ? ($translations[$language]['name'] ?? $term->name) : $term->name, 'parent' => (int) $term->parent,
             'image' => wp_get_attachment_image_url((int) get_term_meta($id, 'thumbnail_id', true), 'medium') ?: '',
             'image_id' => (int) get_term_meta($id, 'thumbnail_id', true),
             'icon' => (string) get_term_meta($id, '_admincafe_icon', true),
@@ -48,7 +49,7 @@ final class Catalog
     public static function product(int $id): array|\WP_Error
     {
         $product = wc_get_product($id);
-        return $product ? self::serialize($product) : new \WP_Error('product_not_found', __('Product not found.', 'fandoogh-rest'), ['status' => 404]);
+        return $product && Branches::productBranch($product) === Branches::current() ? self::serialize($product) : new \WP_Error('product_not_found', __('Product not found.', 'fandoogh-rest'), ['status' => 404]);
     }
 
     public static function serialize($product, ?string $language = null): array
@@ -70,7 +71,8 @@ final class Catalog
             'currency' => get_woocommerce_currency(), 'currency_symbol' => html_entity_decode(get_woocommerce_currency_symbol()),
             'image' => wp_get_attachment_image_url($product->get_image_id(), 'large') ?: '', 'image_id' => $product->get_image_id(),
             'available' => $product->is_purchasable() && $product->is_in_stock(), 'sku' => $product->get_sku(),
-            'category_ids' => $product->get_category_ids(), 'order' => $product->get_menu_order(), 'variations' => $variations,
+            'branch_id' => Branches::productBranch($product),
+            'category_ids' => array_values(array_filter($product->get_category_ids(), static fn($id): bool => Branches::categoryBranch((int) $id) === Branches::productBranch($product))), 'order' => $product->get_menu_order(), 'variations' => $variations,
             'visible' => $product->get_meta('_admincafe_visible') !== 'no', 'status' => $product->get_status(),
             'translations' => $language === null ? (object) self::storedTranslations($product->get_meta('_admincafe_translations')) : (object) []];
     }
@@ -137,6 +139,12 @@ final class Catalog
         if (!$product) {
             return new \WP_Error('product_not_found', __('Product not found.', 'fandoogh-rest'), ['status' => 404]);
         }
+        if ($id && Branches::productBranch($product) !== Branches::current()) {
+            return new \WP_Error('product_not_found', __('Product not found.', 'fandoogh-rest'), ['status' => 404]);
+        }
+        if (isset($input['branch_id']) && (!is_scalar($input['branch_id']) || (int) $input['branch_id'] !== Branches::current())) {
+            return new \WP_Error('branch_mismatch', __('Choose the product branch in the panel.', 'fandoogh-rest'), ['status' => 400]);
+        }
         if (!in_array($product->get_type(), ['simple', 'variable', 'variation'], true)) {
             return new \WP_Error('unsupported_product', __('Unsupported product type.', 'fandoogh-rest'), ['status' => 400]);
         }
@@ -191,7 +199,7 @@ final class Catalog
         if (isset($input['status']) && !in_array($input['status'], ['publish', 'draft', 'private'], true)) {
             return new \WP_Error('invalid_status', __('Invalid product status.', 'fandoogh-rest'), ['status' => 400]);
         }
-        if (isset($input['image_id']) && (int) $input['image_id'] !== 0 && !wp_attachment_is_image(absint($input['image_id']))) {
+        if (isset($input['image_id']) && (int) $input['image_id'] !== 0 && (!wp_attachment_is_image(absint($input['image_id'])) || !Branches::ownsMedia(absint($input['image_id'])))) {
             return new \WP_Error('invalid_image', __('Choose an image attachment.', 'fandoogh-rest'), ['status' => 400]);
         }
         if (isset($input['category_ids'])) {
@@ -199,12 +207,13 @@ final class Catalog
                 return new \WP_Error('invalid_categories', __('Categories must be an array.', 'fandoogh-rest'), ['status' => 400]);
             }
             foreach ($input['category_ids'] as $term) {
-                if (!term_exists(absint($term), 'product_cat')) {
+                if (!is_scalar($term) || !term_exists(absint($term), 'product_cat') || Branches::categoryBranch(absint($term)) !== Branches::current()) {
                     return new \WP_Error('invalid_category', __('Category not found.', 'fandoogh-rest'), ['status' => 400]);
                 }
             }
         }
         try {
+            if (!$product->is_type('variation')) { $product->update_meta_data('_fandoogh_branch_id', Branches::current()); }
             if ($translation_patch !== null) { $product->update_meta_data('_admincafe_translations', self::mergeTranslations(self::storedTranslations($product->get_meta('_admincafe_translations')), $translation_patch)); }
             foreach (['name', 'sku'] as $field) {
                 if (isset($input[$field])) { $product->{'set_' . $field}(sanitize_text_field($input[$field])); }

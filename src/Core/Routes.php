@@ -1,5 +1,6 @@
 <?php
 namespace FandooghRest\Core;
+use FandooghRest\Branches\Branches;
 
 defined('ABSPATH') || exit;
 
@@ -8,8 +9,11 @@ final class Routes
     public function register(): void
     {
         add_action('init', [self::class, 'rewrites']);
-        add_filter('query_vars', static fn(array $vars): array => array_merge($vars, ['admincafe_route', 'admincafe_token']));
+        add_filter('query_vars', static fn(array $vars): array => array_merge($vars, ['admincafe_route', 'admincafe_token', 'fandoogh_branch_slug']));
         add_filter('request', static function (array $vars): array {
+            $branch = self::resolveBranch($vars);
+            if ($branch === null) { return ['error' => '404']; }
+            Branches::setCurrent($branch['id']);
             $pageId = (int) Settings::get('menu_page_id', 0);
             if (($vars['admincafe_route'] ?? '') === 'menu' && $pageId && get_post_status($pageId) === 'publish') {
                 // Let WordPress resolve the builder page, including when its slug is /menu/.
@@ -26,11 +30,43 @@ final class Routes
     {
         $menu = preg_quote((string) Settings::get('menu_slug'), '#');
         $panel = preg_quote((string) Settings::get('panel_slug'), '#');
+        add_rewrite_rule('^' . $menu . '/([^/]+)/?$', 'index.php?admincafe_route=menu&fandoogh_branch_slug=$matches[1]', 'top');
         add_rewrite_rule('^' . $menu . '/?$', 'index.php?admincafe_route=menu', 'top');
         add_rewrite_rule('^' . $panel . '/?$', 'index.php?admincafe_route=panel', 'top');
         add_rewrite_rule('^' . $panel . '/sw\.js$', 'index.php?admincafe_route=worker', 'top');
         add_rewrite_rule('^' . $panel . '/manifest\.webmanifest$', 'index.php?admincafe_route=manifest', 'top');
         add_rewrite_rule('^cafe-qr/([a-zA-Z0-9_-]{16,128})/?$', 'index.php?admincafe_route=qr&admincafe_token=$matches[1]', 'top');
+    }
+
+    /** QR ownership is authoritative; URL/query selections may never override it. */
+    private static function resolveBranch(array $vars): ?array
+    {
+        $id = Branches::defaultId();
+        if (!empty($vars['fandoogh_branch_slug'])) {
+            $id = 0;
+            foreach (Branches::all() as $candidate) {
+                if (rawurldecode($candidate['slug']) === rawurldecode((string) $vars['fandoogh_branch_slug'])) { $id = $candidate['id']; break; }
+            }
+        }
+        if (isset($_GET['branch_id'])) {
+            $query = wp_unslash($_GET['branch_id']);
+            if (!is_string($query) || !preg_match('/^[1-9][0-9]*$/D', $query)) { return null; }
+            if (!empty($vars['fandoogh_branch_slug']) && $id !== (int) $query) { return null; }
+            $id = (int) $query;
+        }
+        if (isset($_GET['table'])) {
+            $token = wp_unslash($_GET['table']);
+            if (!is_string($token)) { return null; }
+            $table = \FandooghRest\Tables\Tables::findByToken($token);
+            if (!$table || empty($table['enabled'])) { return null; }
+            $tableBranch = (int) ($table['branch_id'] ?? Branches::defaultId());
+            if ((!empty($vars['fandoogh_branch_slug']) || isset($_GET['branch_id'])) && $id !== $tableBranch) { return null; }
+            $id = $tableBranch;
+        }
+        $branch = Branches::get($id);
+        // WordPress admin, panel and unrelated pages remain reachable if a branch is disabled.
+        if (!$branch || (empty($branch['enabled']) && (($vars['admincafe_route'] ?? '') === 'menu' || isset($_GET['table'])))) { return null; }
+        return $branch;
     }
 
     public function render(): void
@@ -49,7 +85,7 @@ final class Routes
             nocache_headers();
             $arguments = ['table' => $table['token']];
             if (\FandooghRest\Localization\Language::valid($_GET['lang'] ?? null)) { $arguments['lang'] = $_GET['lang']; }
-            wp_safe_redirect(add_query_arg($arguments, Settings::menuUrl()), 302);
+            wp_safe_redirect(add_query_arg($arguments, Branches::menuUrl((int) ($table['branch_id'] ?? Branches::defaultId()))), 302);
             exit;
         }
         if ($route === 'worker') {

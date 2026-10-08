@@ -1,10 +1,41 @@
 import { languages, translatedEntity } from "./customer-i18n.js";
 export function api(config) {
-  let token = "";
+  let token = "",
+    branchId = Number(config.branchId) || 0,
+    generation = 0;
   return {
     setToken: (v) => (token = v),
+    invalidate: () => generation++,
+    setBranch(id) {
+      const next = Number(id) || 0;
+      if (next !== branchId) {
+        branchId = next;
+        generation++;
+      }
+    },
     async request(path, method = "GET", body) {
-      if (config.demo === true) return demo(path, method, body);
+      const requestGeneration = generation,
+        requestBranch = branchId;
+      if (requestBranch) {
+        const [route, query = ""] = path.split("?");
+        const params = new URLSearchParams(query);
+        params.set("branch_id", requestBranch);
+        path = route + "?" + params.toString();
+        if (body && !(body instanceof FormData))
+          body = { ...body, branch_id: requestBranch };
+      }
+      function current() {
+        if (requestGeneration !== generation) {
+          const error = new Error("پاسخ شعبه قبلی کنار گذاشته شد");
+          error.code = "stale_branch";
+          throw error;
+        }
+      }
+      if (config.demo === true) {
+        const result = await demo(path, method, body);
+        current();
+        return result;
+      }
       const headers = {};
       if (config.nonce) headers["X-WP-Nonce"] = config.nonce;
       if (token) headers["X-AdminCafe-Token"] = token;
@@ -27,8 +58,14 @@ export function api(config) {
       const data = await response
         .json()
         .catch(() => ({ message: "پاسخ سرور معتبر نیست" }));
-      if (!response.ok)
-        throw new Error(data.message || "ارتباط با سرور ناموفق بود");
+      current();
+      if (!response.ok) {
+        const error = new Error(data.message || "ارتباط با سرور ناموفق بود");
+        error.code = data.code;
+        error.data = data.data;
+        error.status = response.status || data.data?.status;
+        throw error;
+      }
       return data;
     },
   };
@@ -225,13 +262,25 @@ settings.content_translations = {
   zh: { restaurant_name: "阿拉姆咖啡馆", tagline: "小憩片刻，享受美好" },
   tr: { restaurant_name: "Aram Kafe", tagline: "Küçük bir mola, güzel bir an" },
 };
+const demoBranches = [
+  { id: 1, name: "شعبه اصلی", slug: "main", enabled: true, menu_url: "/" },
+];
 async function demo(path, method, body) {
   await new Promise((r) => setTimeout(r, 180));
   const [route] = path.split("?");
   const language =
     new URLSearchParams(path.split("?")[1] || "").get("lang") || "fa";
+  const branch =
+    demoBranches.find(
+      (b) =>
+        b.id ===
+        Number(new URLSearchParams(path.split("?")[1] || "").get("branch_id")),
+    ) || demoBranches[0];
   if (route === "/bootstrap")
     return {
+      branch_id: branch.id,
+      branch,
+      branches: demoBranches,
       language,
       locale:
         languages.find((l) => l.code === language)?.html_locale || "fa-IR",
@@ -249,6 +298,10 @@ async function demo(path, method, body) {
     };
   if (route === "/manage/bootstrap")
     return {
+      branch_id: branch.id,
+      branch,
+      branches: demoBranches,
+      can_manage_branches: true,
       settings,
       user: { id: 1, name: "مدیر کافه", roles: ["admincafe_manager"] },
       capabilities: [
@@ -356,10 +409,17 @@ async function demo(path, method, body) {
     throw new Error("واردسازی فایل در سایت متصل در دسترس است.");
   if (route === "/manage/reorder") return { success: true };
   const resource = route.match(
-    /^\/manage\/(products|categories|tables|staff|orders)(?:\/(\d+))?$/,
+    /^\/manage\/(products|categories|tables|staff|orders|branches)(?:\/(\d+))?$/,
   );
   if (resource) {
-    let list = { products, categories, tables, staff, orders }[resource[1]],
+    let list = {
+        products,
+        categories,
+        tables,
+        staff,
+        orders,
+        branches: demoBranches,
+      }[resource[1]],
       id = Number(resource[2]);
     if (method === "GET")
       return id
@@ -385,6 +445,7 @@ async function demo(path, method, body) {
       token: "demo-new",
       url: "https://example.com/cafe-qr/demo-new",
     };
+    if (resource[1] === "branches") item.menu_url = "/menu/" + item.slug + "/";
     list.push(item);
     return item;
   }
