@@ -360,3 +360,103 @@ test("revoked branch preference recovers through a context-free bootstrap and di
     globalThis.localStorage = originalStorage;
   }
 });
+
+test("tab navigation clears previous cards immediately and rejects delayed responses from older views", async () => {
+  const original = globalThis.fetch;
+  let notifyCategoryStarted;
+  const categoryStarted = new Promise((resolve) => {
+    notifyCategoryStarted = resolve;
+  });
+  const pending = new Map(),
+    calls = [];
+  globalThis.fetch = (url) => {
+    const path = new URL(url, "https://test").pathname;
+    calls.push(path);
+    if (path === "/api/manage/categories") notifyCategoryStarted();
+    return new Promise((resolve) =>
+      pending.set(path, (value) =>
+        resolve({ ok: true, json: async () => value }),
+      ),
+    );
+  };
+  try {
+    const panel = usePanel(
+      { apiBase: "/api", branchId: 1 },
+      { querySelector() {} },
+    );
+    panel.bootstrap.value = {
+      branches: [{ id: 1, name: "Main", enabled: true }],
+      can_manage_branches: true,
+      user: { id: 1, roles: [] },
+      settings: {},
+      capabilities: ["admincafe_manage_menu"],
+    };
+    panel.tab.value = "overview";
+    panel.data.value = [{ id: 88, number: "Order" }];
+    panel.edit.value = { kind: "orderDetails", id: 88 };
+    const overview = panel.load();
+    const branches = panel.go("branches");
+    assert.deepEqual(panel.data.value, []);
+    assert.equal(panel.edit.value, null);
+    pending.get("/api/manage/reports")({ revenue: 999 });
+    await overview;
+    assert.deepEqual(panel.reports.value, {});
+    assert.equal(panel.busy.value, true);
+    assert.equal(calls.includes("/api/manage/orders"), false);
+    const products = panel.go("products");
+    pending.get("/api/manage/branches")([{ id: 99, name: "Old branch" }]);
+    await branches;
+    assert.deepEqual(panel.data.value, []);
+    assert.equal(panel.busy.value, true);
+    pending.get("/api/manage/products")([{ id: 7, name: "Coffee" }]);
+    // Allow the product loader to request its categories before leaving the view.
+    await categoryStarted;
+    const tables = panel.go("tables");
+    assert.deepEqual(panel.data.value, []);
+    assert.deepEqual(panel.products.value, []);
+    pending.get("/api/manage/categories")([{ id: 66, name: "Old category" }]);
+    await products;
+    assert.deepEqual(panel.categories.value, []);
+    assert.equal(panel.busy.value, true);
+    pending.get("/api/manage/tables")([{ id: 4, label: "Table" }]);
+    await tables;
+    assert.deepEqual(
+      panel.data.value.map((item) => item.id),
+      [4],
+    );
+    assert.equal(panel.busy.value, false);
+    assert.equal(panel.error.value, "");
+  } finally {
+    globalThis.fetch = original;
+  }
+});
+
+test("a failed request from a previous tab cannot overwrite the current view's error", async () => {
+  const original = globalThis.fetch;
+  let rejectOld;
+  globalThis.fetch = (url) =>
+    new URL(url, "https://test").pathname.endsWith("/products")
+      ? new Promise((resolve, reject) => {
+          rejectOld = reject;
+        })
+      : Promise.resolve({
+          ok: true,
+          json: async () => [{ id: 2, name: "Current branch" }],
+        });
+  try {
+    const panel = usePanel(
+      { apiBase: "/api", branchId: 1 },
+      { querySelector() {} },
+    );
+    panel.tab.value = "products";
+    const old = panel.load();
+    await panel.go("branches");
+    rejectOld(new Error("Old view network failure"));
+    await old;
+    assert.equal(panel.error.value, "");
+    assert.equal(panel.data.value[0].name, "Current branch");
+    assert.equal(panel.busy.value, false);
+  } finally {
+    globalThis.fetch = original;
+  }
+});
