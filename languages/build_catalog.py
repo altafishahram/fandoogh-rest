@@ -39,7 +39,7 @@ translations.update({message: message for message in ui_messages})
 missing = sorted(set(entries) - set(translations))
 if missing:
     raise SystemExit('Missing Persian translations: ' + json.dumps(missing, ensure_ascii=False, indent=2))
-header = ('Project-Id-Version: Fandoogh Rest 1.4.0\nReport-Msgid-Bugs-To: \n'
+header = ('Project-Id-Version: Fandoogh Rest 1.5.0\nReport-Msgid-Bugs-To: \n'
           'POT-Creation-Date: 2026-10-09 00:00+0000\nPO-Revision-Date: 2026-10-09 00:00+0000\n'
           'Last-Translator: Fandoogh Rest\nLanguage-Team: Persian\nLanguage: fa_IR\n'
           'MIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\n'

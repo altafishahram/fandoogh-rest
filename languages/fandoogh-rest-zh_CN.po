@@ -1,6 +1,6 @@
 # Fandoogh Rest customer interface. The management panel stays Persian.
 msgid ""
-msgstr "Project-Id-Version: Fandoogh Rest 1.4.0\nLanguage: zh_CN\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=1; plural=0;\n"
+msgstr "Project-Id-Version: Fandoogh Rest 1.5.0\nLanguage: zh_CN\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=1; plural=0;\n"
 
 #: resources/customer-server-strings.json
 msgid "A unique request ID is required."

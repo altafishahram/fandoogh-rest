@@ -4,7 +4,7 @@ Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 8.2
 Requires Plugins: woocommerce
-Stable tag: 1.4.0
+Stable tag: 1.5.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -53,6 +53,9 @@ Web Push requires HTTPS, browser/OS support, user permission and working server-
 No. Normal uninstall preserves data. Optional FANDOOGH_REST_REMOVE_DATA only removes Fandoogh Rest-specific settings, roles and events; WooCommerce products/orders remain.
 
 == Changelog ==
+= 1.5.0 =
+Approved warm olive customer menu, larger mobile photo cards and WooCommerce product galleries with touch, mouse and keyboard navigation. No previous/next gallery buttons. Gallery upload/reordering in the dedicated panel, branch media validation and bundled CSS/font verification.
+
 = 1.4.0 =
 Multi-branch menus and staff operations, isolated carts/orders/QR/content/notifications, branch builder embeds and a shared Woo gateway/currency. Branch-specific shipping rates are deferred.
 
@@ -77,4 +80,4 @@ Automatic translation is disabled by default. When configured and enabled by a m
 Local fonts do not contact a remote font provider. Optional browser Web Push sends encrypted notifications to the recipient browser's push provider after explicit subscription. Devices can be removed from the panel. Dependencies retain their original license files under vendor/ and assets/FONT-LICENSE.txt.
 
 == Validation ==
-Local integration verified on WordPress 7.1.2 / WooCommerce 11.1.2 with HPOS, PHP 8.3.35 and SQLite Database Integration. MySQL/MariaDB, a real bank gateway, HTTPS push delivery and a live Elementor installation require target-site validation.
+Local integration verified on WordPress 7.1.2 / WooCommerce 11.1.2 with HPOS, PHP 8.3.35 and SQLite Database Integration. Required CI also verifies WordPress 7.1.3 / WooCommerce 11.2.0 on MySQL 8 HPOS. A real bank gateway, HTTPS push delivery, physical phone gestures and a live Elementor installation require target-site validation.

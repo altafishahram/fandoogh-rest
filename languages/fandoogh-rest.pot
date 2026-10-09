@@ -1,6 +1,6 @@
 # Fandoogh Rest translation catalog.
 msgid ""
-msgstr "Project-Id-Version: Fandoogh Rest 1.4.0\nReport-Msgid-Bugs-To: \nPOT-Creation-Date: 2026-10-09 00:00+0000\nPO-Revision-Date: 2026-10-09 00:00+0000\nLast-Translator: Fandoogh Rest\nLanguage-Team: Persian\nLanguage: \nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=(n > 1);\nX-Domain: fandoogh-rest\n"
+msgstr "Project-Id-Version: Fandoogh Rest 1.5.0\nReport-Msgid-Bugs-To: \nPOT-Creation-Date: 2026-10-09 00:00+0000\nPO-Revision-Date: 2026-10-09 00:00+0000\nLast-Translator: Fandoogh Rest\nLanguage-Team: Persian\nLanguage: \nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=(n > 1);\nX-Domain: fandoogh-rest\n"
 
 #: frontend/src/i18n.js:5 resources/ui-strings.php:5
 msgid "+ سفارش صندوق"

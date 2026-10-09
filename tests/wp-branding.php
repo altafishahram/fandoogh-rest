@@ -9,7 +9,7 @@ $check = static function (bool $condition, string $label) use (&$passed): void {
     if (!$condition) { throw new RuntimeException('FAIL: ' . $label); }
     $passed++;
 };
-$check(FANDOOGH_REST_VERSION === '1.4.0', 'Renamed plugin loaded');
+$check(FANDOOGH_REST_VERSION === '1.5.0', 'Renamed plugin loaded');
 $check(ADMINCAFE_VERSION === FANDOOGH_REST_VERSION, 'Legacy constants reference the same implementation');
 $check(class_exists('AdminCafe\\Core\\Settings'), 'Legacy class names autoload');
 $check(AdminCafe\Core\Settings::all() === FandooghRest\Core\Settings::all(), 'Old and new classes share persisted settings');
