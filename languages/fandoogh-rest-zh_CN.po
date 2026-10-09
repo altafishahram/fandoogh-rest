@@ -171,8 +171,16 @@ msgid "{count} انتخاب شما"
 msgstr "已选 {count} 件"
 
 #: frontend/src/customer-i18n.js
+msgid "{count} دقیقه آماده‌سازی"
+msgstr "准备约需 {count} 分钟"
+
+#: frontend/src/customer-i18n.js
 msgid "آ"
 msgstr "咖"
+
+#: frontend/src/customer-i18n.js
+msgid "آشپزخانه و کافه"
+msgstr "餐厅与咖啡馆"
 
 #: frontend/src/customer-i18n.js
 msgid "آماده تحویل"
@@ -203,8 +211,16 @@ msgid "از عطر اولین قهوه تا شیرینی آخرین لقمه."
 msgstr "从第一缕咖啡香到最后一口甜蜜。"
 
 #: frontend/src/customer-i18n.js
+msgid "از منوی ما"
+msgstr "来自我们的菜单"
+
+#: frontend/src/customer-i18n.js
 msgid "افزایش {name}"
 msgstr "增加 {name}"
+
+#: frontend/src/customer-i18n.js
+msgid "افزودن {name}"
+msgstr "添加 {name}"
 
 #: frontend/src/customer-i18n.js
 msgid "افزودن به انتخاب‌ها"
@@ -225,6 +241,10 @@ msgstr "选择规格"
 #: frontend/src/customer-i18n.js
 msgid "انتخاب کنید"
 msgstr "请选择"
+
+#: frontend/src/customer-i18n.js
+msgid "انتخاب گزینه برای {name}"
+msgstr "为 {name} 选择规格"
 
 #: frontend/src/customer-i18n.js
 msgid "انتخاب‌های شما"
@@ -263,8 +283,36 @@ msgid "تحویل شد"
 msgstr "已送达"
 
 #: frontend/src/customer-i18n.js
+msgid "تصاویر {name}"
+msgstr "{name} 的图片"
+
+#: frontend/src/customer-i18n.js
+msgid "تصویر {current} از {total}"
+msgstr "第 {current} 张，共 {total} 张"
+
+#: frontend/src/customer-i18n.js
+msgid "تصویر {number} از {count}"
+msgstr "第 {number} 张，共 {count} 张"
+
+#: frontend/src/customer-i18n.js
+msgid "تصویر {number} از {name}"
+msgstr "{name} 的第 {number} 张图片"
+
+#: frontend/src/customer-i18n.js
+msgid "تصویر در دسترس نیست"
+msgstr "图片不可用"
+
+#: frontend/src/customer-i18n.js
+msgid "تعداد"
+msgstr "数量"
+
+#: frontend/src/customer-i18n.js
 msgid "توضیحات سفارش"
 msgstr "订单备注"
+
+#: frontend/src/customer-i18n.js
+msgid "جزئیات {name}"
+msgstr "{name} 的详情"
 
 #: frontend/src/customer-i18n.js
 msgid "جزئیات محصول"
@@ -333,6 +381,10 @@ msgstr "送至 {table}"
 #: frontend/src/customer-i18n.js
 msgid "سفارش {number} ثبت شد"
 msgstr "订单 {number} 已收到"
+
+#: frontend/src/customer-i18n.js
+msgid "سفارش آنلاین"
+msgstr "在线点餐"
 
 #: resources/customer-server-strings.json
 msgid "سفارش شما برای تأیید کارکنان ارسال شد"
@@ -419,6 +471,10 @@ msgid "هزینه ارسال، مالیات و پرداخت در صفحه امن
 msgstr "配送费、税费及付款将在安全结账页面计算。"
 
 #: frontend/src/customer-i18n.js
+msgid "همه"
+msgstr "全部"
+
+#: frontend/src/customer-i18n.js
 msgid "هنوز چیزی انتخاب نکرده‌اید."
 msgstr "您尚未选择商品。"
 
@@ -429,6 +485,10 @@ msgstr "状态：{stage}"
 #: frontend/src/customer-i18n.js
 msgid "پاسخ سرور معتبر نیست"
 msgstr "服务器响应无效"
+
+#: frontend/src/customer-i18n.js
+msgid "پاک کردن فیلترها"
+msgstr "清除筛选"
 
 #: frontend/src/customer-i18n.js
 msgid "پرداخت واقعی در پیش‌نمایش در دسترس نیست."

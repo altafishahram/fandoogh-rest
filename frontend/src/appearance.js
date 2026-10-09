@@ -1,11 +1,11 @@
 export const menuThemes = [
   {
     id: "cafe",
-    name: "کافه کلاسیک",
-    description: "گرم و آشنا",
-    accent: "#bd704b",
-    background: "#faf8f5",
-    category_background: "#f0e9df",
+    name: "فندوق",
+    description: "روشن، گرم و زیتونی",
+    accent: "#4e5c36",
+    background: "#f7f6f0",
+    category_background: "#eef0e7",
   },
   {
     id: "minimal",

@@ -258,6 +258,17 @@ export function usePanel(config, root) {
       form.value.name = item.name || item.display_name;
     if (kind === "products" && form.value.visible === undefined)
       form.value.visible = true;
+    if (kind === "products") {
+      form.value.gallery_image_ids ||= [];
+      form.value.gallery_images = form.value.gallery_image_ids.map(
+        (id) =>
+          form.value.images?.find((image) => image.id === id) || {
+            id,
+            src: "",
+            alt: "",
+          },
+      );
+    }
     nextTick(() =>
       root.querySelector(".ac-dialog input,.ac-dialog button")?.focus(),
     );
@@ -273,6 +284,8 @@ export function usePanel(config, root) {
         id = edit.value.id;
       const body = { ...form.value };
       if (k === "products") {
+        delete body.gallery_images;
+        delete body.images;
         if (body.regular_price !== undefined) delete body.price;
         if (body.variations)
           body.variation_translations = Object.fromEntries(
@@ -372,6 +385,51 @@ export function usePanel(config, root) {
       (target === "settings" ? settings.value : form.value)[field] = r.id;
       if (target !== "settings") form.value.image = r.url;
     });
+  }
+  async function galleryMedia(e) {
+    const files = [...e.target.files],
+      generation = viewGeneration,
+      originalForm = form.value;
+    e.target.value = "";
+    if (!files.length) return;
+    if (originalForm.gallery_image_ids.length + files.length > 20) {
+      error.value = t("حداکثر ۲۰ تصویر برای گالری انتخاب کنید.");
+      return;
+    }
+    await run(async () => {
+      for (const file of files) {
+        if (generation !== viewGeneration || originalForm !== form.value)
+          return;
+        const body = new FormData();
+        body.append("file", file);
+        const result = await client.request("/manage/media", "POST", body);
+        if (generation !== viewGeneration || originalForm !== form.value)
+          return;
+        if (!originalForm.gallery_image_ids.includes(result.id)) {
+          originalForm.gallery_image_ids.push(result.id);
+          originalForm.gallery_images.push({
+            id: result.id,
+            src: result.url,
+            alt: "",
+          });
+        }
+      }
+    });
+  }
+  function removeGalleryImage(index) {
+    form.value.gallery_image_ids.splice(index, 1);
+    form.value.gallery_images.splice(index, 1);
+  }
+  function moveGalleryImage(index, direction) {
+    const target = index + direction;
+    if (target < 0 || target >= form.value.gallery_image_ids.length) return;
+    for (const list of [
+      form.value.gallery_image_ids,
+      form.value.gallery_images,
+    ]) {
+      const [item] = list.splice(index, 1);
+      list.splice(target, 0, item);
+    }
   }
   async function qr(t, type) {
     await run(async () => {
@@ -780,6 +838,9 @@ export function usePanel(config, root) {
     quickPrice,
     drop,
     media,
+    galleryMedia,
+    removeGalleryImage,
+    moveGalleryImage,
     qr,
     importFile,
     applyImport,

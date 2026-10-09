@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "vite --host 127.0.0.1",
-    "build": "vite build",
+    "build": "vite build && node scripts/verify-build.mjs",
     "test": "node --test --test-isolation=none test/*.test.js",
     "format": "prettier --write src test *.js *.html package.json"
   },

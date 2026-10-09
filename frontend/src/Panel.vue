@@ -185,6 +185,64 @@ export default {
             alt="تصویر محصول"
             class="ac-thumb"
           />
+          <button
+            v-if="form.image_id"
+            type="button"
+            @click="
+              form.image_id = 0;
+              form.image = '';
+            "
+          >
+            {{ t("حذف تصویر اصلی") }}
+          </button>
+          <fieldset>
+            <legend>{{ t("گالری تصاویر محصول") }}</legend>
+            <label
+              >{{ t("افزودن تصاویر (حداکثر ۲۰ تصویر)") }}
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                :disabled="busy || form.gallery_image_ids.length >= 20"
+                @change="galleryMedia($event)"
+              />
+            </label>
+            <ol>
+              <li v-for="(image, index) in form.gallery_images" :key="image.id">
+                <img
+                  v-if="image.src"
+                  :src="image.thumbnail || image.src"
+                  :alt="image.alt || `${t('تصویر گالری')} ${index + 1}`"
+                  class="ac-thumb"
+                />
+                <span>{{ t("تصویر") }} {{ index + 1 }}</span>
+                <button
+                  type="button"
+                  :disabled="busy || index === 0"
+                  @click="moveGalleryImage(index, -1)"
+                  :aria-label="`${t('انتقال تصویر به قبل')} ${index + 1}`"
+                >
+                  {{ t("قبل") }}
+                </button>
+                <button
+                  type="button"
+                  :disabled="busy || index === form.gallery_images.length - 1"
+                  @click="moveGalleryImage(index, 1)"
+                  :aria-label="`${t('انتقال تصویر به بعد')} ${index + 1}`"
+                >
+                  {{ t("بعد") }}
+                </button>
+                <button
+                  type="button"
+                  :disabled="busy"
+                  @click="removeGalleryImage(index)"
+                  :aria-label="`${t('حذف تصویر')} ${index + 1}`"
+                >
+                  {{ t("حذف") }}
+                </button>
+              </li>
+            </ol>
+          </fieldset>
           <fieldset v-if="form.variations?.length">
             <legend>{{ t("گزینه‌های محصول") }}</legend>
             <div v-for="v in form.variations" :key="v.id">

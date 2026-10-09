@@ -171,8 +171,16 @@ msgid "{count} انتخاب شما"
 msgstr "Seçtiğiniz {count} ürün"
 
 #: frontend/src/customer-i18n.js
+msgid "{count} دقیقه آماده‌سازی"
+msgstr "{count} dakika hazırlık"
+
+#: frontend/src/customer-i18n.js
 msgid "آ"
 msgstr "A"
+
+#: frontend/src/customer-i18n.js
+msgid "آشپزخانه و کافه"
+msgstr "Mutfak ve kafe"
 
 #: frontend/src/customer-i18n.js
 msgid "آماده تحویل"
@@ -203,8 +211,16 @@ msgid "از عطر اولین قهوه تا شیرینی آخرین لقمه."
 msgstr "İlk kahvenin kokusundan son tatlı lokmaya."
 
 #: frontend/src/customer-i18n.js
+msgid "از منوی ما"
+msgstr "Menümüzden"
+
+#: frontend/src/customer-i18n.js
 msgid "افزایش {name}"
 msgstr "{name} artır"
+
+#: frontend/src/customer-i18n.js
+msgid "افزودن {name}"
+msgstr "{name} ekle"
 
 #: frontend/src/customer-i18n.js
 msgid "افزودن به انتخاب‌ها"
@@ -225,6 +241,10 @@ msgstr "Seçenek seçin"
 #: frontend/src/customer-i18n.js
 msgid "انتخاب کنید"
 msgstr "Lütfen seçin"
+
+#: frontend/src/customer-i18n.js
+msgid "انتخاب گزینه برای {name}"
+msgstr "{name} için seçenek seçin"
 
 #: frontend/src/customer-i18n.js
 msgid "انتخاب‌های شما"
@@ -263,8 +283,36 @@ msgid "تحویل شد"
 msgstr "Teslim edildi"
 
 #: frontend/src/customer-i18n.js
+msgid "تصاویر {name}"
+msgstr "{name} görselleri"
+
+#: frontend/src/customer-i18n.js
+msgid "تصویر {current} از {total}"
+msgstr "{total} görselden {current}. görsel"
+
+#: frontend/src/customer-i18n.js
+msgid "تصویر {number} از {count}"
+msgstr "{count} görselden {number}. görsel"
+
+#: frontend/src/customer-i18n.js
+msgid "تصویر {number} از {name}"
+msgstr "{name} için {number}. görsel"
+
+#: frontend/src/customer-i18n.js
+msgid "تصویر در دسترس نیست"
+msgstr "Görsel mevcut değil"
+
+#: frontend/src/customer-i18n.js
+msgid "تعداد"
+msgstr "Adet"
+
+#: frontend/src/customer-i18n.js
 msgid "توضیحات سفارش"
 msgstr "Sipariş notu"
+
+#: frontend/src/customer-i18n.js
+msgid "جزئیات {name}"
+msgstr "{name} ayrıntıları"
 
 #: frontend/src/customer-i18n.js
 msgid "جزئیات محصول"
@@ -333,6 +381,10 @@ msgstr "{table} için servis"
 #: frontend/src/customer-i18n.js
 msgid "سفارش {number} ثبت شد"
 msgstr "{number} numaralı sipariş alındı"
+
+#: frontend/src/customer-i18n.js
+msgid "سفارش آنلاین"
+msgstr "Çevrimiçi sipariş"
 
 #: resources/customer-server-strings.json
 msgid "سفارش شما برای تأیید کارکنان ارسال شد"
@@ -419,6 +471,10 @@ msgid "هزینه ارسال، مالیات و پرداخت در صفحه امن
 msgstr "Teslimat, vergi ve ödeme güvenli ödeme sayfasında hesaplanır."
 
 #: frontend/src/customer-i18n.js
+msgid "همه"
+msgstr "Tümü"
+
+#: frontend/src/customer-i18n.js
 msgid "هنوز چیزی انتخاب نکرده‌اید."
 msgstr "Henüz bir ürün seçmediniz."
 
@@ -429,6 +485,10 @@ msgstr "Durum: {stage}"
 #: frontend/src/customer-i18n.js
 msgid "پاسخ سرور معتبر نیست"
 msgstr "Sunucu yanıtı geçersiz"
+
+#: frontend/src/customer-i18n.js
+msgid "پاک کردن فیلترها"
+msgstr "Filtreleri temizle"
 
 #: frontend/src/customer-i18n.js
 msgid "پرداخت واقعی در پیش‌نمایش در دسترس نیست."

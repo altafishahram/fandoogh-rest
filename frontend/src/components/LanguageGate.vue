@@ -99,8 +99,7 @@ function keyboard(event, index) {
             :lang="language.html_locale || language.code"
             :dir="language.direction"
             >{{ language.name }}</strong
-          ><small :lang="language.code">{{ countries[language.code] }}</small
-          ><span class="ac-language-arrow" aria-hidden="true">↗</span>
+          ><small :lang="language.code">{{ countries[language.code] }}</small>
         </button>
       </div>
       <p class="ac-language-entry-hint">

@@ -60,6 +60,7 @@ final class Catalog
                 $variant = wc_get_product($id);
                 if ($variant && $variant->get_status() === 'publish') {
                     $variations[] = ['id' => $id, 'name' => self::localizedName($variant, $language ?? 'fa'), 'price' => $variant->get_price(), 'regular_price' => $variant->get_regular_price(), 'sale_price' => $variant->get_sale_price(),
+                        'image' => wp_get_attachment_image_url($variant->get_image_id(), 'large') ?: '', 'image_id' => $variant->get_image_id(),
                         'available' => $variant->is_purchasable() && $variant->is_in_stock(), 'attributes' => $variant->get_attributes(),
                         'translations' => $language === null ? (object) self::storedTranslations($variant->get_meta('_admincafe_translations')) : (object) []];
                 }
@@ -70,11 +71,45 @@ final class Catalog
             'price' => $product->get_price(), 'regular_price' => $product->get_regular_price(), 'sale_price' => $product->get_sale_price(),
             'currency' => get_woocommerce_currency(), 'currency_symbol' => html_entity_decode(get_woocommerce_currency_symbol()),
             'image' => wp_get_attachment_image_url($product->get_image_id(), 'large') ?: '', 'image_id' => $product->get_image_id(),
+            'images' => self::images($product), 'gallery_image_ids' => array_values((array) $product->get_gallery_image_ids()),
             'available' => $product->is_purchasable() && $product->is_in_stock(), 'sku' => $product->get_sku(),
             'branch_id' => Branches::productBranch($product),
             'category_ids' => array_values(array_filter($product->get_category_ids(), static fn($id): bool => Branches::categoryBranch((int) $id) === Branches::productBranch($product))), 'order' => $product->get_menu_order(), 'variations' => $variations,
             'visible' => $product->get_meta('_admincafe_visible') !== 'no', 'status' => $product->get_status(),
             'translations' => $language === null ? (object) self::storedTranslations($product->get_meta('_admincafe_translations')) : (object) []];
+    }
+
+    /** Ordered public media, with the primary image first and usable attachments only. */
+    public static function images($product): array
+    {
+        $images = [];
+        $seen = [];
+        foreach (array_merge([(int) $product->get_image_id()], (array) $product->get_gallery_image_ids()) as $id) {
+            $id = (int) $id;
+            if (!$id || isset($seen[$id]) || !wp_attachment_is_image($id)) { continue; }
+            $seen[$id] = true;
+            $source = wp_get_attachment_image_src($id, 'large');
+            if (!$source) { continue; }
+            $images[] = ['id' => $id, 'src' => $source[0], 'thumbnail' => wp_get_attachment_image_url($id, 'thumbnail') ?: $source[0],
+                'alt' => wp_strip_all_tags((string) get_post_meta($id, '_wp_attachment_image_alt', true)), 'width' => (int) $source[1], 'height' => (int) $source[2]];
+        }
+        return $images;
+    }
+
+    /** Reject malformed media lists before changing any product fields. */
+    public static function validateGallery(mixed $input): array|\WP_Error
+    {
+        if (!is_array($input) || !array_is_list($input) || count($input) > 20) {
+            return new \WP_Error('invalid_gallery', __('Choose up to 20 gallery images.', 'fandoogh-rest'), ['status' => 400]);
+        }
+        $seen = [];
+        foreach ($input as $id) {
+            if (!is_int($id) || $id <= 0 || isset($seen[$id]) || !wp_attachment_is_image($id) || !Branches::ownsMedia($id)) {
+                return new \WP_Error('invalid_gallery', __('Choose unique image attachments from this branch.', 'fandoogh-rest'), ['status' => 400]);
+            }
+            $seen[$id] = true;
+        }
+        return $input;
     }
 
     /** Canonical Woo content is Persian; untranslated fields always fall back individually. */
@@ -149,6 +184,11 @@ final class Catalog
             return new \WP_Error('unsupported_product', __('Unsupported product type.', 'fandoogh-rest'), ['status' => 400]);
         }
         $translation_patch = null;
+        $gallery = null;
+        if (array_key_exists('gallery_image_ids', $input)) {
+            $gallery = self::validateGallery($input['gallery_image_ids']);
+            if (is_wp_error($gallery)) { return $gallery; }
+        }
         if (array_key_exists('translations', $input)) {
             $translation_patch = self::validateTranslations($input['translations']);
             if (is_wp_error($translation_patch)) { return $translation_patch; }
@@ -225,6 +265,7 @@ final class Catalog
             elseif (!$id) { $product->set_status('publish'); }
             if (isset($input['category_ids']) && !$product->is_type('variation')) { $product->set_category_ids(array_map('absint', $input['category_ids'])); }
             if (isset($input['image_id'])) { $product->set_image_id(absint($input['image_id'])); }
+            if ($gallery !== null) { $product->set_gallery_image_ids($gallery); }
             if (isset($input['order'])) { $product->set_menu_order(max(0, (int) $input['order'])); }
             if (array_key_exists('visible', $input)) { $product->update_meta_data('_admincafe_visible', rest_sanitize_boolean($input['visible']) ? 'yes' : 'no'); }
             if (array_key_exists('available', $input)) { $product->set_stock_status(rest_sanitize_boolean($input['available']) ? 'instock' : 'outofstock'); }
@@ -238,6 +279,11 @@ final class Catalog
             }
             if ($importMarker !== null) { $product->update_meta_data('_admincafe_import_row', $importMarker); }
             $product->save();
+            // Woo merges array changes recursively in memory; reread a replaced gallery
+            // so shorter lists and an empty list match the successfully saved data.
+            if ($gallery !== null && method_exists($product, 'get_data_store')) {
+                $product->get_data_store()->read($product);
+            }
             if ($translation_patch !== null) { do_action('admincafe_translation_manual_input', 'product', $product->get_id(), $translation_patch); }
             if ($product->is_type('variation')) { \WC_Product_Variable::sync($product->get_parent_id()); }
             foreach ($variation_updates as $variation_id => $fields) {

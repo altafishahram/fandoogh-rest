@@ -24,7 +24,7 @@ namespace {
         public function offsetUnset($offset): void { unset($this->data[$offset]); }
     }
     class WC_Product_Simple {
-        public array $fields = ['id' => 100, 'name' => '', 'description' => '', 'short_description' => '', 'sku' => '', 'price' => '', 'regular_price' => '', 'sale_price' => '', 'status' => 'draft', 'category_ids' => [], 'image_id' => 0, 'menu_order' => 0, 'stock_status' => 'instock'];
+        public array $fields = ['id' => 100, 'name' => '', 'description' => '', 'short_description' => '', 'sku' => '', 'price' => '', 'regular_price' => '', 'sale_price' => '', 'status' => 'draft', 'category_ids' => [], 'image_id' => 0, 'gallery_image_ids' => [], 'menu_order' => 0, 'stock_status' => 'instock'];
         public array $meta = [];
         public function get_type() { return 'simple'; }
         public function __call($name, $args) {
@@ -61,6 +61,9 @@ namespace {
     function wp_kses_post($value) { return strip_tags((string) $value, '<p><strong><em>'); }
     function wc_format_decimal($value) { return $value === '' ? '' : (string) $value; }
     function wp_get_attachment_image_url($id, $size) { return $id ? 'https://cafe.test/image.jpg' : false; }
+    function wp_attachment_is_image($id) { return in_array($id, [301, 302, 303, 304], true); }
+    function wp_get_attachment_image_src($id, $size) { return $id === 304 ? false : ['https://cafe.test/image-' . $id . '.jpg', 1200, 800, true]; }
+    function get_post_meta($id, $key, $single = true) { return $key === '_wp_attachment_image_alt' ? '<b>Food ' . $id . '</b>' : ''; }
     function rest_sanitize_boolean($value) { return !in_array($value, [false, 'false', '0', 0, ''], true); }
     function is_wp_error($value) { return $value instanceof WP_Error; }
     function absint($value) { return abs((int) $value); }
@@ -122,6 +125,27 @@ namespace {
     check(is_wp_error(Catalog::saveProduct(['name' => 'Coffee', 'type' => 'variable'])), 'Unsupported creation rejected');
     check(is_wp_error(Catalog::saveProduct(['name' => 'Coffee'], 999)), 'Unknown product rejected');
     check(is_wp_error(Catalog::saveProduct([])), 'Creation name required');
+    $galleryProduct = new WC_Product_Simple();
+    $galleryProduct->fields['id'] = 3010;
+    $galleryProduct->fields['image_id'] = 301;
+    $galleryProduct->fields['gallery_image_ids'] = [302, 301, 302, 999, 304, 303];
+    $products[3010] = $galleryProduct;
+    $serializedGallery = Catalog::serialize($galleryProduct);
+    check(array_column($serializedGallery['images'], 'id') === [301, 302, 303], 'Gallery puts primary first, preserves order, omits duplicates invalid attachments and missing sources');
+    check($serializedGallery['images'][0]['width'] === 1200 && $serializedGallery['images'][0]['height'] === 800 && $serializedGallery['images'][0]['alt'] === 'Food 301' && $serializedGallery['images'][0]['thumbnail'] !== '', 'Gallery supplies dimensions alt text and thumbnail');
+    check($serializedGallery['image_id'] === 301 && $serializedGallery['image'] !== '', 'Legacy primary image fields preserved');
+    Catalog::saveProduct(['gallery_image_ids' => [303, 302]], 3010);
+    check($galleryProduct->get_gallery_image_ids() === [303, 302], 'Gallery update persists chosen order');
+    Catalog::saveProduct(['name' => 'Gallery food'], 3010);
+    check($galleryProduct->get_gallery_image_ids() === [303, 302], 'Absent gallery patch preserves images');
+    foreach ([null, '302', [0], [-302], ['302'], [302.0], [true], [[302]], [999], [302, 302], ['key' => 302], array_fill(0, 21, 302)] as $invalidGallery) {
+        check(is_wp_error(Catalog::saveProduct(['name' => 'Must not mutate', 'gallery_image_ids' => $invalidGallery], 3010)) && $galleryProduct->get_name() === 'Gallery food' && $galleryProduct->get_gallery_image_ids() === [303, 302], 'Malformed gallery rejected before any mutation');
+    }
+    Catalog::saveProduct(['gallery_image_ids' => []], 3010);
+    check($galleryProduct->get_gallery_image_ids() === [] && count(Catalog::serialize($galleryProduct)['images']) === 1, 'Empty gallery clears supplementary images and retains primary');
+    $galleryProduct->set_image_id(0);
+    $galleryProduct->set_gallery_image_ids([302]);
+    check(array_column(Catalog::serialize($galleryProduct)['images'], 'id') === [302], 'Gallery works when product has no primary image');
     $free = Catalog::saveProduct(['name' => 'Water', 'price' => 0, 'description' => '<p>Fresh</p>']);
     check($free['price'] === '0' && $free['available'] && $free['status'] === 'publish', 'Zero price is sellable and new product publishes');
     check($free['description'] === 'Fresh', 'Public descriptions are plain text');
@@ -134,6 +158,8 @@ namespace {
     $parent = new WC_Product_Variable(); $parent->fields['id'] = 200; $parent->fields['name'] = 'Latte';
     $variant = new TestVariation(); $variant->fields['id'] = 201; $variant->fields['status'] = 'publish';
     $products[200] = $parent; $products[201] = $variant;
+    $variant->set_image_id(303);
+    check(Catalog::serialize($parent)['variations'][0]['image_id'] === 303 && Catalog::serialize($parent)['variations'][0]['image'] !== '', 'Published variations expose their own image');
     check(is_wp_error(Catalog::saveProduct(['name' => 'Changed', 'variations' => [['id' => 201, 'price' => -1]]], 200)), 'Nested negative price rejected');
     check($parent->fields['name'] === 'Latte', 'Entire variation list validated before parent mutation');
     check(is_wp_error(Catalog::saveProduct(['variations' => [['id' => 100, 'price' => 5]]], 200)), 'Nested cross-parent choice rejected');

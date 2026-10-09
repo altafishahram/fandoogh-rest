@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- Apply the approved warm ivory and olive customer menu, with larger mobile photo cards, restrained motion, a refreshed language gate and product detail layout. Preserve branch content, builder components, custom appearance settings and existing CSS hooks.
+- Add ordered WooCommerce product galleries and gallery management in the restaurant panel. Validate branch-owned image attachments before saving; preserve an omitted gallery and support explicit clearing or shortening.
+- Browse detail photos by touch swipe, mouse drag or keyboard, with direct-selection indicators and no previous/next buttons. Support RTL, variant photos, unavailable images and reduced motion.
+- Keep customer quantities, variable-product selection and the existing table/online checkout flows. Add gallery and customer rendering regressions plus real WordPress gallery integration to CI.
+- Bundle menu and panel styles into one stylesheet and resolve bundled fonts relative to the plugin directory, including sites installed in a subdirectory.
+
 ## 1.4.0 — Multi-branch operations
 
 - Add stable branch identities, central branch management and explicit employee assignments.
