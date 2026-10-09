@@ -13,7 +13,7 @@ for code, strings in catalogs.items():
         assert sorted(re.findall(r'\{[a-z_]+\}', message)) == sorted(re.findall(r'\{[a-z_]+\}', translated)), (code, message, 'placeholder mismatch')
 
 for code, locale, plurals in [('zh', 'zh_CN', 'nplurals=1; plural=0;'), ('tr', 'tr_TR', 'nplurals=2; plural=(n > 1);')]:
-    header = f'Project-Id-Version: Fandoogh Rest 1.4.0\nLanguage: {locale}\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: {plurals}\n'
+    header = f'Project-Id-Version: Fandoogh Rest 1.5.0\nLanguage: {locale}\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: {plurals}\n'
     entries = {'': header, **catalogs[code]}
     lines = ['# Fandoogh Rest customer interface. The management panel stays Persian.', 'msgid ""', 'msgstr ' + json.dumps(header)]
     for message in sorted(catalogs[code]):

@@ -4,7 +4,7 @@ A Persian-first WordPress/WooCommerce plugin for restaurant menus and operations
 WooCommerce owns products, inventory, orders and payments. The plugin adds a
 customer menu, staff panel, tables, localized content, imports and notifications.
 
-**Version: 1.4.0.** Multi-branch menus and operations share one
+**Version: 1.5.0.** The warm olive customer menu includes larger mobile photo cards and swipeable WooCommerce product galleries. Multi-branch menus and operations share one
 WooCommerce store, payment gateway and currency. Each branch has independent
 products, categories, tables, customer translations and appearance.
 See [multi-branch setup and boundaries](docs/MULTIBRANCH-PLAN.md).
@@ -16,10 +16,12 @@ See [multi-branch setup and boundaries](docs/MULTIBRANCH-PLAN.md).
 - [Security reporting](SECURITY.md)
 - [Historical validation](docs/VALIDATION.md)
 - [Multi-branch validation](docs/VALIDATION-1.4.0.md)
+- [Menu and gallery guide](docs/MENU-GALLERY.md)
+- [1.5.0 release notes](docs/RELEASE-1.5.0.md)
 
 ## Install
 
-Use the installable `fandoogh-rest-1.4.0.zip`, not GitHub's source-code ZIP.
+Use the installable `fandoogh-rest-1.5.0.zip`, not GitHub's source-code ZIP.
 Upload it through WordPress Plugins → Add New → Upload Plugin. PHP 8.2+, WordPress
 6.5+ and WooCommerce 9.0+ are declared minimums; tested environments are recorded
 separately. These declarations do not imply every minimum-version combination

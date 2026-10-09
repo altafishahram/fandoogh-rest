@@ -22,7 +22,7 @@ if (($argv[1] ?? '') === 'conflict') {
     echo "Branding conflict checks passed.\n";
     exit;
 }
-check(FANDOOGH_REST_VERSION === '1.4.0', 'New version');
+check(FANDOOGH_REST_VERSION === '1.5.0', 'New version');
 check(basename(FANDOOGH_REST_FILE) === (($argv[1] ?? '') === 'legacy' ? 'admincafe.php' : 'fandoogh-rest.php'), 'HPOS integration uses the entry point actually loaded');
 check(ADMINCAFE_PATH === FANDOOGH_REST_PATH, 'Existing path integrations work');
 check(FANDOOGH_REST_GOOGLE_TRANSLATE_API_KEY === 'test-legacy-credential', 'Legacy wp-config credentials work');
