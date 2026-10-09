@@ -15,7 +15,7 @@ final class Settings
             'restaurant_name' => get_bloginfo('name'), 'tagline' => 'طعم خوب، لحظه‌های بهتر',
             'logo_id' => 0, 'cover_id' => 0, 'menu_slug' => 'menu', 'panel_slug' => 'cafe-panel', 'menu_page_id' => 0,
             'dine_in_enabled' => false, 'pickup_enabled' => false, 'delivery_enabled' => false, 'ordering_paused' => false,
-            'table_default_mode' => 'menu', 'accent' => '#c87545', 'category_background' => '#f3ede5', 'background' => '#faf8f5',
+            'table_default_mode' => 'menu', 'accent' => '#4e5c36', 'category_background' => '#eef0e7', 'background' => '#f7f6f0',
             'font_family' => 'Vazirmatn', 'custom_font_url' => '', 'currency_code' => get_option('woocommerce_currency', 'IRT'), 'currency_label' => '',
             'title_size_mobile' => 18, 'title_size_desktop' => 22, 'description_size_mobile' => 13, 'description_size_desktop' => 14,
             'price_size_mobile' => 16, 'price_size_desktop' => 18, 'title_weight' => 700, 'description_weight' => 400, 'price_weight' => 700,

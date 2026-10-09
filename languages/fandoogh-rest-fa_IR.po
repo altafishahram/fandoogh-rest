@@ -26,7 +26,7 @@ msgstr "شناسه یکتای درخواست الزامی است."
 msgid "A valid email is required."
 msgstr "ایمیل معتبر الزامی است."
 
-#: src/Menu/Catalog.php:174
+#: src/Menu/Catalog.php:214
 msgid "A variation ID is required."
 msgstr "شناسه تنوع محصول الزامی است."
 
@@ -99,7 +99,7 @@ msgstr "دسترسی صندوق‌دار الزامی است."
 msgid "Cashier permission required."
 msgstr "دسترسی صندوق‌دار الزامی است."
 
-#: src/Menu/Catalog.php:207
+#: src/Menu/Catalog.php:247
 msgid "Categories must be an array."
 msgstr "دسته‌بندی‌ها باید به صورت آرایه ارسال شوند."
 
@@ -119,7 +119,7 @@ msgstr "نام دسته‌بندی الزامی است."
 msgid "Category navigation"
 msgstr "ناوبری دسته‌بندی‌ها"
 
-#: src/Menu/Catalog.php:211 src/Rest/Management.php:129 src/Rest/Management.php:66 src/Rest/Management.php:68
+#: src/Menu/Catalog.php:251 src/Rest/Management.php:129 src/Rest/Management.php:66 src/Rest/Management.php:68
 msgid "Category not found."
 msgstr "دسته‌بندی پیدا نشد."
 
@@ -127,7 +127,7 @@ msgstr "دسته‌بندی پیدا نشد."
 msgid "Check the translation API credential and Google project permissions."
 msgstr "کلید ترجمه، فعال بودن API و دسترسی‌های پروژه گوگل را بررسی کنید."
 
-#: src/Menu/Catalog.php:184
+#: src/Menu/Catalog.php:224
 msgid "Choice price must be a non-negative number."
 msgstr "قیمت گزینه باید عددی غیرمنفی باشد."
 
@@ -155,7 +155,7 @@ msgstr "یک شعبهٔ معتبر انتخاب کنید."
 msgid "Choose a valid, unreserved page address."
 msgstr "یک آدرس صفحه معتبر و رزرو نشده انتخاب کنید."
 
-#: src/Menu/Catalog.php:203 src/Rest/Management.php:134
+#: src/Menu/Catalog.php:243 src/Rest/Management.php:134
 msgid "Choose an image attachment."
 msgstr "یک تصویر از رسانه‌ها انتخاب کنید."
 
@@ -183,9 +183,17 @@ msgstr "از باکس‌های تعریف‌شده برای CSS استفاده �
 msgid "Choose supported customer languages."
 msgstr "زبان‌های پشتیبانی‌شدهٔ مشتری را انتخاب کنید."
 
-#: src/Menu/Catalog.php:146
+#: src/Menu/Catalog.php:181
 msgid "Choose the product branch in the panel."
 msgstr "شعبهٔ غذا را از پنل انتخاب کنید."
+
+#: src/Menu/Catalog.php:108
+msgid "Choose unique image attachments from this branch."
+msgstr "تصاویر بدون تکرار از رسانه‌های همین شعبه انتخاب کنید."
+
+#: src/Menu/Catalog.php:103
+msgid "Choose up to 20 gallery images."
+msgstr "حداکثر ۲۰ تصویر برای گالری انتخاب کنید."
 
 #: src/Rest/Management.php:188
 msgid "Choose valid branches."
@@ -207,7 +215,7 @@ msgstr "بخش"
 msgid "Conflicting branch selection."
 msgstr "انتخاب شعبه با اطلاعات درخواست همخوانی ندارد."
 
-#: src/Menu/Catalog.php:136
+#: src/Menu/Catalog.php:171
 msgid "Create simple products here; configure variable products in WooCommerce."
 msgstr "محصولات ساده را اینجا بسازید؛ محصولات متغیر را در ووکامرس تنظیم کنید."
 
@@ -243,7 +251,7 @@ msgstr "برای ورود فایل‌های XLSX، افزونه ZIP را در PH
 msgid "Enable the PHP openssl, curl and mbstring extensions for push notifications."
 msgstr "برای اعلان‌های پوش، افزونه‌های openssl، curl و mbstring را در PHP فعال کنید."
 
-#: src/Menu/Catalog.php:163 src/Menu/Catalog.php:178
+#: src/Menu/Catalog.php:203 src/Menu/Catalog.php:218
 msgid "Every choice must belong to this product and appear once."
 msgstr "هر گزینه باید متعلق به این محصول باشد و فقط یک بار در فهرست بیاید."
 
@@ -359,11 +367,11 @@ msgstr "کانال معتبر نیست."
 msgid "Invalid checkout channel."
 msgstr "روش دریافت سفارش معتبر نیست."
 
-#: src/Menu/Catalog.php:182
+#: src/Menu/Catalog.php:222
 msgid "Invalid choice field."
 msgstr "فیلد گزینه محصول معتبر نیست."
 
-#: src/Core/Settings.php:203 src/Menu/Catalog.php:103 src/Menu/Catalog.php:159 src/Menu/Catalog.php:161 src/Menu/Catalog.php:96 src/Menu/Catalog.php:99
+#: src/Core/Settings.php:203 src/Menu/Catalog.php:131 src/Menu/Catalog.php:134 src/Menu/Catalog.php:138 src/Menu/Catalog.php:199 src/Menu/Catalog.php:201
 msgid "Invalid content translations."
 msgstr "ترجمه‌های محتوا نامعتبر است."
 
@@ -379,7 +387,7 @@ msgstr "محصول معتبر نیست."
 msgid "Invalid payment action."
 msgstr "عملیات پرداخت معتبر نیست."
 
-#: src/Menu/Catalog.php:132
+#: src/Menu/Catalog.php:167
 #, php-format
 msgid "Invalid product field: %s"
 msgstr "فیلد محصول معتبر نیست: %s"
@@ -388,7 +396,7 @@ msgstr "فیلد محصول معتبر نیست: %s"
 msgid "Invalid product or quantity."
 msgstr "محصول یا تعداد معتبر نیست."
 
-#: src/Menu/Catalog.php:200
+#: src/Menu/Catalog.php:240
 msgid "Invalid product status."
 msgstr "وضعیت محصول معتبر نیست."
 
@@ -553,7 +561,7 @@ msgstr "لطفاً صفحه را تازه‌سازی کنید یا چند دقی
 msgid "Price must be a non-negative number, blank, or unavailable."
 msgstr "قیمت باید عددی غیرمنفی، خالی یا ناموجود باشد."
 
-#: src/Menu/Catalog.php:196
+#: src/Menu/Catalog.php:236
 msgid "Price must be a non-negative number."
 msgstr "قیمت باید عددی غیرمنفی باشد."
 
@@ -565,11 +573,11 @@ msgstr "کارت‌های محصولات"
 msgid "Product cell data exceeds the 2 MB safety limit."
 msgstr "حجم داده سلول‌های محصول بیش از حد ایمن ۲ مگابایت است."
 
-#: src/Import/Importer.php:138 src/Menu/Catalog.php:192
+#: src/Import/Importer.php:138 src/Menu/Catalog.php:232
 msgid "Product name is required."
 msgstr "نام محصول الزامی است."
 
-#: src/Menu/Catalog.php:140 src/Menu/Catalog.php:143 src/Menu/Catalog.php:52 src/Rest/Management.php:55
+#: src/Menu/Catalog.php:175 src/Menu/Catalog.php:178 src/Menu/Catalog.php:52 src/Rest/Management.php:55
 msgid "Product not found."
 msgstr "محصول پیدا نشد."
 
@@ -677,7 +685,7 @@ msgstr "ورود | رستوران فندوق"
 msgid "Supply a category and product IDs."
 msgstr "دسته‌بندی و شناسه محصولات را ارسال کنید."
 
-#: src/Menu/Catalog.php:171
+#: src/Menu/Catalog.php:211
 msgid "Supply existing choices of this variable product."
 msgstr "گزینه‌های موجود این محصول متغیر را ارسال کنید."
 
@@ -949,7 +957,7 @@ msgstr "این مقدار CSS پشتیبانی نمی‌شود."
 msgid "Unsupported customer language."
 msgstr "زبان مشتری پشتیبانی نمی‌شود."
 
-#: src/Menu/Catalog.php:149
+#: src/Menu/Catalog.php:184
 msgid "Unsupported product type."
 msgstr "نوع محصول پشتیبانی نمی‌شود."
 
@@ -1097,6 +1105,10 @@ msgstr "اعمال واردسازی"
 msgid "افزودن به انتخاب‌ها"
 msgstr "افزودن به انتخاب‌ها"
 
+#: frontend/src/i18n.js:50 resources/ui-strings.php:52
+msgid "افزودن تصاویر (حداکثر ۲۰ تصویر)"
+msgstr "افزودن تصاویر (حداکثر ۲۰ تصویر)"
+
 #: frontend/src/i18n.js:26 resources/ui-strings.php:26
 msgid "افزودن محصول"
 msgstr "افزودن محصول"
@@ -1128,6 +1140,14 @@ msgstr "انتخاب گزینه"
 #: frontend/src/i18n.js:33 resources/ui-strings.php:33
 msgid "انتخاب‌های شما"
 msgstr "انتخاب‌های شما"
+
+#: frontend/src/i18n.js:53 resources/ui-strings.php:55
+msgid "انتقال تصویر به بعد"
+msgstr "انتقال تصویر به بعد"
+
+#: frontend/src/i18n.js:52 resources/ui-strings.php:54
+msgid "انتقال تصویر به قبل"
+msgstr "انتقال تصویر به قبل"
 
 #: frontend/src/i18n.js:34 resources/ui-strings.php:34
 msgid "اندازه QR"
@@ -1165,6 +1185,10 @@ msgstr "برای تغییر ترتیب این دسته، کارت‌ها را ب
 msgid "برچسب نمایش (اختیاری)"
 msgstr "برچسب نمایش (اختیاری)"
 
+#: frontend/src/i18n.js:56 resources/ui-strings.php:58
+msgid "بعد"
+msgstr "بعد"
+
 #: frontend/src/i18n.js:43 resources/ui-strings.php:45
 msgid "تأیید سفارش"
 msgstr "تأیید سفارش"
@@ -1182,78 +1206,94 @@ msgid "تصویر"
 msgstr "تصویر"
 
 #: frontend/src/i18n.js:47 resources/ui-strings.php:49
+msgid "تصویر گالری"
+msgstr "تصویر گالری"
+
+#: frontend/src/i18n.js:57 resources/ui-strings.php:59
 msgid "تعداد سفارش"
 msgstr "تعداد سفارش"
 
-#: frontend/src/i18n.js:48 resources/ui-strings.php:50
+#: frontend/src/i18n.js:58 resources/ui-strings.php:60
 msgid "تغییر واحد پول، مبلغ قیمت‌های موجود را تبدیل نمی‌کند. پیش از ذخیره، قیمت‌ها را بررسی کنید."
 msgstr "تغییر واحد پول، مبلغ قیمت‌های موجود را تبدیل نمی‌کند. پیش از ذخیره، قیمت‌ها را بررسی کنید."
 
-#: frontend/src/i18n.js:49 resources/ui-strings.php:51
+#: frontend/src/i18n.js:59 resources/ui-strings.php:61
 msgid "تلفن"
 msgstr "تلفن"
 
-#: frontend/src/i18n.js:50 resources/ui-strings.php:52
+#: frontend/src/i18n.js:60 resources/ui-strings.php:62
 msgid "تلفن مشتری"
 msgstr "تلفن مشتری"
 
-#: frontend/src/i18n.js:51 resources/ui-strings.php:53
+#: frontend/src/i18n.js:61 resources/ui-strings.php:63
 msgid "توضیحات"
 msgstr "توضیحات"
 
-#: frontend/src/i18n.js:52 resources/ui-strings.php:54
+#: frontend/src/i18n.js:62 resources/ui-strings.php:64
 msgid "توضیحات سفارش"
 msgstr "توضیحات سفارش"
 
-#: frontend/src/i18n.js:53 resources/ui-strings.php:55
+#: frontend/src/i18n.js:63 resources/ui-strings.php:65
 msgid "ثبت تسویه"
 msgstr "ثبت تسویه"
 
-#: frontend/src/i18n.js:54 resources/ui-strings.php:56
+#: frontend/src/i18n.js:64 resources/ui-strings.php:66
 msgid "جزئیات"
 msgstr "جزئیات"
 
-#: frontend/src/i18n.js:55 resources/ui-strings.php:57
+#: frontend/src/i18n.js:65 resources/ui-strings.php:67
 msgid "جمع انتخاب‌ها"
 msgstr "جمع انتخاب‌ها"
 
-#: frontend/src/i18n.js:56 resources/ui-strings.php:58
+#: frontend/src/i18n.js:66 resources/ui-strings.php:68
 msgid "حالت"
 msgstr "حالت"
 
-#: frontend/src/i18n.js:57 resources/ui-strings.php:59
+#: frontend/src/i18n.js:67 resources/ui-strings.php:69
 msgid "حالت پیش‌فرض میز"
 msgstr "حالت پیش‌فرض میز"
 
-#: frontend/src/i18n.js:58 resources/ui-strings.php:60
+#: frontend/src/i18n.js:51 resources/ui-strings.php:53
+msgid "حداکثر ۲۰ تصویر برای گالری انتخاب کنید."
+msgstr "حداکثر ۲۰ تصویر برای گالری انتخاب کنید."
+
+#: frontend/src/i18n.js:68 resources/ui-strings.php:70
 msgid "حذف"
 msgstr "حذف"
 
-#: frontend/src/i18n.js:59 resources/ui-strings.php:61
+#: frontend/src/i18n.js:54 resources/ui-strings.php:56
+msgid "حذف تصویر"
+msgstr "حذف تصویر"
+
+#: frontend/src/i18n.js:48 resources/ui-strings.php:50
+msgid "حذف تصویر اصلی"
+msgstr "حذف تصویر اصلی"
+
+#: frontend/src/i18n.js:69 resources/ui-strings.php:71
 msgid "خروج از مدیریت"
 msgstr "خروج از مدیریت"
 
-#: frontend/src/i18n.js:60 resources/ui-strings.php:62
+#: frontend/src/i18n.js:70 resources/ui-strings.php:72
 msgid "در حال ارتباط با کافه…"
 msgstr "در حال ارتباط با کافه…"
 
-#: frontend/src/i18n.js:61 resources/ui-strings.php:63
+#: frontend/src/i18n.js:71 resources/ui-strings.php:73
 msgid "درآمد پرداخت‌شده"
 msgstr "درآمد پرداخت‌شده"
 
-#: frontend/src/i18n.js:62 resources/ui-strings.php:64
+#: frontend/src/i18n.js:72 resources/ui-strings.php:74
 msgid "دسته والد"
 msgstr "دسته والد"
 
-#: frontend/src/i18n.js:63 resources/ui-strings.php:65
+#: frontend/src/i18n.js:73 resources/ui-strings.php:75
 msgid "دسته‌بندی‌ها"
 msgstr "دسته‌بندی‌ها"
 
-#: frontend/src/i18n.js:64 resources/ui-strings.php:66
+#: frontend/src/i18n.js:74 resources/ui-strings.php:76
 msgid "دستگاه‌های متصل"
 msgstr "دستگاه‌های متصل"
 
-#: frontend/src/i18n.js:65 resources/ui-strings.php:67
+#: frontend/src/i18n.js:75 resources/ui-strings.php:77
 msgid "ذخیره تنظیمات"
 msgstr "ذخیره تنظیمات"
 
@@ -1261,370 +1301,378 @@ msgstr "ذخیره تنظیمات"
 msgid "رستوران فندوق"
 msgstr "رستوران فندوق"
 
-#: frontend/src/i18n.js:66 resources/ui-strings.php:68
+#: frontend/src/i18n.js:76 resources/ui-strings.php:78
 msgid "رنگ QR"
 msgstr "رنگ QR"
 
-#: frontend/src/i18n.js:67 resources/ui-strings.php:69
+#: frontend/src/i18n.js:77 resources/ui-strings.php:79
 msgid "روش واردسازی"
 msgstr "روش واردسازی"
 
-#: frontend/src/i18n.js:68 resources/ui-strings.php:70
+#: frontend/src/i18n.js:78 resources/ui-strings.php:80
 msgid "ساعات کاری"
 msgstr "ساعات کاری"
 
-#: frontend/src/i18n.js:69 resources/ui-strings.php:71
+#: frontend/src/i18n.js:79 resources/ui-strings.php:81
 msgid "سبد شما"
 msgstr "سبد شما"
 
-#: frontend/src/i18n.js:70 resources/ui-strings.php:72
+#: frontend/src/i18n.js:80 resources/ui-strings.php:82
 msgid "سبد شما خالی است."
 msgstr "سبد شما خالی است."
 
-#: frontend/src/i18n.js:71 resources/ui-strings.php:73
+#: frontend/src/i18n.js:81 resources/ui-strings.php:83
 msgid "سفارشی در این وضعیت وجود ندارد."
 msgstr "سفارشی در این وضعیت وجود ندارد."
 
-#: frontend/src/i18n.js:73 resources/ui-strings.php:75
+#: frontend/src/i18n.js:83 resources/ui-strings.php:85
 msgid "سفارش‌های تازه"
 msgstr "سفارش‌های تازه"
 
-#: frontend/src/i18n.js:72 resources/ui-strings.php:74
+#: frontend/src/i18n.js:82 resources/ui-strings.php:84
 msgid "سفارش‌های رستوران فندوق"
 msgstr "سفارش‌های رستوران فندوق"
 
-#: frontend/src/i18n.js:74 resources/ui-strings.php:76
+#: frontend/src/i18n.js:84 resources/ui-strings.php:86
 msgid "سفارش‌گیری"
 msgstr "سفارش‌گیری"
 
-#: frontend/src/i18n.js:75 resources/ui-strings.php:77
+#: frontend/src/i18n.js:85 resources/ui-strings.php:87
 msgid "شروع آماده‌سازی"
 msgstr "شروع آماده‌سازی"
 
-#: frontend/src/i18n.js:76 resources/ui-strings.php:78
+#: frontend/src/i18n.js:86 resources/ui-strings.php:88
 msgid "شعار"
 msgstr "شعار"
 
-#: frontend/src/i18n.js:77 resources/ui-strings.php:79
+#: frontend/src/i18n.js:87 resources/ui-strings.php:89
 msgid "صفحه بعد"
 msgstr "صفحه بعد"
 
-#: frontend/src/i18n.js:78 resources/ui-strings.php:80
+#: frontend/src/i18n.js:88 resources/ui-strings.php:90
 msgid "صفحه قبل"
 msgstr "صفحه قبل"
 
-#: frontend/src/i18n.js:79 resources/ui-strings.php:81
+#: frontend/src/i18n.js:89 resources/ui-strings.php:91
 msgid "صفحه مستقل رستوران فندوق"
 msgstr "صفحه مستقل رستوران فندوق"
 
-#: frontend/src/i18n.js:80 resources/ui-strings.php:82
+#: frontend/src/i18n.js:90 resources/ui-strings.php:92
 msgid "صفحه مقصد منو"
 msgstr "صفحه مقصد منو"
 
-#: frontend/src/i18n.js:81 resources/ui-strings.php:83
+#: frontend/src/i18n.js:91 resources/ui-strings.php:93
 msgid "طعم مورد علاقه‌تان را پیدا کنید"
 msgstr "طعم مورد علاقه‌تان را پیدا کنید"
 
-#: frontend/src/i18n.js:82 resources/ui-strings.php:84
+#: frontend/src/i18n.js:92 resources/ui-strings.php:94
 msgid "ظاهر منو"
 msgstr "ظاهر منو"
 
-#: frontend/src/i18n.js:83 resources/ui-strings.php:85
+#: frontend/src/i18n.js:93 resources/ui-strings.php:95
 msgid "علامت‌گذاری خوانده‌شده"
 msgstr "علامت‌گذاری خوانده‌شده"
 
-#: frontend/src/i18n.js:84 resources/ui-strings.php:86
+#: frontend/src/i18n.js:94 resources/ui-strings.php:96
 msgid "فایل CSV یا XLSX را انتخاب کنید، ستون‌ها را تطبیق دهید و سپس اعمال کنید."
 msgstr "فایل CSV یا XLSX را انتخاب کنید، ستون‌ها را تطبیق دهید و سپس اعمال کنید."
 
-#: frontend/src/i18n.js:85 resources/ui-strings.php:87
+#: frontend/src/i18n.js:95 resources/ui-strings.php:97
 msgid "فروش روزانه"
 msgstr "فروش روزانه"
 
-#: frontend/src/i18n.js:86 resources/ui-strings.php:88
+#: frontend/src/i18n.js:96 resources/ui-strings.php:98
 msgid "فعال‌سازی روی این دستگاه"
 msgstr "فعال‌سازی روی این دستگاه"
 
-#: frontend/src/i18n.js:87 resources/ui-strings.php:89
+#: frontend/src/i18n.js:97 resources/ui-strings.php:99
 msgid "فقط ایجاد محصولات جدید"
 msgstr "فقط ایجاد محصولات جدید"
 
-#: frontend/src/i18n.js:88 resources/ui-strings.php:90
+#: frontend/src/i18n.js:98 resources/ui-strings.php:100
 msgid "فقط منو"
 msgstr "فقط منو"
 
-#: frontend/src/i18n.js:89 resources/ui-strings.php:91
+#: frontend/src/i18n.js:99 resources/ui-strings.php:101
 msgid "فقط نمایش منو"
 msgstr "فقط نمایش منو"
 
-#: frontend/src/i18n.js:90 resources/ui-strings.php:92
+#: frontend/src/i18n.js:100 resources/ui-strings.php:102
 msgid "فهرست"
 msgstr "فهرست"
 
-#: frontend/src/i18n.js:91 resources/ui-strings.php:93
+#: frontend/src/i18n.js:101 resources/ui-strings.php:103
 msgid "فونت"
 msgstr "فونت"
 
-#: frontend/src/i18n.js:92 resources/ui-strings.php:94
+#: frontend/src/i18n.js:55 resources/ui-strings.php:57
+msgid "قبل"
+msgstr "قبل"
+
+#: frontend/src/i18n.js:102 resources/ui-strings.php:104
 msgid "قطع اتصال"
 msgstr "قطع اتصال"
 
-#: frontend/src/i18n.js:93 resources/ui-strings.php:95
+#: frontend/src/i18n.js:103 resources/ui-strings.php:105
 msgid "قهوه، گفتگو، لحظه‌های خوب"
 msgstr "قهوه، گفتگو، لحظه‌های خوب"
 
-#: frontend/src/i18n.js:94 resources/ui-strings.php:96
+#: frontend/src/i18n.js:104 resources/ui-strings.php:106
 msgid "قیمت"
 msgstr "قیمت"
 
-#: frontend/src/i18n.js:95 resources/ui-strings.php:97
+#: frontend/src/i18n.js:105 resources/ui-strings.php:107
 msgid "قیمت اصلی"
 msgstr "قیمت اصلی"
 
-#: frontend/src/i18n.js:96 resources/ui-strings.php:98
+#: frontend/src/i18n.js:106 resources/ui-strings.php:108
 msgid "قیمت حراج"
 msgstr "قیمت حراج"
 
-#: frontend/src/i18n.js:97 resources/ui-strings.php:99
+#: frontend/src/i18n.js:107 resources/ui-strings.php:109
 msgid "لاته وانیل"
 msgstr "لاته وانیل"
 
-#: frontend/src/i18n.js:98 resources/ui-strings.php:100
+#: frontend/src/i18n.js:108 resources/ui-strings.php:110
 msgid "لغو"
 msgstr "لغو"
 
-#: frontend/src/i18n.js:99 resources/ui-strings.php:101
+#: frontend/src/i18n.js:109 resources/ui-strings.php:111
 msgid "لوگو"
 msgstr "لوگو"
 
-#: frontend/src/i18n.js:100 resources/ui-strings.php:102
+#: frontend/src/i18n.js:110 resources/ui-strings.php:112
 msgid "محبوب‌ترین انتخاب‌ها"
 msgstr "محبوب‌ترین انتخاب‌ها"
 
-#: frontend/src/i18n.js:101 resources/ui-strings.php:103
+#: frontend/src/i18n.js:111 resources/ui-strings.php:113
 msgid "محصولی با این انتخاب پیدا نشد."
 msgstr "محصولی با این انتخاب پیدا نشد."
 
-#: frontend/src/i18n.js:102 resources/ui-strings.php:104
+#: frontend/src/i18n.js:112 resources/ui-strings.php:114
 msgid "محیط نمایشی • اطلاعات نمونه است"
 msgstr "محیط نمایشی • اطلاعات نمونه است"
 
-#: frontend/src/i18n.js:103 resources/ui-strings.php:105
+#: frontend/src/i18n.js:113 resources/ui-strings.php:115
 msgid "مدیریت با طعم آرامش"
 msgstr "مدیریت با طعم آرامش"
 
-#: frontend/src/i18n.js:104 resources/ui-strings.php:106
+#: frontend/src/i18n.js:114 resources/ui-strings.php:116
 msgid "مشاهده منوی کافه ↗"
 msgstr "مشاهده منوی کافه ↗"
 
-#: frontend/src/i18n.js:105 resources/ui-strings.php:107
+#: frontend/src/i18n.js:115 resources/ui-strings.php:117
 msgid "مشاهده همه ←"
 msgstr "مشاهده همه ←"
 
-#: frontend/src/i18n.js:106 resources/ui-strings.php:108
+#: frontend/src/i18n.js:116 resources/ui-strings.php:118
 msgid "منتظر رسیدگی"
 msgstr "منتظر رسیدگی"
 
-#: frontend/src/i18n.js:107 resources/ui-strings.php:109
+#: frontend/src/i18n.js:117 resources/ui-strings.php:119
 msgid "منو و سفارش"
 msgstr "منو و سفارش"
 
-#: frontend/src/i18n.js:108 resources/ui-strings.php:110
+#: frontend/src/i18n.js:118 resources/ui-strings.php:120
 msgid "منوی تازه در حال آماده شدن است…"
 msgstr "منوی تازه در حال آماده شدن است…"
 
-#: frontend/src/i18n.js:109 resources/ui-strings.php:111
+#: frontend/src/i18n.js:119 resources/ui-strings.php:121
 msgid "منوی شما، در چند دقیقه"
 msgstr "منوی شما، در چند دقیقه"
 
-#: frontend/src/i18n.js:110 resources/ui-strings.php:112
+#: frontend/src/i18n.js:120 resources/ui-strings.php:122
 msgid "منوی مشتری ←"
 msgstr "منوی مشتری ←"
 
-#: frontend/src/i18n.js:111 resources/ui-strings.php:113
+#: frontend/src/i18n.js:121 resources/ui-strings.php:123
 msgid "منوی کافه"
 msgstr "منوی کافه"
 
-#: frontend/src/i18n.js:112 resources/ui-strings.php:114
+#: frontend/src/i18n.js:122 resources/ui-strings.php:124
 msgid "موجود"
 msgstr "موجود"
 
-#: frontend/src/i18n.js:113 resources/ui-strings.php:115
+#: frontend/src/i18n.js:123 resources/ui-strings.php:125
 msgid "میز فعال"
 msgstr "میز فعال"
 
-#: frontend/src/i18n.js:114 resources/ui-strings.php:116
+#: frontend/src/i18n.js:124 resources/ui-strings.php:126
 msgid "نام"
 msgstr "نام"
 
-#: frontend/src/i18n.js:115 resources/ui-strings.php:117
+#: frontend/src/i18n.js:125 resources/ui-strings.php:127
 msgid "نام شما (اختیاری)"
 msgstr "نام شما (اختیاری)"
 
-#: frontend/src/i18n.js:116 resources/ui-strings.php:118
+#: frontend/src/i18n.js:126 resources/ui-strings.php:128
 msgid "نام مشتری"
 msgstr "نام مشتری"
 
-#: frontend/src/i18n.js:117 resources/ui-strings.php:119
+#: frontend/src/i18n.js:127 resources/ui-strings.php:129
 msgid "نام میز"
 msgstr "نام میز"
 
-#: frontend/src/i18n.js:118 resources/ui-strings.php:120
+#: frontend/src/i18n.js:128 resources/ui-strings.php:130
 msgid "نام نمایشی"
 msgstr "نام نمایشی"
 
-#: frontend/src/i18n.js:119 resources/ui-strings.php:121
+#: frontend/src/i18n.js:129 resources/ui-strings.php:131
 msgid "نام کاربری"
 msgstr "نام کاربری"
 
-#: frontend/src/i18n.js:120 resources/ui-strings.php:122
+#: frontend/src/i18n.js:130 resources/ui-strings.php:132
 msgid "نام کافه"
 msgstr "نام کافه"
 
-#: frontend/src/i18n.js:121 resources/ui-strings.php:123
+#: frontend/src/i18n.js:131 resources/ui-strings.php:133
 msgid "ناموجود"
 msgstr "ناموجود"
 
-#: frontend/src/i18n.js:122 resources/ui-strings.php:124
+#: frontend/src/i18n.js:132 resources/ui-strings.php:134
 msgid "نشانی تحویل"
 msgstr "نشانی تحویل"
 
-#: frontend/src/i18n.js:123 resources/ui-strings.php:125
+#: frontend/src/i18n.js:133 resources/ui-strings.php:135
 msgid "نقش"
 msgstr "نقش"
 
-#: frontend/src/i18n.js:124 resources/ui-strings.php:126
+#: frontend/src/i18n.js:134 resources/ui-strings.php:136
 msgid "نمایش در منو"
 msgstr "نمایش در منو"
 
-#: frontend/src/i18n.js:125 resources/ui-strings.php:127
+#: frontend/src/i18n.js:135 resources/ui-strings.php:137
 msgid "نوع سفارش"
 msgstr "نوع سفارش"
 
-#: frontend/src/i18n.js:126 resources/ui-strings.php:128
+#: frontend/src/i18n.js:136 resources/ui-strings.php:138
 msgid "هر سفارش، یک مهمان"
 msgstr "هر سفارش، یک مهمان"
 
-#: frontend/src/i18n.js:127 resources/ui-strings.php:129
+#: frontend/src/i18n.js:137 resources/ui-strings.php:139
 msgid "همه دسته‌ها"
 msgstr "همه دسته‌ها"
 
-#: frontend/src/i18n.js:128 resources/ui-strings.php:130
+#: frontend/src/i18n.js:138 resources/ui-strings.php:140
 msgid "همه وضعیت‌ها"
 msgstr "همه وضعیت‌ها"
 
-#: frontend/src/i18n.js:129 resources/ui-strings.php:131
+#: frontend/src/i18n.js:139 resources/ui-strings.php:141
 msgid "همیشه در جریان باشید"
 msgstr "همیشه در جریان باشید"
 
-#: frontend/src/i18n.js:130 resources/ui-strings.php:132
+#: frontend/src/i18n.js:140 resources/ui-strings.php:142
 msgid "هنوز داده‌ای ثبت نشده است."
 msgstr "هنوز داده‌ای ثبت نشده است."
 
-#: frontend/src/i18n.js:131 resources/ui-strings.php:133
+#: frontend/src/i18n.js:141 resources/ui-strings.php:143
 msgid "هنوز موردی ثبت نشده است. با دکمه افزودن، اولین مورد را بسازید."
 msgstr "هنوز موردی ثبت نشده است. با دکمه افزودن، اولین مورد را بسازید."
 
-#: frontend/src/i18n.js:132 resources/ui-strings.php:134
+#: frontend/src/i18n.js:142 resources/ui-strings.php:144
 msgid "هنوز چیزی انتخاب نکرده‌اید."
 msgstr "هنوز چیزی انتخاب نکرده‌اید."
 
-#: frontend/src/i18n.js:133 resources/ui-strings.php:135
+#: frontend/src/i18n.js:143 resources/ui-strings.php:145
 msgid "هویت و مسیرهای کافه"
 msgstr "هویت و مسیرهای کافه"
 
-#: frontend/src/i18n.js:134 resources/ui-strings.php:136
+#: frontend/src/i18n.js:144 resources/ui-strings.php:146
 msgid "واحد پول"
 msgstr "واحد پول"
 
-#: frontend/src/i18n.js:135 resources/ui-strings.php:137
+#: frontend/src/i18n.js:145 resources/ui-strings.php:147
 msgid "واحد پول فروشگاه"
 msgstr "واحد پول فروشگاه"
 
-#: frontend/src/i18n.js:136 resources/ui-strings.php:138
+#: frontend/src/i18n.js:146 resources/ui-strings.php:148
 msgid "واردسازی محصولات"
 msgstr "واردسازی محصولات"
 
-#: frontend/src/i18n.js:137 resources/ui-strings.php:139
+#: frontend/src/i18n.js:147 resources/ui-strings.php:149
 msgid "ویرایش"
 msgstr "ویرایش"
 
-#: frontend/src/i18n.js:138 resources/ui-strings.php:140
+#: frontend/src/i18n.js:148 resources/ui-strings.php:150
 msgid "پس از کسر بازپرداخت‌ها"
 msgstr "پس از کسر بازپرداخت‌ها"
 
-#: frontend/src/i18n.js:139 resources/ui-strings.php:141
+#: frontend/src/i18n.js:149 resources/ui-strings.php:151
 msgid "پنل مدیریت ←"
 msgstr "پنل مدیریت ←"
 
-#: frontend/src/i18n.js:140 resources/ui-strings.php:142
+#: frontend/src/i18n.js:150 resources/ui-strings.php:152
 msgid "پیام‌های مشتری"
 msgstr "پیام‌های مشتری"
 
-#: frontend/src/i18n.js:141 resources/ui-strings.php:143
+#: frontend/src/i18n.js:151 resources/ui-strings.php:153
 msgid "پیش‌نمایش زنده"
 msgstr "پیش‌نمایش زنده"
 
-#: frontend/src/i18n.js:142 resources/ui-strings.php:144
+#: frontend/src/i18n.js:152 resources/ui-strings.php:154
 msgid "پیش‌نمایش نمایشی • سفارش و پرداخت واقعی انجام نمی‌شود"
 msgstr "پیش‌نمایش نمایشی • سفارش و پرداخت واقعی انجام نمی‌شود"
 
-#: frontend/src/i18n.js:143 resources/ui-strings.php:145
+#: frontend/src/i18n.js:153 resources/ui-strings.php:155
 msgid "چیدمان"
 msgstr "چیدمان"
 
-#: frontend/src/i18n.js:144 resources/ui-strings.php:146
+#: frontend/src/i18n.js:154 resources/ui-strings.php:156
 msgid "کارت"
 msgstr "کارت"
 
-#: frontend/src/i18n.js:145 resources/ui-strings.php:147
+#: frontend/src/i18n.js:155 resources/ui-strings.php:157
 msgid "کاور"
 msgstr "کاور"
 
-#: frontend/src/i18n.js:146 resources/ui-strings.php:148
+#: frontend/src/i18n.js:156 resources/ui-strings.php:158
 msgid "کمی تا یک حال خوب"
 msgstr "کمی تا یک حال خوب"
 
-#: frontend/src/i18n.js:147 resources/ui-strings.php:149
+#: frontend/src/i18n.js:49 resources/ui-strings.php:51
+msgid "گالری تصاویر محصول"
+msgstr "گالری تصاویر محصول"
+
+#: frontend/src/i18n.js:157 resources/ui-strings.php:159
 msgid "گذرواژه"
 msgstr "گذرواژه"
 
-#: frontend/src/i18n.js:148 resources/ui-strings.php:150
+#: frontend/src/i18n.js:158 resources/ui-strings.php:160
 msgid "گزینه‌های محصول"
 msgstr "گزینه‌های محصول"
 
-#: frontend/src/i18n.js:149 resources/ui-strings.php:151
+#: frontend/src/i18n.js:159 resources/ui-strings.php:161
 msgid "یادداشت"
 msgstr "یادداشت"
 
-#: frontend/src/i18n.js:150 resources/ui-strings.php:152
+#: frontend/src/i18n.js:160 resources/ui-strings.php:162
 msgid "یک انتخاب خوش‌طعم"
 msgstr "یک انتخاب خوش‌طعم"
 
-#: frontend/src/i18n.js:151 resources/ui-strings.php:153
+#: frontend/src/i18n.js:161 resources/ui-strings.php:163
 msgid "۳۰ روز اخیر"
 msgstr "۳۰ روز اخیر"
 
-#: frontend/src/i18n.js:152 resources/ui-strings.php:154
+#: frontend/src/i18n.js:162 resources/ui-strings.php:164
 msgid "۷ روز اخیر"
 msgstr "۷ روز اخیر"
 
-#: frontend/src/i18n.js:153 resources/ui-strings.php:155
+#: frontend/src/i18n.js:163 resources/ui-strings.php:165
 msgid "۹۰ روز اخیر"
 msgstr "۹۰ روز اخیر"
 
-#: frontend/src/i18n.js:154 resources/ui-strings.php:156
+#: frontend/src/i18n.js:164 resources/ui-strings.php:166
 msgid "↥ انتخاب فایل"
 msgstr "↥ انتخاب فایل"
 
-#: frontend/src/i18n.js:155 resources/ui-strings.php:157
+#: frontend/src/i18n.js:165 resources/ui-strings.php:167
 msgid "☕ قهوه گرم"
 msgstr "☕ قهوه گرم"
 
-#: frontend/src/i18n.js:156 resources/ui-strings.php:158
+#: frontend/src/i18n.js:166 resources/ui-strings.php:168
 msgid "✦ دانه‌های تازه"
 msgstr "✦ دانه‌های تازه"
 
-#: frontend/src/i18n.js:157 resources/ui-strings.php:159
+#: frontend/src/i18n.js:167 resources/ui-strings.php:169
 msgid "✦ همه"
 msgstr "✦ همه"

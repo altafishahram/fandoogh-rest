@@ -5,6 +5,56 @@ export const languages = [
   { code: "tr", name: "Türkçe", html_locale: "tr-TR", direction: "ltr" },
 ];
 const rows = [
+  ["آشپزخانه و کافه", "Kitchen & café", "餐厅与咖啡馆", "Mutfak ve kafe"],
+  ["سفارش آنلاین", "Online ordering", "在线点餐", "Çevrimiçi sipariş"],
+  [
+    "{count} دقیقه آماده‌سازی",
+    "{count} min preparation",
+    "准备约需 {count} 分钟",
+    "{count} dakika hazırlık",
+  ],
+  ["از منوی ما", "From our menu", "来自我们的菜单", "Menümüzden"],
+  ["همه", "All", "全部", "Tümü"],
+  [
+    "جزئیات {name}",
+    "Details for {name}",
+    "{name} 的详情",
+    "{name} ayrıntıları",
+  ],
+  [
+    "تصویر در دسترس نیست",
+    "Image unavailable",
+    "图片不可用",
+    "Görsel mevcut değil",
+  ],
+  ["افزودن {name}", "Add {name}", "添加 {name}", "{name} ekle"],
+  [
+    "انتخاب گزینه برای {name}",
+    "Choose an option for {name}",
+    "为 {name} 选择规格",
+    "{name} için seçenek seçin",
+  ],
+  ["پاک کردن فیلترها", "Clear filters", "清除筛选", "Filtreleri temizle"],
+  [
+    "تصویر {number} از {name}",
+    "Image {number} of {name}",
+    "{name} 的第 {number} 张图片",
+    "{name} için {number}. görsel",
+  ],
+  [
+    "تصویر {number} از {count}",
+    "Image {number} of {count}",
+    "第 {number} 张，共 {count} 张",
+    "{count} görselden {number}. görsel",
+  ],
+  ["تصاویر {name}", "Images of {name}", "{name} 的图片", "{name} görselleri"],
+  [
+    "تصویر {current} از {total}",
+    "Image {current} of {total}",
+    "第 {current} 张，共 {total} 张",
+    "{total} görselden {current}. görsel",
+  ],
+  ["تعداد", "Quantity", "数量", "Adet"],
   ["شعبه", "Branch", "分店", "Şube"],
   [
     "سبد پرداخت مربوط به شعبه دیگری است. آن را پاک کرده و با سفارش این شعبه جایگزین کنیم؟",

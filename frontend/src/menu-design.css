@@ -1,0 +1,517 @@
+/* Customer design. Existing ac-* hooks and appearance variables remain public. */
+.admincafe-root .ac-menu {
+    @apply ac-min-h-[100dvh] ac-pb-28;
+    padding-inline: max(20px, calc((100% - 1240px) / 2));
+}
+.admincafe-root .ac-menu[data-ac-theme="cafe"] {
+    --ac-accent: #4e5c36;
+    --ac-bg: #f8f7f1;
+    --ac-ink: #292e25;
+    --ac-muted: #66705d;
+    --ac-line: #e0e3d6;
+    --ac-category: #eef0e7;
+    --ac-surface: #fff;
+    --ac-soft: #eef0e7;
+    --ac-radius: 16px;
+}
+.admincafe-root .ac-menu .ac-menu-icon {
+    @apply ac-w-5 ac-h-5 ac-shrink-0;
+}
+.admincafe-root .ac-menu .ac-visually-hidden {
+    @apply ac-sr-only;
+}
+.admincafe-root .ac-menu :is(h1, h2, h3) {
+    text-wrap: balance;
+}
+.admincafe-root .ac-menu :is(button, input, select, textarea, a):focus-visible {
+    outline: 3px solid var(--ac-accent);
+    outline-offset: 4px;
+}
+.admincafe-root .ac-menu button {
+    transition:
+        transform 160ms cubic-bezier(0.23, 1, 0.32, 1),
+        background-color 160ms,
+        color 160ms;
+}
+.admincafe-root .ac-menu button:active:not(:disabled) {
+    transform: scale(0.98);
+}
+.admincafe-root .ac-menu .ac-header {
+    @apply ac-flex ac-items-center ac-justify-between ac-gap-4 ac-py-5;
+}
+.admincafe-root .ac-menu .ac-brand {
+    @apply ac-gap-3 ac-min-w-0;
+}
+.admincafe-root .ac-menu .ac-brand strong {
+    @apply ac-text-xl ac-leading-7;
+    overflow-wrap: anywhere;
+}
+.admincafe-root .ac-menu .ac-brand small {
+    @apply ac-text-[10px] ac-tracking-widest;
+}
+.admincafe-root .ac-menu .ac-logo {
+    @apply ac-w-12 ac-h-12 ac-shrink-0 ac-rounded-full ac-object-contain;
+    background: var(--ac-accent);
+    color: var(--ac-button-ink, #fff);
+}
+.admincafe-root .ac-menu .ac-logo .ac-menu-icon {
+    @apply ac-w-8 ac-h-8;
+}
+.admincafe-root .ac-menu .ac-header-actions {
+    @apply ac-flex ac-items-center ac-gap-3;
+}
+.admincafe-root .ac-menu .ac-branch-label {
+    @apply ac-hidden sm:ac-flex ac-items-center ac-gap-2 ac-text-sm;
+    color: var(--ac-muted);
+}
+.admincafe-root .ac-menu .ac-language-switch {
+    @apply ac-flex ac-items-center ac-gap-2 ac-m-0 ac-p-0;
+}
+.admincafe-root .ac-menu .ac-language-switch select {
+    @apply ac-min-h-11 ac-rounded-xl ac-py-2 ac-pe-2 ac-ps-2 ac-text-sm;
+    min-width: 0;
+    max-width: 130px;
+    background: var(--ac-surface);
+}
+.admincafe-root .ac-menu .ac-language-switch .ac-country-flag {
+    @apply ac-w-7 ac-h-5;
+}
+.admincafe-root .ac-menu .ac-header-cart {
+    @apply ac-relative ac-hidden sm:ac-grid ac-place-items-center ac-w-11 ac-h-11 ac-rounded-xl ac-border ac-border-solid;
+    border-color: var(--ac-line);
+    background: var(--ac-surface);
+}
+.admincafe-root .ac-menu .ac-cart-count {
+    @apply ac-absolute ac-rounded-full ac-text-[11px] ac-w-5 ac-h-5 ac-grid ac-place-items-center;
+    inset-block-start: -6px;
+    inset-inline-end: -6px;
+    background: var(--ac-accent);
+    color: var(--ac-button-ink, #fff);
+}
+.admincafe-root .ac-menu .ac-compact-header {
+    @apply ac-justify-end ac-py-3;
+}
+.admincafe-root .ac-menu .ac-hero {
+    @apply ac-grid ac-grid-cols-1 md:ac-grid-cols-[1.1fr_.9fr] ac-gap-6 ac-items-center ac-py-6 md:ac-py-10 ac-min-h-0;
+}
+.admincafe-root .ac-menu .ac-hero h1 {
+    @apply ac-text-[28px] md:ac-text-[40px] ac-leading-[1.65] ac-max-w-[540px];
+}
+.admincafe-root .ac-menu .ac-hero-copy > .ac-eyebrow {
+    @apply ac-hidden md:ac-block ac-mb-4;
+}
+.admincafe-root .ac-menu .ac-hero-copy > p {
+    @apply ac-hidden md:ac-block ac-text-sm ac-max-w-[460px] ac-leading-8 ac-mt-3;
+}
+.admincafe-root .ac-menu .ac-hero-meta {
+    @apply ac-flex ac-items-center ac-gap-3 ac-flex-wrap ac-mt-4 md:ac-mt-6;
+    color: var(--ac-muted);
+}
+.admincafe-root .ac-menu .ac-hero-meta > span {
+    @apply ac-inline-flex ac-items-center ac-gap-2;
+}
+.admincafe-root .ac-menu .ac-pill {
+    @apply ac-rounded-full ac-text-xs ac-font-semibold ac-px-3 ac-py-1;
+    background: var(--ac-category);
+    color: var(--ac-ink);
+    white-space: normal;
+}
+.admincafe-root .ac-menu .ac-hero-meta .ac-mobile-branch {
+    @apply sm:ac-hidden;
+}
+.admincafe-root .ac-menu .ac-hero-frame {
+    @apply ac-hidden md:ac-block ac-relative ac-w-[310px] ac-max-w-full;
+    justify-self: end;
+}
+.admincafe-root .ac-menu .ac-hero.ac-hero-text {
+    grid-template-columns: minmax(0, 1fr);
+}
+.admincafe-root .ac-menu .ac-cover {
+    @apply ac-block ac-w-full ac-h-[280px] ac-object-cover ac-rounded-[28px];
+    box-shadow: none;
+    transform: none;
+}
+.admincafe-root .ac-menu .ac-hero-feature {
+    @apply ac-absolute ac-py-3 ac-px-5 ac-text-start ac-rounded-xl ac-border ac-border-solid;
+    inset-block-end: 20px;
+    inset-inline-start: -20px;
+    background: var(--ac-surface);
+    border-color: var(--ac-line);
+    max-width: 90%;
+}
+.admincafe-root .ac-menu .ac-hero-feature :is(small, strong) {
+    @apply ac-block;
+}
+.admincafe-root .ac-menu .ac-hero-feature strong {
+    @apply ac-text-sm;
+}
+.admincafe-root .ac-menu .ac-catalog {
+    @apply ac-border-t ac-border-solid ac-pt-7;
+    border-color: var(--ac-line);
+}
+.admincafe-root .ac-menu .ac-section-title {
+    @apply ac-flex ac-flex-col sm:ac-flex-row sm:ac-items-center ac-justify-between ac-gap-4 ac-mb-5;
+}
+.admincafe-root .ac-menu .ac-section-title h2 {
+    @apply ac-text-2xl ac-font-bold;
+}
+.admincafe-root .ac-menu .ac-search {
+    @apply ac-relative ac-flex ac-items-center ac-w-full sm:ac-w-[320px] ac-m-0 ac-p-0 ac-rounded-xl;
+    background: transparent;
+    border: 0;
+}
+.admincafe-root .ac-menu .ac-search .ac-menu-icon {
+    @apply ac-absolute ac-pointer-events-none;
+    inset-inline-end: 16px;
+    color: var(--ac-muted);
+}
+.admincafe-root .ac-menu .ac-search input {
+    @apply ac-min-h-12 ac-rounded-xl ac-pe-12 ac-py-3 ac-ps-4 ac-text-base;
+    background: transparent;
+    border-color: var(--ac-line);
+}
+.admincafe-root .ac-menu .ac-categories {
+    @apply ac-flex ac-gap-3 ac-overflow-x-auto ac-py-2 ac-mb-6 ac-flex-nowrap;
+    scrollbar-width: none;
+}
+.admincafe-root .ac-menu .ac-categories::-webkit-scrollbar {
+    display: none;
+}
+.admincafe-root .ac-menu .ac-categories button {
+    @apply ac-shrink-0 ac-min-h-11 ac-rounded-xl ac-px-5 ac-py-2 ac-text-sm ac-border ac-border-solid;
+    border-color: var(--ac-line);
+    background: var(--ac-surface);
+    color: var(--ac-ink);
+}
+.admincafe-root .ac-menu .ac-categories button.active {
+    background: var(--ac-accent);
+    border-color: var(--ac-accent);
+    color: var(--ac-button-ink, #fff);
+}
+.admincafe-root .ac-menu .ac-products {
+    @apply ac-grid ac-grid-cols-1 lg:ac-grid-cols-2 ac-gap-5;
+}
+.admincafe-root .ac-menu .ac-product {
+    @apply ac-grid ac-grid-cols-1 ac-p-0 ac-overflow-hidden ac-border ac-border-solid ac-text-start;
+    border-radius: var(--ac-radius, 16px);
+    border-color: var(--ac-line);
+    background: var(--ac-surface, #fff);
+    transform: none;
+    box-shadow: var(--ac-shadow, none);
+    transition: border-color 160ms;
+}
+.admincafe-root .ac-menu .ac-product:hover {
+    transform: none;
+    box-shadow: var(--ac-shadow, none);
+}
+.admincafe-root .ac-menu .ac-product-art {
+    @apply ac-relative ac-grid ac-place-items-center ac-p-0 ac-w-full ac-overflow-hidden;
+    height: auto;
+    aspect-ratio: 1;
+    background: var(--ac-soft, #eef0e7);
+}
+.admincafe-root .ac-menu .ac-product-art img {
+    @apply ac-block ac-w-full ac-h-full ac-object-cover;
+    position: absolute;
+    inset: 0;
+}
+.admincafe-root .ac-menu .ac-photo-placeholder {
+    @apply ac-flex ac-flex-col ac-items-center ac-gap-3 ac-text-xs ac-p-4;
+    color: var(--ac-muted);
+}
+.admincafe-root .ac-menu .ac-photo-placeholder .ac-menu-icon {
+    @apply ac-w-10 ac-h-10;
+}
+.admincafe-root .ac-menu .ac-product-copy {
+    @apply ac-flex ac-flex-col ac-p-5 ac-min-w-0;
+}
+.admincafe-root .ac-menu .ac-product-title {
+    @apply ac-text-start ac-p-0 ac-min-h-11;
+}
+.admincafe-root .ac-menu .ac-product h3 {
+    font-size: var(--ac-title-mobile, 18px);
+    font-weight: var(--ac-title-weight-mobile, 700);
+    overflow-wrap: anywhere;
+}
+.admincafe-root .ac-menu .ac-product-copy p {
+    @apply ac-mt-1 ac-mb-4 ac-leading-7 ac-min-h-0;
+    font-size: var(--ac-description-mobile, 14px);
+    font-weight: var(--ac-description-weight-mobile, 400);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.admincafe-root .ac-menu .ac-product-bottom {
+    @apply ac-flex ac-flex-wrap ac-items-center ac-justify-between ac-gap-3 ac-mt-auto;
+}
+.admincafe-root .ac-menu .ac-product-bottom strong {
+    font-size: var(--ac-price-mobile, 18px);
+    font-weight: var(--ac-price-weight-mobile, 700);
+    color: var(--ac-ink);
+    font-variant-numeric: tabular-nums;
+}
+.admincafe-root .ac-menu .ac-plus {
+    @apply ac-w-11 ac-h-11 ac-min-w-[44px] ac-min-h-[44px] ac-grid ac-place-items-center ac-rounded-xl ac-p-0;
+    background: var(--ac-soft, #eef0e7);
+    color: var(--ac-accent);
+}
+.admincafe-root .ac-menu .ac-stepper {
+    @apply ac-flex ac-items-center ac-gap-2;
+}
+.admincafe-root .ac-menu .ac-stepper button {
+    @apply ac-grid ac-place-items-center ac-w-11 ac-h-11 ac-rounded-xl ac-p-0;
+    background: var(--ac-soft, #eef0e7);
+    color: var(--ac-ink);
+}
+.admincafe-root .ac-menu .ac-stepper span {
+    @apply ac-min-w-[20px] ac-text-center ac-font-bold;
+    font-variant-numeric: tabular-nums;
+}
+.admincafe-root .ac-menu .ac-card-stepper .ac-plus {
+    background: var(--ac-accent);
+    color: var(--ac-button-ink, #fff);
+}
+.admincafe-root .ac-menu .ac-stock {
+    @apply ac-rounded-full ac-text-xs ac-px-3 ac-py-1;
+    right: auto;
+    inset-inline-start: 12px;
+    background: var(--ac-surface);
+    color: var(--ac-ink);
+}
+.admincafe-root .ac-menu .ac-empty {
+    @apply ac-col-span-full ac-flex ac-flex-col ac-items-center ac-p-10 ac-border ac-border-dashed ac-rounded-2xl ac-text-center;
+    border-color: var(--ac-line);
+}
+.admincafe-root .ac-menu .ac-filter-reset {
+    @apply ac-min-h-11 ac-px-5 ac-py-2 ac-rounded-xl ac-mt-3 ac-border ac-border-solid;
+    border-color: var(--ac-line);
+    color: var(--ac-accent);
+}
+.admincafe-root .ac-menu .ac-footer {
+    @apply ac-flex ac-flex-wrap ac-items-center ac-justify-between ac-gap-3 ac-text-start ac-mt-10 ac-py-6;
+}
+.admincafe-root .ac-menu .ac-footer p {
+    @apply ac-m-0 ac-text-xs;
+}
+.admincafe-root .ac-menu .ac-cart-float {
+    @apply ac-flex ac-items-center ac-justify-between ac-gap-4 ac-min-h-14 ac-max-w-[560px] ac-rounded-xl ac-px-5 ac-py-3;
+    background: var(--ac-accent);
+    color: var(--ac-button-ink, #fff);
+    box-shadow: 0 8px 28px #292e2518;
+    bottom: max(12px, env(safe-area-inset-bottom));
+}
+.admincafe-root .ac-menu .ac-cart-float strong {
+    @apply ac-flex ac-items-center ac-gap-3;
+}
+.admincafe-root .ac-menu .ac-overlay {
+    @apply ac-p-3 sm:ac-p-5;
+    background: #242a20a6;
+    backdrop-filter: none;
+}
+.admincafe-root .ac-menu .ac-dialog {
+    @apply ac-relative ac-w-full ac-rounded-3xl ac-p-6 sm:ac-p-8;
+    max-height: calc(100dvh - 24px);
+    background: var(--ac-surface, #fff);
+    color: var(--ac-ink);
+    box-shadow: 0 24px 100px #292e2529;
+    animation: ac-menu-arrive 220ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+.admincafe-root .ac-menu .ac-dialog.ac-keyboard-open {
+    animation: none;
+}
+.admincafe-root .ac-menu .ac-close {
+    @apply ac-grid ac-place-items-center ac-w-11 ac-h-11 ac-rounded-xl ac-p-0 ac-z-10;
+    top: 12px;
+    left: auto;
+    right: auto;
+    inset-inline-end: 12px;
+    background: var(--ac-surface, #fff);
+    border: 1px solid var(--ac-line);
+}
+.admincafe-root .ac-menu .ac-food-dialog {
+    @apply ac-grid ac-grid-cols-1 md:ac-grid-cols-2 ac-p-0 ac-max-w-[880px];
+}
+.admincafe-root .ac-menu .ac-detail-media {
+    @apply ac-min-w-0 ac-overflow-hidden;
+    background: var(--ac-soft);
+    --gallery-background: var(--ac-soft);
+    --gallery-fallback-color: var(--ac-muted);
+    --menu-accent: var(--ac-accent);
+}
+.admincafe-root .ac-menu .ac-detail-media .food-gallery__viewport {
+    aspect-ratio: 1;
+}
+.admincafe-root .ac-menu .ac-detail-copy {
+    @apply ac-min-w-0 ac-p-6 sm:ac-p-8 md:ac-pt-20;
+}
+.admincafe-root .ac-menu .ac-detail-copy h2 {
+    @apply ac-text-2xl;
+}
+.admincafe-root .ac-menu .ac-detail-description {
+    @apply ac-leading-8 ac-text-sm ac-my-4;
+    white-space: pre-line;
+    overflow-wrap: anywhere;
+}
+.admincafe-root .ac-menu .ac-detail-price {
+    @apply ac-block ac-text-2xl ac-mt-6;
+    font-variant-numeric: tabular-nums;
+}
+.admincafe-root .ac-menu .ac-detail-quantity {
+    @apply ac-flex ac-items-center ac-justify-between ac-gap-4 ac-my-5 ac-text-sm;
+}
+.admincafe-root .ac-menu .ac-primary {
+    @apply ac-flex ac-items-center ac-justify-center ac-gap-3 ac-min-h-12 ac-px-5 ac-py-3 ac-rounded-xl ac-font-bold;
+    color: var(--ac-button-ink, #fff) !important;
+}
+.admincafe-root .ac-menu .ac-detail-copy .ac-primary {
+    @apply ac-w-full ac-mt-5;
+}
+.admincafe-root .ac-menu .ac-cart-dialog {
+    @apply ac-pt-20 ac-max-w-[560px];
+}
+.admincafe-root .ac-menu .ac-cart-row {
+    @apply ac-gap-4;
+}
+.admincafe-root .ac-menu .ac-cart-row > div:first-child {
+    @apply ac-min-w-0;
+    overflow-wrap: anywhere;
+}
+.admincafe-root .ac-menu .ac-cart-row .ac-stepper {
+    @apply ac-shrink-0;
+}
+.admincafe-root .ac-menu .ac-cart-dialog label {
+    @apply ac-flex ac-flex-col ac-gap-2 ac-text-sm;
+    color: var(--ac-muted);
+}
+.admincafe-root .ac-menu :is(select, input, textarea) {
+    min-height: 44px;
+    font-size: 16px;
+    background: var(--ac-surface, #fff);
+    color: var(--ac-ink);
+}
+.admincafe-root .ac-menu .ac-loading {
+    @apply ac-py-12 ac-text-center;
+}
+.admincafe-root .ac-menu .ac-language-gate {
+    background: #242a20a6;
+    backdrop-filter: none;
+}
+.admincafe-root .ac-menu .ac-language-dialog {
+    @apply ac-w-full ac-max-w-[520px] ac-rounded-3xl ac-p-7 sm:ac-p-10;
+    background: var(--ac-surface, #fff);
+    border: 1px solid var(--ac-line);
+    box-shadow: 0 24px 100px #292e2529;
+}
+.admincafe-root .ac-menu .ac-language-globe {
+    @apply ac-w-16 ac-h-16 ac-rounded-full ac-mb-5;
+    background: var(--ac-soft);
+    color: var(--ac-accent);
+}
+.admincafe-root .ac-menu .ac-language-dialog h2 {
+    @apply ac-text-2xl;
+}
+.admincafe-root .ac-menu .ac-language-secondary {
+    @apply ac-text-sm;
+}
+.admincafe-root .ac-menu .ac-language-cards {
+    @apply ac-grid ac-grid-cols-2 ac-gap-3 ac-mt-7;
+}
+.admincafe-root .ac-menu .ac-language-card {
+    @apply ac-flex ac-flex-col ac-items-center ac-justify-center ac-gap-2 ac-min-h-[112px] ac-p-4 ac-rounded-xl ac-border ac-border-solid;
+    background: var(--ac-bg);
+    border-color: var(--ac-line);
+    box-shadow: none;
+}
+.admincafe-root .ac-menu .ac-language-card.suggested {
+    border-color: var(--ac-accent);
+    background: var(--ac-soft);
+}
+.admincafe-root .ac-menu .ac-language-card .ac-country-flag {
+    @apply ac-w-10 ac-h-7;
+}
+.admincafe-root .ac-menu .ac-language-card strong {
+    @apply ac-text-base;
+}
+.admincafe-root .ac-menu .ac-language-card small {
+    @apply ac-text-xs;
+    color: var(--ac-muted);
+}
+.admincafe-root .ac-menu .ac-language-arrow {
+    @apply ac-hidden;
+}
+.admincafe-root .ac-menu .ac-language-entry-hint {
+    @apply ac-text-xs ac-mt-5;
+}
+@media (min-width: 768px) {
+    .admincafe-root .ac-menu .ac-product {
+        @apply ac-grid-cols-[180px_minmax(0,1fr)];
+    }
+    .admincafe-root .ac-menu .ac-product-art {
+        height: 100%;
+        min-height: 210px;
+        aspect-ratio: auto;
+    }
+    .admincafe-root .ac-menu .ac-product h3 {
+        font-size: var(--ac-title-desktop, 22px);
+        font-weight: var(--ac-title-weight-desktop, 700);
+    }
+    .admincafe-root .ac-menu .ac-product-copy p {
+        font-size: var(--ac-description-desktop, 14px);
+        font-weight: var(--ac-description-weight-desktop, 400);
+    }
+    .admincafe-root .ac-menu .ac-product-bottom strong {
+        font-size: var(--ac-price-desktop, 18px);
+        font-weight: var(--ac-price-weight-desktop, 700);
+    }
+}
+@media (max-width: 767px) {
+    .admincafe-root .ac-menu .ac-product-no-photo .ac-product-art {
+        aspect-ratio: auto;
+        min-height: 112px;
+    }
+    .admincafe-root .ac-menu .ac-product-art {
+        max-height: 420px;
+    }
+    .admincafe-root .ac-menu .ac-cart-row {
+        @apply ac-flex-wrap;
+    }
+}
+@media (hover: hover) and (pointer: fine) {
+    .admincafe-root .ac-menu .ac-product:hover {
+        border-color: var(--ac-accent);
+    }
+    .admincafe-root
+        .ac-menu
+        :is(
+            .ac-plus,
+            .ac-stepper button,
+            .ac-filter-reset,
+            .ac-header-cart
+        ):hover {
+        background: var(--ac-category);
+    }
+    .admincafe-root .ac-menu .ac-language-card:hover {
+        transform: translateY(-2px);
+        border-color: var(--ac-accent);
+    }
+}
+@keyframes ac-menu-arrive {
+    from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.97);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .admincafe-root .ac-menu *,
+    .admincafe-root .ac-menu *::before,
+    .admincafe-root .ac-menu *::after {
+        animation: none !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

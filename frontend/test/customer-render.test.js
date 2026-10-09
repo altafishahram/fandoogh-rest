@@ -7,6 +7,7 @@ import { parse } from "@vue/compiler-sfc";
 import { useMenu } from "../src/useMenu.js";
 import { stores } from "../src/state.js";
 import CompiledMenuCss from "../src/components/CompiledMenuCss.js";
+import * as galleryHelpers from "../src/gallery.js";
 const source = await readFile(
   new URL("../src/Menu.vue", import.meta.url),
   "utf8",
@@ -55,6 +56,55 @@ const LanguageGate = {
   },
   render: gate.render,
 };
+const gallery = await compiledTemplate("../src/components/FoodGallery.vue");
+const gallerySetup = new Function(
+  "Vue",
+  "helpers",
+  "defineProps",
+  "defineEmits",
+  "const {computed,onBeforeUnmount,ref,watch}=Vue;" +
+    "const {galleryGestureIntent,galleryIndex,galleryIndexLabel,galleryKeyIndex,gallerySwipeIndex,normalizeGalleryImages}=helpers;" +
+    gallery.descriptor.scriptSetup.content.replace(
+      /import[\s\S]*?from\s*["'][^"']+["'];?/g,
+      "",
+    ) +
+    ";return {props,images,orderedImages,index,failed,viewport,dragX,dragging,instant,trackStyle,announcement,select,keydown,pointerdown,pointermove,pointerup,resetGesture,imageError,galleryIndexLabel};",
+);
+const FoodGallery = {
+  props: [
+    "images",
+    "name",
+    "imageLabel",
+    "indexLabel",
+    "errorLabel",
+    "emptyLabel",
+    "direction",
+  ],
+  emits: ["change"],
+  setup(props, { emit }) {
+    return gallerySetup(
+      Vue,
+      galleryHelpers,
+      () => props,
+      () => emit,
+    );
+  },
+  render: gallery.render,
+};
+const actualMenu = new Function(
+  "h",
+  "FoodGallery",
+  "CompiledMenuCss",
+  "LanguageGate",
+  "CountryFlag",
+  "useMenu",
+  parse(source)
+    .descriptor.script.content.replace(
+      /import[\s\S]*?from\s*["'][^"']+["'];?/g,
+      "",
+    )
+    .replace("export default", "return"),
+)(Vue.h, FoodGallery, CompiledMenuCss, LanguageGate, CountryFlag, useMenu);
 const all = (n, predicate) => [
   ...(predicate(n) ? [n] : []),
   ...n.children.flatMap((c) => all(c, predicate)),
@@ -170,7 +220,7 @@ test("all customer roots render every language and preserve quantities, selected
     const make = (component, standalone = false) => {
       const tree = node("root");
       const app = renderer.createApp({
-        components: { LanguageGate, CountryFlag, CompiledMenuCss },
+        components: actualMenu.components,
         setup() {
           return useMenu(
             {
@@ -274,6 +324,62 @@ test("all customer roots render every language and preserve quantities, selected
       find(menu.tree, (n) => n.props.class === "ac-menu")?.props.dir,
       "ltr",
     );
+    const originalCart = JSON.parse(JSON.stringify(menu.instance.state.cart));
+    const simple = menu.instance.products.find(
+      (p) => p.type === "simple" && p.available,
+    );
+    assert.ok(simple);
+    menu.instance.open(simple);
+    menu.instance.quantity = 2;
+    menu.instance.add();
+    await Vue.nextTick();
+    assert.equal(
+      menu.instance.state.cart.find((item) => item.product_id === simple.id)
+        .quantity,
+      2,
+    );
+    const afterSimpleAdd = JSON.stringify(menu.instance.state.cart);
+    menu.instance.open({ ...simple, available: false });
+    menu.instance.quantity = 2;
+    menu.instance.add();
+    menu.instance.quickAdd({ ...simple, available: false });
+    assert.equal(JSON.stringify(menu.instance.state.cart), afterSimpleAdd);
+    const variable = menu.instance.products.find(
+      (p) => p.type === "variable" && p.available,
+    );
+    assert.ok(variable);
+    menu.instance.quickAdd(variable);
+    assert.equal(menu.instance.selected.id, variable.id);
+    assert.equal(menu.instance.quantity, 1);
+    assert.equal(JSON.stringify(menu.instance.state.cart), afterSimpleAdd);
+    menu.instance.open({
+      ...variable,
+      image: "/main.webp",
+      images: [{ src: "/main.webp" }, { src: "/detail.webp" }],
+      variations: [
+        { id: 987, name: "Large", available: true, image: "/detail.webp" },
+      ],
+    });
+    menu.instance.variation = 987;
+    assert.deepEqual(
+      menu.instance.galleryImages.map((image) => image.src),
+      ["/detail.webp", "/main.webp"],
+    );
+    await Vue.nextTick();
+    const renderedImages = all(
+      menu.tree,
+      (n) =>
+        n.type === "img" &&
+        ["/main.webp", "/detail.webp"].includes(n.props.src),
+    );
+    assert.equal(renderedImages.length, 2);
+    assert.equal(
+      renderedImages.find((image) => image.props.src === "/detail.webp").parent
+        .props["aria-hidden"],
+      false,
+    );
+    menu.instance.state.cart = originalCart;
+    await Vue.nextTick();
     menu.instance.open(menu.instance.products.find((p) => p.id === 2));
     menu.instance.variation = 22;
     menu.instance.add();

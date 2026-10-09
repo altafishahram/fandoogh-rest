@@ -56,6 +56,8 @@
   "Choice price must be a non-negative number.": "قیمت گزینه باید عددی غیرمنفی باشد.",
   "Choose a valid, unreserved page address.": "یک آدرس صفحه معتبر و رزرو نشده انتخاب کنید.",
   "Choose an image attachment.": "یک تصویر از رسانه‌ها انتخاب کنید.",
+  "Choose up to 20 gallery images.": "حداکثر ۲۰ تصویر برای گالری انتخاب کنید.",
+  "Choose unique image attachments from this branch.": "تصاویر بدون تکرار از رسانه‌های همین شعبه انتخاب کنید.",
   "Choose an operational Fandoogh Rest role.": "یک نقش عملیاتی رستوران فندوق انتخاب کنید.",
   "Choose between 1 and 100 items.": "بین ۱ تا ۱۰۰ محصول انتخاب کنید.",
   "Choose columns from the uploaded file.": "ستون‌ها را از فایل بارگذاری شده انتخاب کنید.",

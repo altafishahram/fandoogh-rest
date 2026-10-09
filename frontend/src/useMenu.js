@@ -41,6 +41,8 @@ export function useMenu(config, root) {
     search = ref(""),
     selected = ref(null),
     variation = ref(0),
+    quantity = ref(1),
+    openingFromKeyboard = ref(false),
     cartOpen = ref(false),
     busy = ref(false),
     channel = ref("table"),
@@ -214,6 +216,36 @@ export function useMenu(config, root) {
   const count = computed(() =>
     state.cart.reduce((sum, i) => sum + i.quantity, 0),
   );
+  const heroProduct = computed(
+    () =>
+      boot.value.products.find((p) => p.available && p.image) ||
+      boot.value.products.find((p) => p.image),
+  );
+  const galleryImages = computed(() => {
+    const product = selected.value;
+    if (!product) return [];
+    const images = [...(product.images || [])];
+    if (product.image && !images.some((image) => image.src === product.image))
+      images.unshift({
+        id: product.image_id,
+        src: product.image,
+        alt: product.name,
+      });
+    const choice = product.variations?.find(
+      (v) => v.id === Number(variation.value),
+    );
+    if (choice?.image) {
+      return [
+        {
+          id: choice.image_id,
+          src: choice.image,
+          alt: choice.name || product.name,
+        },
+        ...images.filter((image) => image.src !== choice.image),
+      ];
+    }
+    return images;
+  });
   watch(
     () => state.cart,
     () => {
@@ -254,35 +286,83 @@ export function useMenu(config, root) {
     cartOpen.value = false;
     nextTick(() => focus?.focus());
   }
-  function open(p) {
+  function openCart(event) {
+    openingFromKeyboard.value = event?.detail === 0;
+    cartOpen.value = true;
+  }
+  function open(p, event) {
     focus = document.activeElement;
+    openingFromKeyboard.value = event?.detail === 0;
     selected.value = p;
     variation.value = 0;
+    quantity.value = 1;
     nextTick(() => root.querySelector(".ac-dialog button")?.focus());
+  }
+  function quantityFor(product) {
+    return state.cart
+      .filter((i) => i.product_id === product.id)
+      .reduce((sum, i) => sum + i.quantity, 0);
+  }
+  function quickAdd(product, event) {
+    if (!enabled.value || !product.available) return;
+    if (product.type === "variable") {
+      open(product, event);
+      return;
+    }
+    const existing = state.cart.find(
+      (i) => i.product_id === product.id && !i.variation_id,
+    );
+    if (existing) existing.quantity = Math.min(99, existing.quantity + 1);
+    else
+      state.cart.push({
+        key: `${product.id}:0`,
+        product_id: product.id,
+        variation_id: 0,
+        name: product.name,
+        price: product.price,
+        quantity: 1,
+      });
+  }
+  function changeProduct(product, delta) {
+    if (!enabled.value) return;
+    if (product.type === "variable") {
+      open(product);
+      return;
+    }
+    const item = state.cart.find(
+      (i) => i.product_id === product.id && !i.variation_id,
+    );
+    if (item) change(item, delta);
+    else if (delta > 0) quickAdd(product);
   }
   function add() {
     const p = selected.value,
-      v = p.variations?.find((v) => v.id === Number(variation.value));
+      v = p?.variations?.find((v) => v.id === Number(variation.value));
+    if (!p || !enabled.value || !p.available || (v && !v.available)) return;
     if (p.type === "variable" && !v) {
       error.value = "لطفاً یک گزینه انتخاب کنید";
       return;
     }
     const id = `${p.id}:${v?.id || 0}`,
       existing = state.cart.find((i) => i.key === id);
-    if (existing) existing.quantity++;
+    const amount = Math.max(
+      1,
+      Math.min(99, Math.floor(Number(quantity.value) || 1)),
+    );
+    if (existing) existing.quantity = Math.min(99, existing.quantity + amount);
     else
       state.cart.push({
         key: id,
         product_id: p.id,
         variation_id: v?.id || 0,
         name: p.name + (v ? " • " + v.name : ""),
-        price: v?.price || p.price,
-        quantity: 1,
+        price: v?.price ?? p.price,
+        quantity: amount,
       });
     close();
   }
   function change(i, d) {
-    i.quantity += d;
+    i.quantity = Math.min(99, i.quantity + d);
     if (i.quantity <= 0) state.cart.splice(state.cart.indexOf(i), 1);
   }
   async function submit() {
@@ -424,7 +504,9 @@ export function useMenu(config, root) {
   });
   function trap(e) {
     const nodes = [
-      ...e.currentTarget.querySelectorAll("button,input,select,textarea"),
+      ...e.currentTarget.querySelectorAll(
+        'button,input,select,textarea,a[href],[tabindex]:not([tabindex="-1"])',
+      ),
     ].filter((n) => !n.disabled);
     if (e.shiftKey && document.activeElement === nodes[0]) {
       e.preventDefault();
@@ -463,6 +545,13 @@ export function useMenu(config, root) {
     search,
     selected,
     variation,
+    quantity,
+    openingFromKeyboard,
+    heroProduct,
+    galleryImages,
+    quantityFor,
+    quickAdd,
+    changeProduct,
     cartOpen,
     busy,
     channel,
@@ -480,6 +569,7 @@ export function useMenu(config, root) {
     money: customerMoney,
     trap,
     open,
+    openCart,
     close,
     add,
     change,
