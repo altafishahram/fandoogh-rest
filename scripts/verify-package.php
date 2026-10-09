@@ -4,15 +4,14 @@ require __DIR__ . '/archive.php';
 $root = dirname(__DIR__);
 $version = fr_package_version($root);
 $required = ['fandoogh-rest/fandoogh-rest.php', 'fandoogh-rest/assets/menu.js', 'fandoogh-rest/assets/panel.js', 'fandoogh-rest/assets/fandoogh-rest.css', 'fandoogh-rest/vendor/autoload.php', 'fandoogh-rest/public/sw.js'];
+$sourceRequired = ['fandoogh-rest/frontend/package.json', 'fandoogh-rest/frontend/package-lock.json', 'fandoogh-rest/frontend/vite.config.js', 'fandoogh-rest/frontend/scripts/verify-build.mjs', 'fandoogh-rest/scripts/package.php', 'fandoogh-rest/scripts/stage.mjs'];
 foreach (['fandoogh-rest-' . $version, 'fandoogh-rest-source-' . $version] as $base) {
     $zip = new ZipArchive();
     $path = $root . '/dist/' . $base . '.zip';
     if ($zip->open($path) !== true) { throw new RuntimeException('Missing archive: ' . $path); }
     $source = str_contains($base, '-source-');
-    if (!$source) {
-        foreach ($required as $entry) {
-            if ($zip->locateName($entry) === false) { throw new RuntimeException('Missing package entry: ' . $entry); }
-        }
+    foreach ($source ? $sourceRequired : $required as $entry) {
+        if ($zip->locateName($entry) === false) { throw new RuntimeException('Missing package entry: ' . $entry); }
     }
     $names = [];
     for ($i = 0; $i < $zip->numFiles; $i++) {
