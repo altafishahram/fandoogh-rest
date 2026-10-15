@@ -33,7 +33,7 @@ jobs:
           extensions: curl, gd, intl, mbstring, openssl, zip
           tools: composer:v2
           coverage: none
-      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: '24'
           cache: npm
@@ -120,7 +120,7 @@ jobs:
           extensions: curl, gd, intl, mbstring, mysqli, openssl, zip
           tools: composer:v2, wp-cli
           coverage: none
-      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: '24'
           cache: npm
