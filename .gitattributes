@@ -1,0 +1,5 @@
+# یکسان‌سازی پایان خط: مخزن LF، فایل‌های کاری ویندوز CRLF
+* text=auto eol=crlf
+
+*.sh text eol=lf
+*.py  text eol=lf
