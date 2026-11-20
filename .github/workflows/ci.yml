@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: PHP syntax (PHP ${{ matrix.php }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['7.4', '8.1', '8.3']
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+
+      - name: Lint all PHP files
+        run: |
+          set -euo pipefail
+          mapfile -d '' files < <(find . -type f -name '*.php' -not -path './.git/*' -print0)
+          echo "Checking ${#files[@]} PHP files"
+          printf '%s\0' "${files[@]}" | xargs -0 -n1 -P4 php -l
+
+  package:
+    name: Build and verify release package
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Build package
+        run: python tools/build-release.py
+
+      - name: Verify package contents
+        run: python tools/preflight.py --package-only
+
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: fondogh-online-menu
+          path: |
+            fondogh-online-menu.zip
+            fondogh-online-menu.zip.sha256
+          if-no-files-found: error
+          retention-days: 30

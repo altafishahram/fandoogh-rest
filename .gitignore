@@ -4,8 +4,17 @@ __pycache__/
 .DS_Store
 Thumbs.db
 
-# بستهٔ ساخت‌شده (با tools/build-release.py بازسازی می‌شود)
+# بستهٔ ساخت‌شده (در GitHub Releases منتشر می‌شود)
 *.zip
+*.sha256
 
-# آینهٔ محلی مهارت‌ها (منبع اصلی: .agents/skills)
+# دادهٔ داخلی تیم و تنظیمات ابزارها — وارد مخزن عمومی نمی‌شود
+bot-operations/
+.agents/
 .claude/
+
+# فایل‌های محیطی و ویرایشگر
+.env
+.env.*
+.idea/
+.vscode/

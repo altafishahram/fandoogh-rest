@@ -1,0 +1,57 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*.*.*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to release (for example v1.0.0)'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Publish release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Verify tag matches plugin version
+        run: |
+          set -euo pipefail
+          TAG="${GITHUB_REF_NAME}"
+          VERSION=$(grep -oP "^\s*\*\s*Version:\s*\K[0-9.]+" fondogh-online-menu.php | head -n1)
+          CONST=$(grep -oP "define\('RMM_VERSION',\s*'\K[0-9.]+" fondogh-online-menu.php | head -n1)
+          echo "tag=$TAG version=$VERSION const=$CONST"
+          if [ "$TAG" != "v$VERSION" ]; then
+            echo "::error::Tag $TAG does not match plugin version $VERSION"
+            exit 1
+          fi
+          if [ "$VERSION" != "$CONST" ]; then
+            echo "::error::Header version $VERSION and RMM_VERSION $CONST differ"
+            exit 1
+          fi
+
+      - name: Build package
+        run: python tools/build-release.py
+
+      - name: Verify package contents
+        run: python tools/preflight.py --package-only
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            fondogh-online-menu.zip
+            fondogh-online-menu.zip.sha256
+          generate_release_notes: true
+          fail_on_unmatched_files: true

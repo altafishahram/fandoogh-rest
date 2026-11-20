@@ -1,0 +1,73 @@
+name: Bug report
+description: گزارش خطا یا رفتار نادرست در افزونه
+labels: ['bug']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        برای گزارش آسیب‌پذیری امنیتی از این فرم استفاده نکنید؛ بخش **Security → Report a vulnerability** را ببینید.
+
+  - type: input
+    id: plugin-version
+    attributes:
+      label: نسخهٔ افزونه
+      placeholder: '1.0.0'
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: محیط
+      description: نسخهٔ WordPress، WooCommerce، Elementor، PHP و قالب
+      placeholder: 'WP 6.6، Woo 9.1، Elementor 3.25، PHP 8.1'
+    validations:
+      required: true
+
+  - type: dropdown
+    id: mode
+    attributes:
+      label: حالت کاری منو
+      options:
+        - کاتالوگ (view_only)
+        - سر میز (dine_in)
+        - بیرون‌بر (online_delivery)
+        - نامرتبط به حالت منو
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: گام‌های بازتولید
+      placeholder: |
+        ۱. ...
+        ۲. ...
+        ۳. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: رفتار مورد انتظار
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: رفتار واقعی و پیام خطا
+      description: متن خطای PHP یا کنسول مرورگر را کامل بگذارید
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: تأییدها
+      options:
+        - label: نسخهٔ افزونه را روی آخرین انتشار GitHub Releases بررسی کرده‌ام.
+          required: true
+        - label: این گزارش شامل اطلاعات محرمانه یا دادهٔ مشتری نیست.
+          required: true

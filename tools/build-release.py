@@ -10,6 +10,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import os
 import sys
 import zipfile
@@ -70,8 +71,13 @@ def main() -> int:
         for relative in files:
             archive.write(os.path.join(ROOT, relative), f"{SLUG}/{relative.replace(os.sep, '/')}")
 
+    with open(ZIP_PATH, "rb") as handle:
+        digest = hashlib.sha256(handle.read()).hexdigest()
+    with open(ZIP_PATH + ".sha256", "w", encoding="utf-8", newline="\n") as handle:
+        handle.write(f"{digest}  {SLUG}.zip\n")
+
     size = os.path.getsize(ZIP_PATH) / 1024
-    print(f"OK: {len(files)} files -> {os.path.basename(ZIP_PATH)} ({size:.0f} KB)")
+    print(f"OK: {len(files)} files -> {os.path.basename(ZIP_PATH)} ({size:.0f} KB) sha256={digest[:16]}...")
     return 0
 
 
