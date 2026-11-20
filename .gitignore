@@ -1,0 +1,11 @@
+# آرتیفکت‌های پایتون و سیستم
+__pycache__/
+*.py[cod]
+.DS_Store
+Thumbs.db
+
+# بستهٔ ساخت‌شده (با tools/build-release.py بازسازی می‌شود)
+*.zip
+
+# آینهٔ محلی مهارت‌ها (منبع اصلی: .agents/skills)
+.claude/

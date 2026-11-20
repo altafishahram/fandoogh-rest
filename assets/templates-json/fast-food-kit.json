@@ -1,0 +1,58 @@
+{
+  "version": "0.4",
+  "title": "TastyMenu - Fast Food Modern Kit",
+  "type": "page",
+  "content": [
+    {
+      "id": "sec-fast-food-1",
+      "elType": "section",
+      "elements": [
+        {
+          "id": "col-fast-food-1",
+          "elType": "column",
+          "elements": [
+            {
+              "id": "w-branch-1",
+              "elType": "widget",
+              "widgetType": "rmm_branch_selector",
+              "settings": {
+                "show_status": "yes",
+                "show_table": "yes",
+                "show_lang": "yes"
+              }
+            },
+            {
+              "id": "w-cat-1",
+              "elType": "widget",
+              "widgetType": "rmm_category_bar",
+              "settings": {
+                "is_sticky": "yes",
+                "show_all_button": "yes"
+              }
+            },
+            {
+              "id": "w-menu-1",
+              "elType": "widget",
+              "widgetType": "rmm_food_menu_grid",
+              "settings": {
+                "layout_style": "modern_grid",
+                "columns": "3",
+                "show_search": "yes",
+                "show_badges": "yes",
+                "show_calories": "yes"
+              }
+            },
+            {
+              "id": "w-cart-1",
+              "elType": "widget",
+              "widgetType": "rmm_floating_cart",
+              "settings": {
+                "cart_btn_text": "مشاهده سفارش و تسویه‌حساب"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

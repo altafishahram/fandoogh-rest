@@ -1,0 +1,104 @@
+<?php
+/**
+ * Plugin Name: منو آنلاین فندق (Fondogh Online Menu)
+ * Plugin URI:  https://fondogh-menu.ir
+ * Description: افزونه جامع و هوشمند مدیریت منوی آنلاین و سفارش‌گیری رستوران و کافه بر پایه ووکامرس و المنتور (چندشعبه‌ای، چندزبانه، پنل اختصاصی فرانت‌اند PWA، حالت کاتالوگ و سفارش سر میز).
+ * Version:     1.0.0
+ * Author:      تیم منو آنلاین فندق
+ * Author URI:  https://fondogh-menu.ir
+ * Text Domain: fondogh-online-menu
+ * Domain Path: /languages
+ * Update URI:  false
+ * Requires at least: 5.8
+ * Requires PHP: 7.4
+ * WC requires at least: 5.0
+ * Elementor tested up to: 3.25
+ */
+
+if (!defined('ABSPATH')) {
+    exit;
+}
+
+// Define Plugin Constants safely
+if (!defined('RMM_VERSION')) {
+    define('RMM_VERSION', '1.0.0');
+}
+if (!defined('RMM_PLUGIN_FILE')) {
+    define('RMM_PLUGIN_FILE', __FILE__);
+}
+if (!defined('RMM_PLUGIN_PATH')) {
+    define('RMM_PLUGIN_PATH', plugin_dir_path(__FILE__));
+}
+if (!defined('RMM_PLUGIN_URL')) {
+    define('RMM_PLUGIN_URL', plugin_dir_url(__FILE__));
+}
+if (!defined('RMM_PLUGIN_BASENAME')) {
+    define('RMM_PLUGIN_BASENAME', plugin_basename(__FILE__));
+}
+
+// Require Autoloader with fallback
+$autoloader_file = RMM_PLUGIN_PATH . 'includes/Autoloader.php';
+if (file_exists($autoloader_file)) {
+    require_once $autoloader_file;
+    if (class_exists('RMM\\Autoloader')) {
+        \RMM\Autoloader::run();
+    }
+} else {
+    add_action('admin_notices', function () {
+        echo '<div class="notice notice-error"><p>' .
+            esc_html__('خطا در بارگذاری افزونه منو آنلاین فندق: فایل includes/Autoloader.php یافت نشد. لطفاً مطمئن شوید افزونه به طور کامل درون پوشه خود آپلود و استخراج شده است.', 'fondogh-online-menu') .
+            '</p></div>';
+    });
+    return;
+}
+
+/**
+ * Activation & Deactivation Hooks (Safe Wrapper)
+ */
+register_activation_hook(__FILE__, function () {
+    try {
+        if (class_exists('RMM\\Core\\Installer')) {
+            \RMM\Core\Installer::activate();
+        }
+    } catch (\Throwable $e) {
+        error_log('Fondogh Menu Activation Error: ' . $e->getMessage());
+    }
+});
+
+register_deactivation_hook(__FILE__, function () {
+    try {
+        if (class_exists('RMM\\Core\\Installer')) {
+            \RMM\Core\Installer::deactivate();
+        }
+    } catch (\Throwable $e) {
+        error_log('Fondogh Menu Deactivation Error: ' . $e->getMessage());
+    }
+});
+
+/**
+ * Initialize Plugin Core on plugins_loaded (Safe Wrapper)
+ */
+add_action('plugins_loaded', function () {
+    // Check WooCommerce dependency
+    if (!class_exists('WooCommerce')) {
+        add_action('admin_notices', function () {
+            echo '<div class="notice notice-error"><p>' .
+                esc_html__('افزونه «منو آنلاین فندق» برای کارکرد صحیح نیازمند فعال بودن ووکامرس (WooCommerce) است.', 'fondogh-online-menu') .
+                '</p></div>';
+        });
+        return;
+    }
+
+    try {
+        if (class_exists('RMM\\Plugin')) {
+            \RMM\Plugin::instance();
+        }
+    } catch (\Throwable $e) {
+        error_log('Fondogh Menu Launch Error: ' . $e->getMessage());
+        add_action('admin_notices', function () use ($e) {
+            echo '<div class="notice notice-error"><p>' .
+                sprintf(esc_html__('خطا در اجرای افزونه منو آنلاین فندق: %s', 'fondogh-online-menu'), esc_html($e->getMessage())) .
+                '</p></div>';
+        });
+    }
+});

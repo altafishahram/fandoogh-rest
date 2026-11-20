@@ -1,0 +1,58 @@
+{
+  "version": "0.4",
+  "title": "TastyMenu - Oriental & Traditional Kit",
+  "type": "page",
+  "content": [
+    {
+      "id": "sec-oriental-1",
+      "elType": "section",
+      "elements": [
+        {
+          "id": "col-oriental-1",
+          "elType": "column",
+          "elements": [
+            {
+              "id": "w-branch-or",
+              "elType": "widget",
+              "widgetType": "rmm_branch_selector",
+              "settings": {
+                "show_status": "yes",
+                "show_table": "yes",
+                "show_lang": "no"
+              }
+            },
+            {
+              "id": "w-cat-or",
+              "elType": "widget",
+              "widgetType": "rmm_category_bar",
+              "settings": {
+                "is_sticky": "yes",
+                "show_all_button": "yes"
+              }
+            },
+            {
+              "id": "w-menu-or",
+              "elType": "widget",
+              "widgetType": "rmm_food_menu_grid",
+              "settings": {
+                "layout_style": "compact_grid",
+                "columns": "4",
+                "show_search": "yes",
+                "show_badges": "yes",
+                "show_calories": "no"
+              }
+            },
+            {
+              "id": "w-cart-or",
+              "elType": "widget",
+              "widgetType": "rmm_floating_cart",
+              "settings": {
+                "cart_btn_text": "تکمیل سفارش سنتی"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

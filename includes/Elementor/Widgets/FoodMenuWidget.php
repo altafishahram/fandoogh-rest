@@ -1,0 +1,1503 @@
+<?php
+namespace RMM\Elementor\Widgets;
+
+if (!defined('ABSPATH')) {
+    exit;
+}
+
+if (!class_exists('\Elementor\Widget_Base')) {
+    return;
+}
+
+class FoodMenuWidget extends \Elementor\Widget_Base {
+
+    public function get_name() {
+        return 'rmm_food_menu_grid';
+    }
+
+    public function get_title() {
+        return __('شبکه و لیست منوی غذا (TastyMenu Grid)', 'restaurant-menu-manager');
+    }
+
+    public function get_icon() {
+        return 'eicon-gallery-grid';
+    }
+
+    public function get_categories() {
+        return ['tastymenu-category'];
+    }
+
+    private function get_elementor_templates_options() {
+        $options = [
+            '0' => __('— انتخاب قالب المنتور —', 'restaurant-menu-manager'),
+        ];
+        $posts = get_posts([
+            'post_type'      => 'elementor_library',
+            'posts_per_page' => -1,
+            'post_status'    => 'publish',
+        ]);
+        if (!empty($posts)) {
+            foreach ($posts as $post) {
+                $options[$post->ID] = $post->post_title . ' (ID: ' . $post->ID . ')';
+            }
+        }
+        return $options;
+    }
+
+    protected function register_controls() {
+        $this->start_controls_section(
+            'section_layout',
+            [
+                'label' => __('طراحی و چیدمان منو', 'restaurant-menu-manager'),
+            ]
+        );
+
+        $this->add_control(
+            'layout_style',
+            [
+                'label'   => __('سبک نمایش منو', 'restaurant-menu-manager'),
+                'type'    => \Elementor\Controls_Manager::SELECT,
+                'default' => 'modern_grid',
+                'options' => [
+                    'modern_grid' => __('شبکه مدرن (Modern Grid)', 'restaurant-menu-manager'),
+                    'oriental'    => __('تم شرقی (Oriental / Asian Luxury)', 'restaurant-menu-manager'),
+                    'app_list'    => __('لیستی اپلیکیشنی (اسنپ‌فودی / UberEats)', 'restaurant-menu-manager'),
+                    'fine_dining' => __('لوکس و کافه‌ای (Fine Dining / Minimal)', 'restaurant-menu-manager'),
+                    'compact_grid'=> __('کارت فشرده (Compact)', 'restaurant-menu-manager'),
+                ],
+            ]
+        );
+
+        // Responsive Columns for Grid Mode
+        $this->add_responsive_control(
+            'columns',
+            [
+                'label'   => __('تعداد ستون‌های حالت شبکه‌ای (Grid)', 'restaurant-menu-manager'),
+                'type'    => \Elementor\Controls_Manager::SELECT,
+                'default' => '3',
+                'tablet_default' => '2',
+                'mobile_default' => '1',
+                'options' => [
+                    '1' => '۱ ستون',
+                    '2' => '۲ ستون',
+                    '3' => '۳ ستون',
+                    '4' => '۴ ستون',
+                    '5' => '۵ ستون',
+                    '6' => '۶ ستون',
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .rmm-menu-container.rmm-view-grid, {{WRAPPER}} .rmm-menu-container:not(.rmm-view-list)' => 'grid-template-columns: repeat({{VALUE}}, minmax(0, 1fr)) !important;',
+                ],
+            ]
+        );
+
+        // Responsive Columns for List Mode
+        $this->add_responsive_control(
+            'list_columns',
+            [
+                'label'   => __('تعداد ستون‌های حالت لیستی (List)', 'restaurant-menu-manager'),
+                'type'    => \Elementor\Controls_Manager::SELECT,
+                'default' => '2',
+                'tablet_default' => '1',
+                'mobile_default' => '1',
+                'options' => [
+                    '1' => '۱ ستون (تمام عرض)',
+                    '2' => '۲ ستون (جفت کنار هم)',
+                    '3' => '۳ ستون',
+                    '4' => '۴ ستون',
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .rmm-menu-container.rmm-view-list' => 'grid-template-columns: repeat({{VALUE}}, minmax(0, 1fr)) !important;',
+                ],
+            ]
+        );
+
+        // Live Grid / List Toggle Switcher for Customers
+        $this->add_control(
+            'enable_view_switcher',
+            [
+                'label'        => __('دکمه تغییر زنده حالت شبکه / لیست برای مشتری', 'restaurant-menu-manager'),
+                'type'         => \Elementor\Controls_Manager::SWITCHER,
+                'default'      => 'yes',
+                'return_value' => 'yes',
+                'description'  => __('به مشتری اجازه می‌دهد بین نمای شبکه‌ای و نمای لیستی سریع جابجا شود.', 'restaurant-menu-manager'),
+            ]
+        );
+
+        $this->add_control(
+            'default_view',
+            [
+                'label'   => __('نمای پیش‌فرض منو', 'restaurant-menu-manager'),
+                'type'    => \Elementor\Controls_Manager::SELECT,
+                'default' => 'grid',
+                'options' => [
+                    'grid' => __('شبکه‌ای (Grid)', 'restaurant-menu-manager'),
+                    'list' => __('لیستی (List)', 'restaurant-menu-manager'),
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'show_search',
+            [
+                'label'        => __('نمایش باکس جستجوی زنده غذا', 'restaurant-menu-manager'),
+                'type'         => \Elementor\Controls_Manager::SWITCHER,
+                'default'      => 'yes',
+                'return_value' => 'yes',
+            ]
+        );
+
+        $this->add_control(
+            'show_badges',
+            [
+                'label'        => __('نمایش نشان‌های رژیمی (تند، گیاهی و...)', 'restaurant-menu-manager'),
+                'type'         => \Elementor\Controls_Manager::SWITCHER,
+                'default'      => 'yes',
+                'return_value' => 'yes',
+            ]
+        );
+
+        $this->add_control(
+            'show_calories',
+            [
+                'label'        => __('نمایش کالری و زمان آماده‌سازی', 'restaurant-menu-manager'),
+                'type'         => \Elementor\Controls_Manager::SWITCHER,
+                'default'      => 'yes',
+                'return_value' => 'yes',
+            ]
+        );
+
+        $this->add_control(
+            'hide_out_of_stock',
+            [
+                'label'        => __('مخفی‌سازی غذاهای ناموجود', 'restaurant-menu-manager'),
+                'type'         => \Elementor\Controls_Manager::SWITCHER,
+                'default'      => 'yes',
+                'return_value' => 'yes',
+                'description'  => __('در صورت غیرفعال بودن موجودی غذا، کارت آن از منوی مشتریان حذف می‌شود.', 'restaurant-menu-manager'),
+            ]
+        );
+
+        $this->add_control(
+            'show_category_headers',
+            [
+                'label'        => __('نمایش عناوین دسته‌بندی‌ها به عنوان جداکننده', 'restaurant-menu-manager'),
+                'type'         => \Elementor\Controls_Manager::SWITCHER,
+                'default'      => 'yes',
+                'return_value' => 'yes',
+                'description'  => __('در ابتدای هر بخش از منو، عنوان و نشان دسته‌بندی با اولویت تنظیم‌شده در مدیریت نمایش داده می‌شود.', 'restaurant-menu-manager'),
+            ]
+        );
+
+        $this->add_control(
+            'show_cat_count',
+            [
+                'label'        => __('نمایش تعداد غذاها در عنوان دسته', 'restaurant-menu-manager'),
+                'type'         => \Elementor\Controls_Manager::SWITCHER,
+                'default'      => 'yes',
+                'return_value' => 'yes',
+                'condition'    => [
+                    'show_category_headers' => 'yes',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'show_cat_thumb',
+            [
+                'label'        => __('نمایش تصویر دسته‌بندی در کنار عنوان', 'restaurant-menu-manager'),
+                'type'         => \Elementor\Controls_Manager::SWITCHER,
+                'default'      => 'yes',
+                'return_value' => 'yes',
+                'condition'    => [
+                    'show_category_headers' => 'yes',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'show_cat_desc',
+            [
+                'label'        => __('نمایش توضیحات دسته‌بندی', 'restaurant-menu-manager'),
+                'type'         => \Elementor\Controls_Manager::SWITCHER,
+                'default'      => 'yes',
+                'return_value' => 'yes',
+                'condition'    => [
+                    'show_category_headers' => 'yes',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'show_theme_toggle',
+            [
+                'label'        => __('دکمه تغییر تم (روز / شب)', 'restaurant-menu-manager'),
+                'type'         => \Elementor\Controls_Manager::SWITCHER,
+                'default'      => 'no',
+                'return_value' => 'yes',
+                'description'  => __('دکمه شناور تغییر حالت تیره و روشن را برای کل منو فعال می‌کند (می‌توانید از ویجت اختصاصی سوئیچر روز و شب نیز استفاده کنید).', 'restaurant-menu-manager'),
+            ]
+        );
+
+        $this->end_controls_section();
+
+        // Section: Card Click Action
+        $this->start_controls_section(
+            'section_card_click',
+            [
+                'label' => __('رفتار کلیک روی کارت غذا (پاپ‌آپ جزئیات)', 'restaurant-menu-manager'),
+            ]
+        );
+
+        $this->add_control(
+            'card_click_action',
+            [
+                'label'   => __('عملیات با لمس / کلیک روی کارت', 'restaurant-menu-manager'),
+                'type'    => \Elementor\Controls_Manager::SELECT,
+                'default' => 'default_modal',
+                'options' => [
+                    'default_modal'      => __('✨ باز شدن پاپ‌آپ هوشمند فندق (استایل پیش‌فرض و کامل)', 'restaurant-menu-manager'),
+                    'elementor_template' => __('🎨 بارگذاری قالب ذخیره‌شده المنتور (قالب اختصاصی)', 'restaurant-menu-manager'),
+                    'elementor_popup'    => __('🚀 باز شدن پاپ‌آپ المنتور پرو (Elementor Pro Popup)', 'restaurant-menu-manager'),
+                    'none'               => __('غیرفعال (فقط دکمه خرید داخل کارت کار کند)', 'restaurant-menu-manager'),
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'elementor_template_id',
+            [
+                'label'     => __('انتخاب قالب المنتور برای پاپ‌آپ', 'restaurant-menu-manager'),
+                'type'      => \Elementor\Controls_Manager::SELECT,
+                'default'   => '0',
+                'options'   => $this->get_elementor_templates_options(),
+                'condition' => [
+                    'card_click_action' => 'elementor_template',
+                ],
+                'description' => __('می‌توانید هر قالبی را در قالب‌های ذخیره‌شده المنتور طراحی کنید؛ اطلاعات غذا (تصویر، عنوان، قیمت، کالری، ترکیبات) با تگ‌های داینامیک فندق به صورت زنده در آن لود می‌شوند.', 'restaurant-menu-manager'),
+            ]
+        );
+
+        $this->add_control(
+            'elementor_popup_id',
+            [
+                'label'       => __('شناسه پاپ‌آپ المنتور پرو (Popup ID)', 'restaurant-menu-manager'),
+                'type'        => \Elementor\Controls_Manager::TEXT,
+                'placeholder' => '1234',
+                'condition'   => [
+                    'card_click_action' => 'elementor_popup',
+                ],
+                'description' => __('شناسه پاپ‌آپ المنتور پرو خود را اینجا وارد کنید.', 'restaurant-menu-manager'),
+            ]
+        );
+
+        $this->end_controls_section();
+
+        // ==================== STYLE TAB ==================== //
+
+        // 1. Search Bar Style
+        $this->start_controls_section(
+            'section_style_search',
+            [
+                'label' => __('استایل باکس جستجو', 'restaurant-menu-manager'),
+                'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+                'condition' => [
+                    'show_search' => 'yes',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'search_bg_color',
+            [
+                'label'     => __('رنگ پس‌زمینه جستجو', 'restaurant-menu-manager'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .rmm-menu-search-field' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'search_text_color',
+            [
+                'label'     => __('رنگ متن جستجو', 'restaurant-menu-manager'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .rmm-menu-search-field' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'search_icon_color',
+            [
+                'label'     => __('رنگ آیکون ذره‌بین', 'restaurant-menu-manager'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .rmm-search-icon' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name'     => 'search_typography',
+                'label'    => __('تایپوگرافی متن جستجو', 'restaurant-menu-manager'),
+                'selector' => '{{WRAPPER}} .rmm-menu-search-field',
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Border::get_type(),
+            [
+                'name'     => 'search_border',
+                'selector' => '{{WRAPPER}} .rmm-menu-search-field',
+            ]
+        );
+
+        $this->add_control(
+            'search_border_radius',
+            [
+                'label'      => __('گردی کادر جستجو (Border Radius)', 'restaurant-menu-manager'),
+                'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', '%'],
+                'selectors'  => [
+                    '{{WRAPPER}} .rmm-menu-search-field' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Box_Shadow::get_type(),
+            [
+                'name'     => 'search_box_shadow',
+                'selector' => '{{WRAPPER}} .rmm-menu-search-field',
+            ]
+        );
+
+        $this->end_controls_section();
+
+        // 2. Food Card Style
+        $this->start_controls_section(
+            'section_style_cards',
+            [
+                'label' => __('استایل کارت غذاها', 'restaurant-menu-manager'),
+                'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+            ]
+        );
+
+        $this->add_control(
+            'card_bg_color',
+            [
+                'label'     => __('رنگ پس‌زمینه کارت', 'restaurant-menu-manager'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .rmm-food-card' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'card_bg_hover_color',
+            [
+                'label'     => __('رنگ پس‌زمینه در هاور', 'restaurant-menu-manager'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .rmm-food-card:hover' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Border::get_type(),
+            [
+                'name'     => 'card_border',
+                'selector' => '{{WRAPPER}} .rmm-food-card',
+            ]
+        );
+
+        $this->add_control(
+            'card_border_radius',
+            [
+                'label'      => __('انحنای لبه کارت (Border Radius)', 'restaurant-menu-manager'),
+                'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', '%'],
+                'selectors'  => [
+                    '{{WRAPPER}} .rmm-food-card' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Box_Shadow::get_type(),
+            [
+                'name'     => 'card_box_shadow',
+                'selector' => '{{WRAPPER}} .rmm-food-card',
+            ]
+        );
+
+        $this->add_control(
+            'card_padding',
+            [
+                'label'      => __('فاصله داخلی کارت (Padding)', 'restaurant-menu-manager'),
+                'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', 'em'],
+                'selectors'  => [
+                    '{{WRAPPER}} .rmm-card-details' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'cards_gap',
+            [
+                'label'      => __('فاصله بین کارت‌ها (Grid Gap)', 'restaurant-menu-manager'),
+                'type'       => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'range'      => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 60,
+                    ],
+                ],
+                'selectors'  => [
+                    '{{WRAPPER}} .rmm-menu-container' => 'gap: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        // Card Image Controls
+        $this->add_control(
+            'card_image_heading',
+            [
+                'label'     => __('تصویر کارت غذا', 'restaurant-menu-manager'),
+                'type'      => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
+            ]
+        );
+
+        $this->add_control(
+            'card_image_height',
+            [
+                'label'      => __('ارتفاع تصویر', 'restaurant-menu-manager'),
+                'type'       => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px', 'vh'],
+                'range'      => [
+                    'px' => [
+                        'min' => 100,
+                        'max' => 450,
+                    ],
+                ],
+                'selectors'  => [
+                    '{{WRAPPER}} .rmm-card-image-wrap' => 'height: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'card_image_border_radius',
+            [
+                'label'      => __('گردی کادر تصویر', 'restaurant-menu-manager'),
+                'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', '%'],
+                'selectors'  => [
+                    '{{WRAPPER}} .rmm-card-image-wrap, {{WRAPPER}} .rmm-card-img' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->end_controls_section();
+
+        // 3. Typography & Colors (Title, Price, Ingredients)
+        $this->start_controls_section(
+            'section_style_typography',
+            [
+                'label' => __('تایپوگرافی و رنگ‌های متن', 'restaurant-menu-manager'),
+                'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+            ]
+        );
+
+        // Title
+        $this->add_control(
+            'title_heading',
+            [
+                'label'     => __('عنوان غذا', 'restaurant-menu-manager'),
+                'type'      => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
+            ]
+        );
+
+        $this->add_control(
+            'title_color',
+            [
+                'label'     => __('رنگ عنوان غذا', 'restaurant-menu-manager'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .rmm-food-title' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name'     => 'title_typography',
+                'label'    => __('تایپوگرافی عنوان', 'restaurant-menu-manager'),
+                'selector' => '{{WRAPPER}} .rmm-food-title',
+            ]
+        );
+
+        // Price
+        $this->add_control(
+            'price_heading',
+            [
+                'label'     => __('قیمت غذا', 'restaurant-menu-manager'),
+                'type'      => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
+            ]
+        );
+
+        $this->add_control(
+            'price_color',
+            [
+                'label'     => __('رنگ قیمت', 'restaurant-menu-manager'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .rmm-food-price, {{WRAPPER}} .rmm-food-price .woocommerce-Price-amount' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name'     => 'price_typography',
+                'label'    => __('تایپوگرافی قیمت', 'restaurant-menu-manager'),
+                'selector' => '{{WRAPPER}} .rmm-food-price',
+            ]
+        );
+
+        // Ingredients
+        $this->add_control(
+            'ingredients_heading',
+            [
+                'label'     => __('ترکیبات و توضیحات', 'restaurant-menu-manager'),
+                'type'      => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
+            ]
+        );
+
+        $this->add_control(
+            'ingredients_color',
+            [
+                'label'     => __('رنگ متن ترکیبات', 'restaurant-menu-manager'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .rmm-food-ingredients' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name'     => 'ingredients_typography',
+                'label'    => __('تایپوگرافی ترکیبات', 'restaurant-menu-manager'),
+                'selector' => '{{WRAPPER}} .rmm-food-ingredients',
+            ]
+        );
+
+        // Meta (Calories & Time)
+        $this->add_control(
+            'meta_heading',
+            [
+                'label'     => __('کالری و زمان پخت', 'restaurant-menu-manager'),
+                'type'      => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
+            ]
+        );
+
+        $this->add_control(
+            'meta_color',
+            [
+                'label'     => __('رنگ اطلاعات کالری و زمان', 'restaurant-menu-manager'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .rmm-food-meta-row' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name'     => 'meta_typography',
+                'label'    => __('تایپوگرافی کالری و زمان', 'restaurant-menu-manager'),
+                'selector' => '{{WRAPPER}} .rmm-food-meta-row',
+            ]
+        );
+
+        $this->end_controls_section();
+
+        // 4. Badges Style
+        $this->start_controls_section(
+            'section_style_badges',
+            [
+                'label' => __('استایل نشان‌های رژیمی', 'restaurant-menu-manager'),
+                'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+                'condition' => [
+                    'show_badges' => 'yes',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name'     => 'badge_typography',
+                'label'    => __('تایپوگرافی نشان‌ها', 'restaurant-menu-manager'),
+                'selector' => '{{WRAPPER}} .rmm-card-badge',
+            ]
+        );
+
+        $this->add_control(
+            'badge_border_radius',
+            [
+                'label'      => __('انحنای لبه نشان‌ها', 'restaurant-menu-manager'),
+                'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', '%'],
+                'selectors'  => [
+                    '{{WRAPPER}} .rmm-card-badge' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'badge_padding',
+            [
+                'label'      => __('فاصله داخلی نشان‌ها', 'restaurant-menu-manager'),
+                'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px'],
+                'selectors'  => [
+                    '{{WRAPPER}} .rmm-card-badge' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'badge_box_shadow',
+            [
+                'label'     => __('سایه نشان‌ها', 'restaurant-menu-manager'),
+                'type'      => \Elementor\Controls_Manager::SWITCHER,
+                'default'   => 'yes',
+                'selectors' => [
+                    '{{WRAPPER}} .rmm-card-badge' => 'box-shadow: 0 2px 8px rgba(0,0,0,0.18);',
+                ],
+            ]
+        );
+
+        // Out of Stock Badge
+        $this->add_control(
+            'out_of_stock_heading',
+            [
+                'label'     => __('نشان «ناموجود»', 'restaurant-menu-manager'),
+                'type'      => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
+            ]
+        );
+
+        $this->add_control(
+            'out_of_stock_bg_color',
+            [
+                'label'     => __('رنگ پس‌زمینه ناموجود', 'restaurant-menu-manager'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .rmm-out-badge' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'out_of_stock_text_color',
+            [
+                'label'     => __('رنگ متن ناموجود', 'restaurant-menu-manager'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .rmm-out-badge' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'out_of_stock_radius',
+            [
+                'label'      => __('گردی کادر ناموجود', 'restaurant-menu-manager'),
+                'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', '%'],
+                'selectors'  => [
+                    '{{WRAPPER}} .rmm-out-badge' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->end_controls_section();
+
+        // 5. Action Buttons Style
+        $this->start_controls_section(
+            'section_style_button',
+            [
+                'label' => __('استایل دکمه خرید و سفارش', 'restaurant-menu-manager'),
+                'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name'     => 'btn_typography',
+                'label'    => __('تایپوگرافی دکمه', 'restaurant-menu-manager'),
+                'selector' => '{{WRAPPER}} .rmm-btn-order',
+            ]
+        );
+
+        $this->start_controls_tabs('tabs_button_style');
+
+        $this->start_controls_tab(
+            'tab_button_normal',
+            [
+                'label' => __('عادی', 'restaurant-menu-manager'),
+            ]
+        );
+
+        $this->add_control(
+            'btn_bg_color',
+            [
+                'label'     => __('رنگ پس‌زمینه دکمه', 'restaurant-menu-manager'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .rmm-btn-order' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'btn_text_color',
+            [
+                'label'     => __('رنگ متن دکمه', 'restaurant-menu-manager'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .rmm-btn-order' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->end_controls_tab();
+
+        $this->start_controls_tab(
+            'tab_button_hover',
+            [
+                'label' => __('هاور (Hover)', 'restaurant-menu-manager'),
+            ]
+        );
+
+        $this->add_control(
+            'btn_bg_hover_color',
+            [
+                'label'     => __('رنگ پس‌زمینه در هاور', 'restaurant-menu-manager'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .rmm-btn-order:hover' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'btn_text_hover_color',
+            [
+                'label'     => __('رنگ متن در هاور', 'restaurant-menu-manager'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .rmm-btn-order:hover' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->end_controls_tab();
+
+        $this->end_controls_tabs();
+
+        $this->add_control(
+            'btn_border_radius',
+            [
+                'label'      => __('گردی لبه دکمه (Border Radius)', 'restaurant-menu-manager'),
+                'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', '%'],
+                'separator'  => 'before',
+                'selectors'  => [
+                    '{{WRAPPER}} .rmm-btn-order' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'btn_padding',
+            [
+                'label'      => __('فاصله داخلی دکمه (Padding)', 'restaurant-menu-manager'),
+                'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', 'em'],
+                'selectors'  => [
+                    '{{WRAPPER}} .rmm-btn-order' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Box_Shadow::get_type(),
+            [
+                'name'     => 'btn_box_shadow',
+                'selector' => '{{WRAPPER}} .rmm-btn-order',
+            ]
+        );
+
+        $this->end_controls_section();
+
+        // 6. Food Details Modal Style
+        $this->start_controls_section(
+            'section_style_modal',
+            [
+                'label' => __('استایل پاپ‌آپ جزئیات غذا (Food Modal Style)', 'restaurant-menu-manager'),
+                'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+            ]
+        );
+
+        $this->add_control(
+            'modal_box_bg',
+            [
+                'label'     => __('رنگ پس‌زمینه پنجره پاپ‌آپ', 'restaurant-menu-manager'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .rmm-modal-box' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'modal_box_radius',
+            [
+                'label'      => __('گردی لبه پنجره (Border Radius)', 'restaurant-menu-manager'),
+                'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', '%'],
+                'selectors'  => [
+                    '{{WRAPPER}} .rmm-modal-box' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Box_Shadow::get_type(),
+            [
+                'name'     => 'modal_box_shadow',
+                'selector' => '{{WRAPPER}} .rmm-modal-box',
+            ]
+        );
+
+        $this->add_control(
+            'modal_title_heading',
+            [
+                'label'     => __('عنوان غذا در پاپ‌آپ', 'restaurant-menu-manager'),
+                'type'      => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
+            ]
+        );
+
+        $this->add_control(
+            'modal_title_color',
+            [
+                'label'     => __('رنگ عنوان غذا', 'restaurant-menu-manager'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .rmm-modal-food-title' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name'     => 'modal_title_typography',
+                'selector' => '{{WRAPPER}} .rmm-modal-food-title',
+            ]
+        );
+
+        $this->add_control(
+            'modal_price_heading',
+            [
+                'label'     => __('قیمت در پاپ‌آپ', 'restaurant-menu-manager'),
+                'type'      => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
+            ]
+        );
+
+        $this->add_control(
+            'modal_price_color',
+            [
+                'label'     => __('رنگ قیمت', 'restaurant-menu-manager'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .rmm-modal-food-price' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name'     => 'modal_price_typography',
+                'selector' => '{{WRAPPER}} .rmm-modal-food-price',
+            ]
+        );
+
+        $this->add_control(
+            'modal_desc_heading',
+            [
+                'label'     => __('توضیحات و ترکیبات در پاپ‌آپ', 'restaurant-menu-manager'),
+                'type'      => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
+            ]
+        );
+
+        $this->add_control(
+            'modal_desc_color',
+            [
+                'label'     => __('رنگ متن ترکیبات', 'restaurant-menu-manager'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .rmm-modal-ingredients-text' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name'     => 'modal_desc_typography',
+                'selector' => '{{WRAPPER}} .rmm-modal-ingredients-text',
+            ]
+        );
+
+        $this->end_controls_section();
+
+        // 7. Category Section Headers Style
+        $this->start_controls_section(
+            'section_style_cat_headers',
+            [
+                'label'     => __('استایل عناوین دسته‌بندی‌ها (Category Headers)', 'restaurant-menu-manager'),
+                'tab'       => \Elementor\Controls_Manager::TAB_STYLE,
+                'condition' => [
+                    'show_category_headers' => 'yes',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'cat_title_color',
+            [
+                'label'     => __('رنگ عنوان دسته‌بندی', 'restaurant-menu-manager'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .rmm-category-title' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name'     => 'cat_title_typography',
+                'label'    => __('تایپوگرافی عنوان دسته‌بندی', 'restaurant-menu-manager'),
+                'selector' => '{{WRAPPER}} .rmm-category-title',
+            ]
+        );
+
+        $this->add_control(
+            'cat_badge_bg',
+            [
+                'label'     => __('رنگ پس‌زمینه نشان تعداد', 'restaurant-menu-manager'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .rmm-cat-count-badge' => 'background: {{VALUE}} !important;',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'cat_badge_color',
+            [
+                'label'     => __('رنگ متن نشان تعداد', 'restaurant-menu-manager'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .rmm-cat-count-badge' => 'color: {{VALUE}} !important;',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'cat_divider_color',
+            [
+                'label'     => __('رنگ خط جداکننده دسته‌بندی', 'restaurant-menu-manager'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .rmm-cat-divider-line' => 'background: {{VALUE}} !important;',
+                    '{{WRAPPER}} .rmm-cat-divider-ornament' => 'color: {{VALUE}} !important;',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'cat_section_spacing',
+            [
+                'label'      => __('فاصله بالای هر دسته‌بندی', 'restaurant-menu-manager'),
+                'type'       => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'range'      => [
+                    'px' => [
+                        'min' => 10,
+                        'max' => 80,
+                    ],
+                ],
+                'selectors'  => [
+                    '{{WRAPPER}} .rmm-category-section' => 'margin-bottom: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->end_controls_section();
+    }
+
+    protected function render() {
+        $settings = $this->get_settings_for_display();
+        $style = $settings['layout_style'] ?? 'modern_grid';
+        $columns = $settings['columns'] ?? '3';
+
+        $active_branch_id = \RMM\Branches\BranchContext::get_active_branch_id();
+        $branch_mode = \RMM\Branches\BranchContext::get_branch_mode($active_branch_id);
+        $is_view_only = ($branch_mode === 'view_only');
+
+        $card_action = $settings['card_click_action'] ?? 'default_modal';
+        $template_id = $settings['elementor_template_id'] ?? 0;
+        $popup_id    = $settings['elementor_popup_id'] ?? '';
+
+        // Multilingual active strings
+        $active_lang = class_exists('\RMM\I18n\MultiLangManager') ? \RMM\I18n\MultiLangManager::get_current_language() : 'fa';
+        $search_placeholder = class_exists('\RMM\I18n\MultiLangManager') ? \RMM\I18n\MultiLangManager::get_ui_string('search_placeholder', $active_lang) : __('جستجو در منو (مثلاً پیتزا، برگر، سالاد...)', 'restaurant-menu-manager');
+        $str_minutes = class_exists('\RMM\I18n\MultiLangManager') ? \RMM\I18n\MultiLangManager::get_ui_string('minutes', $active_lang) : __('دقیقه', 'restaurant-menu-manager');
+        $str_out_of_stock = class_exists('\RMM\I18n\MultiLangManager') ? \RMM\I18n\MultiLangManager::get_ui_string('out_of_stock', $active_lang) : __('ناموجود در این شعبه', 'restaurant-menu-manager');
+        $str_order_wa = class_exists('\RMM\I18n\MultiLangManager') ? \RMM\I18n\MultiLangManager::get_ui_string('order_whatsapp', $active_lang) : __('سفارش در واتساپ', 'restaurant-menu-manager');
+        $str_call = class_exists('\RMM\I18n\MultiLangManager') ? \RMM\I18n\MultiLangManager::get_ui_string('call_order', $active_lang) : __('تماس تلفنی', 'restaurant-menu-manager');
+        $str_options = class_exists('\RMM\I18n\MultiLangManager') ? \RMM\I18n\MultiLangManager::get_ui_string('choose_options', $active_lang) : __('انتخاب مخلفات', 'restaurant-menu-manager');
+        $str_add = class_exists('\RMM\I18n\MultiLangManager') ? \RMM\I18n\MultiLangManager::get_ui_string('add_to_cart', $active_lang) : __('افزودن به سبد', 'restaurant-menu-manager');
+        $str_digital = class_exists('\RMM\I18n\MultiLangManager') ? \RMM\I18n\MultiLangManager::get_ui_string('digital_menu', $active_lang) : __('منو دیجیتال', 'restaurant-menu-manager');
+        $str_grid_view = class_exists('\RMM\I18n\MultiLangManager') ? \RMM\I18n\MultiLangManager::get_ui_string('grid_view', $active_lang) : __('نمایش شبکه‌ای', 'restaurant-menu-manager');
+        $str_list_view = class_exists('\RMM\I18n\MultiLangManager') ? \RMM\I18n\MultiLangManager::get_ui_string('list_view', $active_lang) : __('نمایش لیستی', 'restaurant-menu-manager');
+
+        $enable_switcher = ($settings['enable_view_switcher'] ?? 'yes') === 'yes';
+        $default_view = $settings['default_view'] ?? ($style === 'app_list' ? 'list' : 'grid');
+
+        // Enqueue frontend scripts & styles
+        wp_enqueue_style('rmm-frontend-menu');
+        wp_enqueue_script('rmm-frontend-menu');
+
+        $args = [
+            'post_type'      => 'product',
+            'post_status'    => 'publish',
+            'posts_per_page' => -1,
+            'orderby'        => 'menu_order',
+            'order'          => 'ASC',
+        ];
+
+        $query = new \WP_Query($args);
+        if (!$query->have_posts()) {
+            echo '<p class="rmm-no-foods">' . esc_html__('هیچ غذایی در این منو یافت نشد.', 'restaurant-menu-manager') . '</p>';
+            return;
+        }
+
+        $view_class = ($default_view === 'list') ? 'rmm-view-list' : 'rmm-view-grid';
+        $grid_class = 'rmm-menu-container rmm-style-' . esc_attr($style) . ' ' . $view_class . ' rmm-cols-' . esc_attr($columns);
+        $wrapper_class = 'rmm-menu-widget-wrapper' . ($style === 'oriental' ? ' rmm-theme-oriental' : '');
+
+        $context_data = [
+            'is_view_only'      => $is_view_only,
+            'card_action'       => $card_action,
+            'template_id'       => $template_id,
+            'popup_id'          => $popup_id,
+            'active_lang'       => $active_lang,
+            'str_digital'       => $str_digital,
+            'str_out_of_stock'  => $str_out_of_stock,
+            'str_order_wa'      => $str_order_wa,
+            'str_call'          => $str_call,
+            'str_options'       => $str_options,
+            'str_add'           => $str_add,
+            'str_minutes'       => $str_minutes,
+        ];
+
+        // Group products by category and filter stock
+        $hide_out_of_stock = ($settings['hide_out_of_stock'] ?? 'yes') === 'yes';
+        $products_by_cat = [];
+        $uncategorized_products = [];
+        $all_active_products = [];
+        $branch_id = class_exists('\RMM\Branches\BranchContext') ? \RMM\Branches\BranchContext::get_active_branch_id() : 0;
+
+        while ($query->have_posts()) {
+            $query->the_post();
+            $product = wc_get_product(get_the_ID());
+            if (!$product) continue;
+
+            $p_id = $product->get_id();
+            $in_stock = $product->is_in_stock();
+
+            if ($branch_id && class_exists('\RMM\Branches\InventoryRepository')) {
+                $inv_item = \RMM\Branches\InventoryRepository::get_item($p_id, $branch_id);
+                if ($inv_item && (!$inv_item->is_available || $inv_item->stock_status === 'outofstock')) {
+                    $in_stock = false;
+                }
+            }
+
+            if ($hide_out_of_stock && !$in_stock) {
+                continue;
+            }
+
+            $all_active_products[] = $product;
+            $cat_ids = wp_get_post_terms($p_id, 'product_cat', ['fields' => 'ids']);
+            if (empty($cat_ids)) {
+                $uncategorized_products[] = $product;
+            } else {
+                foreach ($cat_ids as $c_id) {
+                    $products_by_cat[$c_id][] = $product;
+                }
+            }
+        }
+        wp_reset_postdata();
+
+        if (empty($all_active_products)) {
+            echo '<p class="rmm-no-foods">' . esc_html__('هیچ غذای موجودی در این منو یافت نشد.', 'restaurant-menu-manager') . '</p>';
+            return;
+        }
+
+        $show_category_headers = ($settings['show_category_headers'] ?? 'yes') === 'yes';
+        $ordered_categories = class_exists('\RMM\Menu\CategoryOrder')
+            ? \RMM\Menu\CategoryOrder::get_ordered_categories(['hide_empty' => true])
+            : get_terms(['taxonomy' => 'product_cat', 'hide_empty' => true]);
+        ?>
+        <div class="<?php echo esc_attr($wrapper_class); ?>">
+            
+            <div class="rmm-top-controls-bar">
+                <?php if ($settings['show_search'] === 'yes') : ?>
+                    <div class="rmm-live-search-bar">
+                        <span class="rmm-search-icon">🔍</span>
+                        <input type="text" class="rmm-menu-search-field" placeholder="<?php echo esc_attr($search_placeholder); ?>">
+                    </div>
+                <?php endif; ?>
+
+                <?php if ($enable_switcher) : ?>
+                    <div class="rmm-view-switcher" role="group" aria-label="<?php esc_attr_e('حالت نمایش منو', 'restaurant-menu-manager'); ?>">
+                        <button type="button" class="rmm-view-btn rmm-btn-grid <?php echo ($default_view === 'grid') ? 'is-active' : ''; ?>" data-view="grid" title="<?php echo esc_attr($str_grid_view); ?>">
+                            <span class="rmm-view-icon">⊞</span>
+                            <span class="rmm-view-text"><?php echo esc_html($str_grid_view); ?></span>
+                        </button>
+                        <button type="button" class="rmm-view-btn rmm-btn-list <?php echo ($default_view === 'list') ? 'is-active' : ''; ?>" data-view="list" title="<?php echo esc_attr($str_list_view); ?>">
+                            <span class="rmm-view-icon">☰</span>
+                            <span class="rmm-view-text"><?php echo esc_html($str_list_view); ?></span>
+                        </button>
+                    </div>
+                <?php endif; ?>
+            </div>
+
+            <?php if ($show_category_headers && !empty($ordered_categories)) : ?>
+                <!-- نمای دسته‌بندی‌شده همراه با عنوان و جداکننده هر دسته -->
+                <div class="rmm-menu-catalog-wrap" data-default-view="<?php echo esc_attr($default_view); ?>">
+                    <?php foreach ($ordered_categories as $cat) : 
+                        $c_id = $cat->term_id;
+                        if (empty($products_by_cat[$c_id])) continue;
+                        $cat_foods = $products_by_cat[$c_id];
+
+                        $cat_name = $cat->name;
+                        if (class_exists('\RMM\I18n\MultiLangManager') && $active_lang !== 'fa') {
+                            $t_name = \RMM\I18n\MultiLangManager::get_term_translation($c_id, $active_lang);
+                            if (!empty($t_name)) {
+                                $cat_name = $t_name;
+                            }
+                        }
+
+                        $thumb_id = get_term_meta($c_id, 'thumbnail_id', true);
+                        $cat_img = $thumb_id ? wp_get_attachment_image_url($thumb_id, 'thumbnail') : '';
+                    ?>
+                        <section class="rmm-category-section" id="rmm-cat-sec-<?php echo esc_attr($c_id); ?>" data-cat-id="<?php echo esc_attr($c_id); ?>">
+                            <header class="rmm-category-header">
+                                <div class="rmm-cat-header-main">
+                                    <?php if ($settings['show_cat_thumb'] === 'yes' && $cat_img) : ?>
+                                        <div class="rmm-cat-header-thumb-wrap">
+                                            <img src="<?php echo esc_url($cat_img); ?>" class="rmm-cat-header-thumb" alt="<?php echo esc_attr($cat_name); ?>">
+                                        </div>
+                                    <?php endif; ?>
+                                    <div class="rmm-cat-header-info">
+                                        <div class="rmm-cat-title-row">
+                                            <h2 class="rmm-category-title"><?php echo esc_html($cat_name); ?></h2>
+                                            <?php if ($settings['show_cat_count'] === 'yes') : ?>
+                                                <span class="rmm-cat-count-badge"><?php echo count($cat_foods); ?></span>
+                                            <?php endif; ?>
+                                        </div>
+                                        <?php if ($settings['show_cat_desc'] === 'yes' && !empty($cat->description)) : ?>
+                                            <p class="rmm-category-desc"><?php echo esc_html($cat->description); ?></p>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                                <div class="rmm-cat-header-divider">
+                                    <span class="rmm-cat-divider-line"></span>
+                                    <span class="rmm-cat-divider-ornament"><?php echo ($style === 'oriental') ? '🏮' : '◆'; ?></span>
+                                    <span class="rmm-cat-divider-line"></span>
+                                </div>
+                            </header>
+
+                            <div class="<?php echo esc_attr($grid_class); ?>" data-default-view="<?php echo esc_attr($default_view); ?>">
+                                <?php foreach ($cat_foods as $prod) : ?>
+                                    <?php $this->render_food_card($prod, $settings, $context_data); ?>
+                                <?php endforeach; ?>
+                            </div>
+                        </section>
+                    <?php endforeach; ?>
+
+                    <?php if (!empty($uncategorized_products)) : ?>
+                        <section class="rmm-category-section rmm-uncategorized-section" id="rmm-cat-sec-uncategorized" data-cat-id="uncategorized">
+                            <header class="rmm-category-header">
+                                <div class="rmm-cat-header-main">
+                                    <div class="rmm-cat-header-info">
+                                        <div class="rmm-cat-title-row">
+                                            <h2 class="rmm-category-title"><?php esc_html_e('سایر غذاها و موارد متفرقه', 'restaurant-menu-manager'); ?></h2>
+                                            <?php if ($settings['show_cat_count'] === 'yes') : ?>
+                                                <span class="rmm-cat-count-badge"><?php echo count($uncategorized_products); ?></span>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="rmm-cat-header-divider">
+                                    <span class="rmm-cat-divider-line"></span>
+                                    <span class="rmm-cat-divider-ornament">◆</span>
+                                    <span class="rmm-cat-divider-line"></span>
+                                </div>
+                            </header>
+
+                            <div class="<?php echo esc_attr($grid_class); ?>" data-default-view="<?php echo esc_attr($default_view); ?>">
+                                <?php foreach ($uncategorized_products as $prod) : ?>
+                                    <?php $this->render_food_card($prod, $settings, $context_data); ?>
+                                <?php endforeach; ?>
+                            </div>
+                        </section>
+                    <?php endif; ?>
+                </div>
+
+            <?php else : ?>
+
+                <!-- حالت یکپارچه بدون سرفصل دسته‌بندی -->
+                <div class="<?php echo esc_attr($grid_class); ?>" data-default-view="<?php echo esc_attr($default_view); ?>">
+                    <?php foreach ($all_active_products as $prod) : ?>
+                        <?php $this->render_food_card($prod, $settings, $context_data); ?>
+                    <?php endforeach; ?>
+                </div>
+
+            <?php endif; ?>
+
+            <!-- MODIFIERS POPUP MODAL (Single Reusable Modal) -->
+            <div id="rmm-modifiers-modal" class="rmm-modal-backdrop" style="display:none;">
+                <div class="rmm-modal-box">
+                    <button class="rmm-modal-close-btn">&times;</button>
+                    <div id="rmm-modal-content">
+                        <!-- Loaded via AJAX -->
+                    </div>
+                </div>
+            </div>
+
+            <?php if (($settings['show_theme_toggle'] ?? 'yes') === 'yes') : ?>
+                <!-- Day / Night Theme Toggle Button (تم شرقی و کل افزونه) -->
+                <button id="theme-toggle-btn" class="rmm-theme-toggle-btn" type="button" aria-label="<?php esc_attr_e('تغییر تم (روز / شب)', 'restaurant-menu-manager'); ?>" title="<?php esc_attr_e('تغییر تم (روز / شب)', 'restaurant-menu-manager'); ?>">
+                    <span class="rmm-theme-icon">🌓</span>
+                    <span class="rmm-theme-text"><?php echo esc_html__('تغییر تم (روز / شب)', 'restaurant-menu-manager'); ?></span>
+                </button>
+            <?php endif; ?>
+
+        </div>
+        <?php
+    }
+
+    /**
+     * Render an individual food card inside the menu
+     */
+    private function render_food_card($product, $settings, $context_data) {
+        if (!$product) return;
+
+        $p_id = $product->get_id();
+        $in_stock = $product->is_in_stock();
+
+        $active_branch_id = class_exists('\RMM\Branches\BranchContext') ? \RMM\Branches\BranchContext::get_active_branch_id() : 0;
+        if ($active_branch_id && class_exists('\RMM\Branches\InventoryRepository')) {
+            $inv_item = \RMM\Branches\InventoryRepository::get_item($p_id, $active_branch_id);
+            if ($inv_item && (!$inv_item->is_available || $inv_item->stock_status === 'outofstock')) {
+                $in_stock = false;
+            }
+        }
+
+        $price = $product->get_price();
+        $regular_price = $product->get_regular_price();
+        $is_on_sale = $product->is_on_sale() && !empty($regular_price) && floatval($regular_price) > floatval($price);
+        $calories = get_post_meta($p_id, '_rmm_calories', true);
+        $prep_time = get_post_meta($p_id, '_rmm_prep_time', true);
+        $ingredients = get_post_meta($p_id, '_rmm_ingredients', true);
+        $badge = \RMM\Menu\FoodMeta::get_badge_info($p_id, $context_data['active_lang']);
+
+        $food_title = $product->get_name();
+        $food_desc  = wp_strip_all_tags($product->get_short_description() ?: $product->get_description());
+
+        if (class_exists('\RMM\I18n\MultiLangManager') && $context_data['active_lang'] !== 'fa') {
+            $trans_name = \RMM\I18n\MultiLangManager::get_product_translation($p_id, 'name', $context_data['active_lang']);
+            if (!empty($trans_name)) {
+                $food_title = $trans_name;
+            }
+            $trans_ing = \RMM\I18n\MultiLangManager::get_product_translation($p_id, 'ingredients', $context_data['active_lang']);
+            if (!empty($trans_ing)) {
+                $ingredients = $trans_ing;
+            }
+            $trans_desc = \RMM\I18n\MultiLangManager::get_product_translation($p_id, 'desc', $context_data['active_lang']);
+            if (!empty($trans_desc)) {
+                $food_desc = $trans_desc;
+            }
+        }
+
+        $portions = get_post_meta($p_id, '_rmm_portions', true);
+        $modifiers = get_post_meta($p_id, '_rmm_modifier_groups', true);
+        $has_options = (!empty($portions) || !empty($modifiers));
+
+        $cat_ids = wp_get_post_terms($p_id, 'product_cat', ['fields' => 'ids']);
+        $cat_attr = implode(',', (array)$cat_ids);
+
+        $card_action = $context_data['card_action'];
+        $template_id = $context_data['template_id'];
+        $popup_id    = $context_data['popup_id'];
+        $is_view_only= $context_data['is_view_only'];
+        ?>
+        <div class="rmm-food-card <?php echo $in_stock ? 'in-stock' : 'out-of-stock'; ?> <?php echo ($card_action !== 'none') ? 'rmm-card-clickable' : ''; ?>" 
+             data-id="<?php echo esc_attr($p_id); ?>" 
+             data-cats="<?php echo esc_attr($cat_attr); ?>" 
+             data-title="<?php echo esc_attr(mb_strtolower($food_title, 'UTF-8')); ?>"
+             data-action="<?php echo esc_attr($card_action); ?>"
+             data-template-id="<?php echo esc_attr($template_id); ?>"
+             data-popup-id="<?php echo esc_attr($popup_id); ?>">
+            
+            <!-- Thumbnail -->
+            <div class="rmm-card-image-wrap">
+                <?php if (has_post_thumbnail($p_id)) : ?>
+                    <?php echo get_the_post_thumbnail($p_id, 'medium', ['class' => 'rmm-card-img', 'alt' => esc_attr($food_title)]); ?>
+                <?php else : ?>
+                    <img src="<?php echo esc_url(wc_placeholder_img_src()); ?>" class="rmm-card-img" alt="<?php echo esc_attr($food_title); ?>">
+                <?php endif; ?>
+
+                <?php if ($settings['show_badges'] === 'yes' && $badge) : ?>
+                    <span class="rmm-card-badge <?php echo esc_attr($badge['class']); ?>">
+                        <?php if (!empty($badge['image'])) : ?>
+                            <img src="<?php echo esc_url($badge['image']); ?>" class="rmm-badge-icon-img" alt="<?php echo esc_attr($badge['label']); ?>">
+                        <?php elseif (!empty($badge['icon'])) : ?>
+                            <span class="rmm-badge-icon-symbol"><?php echo esc_html($badge['icon']); ?></span>
+                        <?php endif; ?>
+                        <?php if (!empty($badge['label'])) : ?>
+                            <span class="rmm-badge-text-val"><?php echo esc_html($badge['label']); ?></span>
+                        <?php endif; ?>
+                    </span>
+                <?php endif; ?>
+            </div>
+
+            <!-- Content -->
+            <div class="rmm-card-details">
+                <h3 class="rmm-food-title"><?php echo esc_html($food_title); ?></h3>
+
+                <div class="rmm-card-price-badge-row">
+                    <div class="rmm-food-price">
+                        <?php if ($is_view_only && \RMM\Core\Settings::get('catalog_hide_price', 'no') === 'yes') : ?>
+                            <span class="rmm-price-hidden"><?php echo esc_html($context_data['str_digital']); ?></span>
+                        <?php elseif ($is_on_sale) : ?>
+                            <del class="rmm-card-old-price"><?php echo wc_price($regular_price); ?></del>
+                            <ins class="rmm-card-sale-price"><?php echo wc_price($price); ?></ins>
+                        <?php else : ?>
+                            <span class="rmm-card-regular-price"><?php echo wc_price($price); ?></span>
+                        <?php endif; ?>
+                    </div>
+
+                    <?php if ($settings['show_badges'] === 'yes' && $badge) : ?>
+                        <span class="rmm-card-badge <?php echo esc_attr($badge['class']); ?>">
+                            <?php if (!empty($badge['image'])) : ?>
+                                <img src="<?php echo esc_url($badge['image']); ?>" class="rmm-badge-icon-img" alt="<?php echo esc_attr($badge['label']); ?>">
+                            <?php elseif (!empty($badge['icon'])) : ?>
+                                <span class="rmm-badge-icon-symbol"><?php echo esc_html($badge['icon']); ?></span>
+                            <?php endif; ?>
+                            <?php if (!empty($badge['label'])) : ?>
+                                <span class="rmm-badge-text-val"><?php echo esc_html($badge['label']); ?></span>
+                            <?php endif; ?>
+                        </span>
+                    <?php endif; ?>
+                </div>
+
+                <?php if (!empty($food_desc)) : ?>
+                    <p class="rmm-food-desc"><?php echo esc_html($food_desc); ?></p>
+                <?php endif; ?>
+                <?php if ($ingredients && $ingredients !== $food_desc) : ?>
+                    <p class="rmm-food-ingredients"><?php echo esc_html($ingredients); ?></p>
+                <?php endif; ?>
+
+                <!-- Meta (Calories / Prep Time) -->
+                <?php if ($settings['show_calories'] === 'yes' && ($calories || $prep_time)) : ?>
+                    <div class="rmm-food-meta-row">
+                        <?php if ($calories) : ?>
+                            <span>🔥 <?php echo esc_html($calories); ?></span>
+                        <?php endif; ?>
+                        <?php if ($prep_time) : ?>
+                            <span>⏱️ <?php echo esc_html($prep_time . ' ' . $context_data['str_minutes']); ?></span>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
+
+                <!-- Action Button -->
+                <div class="rmm-card-action-row">
+                    <?php if (!$in_stock) : ?>
+                        <span class="rmm-out-badge"><?php echo esc_html($context_data['str_out_of_stock']); ?></span>
+                    <?php elseif ($is_view_only) : ?>
+                        <?php
+                        $action_btn = \RMM\Core\Settings::get('catalog_action_btn', 'whatsapp');
+                        $whatsapp = \RMM\Core\Settings::get('whatsapp_number', '');
+                        $phone = \RMM\Core\Settings::get('phone_number', '');
+                        ?>
+                        <?php if ($action_btn === 'whatsapp' && $whatsapp) : ?>
+                            <a href="<?php echo esc_url('https://wa.me/' . $whatsapp . '?text=' . rawurlencode(sprintf(__('سلام، مایل به استعلام و سفارش غذای %s هستم.', 'restaurant-menu-manager'), $food_title))); ?>" target="_blank" class="rmm-btn-order whatsapp">
+                                💬 <?php echo esc_html($context_data['str_order_wa']); ?>
+                            </a>
+                        <?php elseif ($action_btn === 'call' && $phone) : ?>
+                            <a href="tel:<?php echo esc_attr($phone); ?>" class="rmm-btn-order call">
+                                📞 <?php echo esc_html($context_data['str_call']); ?>
+                            </a>
+                        <?php endif; ?>
+                    <?php else : ?>
+                        <?php if ($has_options) : ?>
+                            <button class="rmm-btn-order rmm-open-modifiers-btn" data-id="<?php echo esc_attr($p_id); ?>">
+                                + <?php echo esc_html($context_data['str_options']); ?>
+                            </button>
+                        <?php else : ?>
+                            <button class="rmm-btn-order rmm-quick-add-btn" data-id="<?php echo esc_attr($p_id); ?>">
+                                + <?php echo esc_html($context_data['str_add']); ?>
+                            </button>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                </div>
+
+            </div>
+        </div>
+        <?php
+    }
+}

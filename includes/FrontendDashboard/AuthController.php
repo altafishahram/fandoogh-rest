@@ -1,0 +1,112 @@
+<?php
+namespace RMM\FrontendDashboard;
+
+if (!defined('ABSPATH')) {
+    exit;
+}
+
+class AuthController {
+
+    public function __construct() {
+        add_action('init', [$this, 'handle_auth_actions']);
+    }
+
+    /**
+     * Check if user is logged in and belongs to allowed roles
+     */
+    public static function is_authorized($user = null) {
+        if (!$user) {
+            $user = wp_get_current_user();
+        }
+
+        if (!$user || !$user->exists()) {
+            return false;
+        }
+
+        // Administrators and managers always authorized
+        if (user_can($user, 'manage_options') || 
+            user_can($user, 'manage_woocommerce') || 
+            user_can($user, 'manage_restaurant_menu') || 
+            user_can($user, 'view_kitchen_orders')) {
+            return true;
+        }
+
+        $allowed_roles = ['administrator', 'shop_manager', 'restaurant_manager', 'kitchen_staff'];
+        return (bool) array_intersect($allowed_roles, (array) $user->roles);
+    }
+
+    /**
+     * Get branch IDs assigned to current user (or all if admin)
+     */
+    public static function get_user_branches($user_id = null) {
+        if (!$user_id) {
+            $user_id = get_current_user_id();
+        }
+
+        if (user_can($user_id, 'manage_options') || user_can($user_id, 'manage_woocommerce')) {
+            // Admins can access all branches
+            return get_terms([
+                'taxonomy'   => \RMM\Branches\BranchTaxonomy::TAXONOMY,
+                'hide_empty' => false,
+                'fields'     => 'ids',
+            ]);
+        }
+
+        // Restaurant manager: check branches where _rmm_manager_id matches
+        return get_terms([
+            'taxonomy'   => \RMM\Branches\BranchTaxonomy::TAXONOMY,
+            'hide_empty' => false,
+            'fields'     => 'ids',
+            'meta_query' => [
+                [
+                    'key'   => '_rmm_manager_id',
+                    'value' => $user_id,
+                ]
+            ]
+        ]);
+    }
+
+    /**
+     * Handle login & logout POST requests on portal
+     */
+    public function handle_auth_actions() {
+        // Handle Logout
+        if (isset($_GET['rmm_action']) && $_GET['rmm_action'] === 'logout') {
+            check_admin_referer('rmm_portal_logout');
+            wp_logout();
+            $slug = \RMM\Core\Settings::get('dashboard_slug', 'restaurant-portal');
+            wp_safe_redirect(home_url('/' . $slug . '/'));
+            exit;
+        }
+
+        // Handle Login
+        if (isset($_POST['rmm_portal_login_submit'])) {
+            if (!isset($_POST['rmm_login_nonce']) || !wp_verify_nonce($_POST['rmm_login_nonce'], 'rmm_portal_login')) {
+                wp_die(__('اعتبارسنجی امنیتی ناموفق بود.', 'restaurant-menu-manager'));
+            }
+
+            $credentials = [
+                'user_login'    => sanitize_user($_POST['log'] ?? ''),
+                'user_password' => $_POST['pwd'] ?? '',
+                'remember'      => !empty($_POST['rememberme']),
+            ];
+
+            $user = wp_signon($credentials, is_ssl());
+
+            $slug = \RMM\Core\Settings::get('dashboard_slug', 'restaurant-portal');
+            $redirect_url = home_url('/' . $slug . '/');
+
+            if (is_wp_error($user)) {
+                $redirect_url = add_query_arg('login_error', urlencode($user->get_error_message()), $redirect_url);
+            } else {
+                if (!self::is_authorized($user)) {
+                    wp_logout();
+                    $redirect_url = add_query_arg('login_error', urlencode(__('حساب کاربری شما دسترسی به پنل مدیریت رستوران را ندارد.', 'restaurant-menu-manager')), $redirect_url);
+                }
+            }
+
+            wp_safe_redirect($redirect_url);
+            exit;
+        }
+    }
+}

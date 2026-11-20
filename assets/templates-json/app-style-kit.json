@@ -1,0 +1,57 @@
+{
+  "version": "0.4",
+  "title": "TastyMenu - App Style Delivery Kit",
+  "type": "page",
+  "content": [
+    {
+      "id": "sec-app-1",
+      "elType": "section",
+      "elements": [
+        {
+          "id": "col-app-1",
+          "elType": "column",
+          "elements": [
+            {
+              "id": "w-branch-app",
+              "elType": "widget",
+              "widgetType": "rmm_branch_selector",
+              "settings": {
+                "show_status": "yes",
+                "show_table": "no",
+                "show_lang": "yes"
+              }
+            },
+            {
+              "id": "w-cat-app",
+              "elType": "widget",
+              "widgetType": "rmm_category_bar",
+              "settings": {
+                "is_sticky": "yes",
+                "show_all_button": "yes"
+              }
+            },
+            {
+              "id": "w-menu-app",
+              "elType": "widget",
+              "widgetType": "rmm_food_menu_grid",
+              "settings": {
+                "layout_style": "app_list",
+                "show_search": "yes",
+                "show_badges": "yes",
+                "show_calories": "yes"
+              }
+            },
+            {
+              "id": "w-cart-app",
+              "elType": "widget",
+              "widgetType": "rmm_floating_cart",
+              "settings": {
+                "cart_btn_text": "مشاهده سبد خرید و ثبت نهایی"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
