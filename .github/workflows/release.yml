@@ -26,9 +26,11 @@ jobs:
           python-version: '3.x'
 
       - name: Verify tag matches plugin version
+        env:
+          INPUT_TAG: ${{ inputs.tag }}
         run: |
           set -euo pipefail
-          TAG="${GITHUB_REF_NAME}"
+          TAG="${INPUT_TAG:-${GITHUB_REF_NAME}}"
           VERSION=$(grep -oP "^\s*\*\s*Version:\s*\K[0-9.]+" fondogh-online-menu.php | head -n1)
           CONST=$(grep -oP "define\('RMM_VERSION',\s*'\K[0-9.]+" fondogh-online-menu.php | head -n1)
           echo "tag=$TAG version=$VERSION const=$CONST"
@@ -40,6 +42,7 @@ jobs:
             echo "::error::Header version $VERSION and RMM_VERSION $CONST differ"
             exit 1
           fi
+          echo "RELEASE_TAG=$TAG" >> "$GITHUB_ENV"
 
       - name: Build package
         run: python tools/build-release.py
@@ -50,6 +53,7 @@ jobs:
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ env.RELEASE_TAG }}
           files: |
             fondogh-online-menu.zip
             fondogh-online-menu.zip.sha256
