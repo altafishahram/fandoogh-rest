@@ -103,12 +103,12 @@ class ModeManager {
         }
 
         if ($action_btn === 'whatsapp' && !empty($whatsapp)) {
-            $msg = rawurlencode(sprintf(__('سلام، مایل به استعلام و سفارش غذای «%s» هستم.', 'restaurant-menu-manager'), $product->get_name()));
+            $msg = rawurlencode(sprintf(__('سلام، مایل به استعلام و سفارش غذای «%s» هستم.', 'fondogh-online-menu'), $product->get_name()));
             $link = "https://wa.me/{$whatsapp}?text={$msg}";
             return sprintf(
                 '<a href="%s" target="_blank" class="button rmm-action-btn rmm-btn-whatsapp" style="background:#25D366; color:#fff; border-radius:6px; display:inline-flex; align-items:center; gap:6px;"><span>💬</span> %s</a>',
                 esc_url($link),
-                __('سفارش در واتساپ', 'restaurant-menu-manager')
+                __('سفارش در واتساپ', 'fondogh-online-menu')
             );
         }
 
@@ -116,7 +116,7 @@ class ModeManager {
             return sprintf(
                 '<a href="tel:%s" class="button rmm-action-btn rmm-btn-call" style="background:#0284c7; color:#fff; border-radius:6px; display:inline-flex; align-items:center; gap:6px;"><span>📞</span> %s</a>',
                 esc_attr($phone),
-                __('تماس با رستوران', 'restaurant-menu-manager')
+                __('تماس با رستوران', 'fondogh-online-menu')
             );
         }
 
@@ -131,7 +131,7 @@ class ModeManager {
         if ($mode === 'view_only') {
             $hide = \RMM\Core\Settings::get('catalog_hide_price', 'no');
             if ($hide === 'yes') {
-                return '<span class="rmm-price-hidden">' . esc_html__('قیمت منو', 'restaurant-menu-manager') . '</span>';
+                return '<span class="rmm-price-hidden">' . esc_html__('قیمت منو', 'fondogh-online-menu') . '</span>';
             }
         }
         return $price_html;
@@ -158,7 +158,7 @@ class ModeManager {
             // Add Table Number Field
             $fields['billing']['rmm_table_number'] = [
                 'type'        => 'text',
-                'label'       => __('شماره میز شما', 'restaurant-menu-manager'),
+                'label'       => __('شماره میز شما', 'fondogh-online-menu'),
                 'required'    => true,
                 'class'       => ['form-row-wide'],
                 'clear'       => true,
@@ -198,14 +198,14 @@ class ModeManager {
 
         if ($table_no || $branch_id) {
             echo '<div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:12px; margin-top:15px;">';
-            echo '<h4 style="margin:0 0 6px; color:#166534;">🍽️ ' . esc_html__('اطلاعات رستورانی سفارش', 'restaurant-menu-manager') . '</h4>';
+            echo '<h4 style="margin:0 0 6px; color:#166534;">🍽️ ' . esc_html__('اطلاعات رستورانی سفارش', 'fondogh-online-menu') . '</h4>';
             if ($table_no) {
-                echo '<p style="margin:2px 0;"><strong>' . esc_html__('سفارش سر میز (Dine-in):', 'restaurant-menu-manager') . '</strong> <span style="background:#22c55e; color:#fff; padding:2px 8px; border-radius:4px; font-weight:bold;">' . sprintf(esc_html__('میز شماره %d', 'restaurant-menu-manager'), $table_no) . '</span></p>';
+                echo '<p style="margin:2px 0;"><strong>' . esc_html__('سفارش سر میز (Dine-in):', 'fondogh-online-menu') . '</strong> <span style="background:#22c55e; color:#fff; padding:2px 8px; border-radius:4px; font-weight:bold;">' . sprintf(esc_html__('میز شماره %d', 'fondogh-online-menu'), $table_no) . '</span></p>';
             }
             if ($branch_id) {
                 $term = get_term($branch_id, \RMM\Branches\BranchTaxonomy::TAXONOMY);
                 if ($term && !is_wp_error($term)) {
-                    echo '<p style="margin:2px 0;"><strong>' . esc_html__('شعبه متصدی:', 'restaurant-menu-manager') . '</strong> ' . esc_html($term->name) . '</p>';
+                    echo '<p style="margin:2px 0;"><strong>' . esc_html__('شعبه متصدی:', 'fondogh-online-menu') . '</strong> ' . esc_html($term->name) . '</p>';
                 }
             }
             echo '</div>';
@@ -234,7 +234,7 @@ class ModeManager {
             $cart_total = WC()->cart->get_subtotal();
             if ($cart_total < $min_order) {
                 wc_add_notice(sprintf(
-                    __('حداقل مبلغ سفارش برای این شعبه %s است. لطفاً برای تکمیل خرید، آیتم‌های دیگری به سبد اضافه کنید.', 'restaurant-menu-manager'),
+                    __('حداقل مبلغ سفارش برای این شعبه %s است. لطفاً برای تکمیل خرید، آیتم‌های دیگری به سبد اضافه کنید.', 'fondogh-online-menu'),
                     wc_price($min_order)
                 ), 'error');
             }

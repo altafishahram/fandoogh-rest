@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title><?php _e('چاپ فیش سفارش ۸۰ میلی‌متری', 'restaurant-menu-manager'); ?></title>
+    <title><?php _e('چاپ فیش سفارش ۸۰ میلی‌متری', 'fondogh-online-menu'); ?></title>
     <style>
         @page {
             size: 80mm auto;
@@ -116,7 +116,7 @@ if (!defined('ABSPATH')) {
 <body>
     <div class="no-print" style="text-align: center; margin-bottom: 15px; padding: 10px; background: #e0f2fe; border-radius: 8px;">
         <button onclick="window.print()" style="background: #0284c7; color: #fff; border: none; padding: 8px 20px; font-size: 14px; font-weight: bold; border-radius: 6px; cursor: pointer;">
-            🖨️ <?php _e('چاپ فیش (Print)', 'restaurant-menu-manager'); ?>
+            🖨️ <?php _e('چاپ فیش (Print)', 'fondogh-online-menu'); ?>
         </button>
     </div>
 

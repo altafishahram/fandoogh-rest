@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>استودیو دیزاین سیستم فندق</title>
+  <!-- Tailwind CSS (studio chrome only) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: ['class', '[data-theme="dark"]'],
+      theme: {
+        extend: {
+          colors: {
+            fondogh: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap');
+
+    * { font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.05); }
+    ::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.2); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(0, 0, 0, 0.3); }
+
+    /* ── Studio chrome ───────────────────────────────────────────────── */
+    .rmm-s-toast {
+      position: fixed;
+      bottom: 24px;
+      left: 24px;
+      padding: 12px 20px;
+      border-radius: 12px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 9999;
+    }
+    .rmm-s-toast--show { transform: translateY(0); opacity: 1; }
+    .rmm-s-toast--success { background: #10b981; }
+    .rmm-s-toast--error { background: #ef4444; }
+
+    .rmm-s-tab--active {
+      background-color: #0284c7 !important;
+      color: #ffffff !important;
+    }
+    .rmm-s-dirty {
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.4) !important;
+      background-color: #d97706 !important;
+    }
+
+    /* Sidebar tabs */
+    .rmm-s-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+      padding: 12px;
+      border-bottom: 1px solid #e2e8f0;
+      background: #ffffff;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+    .rmm-s-sidebar-tab {
+      font-size: 11px;
+      font-weight: 600;
+      line-height: 1.4;
+      padding: 7px 4px;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      background: #f8fafc;
+      color: #475569;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-align: center;
+    }
+    .rmm-s-sidebar-tab:hover { background: #f1f5f9; color: #0f172a; }
+    .rmm-s-sidebar-tab--active {
+      background: #0284c7 !important;
+      border-color: #0284c7 !important;
+      color: #ffffff !important;
+      box-shadow: 0 2px 6px -1px rgba(2, 132, 199, 0.35);
+    }
+
+    .rmm-s-panel { display: none; padding: 14px 14px 28px; }
+    .rmm-s-section-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #0f172a;
+      border-bottom: 1px solid #f1f5f9;
+      padding-bottom: 7px;
+      margin: 16px 0 10px;
+    }
+    .rmm-s-section-title:first-child { margin-top: 0; }
+    .rmm-s-dot { width: 7px; height: 7px; border-radius: 999px; display: inline-block; }
+
+    .rmm-s-field { margin-bottom: 11px; }
+    .rmm-s-field > label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      color: #475569;
+      margin-bottom: 4px;
+    }
+    .rmm-s-color { display: flex; align-items: center; gap: 8px; }
+    .rmm-s-color input[type="color"] {
+      width: 34px;
+      height: 34px;
+      flex: 0 0 34px;
+      padding: 2px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      background: #ffffff;
+      cursor: pointer;
+    }
+    .rmm-s-input {
+      width: 100%;
+      font-size: 12px;
+      padding: 6px 10px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      font-family: 'Vazirmatn', sans-serif;
+      direction: ltr;
+      text-align: left;
+      background: #ffffff;
+      color: #0f172a;
+    }
+    .rmm-s-input:focus {
+      outline: none;
+      border-color: #0284c7;
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12);
+    }
+    select.rmm-s-input { direction: rtl; text-align: right; }
+    .rmm-s-hint { font-size: 10px; color: #94a3b8; margin-top: 3px; line-height: 1.5; }
+
+    /* ── Preview canvas ──────────────────────────────────────────────── */
+    #rmm-preview-root {
+      position: relative;
+      background: var(--rmm-ds-bg);
+      color: var(--rmm-ds-text);
+      padding: 22px;
+      border-radius: 22px;
+      border: 1px solid var(--rmm-ds-border);
+      transition: background 0.2s ease, color 0.2s ease;
+      overflow: hidden;
+    }
+    #rmm-preview-wrap { width: 100%; transition: max-width 0.3s ease; }
+
+    #rmm-preview-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .rmm-lang-pills-component {
+      display: inline-flex;
+      gap: 4px;
+      padding: 4px;
+      border: 1px solid var(--rmm-ds-lang-border);
+      border-radius: var(--rmm-ds-lang-radius);
+      background: var(--rmm-ds-lang-bg);
+      color: var(--rmm-ds-lang-text);
+    }
+    .rmm-lang-pill-item {
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--rmm-ds-lang-text);
+    }
+    .rmm-lang-pill-item.is-active {
+      background: var(--rmm-ds-primary);
+      color: var(--rmm-ds-on-primary);
+    }
+    .rmm-theme-toggle-widget-btn {
+      width: 38px;
+      height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--rmm-ds-border);
+      border-radius: var(--rmm-ds-radius-btn);
+      background: var(--rmm-ds-toggle-bg);
+      color: var(--rmm-ds-toggle-icon);
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    #rmm-preview-root .rmm-live-search-bar { position: relative; margin-bottom: 16px; }
+    #rmm-preview-root .rmm-live-search-bar input {
+      width: 100%;
+      padding: 12px 40px 12px 14px;
+      font-size: 13px;
+      box-sizing: border-box;
+    }
+    #rmm-preview-root .rmm-live-search-bar .rmm-search-icon {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 14px;
+      pointer-events: none;
+    }
+
+    #rmm-preview-root .rmm-category-nav-wrapper {
+      display: flex;
+      align-items: center;
+      gap: var(--rmm-ds-cat-gap);
+      padding: 8px;
+      border: 1px solid var(--rmm-ds-border);
+      border-radius: 16px;
+      margin-bottom: 16px;
+      overflow-x: auto;
+      background: var(--rmm-ds-card);
+    }
+    #rmm-preview-root .rmm-cat-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      border: none;
+      background: var(--rmm-ds-cat-idle-bg);
+      color: var(--rmm-ds-cat-idle-text);
+      border-radius: var(--rmm-ds-radius-btn);
+      transition: all 0.15s ease;
+    }
+    #rmm-preview-root .rmm-cat-pill.active {
+      background: var(--rmm-ds-cat-active-bg);
+      color: var(--rmm-ds-cat-active-text);
+    }
+    #rmm-preview-root .rmm-cat-icon { font-size: var(--rmm-ds-cat-icon); line-height: 1; }
+
+    #rmm-preview-root[data-cat-style="underline"] .rmm-cat-pill {
+      background: transparent !important;
+      border-radius: 0 !important;
+      border-bottom: 2px solid transparent;
+      color: var(--rmm-ds-cat-idle-text) !important;
+    }
+    #rmm-preview-root[data-cat-style="underline"] .rmm-cat-pill.active {
+      color: var(--rmm-ds-cat-active-bg) !important;
+      border-bottom-color: var(--rmm-ds-cat-active-bg) !important;
+      background: transparent !important;
+    }
+    #rmm-preview-root[data-cat-style="button"] .rmm-cat-pill {
+      border: 1px solid var(--rmm-ds-border);
+    }
+    #rmm-preview-root[data-cat-style="button"] .rmm-cat-pill.active {
+      border-color: var(--rmm-ds-cat-active-bg);
+    }
+
+    #rmm-preview-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--rmm-ds-gap-grid);
+    }
+    #rmm-preview-root[data-card-layout="list"] #rmm-preview-grid { grid-template-columns: 1fr; }
+    #rmm-preview-root[data-card-layout="list"] .rmm-food-card {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    #rmm-preview-root[data-card-layout="list"] .rmm-card-image-wrap {
+      width: 150px;
+      flex: 0 0 150px;
+      margin-bottom: 0;
+    }
+
+    .rmm-preview-img {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 34px;
+      background: linear-gradient(135deg, var(--rmm-ds-subtle), var(--rmm-ds-border));
+    }
+    .rmm-card-image-wrap { position: relative; overflow: hidden; }
+
+    #rmm-preview-root .rmm-card-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 10px;
+      padding: 3px 9px;
+    }
+    #rmm-preview-root .rmm-add-btn {
+      font-size: 12px;
+      font-weight: 700;
+      padding: 8px 14px;
+      cursor: pointer;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    #rmm-preview-root[data-btn-style="outline"] .rmm-add-btn {
+      background: transparent !important;
+      color: var(--rmm-ds-primary) !important;
+      border: 2px solid var(--rmm-ds-primary) !important;
+      box-shadow: none !important;
+    }
+
+    /* Modal preview: contained inside the canvas, not the whole screen */
+    #rmm-preview-root .rmm-modal-backdrop {
+      position: absolute;
+      inset: 0;
+      z-index: 40;
+      border-radius: 22px;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    #rmm-preview-root .rmm-modal-box {
+      width: 100%;
+      max-width: 430px;
+      padding: 18px;
+      max-height: 92%;
+      overflow-y: auto;
+      box-sizing: border-box;
+    }
+    #rmm-preview-root .rmm-modal-close-btn {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      line-height: 1;
+    }
+    #rmm-preview-root .rmm-qty-controls {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 4px 10px;
+    }
+    #rmm-preview-root .rmm-qty-btn {
+      background: transparent;
+      border: none;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      line-height: 1;
+    }
+    #rmm-preview-root .rmm-qty-val { font-size: 13px; font-weight: 700; min-width: 18px; text-align: center; }
+
+    #rmm-preview-modal-stage { margin-top: 18px; }
+    .rmm-preview-open-modal {
+      font-size: 12px;
+      font-weight: 700;
+      padding: 9px 16px;
+      border-radius: var(--rmm-ds-radius-btn);
+      border: 1px dashed var(--rmm-ds-border);
+      background: var(--rmm-ds-card);
+      color: var(--rmm-ds-primary);
+      cursor: pointer;
+    }
+
+    /* Floating cart: static inside the canvas, dock position previewed */
+    #rmm-preview-cart {
+      display: flex;
+      justify-content: center;
+      margin-top: 18px;
+    }
+    #rmm-preview-root[data-cart-dock="corner"] #rmm-preview-cart { justify-content: flex-start; }
+    #rmm-preview-root .rmm-floating-cart-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 12px 16px;
+      min-width: 280px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    #rmm-preview-root .rmm-cart-left,
+    #rmm-preview-root .rmm-cart-right {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    #rmm-preview-root .rmm-cart-badge-count {
+      min-width: 22px;
+      height: 22px;
+      padding: 0 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    #rmm-preview-root .rmm-cart-label,
+    #rmm-preview-root .rmm-cart-total { font-size: 12px; font-weight: 700; }
+
+    #rmm-preview-note {
+      font-size: 10px;
+      color: var(--rmm-ds-muted);
+      text-align: center;
+      margin-top: 14px;
+    }
+  </style>
+  {{RMM_TOKEN_CSS}}
+  {{RMM_COMPONENT_CSS}}
+  {{RMM_BOOT_CONFIG}}
+</head>
+<body class="bg-slate-100 text-slate-800 h-screen flex flex-col overflow-hidden select-none">
+
+  <!-- Top Header / App Bar -->
+  <header class="h-14 bg-white border-b border-slate-200 px-4 flex items-center justify-between z-20 shrink-0">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-lg bg-sky-600 text-white flex items-center justify-center font-bold text-lg shadow-sm">
+        ف
+      </div>
+      <div>
+        <h1 class="text-sm font-bold text-slate-900 leading-tight">استودیو دیزاین منو فندق</h1>
+        <p class="text-[11px] text-slate-500">هر المان منو را جداگانه طراحی کنید؛ تغییر همان لحظه در پیش‌نمایش دیده می‌شود</p>
+      </div>
+    </div>
+
+    <!-- Mode & Device Switchers -->
+    <div class="flex items-center gap-2">
+      <!-- Day / Night Mode Switcher -->
+      <div class="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-xs font-medium">
+        <button type="button" data-rmm-mode-tab="light" class="px-3 py-1.5 rounded-md transition-all rmm-s-tab--active">
+          ☀️ تم روز
+        </button>
+        <button type="button" data-rmm-mode-tab="dark" class="px-3 py-1.5 rounded-md transition-all text-slate-600 hover:text-slate-900">
+          🌙 تم شب
+        </button>
+      </div>
+
+      <div class="h-5 w-px bg-slate-200 mx-1"></div>
+
+      <!-- Device Switcher -->
+      <div class="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-xs font-medium">
+        <button type="button" data-rmm-device-tab="desktop" class="px-2.5 py-1.5 rounded-md transition-all rmm-s-tab--active" title="دسکتاپ">
+          🖥️ دسکتاپ
+        </button>
+        <button type="button" data-rmm-device-tab="tablet" class="px-2.5 py-1.5 rounded-md transition-all text-slate-600 hover:text-slate-900" title="تبلت">
+          📱 تبلت
+        </button>
+        <button type="button" data-rmm-device-tab="mobile" class="px-2.5 py-1.5 rounded-md transition-all text-slate-600 hover:text-slate-900" title="موبایل">
+          📱 موبایل
+        </button>
+      </div>
+
+      <div class="h-5 w-px bg-slate-200 mx-1"></div>
+
+      <!-- Action Buttons -->
+      <button type="button" id="rmm-reset-btn" class="px-3 py-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 text-xs font-semibold transition-all">
+        ↩️ بازنشانی
+      </button>
+      <button type="button" id="rmm-save-btn" class="px-4 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold shadow-sm transition-all flex items-center gap-1.5">
+        💾 ذخیره تغییرات
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <div class="flex-1 flex overflow-hidden">
+
+    <!-- Controls Sidebar -->
+    <aside class="w-[340px] bg-white border-l border-slate-200 flex flex-col h-full shrink-0 z-10 shadow-sm overflow-y-auto">
+      <!-- Component Tabs -->
+      <div class="rmm-s-tabs">
+        <button type="button" data-rmm-sidebar-tab="base" class="rmm-s-sidebar-tab rmm-s-sidebar-tab--active">🎨 پایه و تم</button>
+        <button type="button" data-rmm-sidebar-tab="card" class="rmm-s-sidebar-tab">🍽️ کارت غذا</button>
+        <button type="button" data-rmm-sidebar-tab="modal" class="rmm-s-sidebar-tab">🪟 پاپ‌آپ غذا</button>
+        <button type="button" data-rmm-sidebar-tab="cat" class="rmm-s-sidebar-tab">🗂️ دسته‌بندی‌ها</button>
+        <button type="button" data-rmm-sidebar-tab="search" class="rmm-s-sidebar-tab">🔍 جستجو</button>
+        <button type="button" data-rmm-sidebar-tab="lang" class="rmm-s-sidebar-tab">🌐 زبان و تم</button>
+        <button type="button" data-rmm-sidebar-tab="cart" class="rmm-s-sidebar-tab">🛒 سبد شناور</button>
+      </div>
+
+      <!-- Panel: Base / Theme -->
+      <div class="rmm-s-panel" data-rmm-panel="base">
+        <div class="rmm-s-section-title"><span class="rmm-s-dot bg-sky-500"></span> حالت پیش‌فرض منو برای مشتریان</div>
+        <div class="rmm-s-field">
+          <label>تم پیش‌فرض برای مشتری جدید</label>
+          <select class="rmm-s-input" id="rmm-default-theme-select">
+            <option value="dark">🌙 تم شب (پیش‌فرض)</option>
+            <option value="light">☀️ تم روز</option>
+          </select>
+          <div class="rmm-s-hint">مشتری با اولین ورود این حالت را مشاهده می‌کند و از دکمه روز/شب می‌تواند تغییر دهد.</div>
+        </div>
+
+        <div class="rmm-s-section-title"><span class="rmm-s-dot bg-sky-500"></span> رنگ‌های اصلی و تم</div>
+
+        <div class="rmm-s-field">
+          <label>رنگ سازمانی (Primary)</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="primary">
+            <input type="text" class="rmm-s-input" data-rmm-companion="primary" data-rmm-token="primary" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>رنگ دکمه هنگام هاور</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="primary_hover">
+            <input type="text" class="rmm-s-input" data-rmm-companion="primary_hover" data-rmm-token="primary_hover" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>رنگ متن روی رنگ اصلی</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="on_primary">
+            <input type="text" class="rmm-s-input" data-rmm-companion="on_primary" data-rmm-token="on_primary" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>پس‌زمینه صفحه</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="bg">
+            <input type="text" class="rmm-s-input" data-rmm-companion="bg" data-rmm-token="bg" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>پس‌زمینه کارت غذا</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="card">
+            <input type="text" class="rmm-s-input" data-rmm-companion="card" data-rmm-token="card" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>خطوط و کادرها</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="border">
+            <input type="text" class="rmm-s-input" data-rmm-companion="border" data-rmm-token="border" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>پس‌زمینه ملایم (Subtle)</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="subtle">
+            <input type="text" class="rmm-s-input" data-rmm-companion="subtle" data-rmm-token="subtle" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>رنگ متن اصلی</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="text">
+            <input type="text" class="rmm-s-input" data-rmm-companion="text" data-rmm-token="text" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>رنگ متن توضیحات</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="text_secondary">
+            <input type="text" class="rmm-s-input" data-rmm-companion="text_secondary" data-rmm-token="text_secondary" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>رنگ متن کم‌رنگ</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="muted">
+            <input type="text" class="rmm-s-input" data-rmm-companion="muted" data-rmm-token="muted" dir="ltr">
+          </div>
+        </div>
+
+        <div class="rmm-s-section-title"><span class="rmm-s-dot bg-emerald-500"></span> رنگ‌های وضعیت</div>
+        <div class="rmm-s-field">
+          <label>موفق / تایید</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="success">
+            <input type="text" class="rmm-s-input" data-rmm-companion="success" data-rmm-token="success" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>هشدار</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="warning">
+            <input type="text" class="rmm-s-input" data-rmm-companion="warning" data-rmm-token="warning" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>خطا / حذف</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="danger">
+            <input type="text" class="rmm-s-input" data-rmm-companion="danger" data-rmm-token="danger" dir="ltr">
+          </div>
+        </div>
+
+        <div class="rmm-s-section-title"><span class="rmm-s-dot bg-violet-500"></span> تایپوگرافی و فونت</div>
+        <div class="rmm-s-field">
+          <label>فونت اصلی</label>
+          <select class="rmm-s-input" data-rmm-token="font_family">
+            <option value="'Vazirmatn', sans-serif">وزیرمتن (Vazirmatn)</option>
+            <option value="'IRANSans', Tahoma, sans-serif">ایران‌سنس (IRANSans)</option>
+            <option value="'Yekan', Tahoma, sans-serif">یکان (Yekan)</option>
+            <option value="Tahoma, Arial, sans-serif">تاهما (Tahoma)</option>
+            <option value="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">فونت پیش‌فرض سیستم</option>
+          </select>
+        </div>
+        <div class="rmm-s-field">
+          <label>اندازه عنوان غذا</label>
+          <input type="text" class="rmm-s-input" data-rmm-token="title_size" dir="ltr">
+        </div>
+        <div class="rmm-s-field">
+          <label>اندازه متن توضیحات</label>
+          <input type="text" class="rmm-s-input" data-rmm-token="desc_size" dir="ltr">
+        </div>
+        <div class="rmm-s-field">
+          <label>اندازه قیمت</label>
+          <input type="text" class="rmm-s-input" data-rmm-token="price_size" dir="ltr">
+        </div>
+        <div class="rmm-s-field">
+          <label>وزن فونت عنوان</label>
+          <select class="rmm-s-input" data-rmm-token="font_weight">
+            <option value="400">۴۰۰ (نازک)</option>
+            <option value="500">۵۰۰</option>
+            <option value="600">۶۰۰ (پیش‌فرض)</option>
+            <option value="700">۷۰۰ (ضخیم)</option>
+            <option value="800">۸۰۰</option>
+            <option value="900">۹۰۰</option>
+          </select>
+        </div>
+
+        <div class="rmm-s-section-title"><span class="rmm-s-dot bg-amber-500"></span> گردی گوشه‌ها</div>
+        <div class="rmm-s-field">
+          <label>گردی کارت غذا</label>
+          <input type="text" class="rmm-s-input" data-rmm-token="radius_card" dir="ltr">
+        </div>
+        <div class="rmm-s-field">
+          <label>گردی دکمه‌ها</label>
+          <input type="text" class="rmm-s-input" data-rmm-token="radius_btn" dir="ltr">
+        </div>
+        <div class="rmm-s-field">
+          <label>گردی فیلدها</label>
+          <input type="text" class="rmm-s-input" data-rmm-token="radius_input" dir="ltr">
+        </div>
+
+        <div class="rmm-s-section-title"><span class="rmm-s-dot bg-purple-500"></span> فاصله‌ها و سایه‌ها</div>
+        <div class="rmm-s-field">
+          <label>پدینگ داخلی کارت</label>
+          <input type="text" class="rmm-s-input" data-rmm-token="pad_card" dir="ltr">
+        </div>
+        <div class="rmm-s-field">
+          <label>فاصله بین کارت‌ها</label>
+          <input type="text" class="rmm-s-input" data-rmm-token="gap_grid" dir="ltr">
+        </div>
+        <div class="rmm-s-field">
+          <label>سایه کارت</label>
+          <input type="text" class="rmm-s-input" data-rmm-token="shadow_card" dir="ltr">
+          <div class="rmm-s-hint">مثال: 0 4px 16px -2px rgba(15, 23, 42, 0.06)</div>
+        </div>
+        <div class="rmm-s-field">
+          <label>سایه دکمه</label>
+          <input type="text" class="rmm-s-input" data-rmm-token="shadow_btn" dir="ltr">
+        </div>
+      </div>
+
+      <!-- Panel: Food Card -->
+      <div class="rmm-s-panel" data-rmm-panel="card">
+        <div class="rmm-s-section-title"><span class="rmm-s-dot bg-sky-500"></span> چیدمان کارت غذا</div>
+        <div class="rmm-s-field">
+          <label>حالت نمایش کارت‌ها</label>
+          <select class="rmm-s-input" data-rmm-token="card_layout">
+            <option value="grid">شبکه‌ای (Grid)</option>
+            <option value="list">لیستی (List)</option>
+          </select>
+        </div>
+        <div class="rmm-s-field">
+          <label>نسبت ابعاد تصویر غذا</label>
+          <select class="rmm-s-input" data-rmm-token="card_image_ratio">
+            <option value="4 / 3">۴ / ۳ (افقی معمولی)</option>
+            <option value="16 / 9">۱۶ / ۹ (پهن)</option>
+            <option value="1 / 1">۱ / ۱ (مربع)</option>
+            <option value="3 / 4">۳ / ۴ (عمودی)</option>
+            <option value="auto">خودکار (Auto)</option>
+          </select>
+        </div>
+        <div class="rmm-s-field">
+          <label>ارتفاع تصویر در حالت شبکه‌ای</label>
+          <input type="text" class="rmm-s-input" data-rmm-token="card_image_height" placeholder="مثلاً: 180px یا auto" dir="ltr">
+        </div>
+        <div class="rmm-s-field">
+          <label>نحوه نمایش و برش تصویر (Fit)</label>
+          <select class="rmm-s-input" data-rmm-token="card_image_fit">
+            <option value="cover">پر کردن کامل کادر (Cover)</option>
+            <option value="contain">نمایش کامل بدون برش (Contain)</option>
+            <option value="fill">کشیدگی کامل (Fill)</option>
+          </select>
+        </div>
+        <div class="rmm-s-field">
+          <label>گردی گوشه تصویر غذا</label>
+          <input type="text" class="rmm-s-input" data-rmm-token="card_image_radius" placeholder="مثلاً: 12px" dir="ltr">
+        </div>
+        <div class="rmm-s-field">
+          <label>عرض/ارتفاع تصویر در حالت لیستی</label>
+          <input type="text" class="rmm-s-input" data-rmm-token="card_image_list_size" placeholder="مثلاً: 100px" dir="ltr">
+        </div>
+
+        <div class="rmm-s-section-title"><span class="rmm-s-dot bg-amber-500"></span> برچسب‌ها (Badge)</div>
+        <div class="rmm-s-field">
+          <label>رنگ پس‌زمینه برچسب</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="badge_bg">
+            <input type="text" class="rmm-s-input" data-rmm-companion="badge_bg" data-rmm-token="badge_bg" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>رنگ متن برچسب</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="badge_text">
+            <input type="text" class="rmm-s-input" data-rmm-companion="badge_text" data-rmm-token="badge_text" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>گردی برچسب</label>
+          <input type="text" class="rmm-s-input" data-rmm-token="badge_radius" dir="ltr">
+        </div>
+
+        <div class="rmm-s-section-title"><span class="rmm-s-dot bg-emerald-500"></span> دکمه «افزودن به سفارش»</div>
+        <div class="rmm-s-field">
+          <label>حالت دکمه</label>
+          <select class="rmm-s-input" data-rmm-token="btn_style">
+            <option value="solid">توپر (Solid)</option>
+            <option value="outline">با خط دور (Outline)</option>
+          </select>
+        </div>
+        <div class="rmm-s-field">
+          <label>پدینگ عمودی دکمه</label>
+          <input type="text" class="rmm-s-input" data-rmm-token="btn_pad_y" dir="ltr">
+        </div>
+        <div class="rmm-s-field">
+          <label>پدینگ افقی دکمه</label>
+          <input type="text" class="rmm-s-input" data-rmm-token="btn_pad_x" dir="ltr">
+        </div>
+
+        <div class="rmm-s-section-title"><span class="rmm-s-dot bg-slate-400"></span> آیکون‌ها</div>
+        <div class="rmm-s-field">
+          <label>رنگ آیکون‌ها</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="icon_color">
+            <input type="text" class="rmm-s-input" data-rmm-companion="icon_color" data-rmm-token="icon_color" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>اندازه آیکون‌ها</label>
+          <input type="text" class="rmm-s-input" data-rmm-token="icon_size" dir="ltr">
+        </div>
+      </div>
+
+      <!-- Panel: Modal -->
+      <div class="rmm-s-panel" data-rmm-panel="modal">
+        <div class="rmm-s-section-title"><span class="rmm-s-dot bg-indigo-500"></span> پس‌زمینه پاپ‌آپ</div>
+        <div class="rmm-s-field">
+          <label>رنگ پس‌زمینه محوکننده</label>
+          <input type="text" class="rmm-s-input" data-rmm-token="modal_backdrop" dir="ltr">
+          <div class="rmm-s-hint">مثال: rgba(15, 23, 42, 0.55)</div>
+        </div>
+        <div class="rmm-s-field">
+          <label>میزان تاری (Blur)</label>
+          <input type="text" class="rmm-s-input" data-rmm-token="modal_blur" dir="ltr">
+          <div class="rmm-s-hint">مثال: 8px — عدد بزرگ‌تر یعنی تاری بیشتر</div>
+        </div>
+
+        <div class="rmm-s-section-title"><span class="rmm-s-dot bg-sky-500"></span> کادر پاپ‌آپ</div>
+        <div class="rmm-s-field">
+          <label>گردی گوشه کادر</label>
+          <input type="text" class="rmm-s-input" data-rmm-token="modal_radius" dir="ltr">
+        </div>
+        <div class="rmm-s-field">
+          <label>پس‌زمینه شمارنده تعداد</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="qty_bg">
+            <input type="text" class="rmm-s-input" data-rmm-companion="qty_bg" data-rmm-token="qty_bg" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-hint">عنوان، قیمت، توضیحات و دکمه‌های داخل پاپ‌آپ از تب‌های «کارت غذا» و «پایه» رنگ می‌گیرند.</div>
+      </div>
+
+      <!-- Panel: Categories -->
+      <div class="rmm-s-panel" data-rmm-panel="cat">
+        <div class="rmm-s-section-title"><span class="rmm-s-dot bg-sky-500"></span> نوار دسته‌بندی‌ها</div>
+        <div class="rmm-s-field">
+          <label>سبک تب‌ها</label>
+          <select class="rmm-s-input" data-rmm-token="cat_style">
+            <option value="pill">کپسولی (Pill)</option>
+            <option value="underline">خط زیرین (Underline)</option>
+            <option value="button">دکمه‌ای (Button)</option>
+          </select>
+        </div>
+        <div class="rmm-s-field">
+          <label>فاصله بین دسته‌ها</label>
+          <input type="text" class="rmm-s-input" data-rmm-token="cat_gap" dir="ltr">
+        </div>
+        <div class="rmm-s-field">
+          <label>اندازه آیکون دسته</label>
+          <input type="text" class="rmm-s-input" data-rmm-token="cat_icon" dir="ltr">
+        </div>
+        <div class="rmm-s-field">
+          <label>پس‌زمینه تب غیرفعال</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="cat_idle_bg">
+            <input type="text" class="rmm-s-input" data-rmm-companion="cat_idle_bg" data-rmm-token="cat_idle_bg" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>متن تب غیرفعال</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="cat_idle_text">
+            <input type="text" class="rmm-s-input" data-rmm-companion="cat_idle_text" data-rmm-token="cat_idle_text" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>پس‌زمینه تب فعال</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="cat_active_bg">
+            <input type="text" class="rmm-s-input" data-rmm-companion="cat_active_bg" data-rmm-token="cat_active_bg" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>متن تب فعال</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="cat_active_text">
+            <input type="text" class="rmm-s-input" data-rmm-companion="cat_active_text" data-rmm-token="cat_active_text" dir="ltr">
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel: Search -->
+      <div class="rmm-s-panel" data-rmm-panel="search">
+        <div class="rmm-s-section-title"><span class="rmm-s-dot bg-sky-500"></span> باکس جستجوی زنده</div>
+        <div class="rmm-s-field">
+          <label>پس‌زمینه کادر</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="search_bg">
+            <input type="text" class="rmm-s-input" data-rmm-companion="search_bg" data-rmm-token="search_bg" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>رنگ خط دور کادر</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="search_border">
+            <input type="text" class="rmm-s-input" data-rmm-companion="search_border" data-rmm-token="search_border" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>رنگ آیکون ذره‌بین</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="search_icon">
+            <input type="text" class="rmm-s-input" data-rmm-companion="search_icon" data-rmm-token="search_icon" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>رنگ متن راهنما (Placeholder)</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="search_placeholder">
+            <input type="text" class="rmm-s-input" data-rmm-companion="search_placeholder" data-rmm-token="search_placeholder" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>گردی گوشه کادر</label>
+          <input type="text" class="rmm-s-input" data-rmm-token="search_radius" dir="ltr">
+        </div>
+        <div class="rmm-s-hint">با کلیک داخل کادر جستجو، حالت فوکوس با رنگ اصلی نمایش داده می‌شود.</div>
+      </div>
+
+      <!-- Panel: Language & Theme -->
+      <div class="rmm-s-panel" data-rmm-panel="lang">
+        <div class="rmm-s-section-title"><span class="rmm-s-dot bg-emerald-500"></span> دکمه تغییر زبان</div>
+        <div class="rmm-s-field">
+          <label>پس‌زمینه</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="lang_bg">
+            <input type="text" class="rmm-s-input" data-rmm-companion="lang_bg" data-rmm-token="lang_bg" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>رنگ متن</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="lang_text">
+            <input type="text" class="rmm-s-input" data-rmm-companion="lang_text" data-rmm-token="lang_text" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>رنگ خط دور</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="lang_border">
+            <input type="text" class="rmm-s-input" data-rmm-companion="lang_border" data-rmm-token="lang_border" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>گردی گوشه</label>
+          <input type="text" class="rmm-s-input" data-rmm-token="lang_radius" dir="ltr">
+        </div>
+
+        <div class="rmm-s-section-title"><span class="rmm-s-dot bg-amber-500"></span> دکمه تغییر تم (روز / شب)</div>
+        <div class="rmm-s-field">
+          <label>پس‌زمینه دکمه</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="toggle_bg">
+            <input type="text" class="rmm-s-input" data-rmm-companion="toggle_bg" data-rmm-token="toggle_bg" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>رنگ آیکون</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="toggle_icon">
+            <input type="text" class="rmm-s-input" data-rmm-companion="toggle_icon" data-rmm-token="toggle_icon" dir="ltr">
+          </div>
+        </div>
+
+        <div class="rmm-s-section-title"><span class="rmm-s-dot bg-indigo-500"></span> پاپ‌آپ ورود و انتخاب زبان</div>
+        <div class="rmm-s-field">
+          <label>پس‌زمینه کارت پاپ‌آپ</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="lang_modal_bg">
+            <input type="text" class="rmm-s-input" data-rmm-companion="lang_modal_bg" data-rmm-token="lang_modal_bg" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>رنگ عنوان پاپ‌آپ</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="lang_modal_title">
+            <input type="text" class="rmm-s-input" data-rmm-companion="lang_modal_title" data-rmm-token="lang_modal_title" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>پس‌زمینه دکمه هر زبان</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="lang_modal_card_bg">
+            <input type="text" class="rmm-s-input" data-rmm-companion="lang_modal_card_bg" data-rmm-token="lang_modal_card_bg" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>کادر دور دکمه هر زبان</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="lang_modal_card_border">
+            <input type="text" class="rmm-s-input" data-rmm-companion="lang_modal_card_border" data-rmm-token="lang_modal_card_border" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>رنگ متن دکمه زبان</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="lang_modal_card_text">
+            <input type="text" class="rmm-s-input" data-rmm-companion="lang_modal_card_text" data-rmm-token="lang_modal_card_text" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>رنگ زبان انتخاب‌شده (فعال)</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="lang_modal_card_active_bg">
+            <input type="text" class="rmm-s-input" data-rmm-companion="lang_modal_card_active_bg" data-rmm-token="lang_modal_card_active_bg" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>رنگ متن زبان فعال</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="lang_modal_card_active_text">
+            <input type="text" class="rmm-s-input" data-rmm-companion="lang_modal_card_active_text" data-rmm-token="lang_modal_card_active_text" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>رنگ و تیرگی پس‌زمینه محو</label>
+          <input type="text" class="rmm-s-input" data-rmm-token="lang_modal_backdrop" dir="ltr">
+        </div>
+        <div class="rmm-s-field">
+          <label>گردی گوشه کارت پاپ‌آپ</label>
+          <input type="text" class="rmm-s-input" data-rmm-token="lang_modal_radius" dir="ltr">
+        </div>
+        <button type="button" id="rmm-preview-lang-modal-open" class="w-full mt-2 py-2 px-3 rounded-lg border border-indigo-200 text-indigo-700 bg-indigo-50 hover:bg-indigo-100 text-xs font-bold transition-all flex items-center justify-center gap-1.5">
+          🌐 پیش‌نمایش زنده پاپ‌آپ زبان در بوم
+        </button>
+      </div>
+
+      <!-- Panel: Floating Cart -->
+      <div class="rmm-s-panel" data-rmm-panel="cart">
+        <div class="rmm-s-section-title"><span class="rmm-s-dot bg-sky-500"></span> سبد سفارش شناور</div>
+        <div class="rmm-s-field">
+          <label>جایگاه قرارگیری</label>
+          <select class="rmm-s-input" data-rmm-token="cart_dock">
+            <option value="bottom">پایین صفحه (وسط)</option>
+            <option value="corner">گوشه صفحه</option>
+          </select>
+        </div>
+        <div class="rmm-s-field">
+          <label>پس‌زمینه سبد</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="cart_bg">
+            <input type="text" class="rmm-s-input" data-rmm-companion="cart_bg" data-rmm-token="cart_bg" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>رنگ متن سبد</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="cart_text">
+            <input type="text" class="rmm-s-input" data-rmm-companion="cart_text" data-rmm-token="cart_text" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>گردی گوشه سبد</label>
+          <input type="text" class="rmm-s-input" data-rmm-token="cart_radius" dir="ltr">
+        </div>
+        <div class="rmm-s-field">
+          <label>پس‌زمینه نشان تعداد اقلام</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="cart_badge_bg">
+            <input type="text" class="rmm-s-input" data-rmm-companion="cart_badge_bg" data-rmm-token="cart_badge_bg" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>رنگ متن نشان تعداد</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="cart_badge_text">
+            <input type="text" class="rmm-s-input" data-rmm-companion="cart_badge_text" data-rmm-token="cart_badge_text" dir="ltr">
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Live Preview Canvas -->
+    <main class="flex-1 bg-slate-100 p-6 overflow-y-auto flex justify-center items-start">
+      <div id="rmm-preview-root" data-theme="{{RMM_ACTIVE_MODE}}" data-card-layout="grid" data-btn-style="solid" data-cat-style="pill" data-cart-dock="bottom">
+        <div id="rmm-preview-wrap" class="mx-auto">
+
+          <!-- Language switcher + theme toggle -->
+          <div id="rmm-preview-topbar">
+            <div class="rmm-lang-widget-wrap">
+              <div class="rmm-lang-pills-component">
+                <span class="rmm-lang-pill-item is-active">فارسی</span>
+                <span class="rmm-lang-pill-item">English</span>
+                <span class="rmm-lang-pill-item">العربية</span>
+              </div>
+            </div>
+            <div class="rmm-theme-toggle-widget-wrap">
+              <button type="button" class="rmm-theme-toggle-widget-btn rmm-theme-toggle-btn" title="تغییر تم">🌙</button>
+            </div>
+          </div>
+
+          <!-- Category Navigation Bar -->
+          <div class="rmm-category-nav-wrapper">
+            <button type="button" class="rmm-cat-pill active"><span class="rmm-cat-icon">🍔</span> تمام غذاها</button>
+            <button type="button" class="rmm-cat-pill"><span class="rmm-cat-icon">🍕</span> پیتزا و ساندویچ</button>
+            <button type="button" class="rmm-cat-pill"><span class="rmm-cat-icon">🥗</span> سالاد و پیش‌غذا</button>
+            <button type="button" class="rmm-cat-pill"><span class="rmm-cat-icon">🍹</span> نوشیدنی سرد</button>
+          </div>
+
+          <!-- Live Search Bar -->
+          <div class="rmm-live-search-bar">
+            <span class="rmm-search-icon">🔍</span>
+            <input type="text" placeholder="جستجوی نام غذا یا مواد اولیه..." readonly>
+          </div>
+
+          <!-- Food Cards Grid -->
+          <div id="rmm-preview-grid">
+
+            <!-- Card 1 -->
+            <div class="rmm-food-card in-stock rmm-card-clickable">
+              <div class="rmm-card-image-wrap">
+                <div class="rmm-preview-img">🍢</div>
+                <span class="rmm-card-badge rmm-badge-chef">پیشنهاد سرآشپز</span>
+              </div>
+              <div class="rmm-card-details">
+                <h3 class="rmm-food-title">چلو کباب کوبیده مخصوص</h3>
+                <div class="rmm-card-price-badge-row">
+                  <div class="rmm-food-price"><span class="rmm-card-regular-price">۲۹۵٬۰۰۰ تومان</span></div>
+                </div>
+                <p class="rmm-food-desc">دو سیخ کباب کوبیده گوشت گوسفندی ۱۸۰ گرمی، برنج درجه یک ایرانی، گوجه و کره محلی</p>
+                <div class="rmm-card-action-row">
+                  <button type="button" class="rmm-add-btn"><span>+</span> افزودن به سفارش</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="rmm-food-card in-stock rmm-card-clickable">
+              <div class="rmm-card-image-wrap">
+                <div class="rmm-preview-img">🍕</div>
+                <span class="rmm-card-badge rmm-badge-spicy">تند</span>
+              </div>
+              <div class="rmm-card-details">
+                <h3 class="rmm-food-title">پیتزا سیر و استیک</h3>
+                <div class="rmm-card-price-badge-row">
+                  <div class="rmm-food-price"><span class="rmm-card-regular-price">۳۴۰٬۰۰۰ تومان</span></div>
+                </div>
+                <p class="rmm-food-desc">راسته گوساله مرینیت شده، قارچ، فلفل دلمه‌ای، پنیر موزارلا طبیعی و سس سیر دست‌ساز</p>
+                <div class="rmm-card-action-row">
+                  <button type="button" class="rmm-add-btn"><span>+</span> افزودن به سفارش</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Food Modal preview trigger -->
+          <div id="rmm-preview-modal-stage">
+            <button type="button" class="rmm-preview-open-modal" id="rmm-preview-modal-open">
+              🪟 پیش‌نمایش پاپ‌آپ جزئیات غذا
+            </button>
+          </div>
+
+          <!-- Floating Cart preview -->
+          <div id="rmm-preview-cart">
+            <div class="rmm-floating-cart-wrapper">
+              <div class="rmm-floating-cart-btn">
+                <div class="rmm-cart-left">
+                  <span class="rmm-cart-badge-count">۲</span>
+                  <span class="rmm-cart-label">مشاهده سبد سفارش</span>
+                </div>
+                <div class="rmm-cart-right">
+                  <span class="rmm-cart-total">۶۳۵٬۰۰۰ تومان</span>
+                  <span class="rmm-cart-arrow">←</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <p id="rmm-preview-note">این پیش‌نمایش با همان استایل واقعی سایت رندر می‌شود.</p>
+        </div>
+
+        <!-- Modal overlay (contained inside the canvas) -->
+        <div class="rmm-modal-backdrop" id="rmm-preview-modal-overlay" style="display:none;">
+          <div class="rmm-modal-box">
+            <button type="button" class="rmm-modal-close-btn" id="rmm-preview-modal-close" aria-label="بستن">&times;</button>
+            <h3 class="rmm-modal-food-title">چلو کباب کوبیده مخصوص</h3>
+            <div class="rmm-modal-food-price">۲۹۵٬۰۰۰ تومان</div>
+            <p class="rmm-modal-desc-text">دو سیخ کباب کوبیده گوشت گوسفندی ۱۸۰ گرمی، برنج درجه یک ایرانی، گوجه و کره محلی.</p>
+
+            <div class="rmm-modal-section-box">
+              <span class="rmm-modal-section-title">تعداد سفارش</span>
+              <div class="rmm-qty-controls">
+                <button type="button" class="rmm-qty-btn">−</button>
+                <span class="rmm-qty-val">۱</span>
+                <button type="button" class="rmm-qty-btn">+</button>
+              </div>
+            </div>
+
+            <button type="button" class="rmm-modal-add-btn">افزودن به سفارش</button>
+          </div>
+        </div>
+
+        <!-- Entrance Language Modal overlay (contained inside the canvas) -->
+        <div class="rmm-entrance-modal-backdrop" id="rmm-preview-lang-modal-overlay" style="display:none;">
+          <div class="rmm-entrance-card">
+            <button type="button" class="rmm-entrance-close" id="rmm-preview-lang-modal-close" aria-label="بستن">&times;</button>
+            <div class="rmm-entrance-header">
+              <div class="rmm-entrance-icon">🍽️</div>
+              <h3 class="rmm-entrance-title">زبان خود را انتخاب کنید</h3>
+              <p class="rmm-entrance-subtitle">Select your preferred language / اختر لغتك المفضلة</p>
+            </div>
+            <div class="rmm-entrance-grid">
+              <button type="button" class="rmm-entrance-lang-btn is-active">
+                <span class="rmm-entrance-flag">🇮🇷</span>
+                <div class="rmm-entrance-lang-info">
+                  <span class="rmm-entrance-lang-native">فارسی</span>
+                  <span class="rmm-entrance-lang-name">Persian</span>
+                </div>
+              </button>
+              <button type="button" class="rmm-entrance-lang-btn">
+                <span class="rmm-entrance-flag">🇬🇧</span>
+                <div class="rmm-entrance-lang-info">
+                  <span class="rmm-entrance-lang-native">English</span>
+                  <span class="rmm-entrance-lang-name">English</span>
+                </div>
+              </button>
+            </div>
+            <div class="rmm-entrance-footer">
+              <label class="rmm-remember-checkbox">
+                <input type="checkbox" id="rmm-preview-entrance-remember">
+                <span>به خاطر سپردن انتخاب من (Remember choice)</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+  </div>
+
+  <!-- Studio Bridge Script -->
+  <script src="{{PLUGIN_URL}}admin/studio/studio-bridge.js?ver={{VERSION}}"></script>
+</body>
+</html>

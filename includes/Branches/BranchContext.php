@@ -46,12 +46,13 @@ class BranchContext {
             return self::$current_branch_id;
         }
 
-        // 1. Check URL query param (?branch=12)
+        // 1. Check URL query param (?branch=12). This is a preview for the
+        // current request only: writing the cookie is exclusively done by the
+        // explicit POST /set-branch endpoint, so GET has no side effects.
         if (!empty($_GET['branch'])) {
             $branch_param = absint($_GET['branch']);
             if (term_exists($branch_param, BranchTaxonomy::TAXONOMY)) {
                 self::$current_branch_id = $branch_param;
-                self::set_branch_cookie($branch_param);
                 return self::$current_branch_id;
             }
         }
@@ -102,11 +103,19 @@ class BranchContext {
     }
 
     /**
-     * Set branch cookie (client or server)
+     * Set branch cookie securely (HttpOnly and SameSite flags)
      */
     public static function set_branch_cookie($branch_id) {
         if (!headers_sent()) {
-            setcookie(self::COOKIE_NAME, absint($branch_id), time() + (86400 * 30), COOKIEPATH, COOKIE_DOMAIN, is_ssl(), false);
+            $options = [
+                'expires'  => time() + (86400 * 30),
+                'path'     => COOKIEPATH ?: '/',
+                'domain'   => COOKIE_DOMAIN ?: '',
+                'secure'   => is_ssl(),
+                'httponly' => true,
+                'samesite' => 'Lax',
+            ];
+            setcookie(self::COOKIE_NAME, absint($branch_id), $options);
         }
     }
 
@@ -115,9 +124,10 @@ class BranchContext {
     }
 
     /**
-     * REST Endpoint for instant front-end cache-friendly sync
+     * REST Endpoints
      */
     public function register_rest_endpoints() {
+        // Read-only branch menu and inventory sync (No side-effects on GET)
         register_rest_route('rmm/v1', '/branch-menu-sync', [
             'methods'             => 'GET',
             'callback'            => [$this, 'rest_sync_branch_menu'],
@@ -131,17 +141,33 @@ class BranchContext {
                 ]
             ]
         ]);
+
+        // Explicit POST endpoint to set active branch cookie safely
+        register_rest_route('rmm/v1', '/set-branch', [
+            'methods'             => 'POST',
+            'callback'            => [$this, 'rest_set_branch'],
+            'permission_callback' => '__return_true',
+            'args'                => [
+                'branch_id' => [
+                    'required'          => true,
+                    'validate_callback' => function ($param) {
+                        return is_numeric($param);
+                    }
+                ]
+            ]
+        ]);
     }
 
+    /**
+     * GET endpoint: sync branch info & inventory without side-effects
+     */
     public function rest_sync_branch_menu(\WP_REST_Request $request) {
         $branch_id = absint($request->get_param('branch_id'));
         $branch = get_term($branch_id, BranchTaxonomy::TAXONOMY);
 
         if (!$branch || is_wp_error($branch)) {
-            return new \WP_Error('rmm_invalid_branch', __('شعبه نامعتبر است', 'restaurant-menu-manager'), ['status' => 404]);
+            return new \WP_Error('rmm_invalid_branch', __('شعبه نامعتبر است', 'fondogh-online-menu'), ['status' => 404]);
         }
-
-        self::set_branch_cookie($branch_id);
 
         $inventory = InventoryRepository::get_branch_inventory($branch_id);
         $is_open   = get_term_meta($branch_id, '_rmm_is_open', true) !== '0';
@@ -163,6 +189,26 @@ class BranchContext {
     }
 
     /**
+     * POST endpoint: switch active branch and set secure cookie
+     */
+    public function rest_set_branch(\WP_REST_Request $request) {
+        $branch_id = absint($request->get_param('branch_id'));
+        $branch = get_term($branch_id, BranchTaxonomy::TAXONOMY);
+
+        if (!$branch || is_wp_error($branch)) {
+            return new \WP_Error('rmm_invalid_branch', __('شعبه نامعتبر است', 'fondogh-online-menu'), ['status' => 404]);
+        }
+
+        self::set_branch_cookie($branch_id);
+
+        return rest_ensure_response([
+            'success'   => true,
+            'branch_id' => $branch_id,
+            'message'   => __('شعبه با موفقیت انتخاب شد.', 'fondogh-online-menu'),
+        ]);
+    }
+
+    /**
      * WooCommerce Price Filter: Regular Price
      */
     public function filter_product_regular_price($price, $product) {
@@ -177,7 +223,7 @@ class BranchContext {
 
         $item = InventoryRepository::get_item($product->get_id(), $branch_id);
         if ($item && $item->regular_price !== null && $item->regular_price > 0) {
-            return $item->regular_price;
+            return (string) $item->regular_price;
         }
 
         return $price;
@@ -198,14 +244,14 @@ class BranchContext {
 
         $item = InventoryRepository::get_item($product->get_id(), $branch_id);
         if ($item && $item->sale_price !== null && $item->sale_price > 0) {
-            return $item->sale_price;
+            return (string) $item->sale_price;
         }
 
         return $price;
     }
 
     /**
-     * WooCommerce Price Filter: Active Price
+     * WooCommerce Price Filter: Active Price (regular or sale)
      */
     public function filter_product_price($price, $product) {
         if (is_admin() && !wp_doing_ajax()) {
@@ -220,10 +266,9 @@ class BranchContext {
         $item = InventoryRepository::get_item($product->get_id(), $branch_id);
         if ($item) {
             if ($item->sale_price !== null && $item->sale_price > 0) {
-                return $item->sale_price;
-            }
-            if ($item->regular_price !== null && $item->regular_price > 0) {
-                return $item->regular_price;
+                return (string) $item->sale_price;
+            } elseif ($item->regular_price !== null && $item->regular_price > 0) {
+                return (string) $item->regular_price;
             }
         }
 
@@ -231,7 +276,7 @@ class BranchContext {
     }
 
     /**
-     * WooCommerce Stock Filter
+     * WooCommerce Stock Status Filter
      */
     public function filter_product_stock($in_stock, $product) {
         if (is_admin() && !wp_doing_ajax()) {
@@ -247,6 +292,8 @@ class BranchContext {
         if ($item) {
             if (!$item->is_available || $item->stock_status === 'outofstock') {
                 return false;
+            } else {
+                return true;
             }
         }
 
@@ -262,21 +309,21 @@ class BranchContext {
 
         // Block if mode is view_only
         if ($mode === 'view_only') {
-            wc_add_notice(__('این منو صرفاً برای مشاهده است و سفارش‌گیری آنلاین فعال نیست.', 'restaurant-menu-manager'), 'error');
+            wc_add_notice(__('این منو صرفاً برای مشاهده است و سفارش‌گیری آنلاین فعال نیست.', 'fondogh-online-menu'), 'error');
             return false;
         }
 
         // Check if branch is open
         $is_open = get_term_meta($branch_id, '_rmm_is_open', true);
         if ($is_open === '0') {
-            wc_add_notice(__('متأسفانه این شعبه در حال حاضر تعطیل است و سفارش جدید ثبت نمی‌کند.', 'restaurant-menu-manager'), 'error');
+            wc_add_notice(__('متأسفانه این شعبه در حال حاضر تعطیل است و سفارش جدید ثبت نمی‌کند.', 'fondogh-online-menu'), 'error');
             return false;
         }
 
         // Check branch inventory stock
         $item = InventoryRepository::get_item($product_id, $branch_id);
         if ($item && (!$item->is_available || $item->stock_status === 'outofstock')) {
-            wc_add_notice(__('این غذا در حال حاضر در شعبه انتخابی شما تمام شده است.', 'restaurant-menu-manager'), 'error');
+            wc_add_notice(__('این غذا در حال حاضر در شعبه انتخابی شما تمام شده است.', 'fondogh-online-menu'), 'error');
             return false;
         }
 
@@ -284,7 +331,7 @@ class BranchContext {
         if (WC()->cart && !WC()->cart->is_empty()) {
             foreach (WC()->cart->get_cart() as $cart_item) {
                 if (!empty($cart_item['_rmm_branch_id']) && $cart_item['_rmm_branch_id'] != $branch_id) {
-                    wc_add_notice(__('سبد خرید شما حاوی آیتم‌هایی از شعبه دیگری است. لطفاً ابتدا سبد خرید را خالی کنید یا به همان شعبه بازگردید.', 'restaurant-menu-manager'), 'error');
+                    wc_add_notice(__('سبد خرید شما حاوی آیتم‌هایی از شعبه دیگری است. لطفاً ابتدا سبد خرید را خالی کنید یا به همان شعبه بازگردید.', 'fondogh-online-menu'), 'error');
                     return false;
                 }
             }
@@ -347,7 +394,7 @@ class BranchContext {
             $branch_id = absint($values['_rmm_branch_id']);
             $branch_term = get_term($branch_id, BranchTaxonomy::TAXONOMY);
             if ($branch_term && !is_wp_error($branch_term)) {
-                $item->add_meta_data(__('شعبه', 'restaurant-menu-manager'), $branch_term->name, true);
+                $item->add_meta_data(__('شعبه', 'fondogh-online-menu'), $branch_term->name, true);
                 $item->add_meta_data('_rmm_branch_id', $branch_id, true);
                 $order->update_meta_data('_rmm_order_branch_id', $branch_id);
             }

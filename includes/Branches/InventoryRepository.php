@@ -80,7 +80,7 @@ class InventoryRepository {
     }
 
     /**
-     * Upsert single item with ON DUPLICATE KEY UPDATE
+     * Upsert single item with partial merging to avoid nulling out omitted columns
      *
      * @param array $data
      * @return bool|int
@@ -89,12 +89,8 @@ class InventoryRepository {
         global $wpdb;
         $table = self::table();
 
-        $product_id    = absint($data['product_id'] ?? 0);
-        $branch_id     = absint($data['branch_id'] ?? 0);
-        $regular_price = isset($data['regular_price']) && $data['regular_price'] !== '' ? floatval($data['regular_price']) : null;
-        $sale_price    = isset($data['sale_price']) && $data['sale_price'] !== '' ? floatval($data['sale_price']) : null;
-        $stock_status  = in_array($data['stock_status'] ?? '', ['instock', 'outofstock']) ? $data['stock_status'] : 'instock';
-        $is_available  = isset($data['is_available']) ? (int) (bool) $data['is_available'] : 1;
+        $product_id = absint($data['product_id'] ?? 0);
+        $branch_id  = absint($data['branch_id'] ?? 0);
 
         if (!$product_id || !$branch_id) {
             return false;
@@ -102,6 +98,25 @@ class InventoryRepository {
 
         // Invalidate internal cache
         unset(self::$cache["{$product_id}_{$branch_id}"]);
+
+        // Fetch existing record to prevent nulling omitted columns
+        $existing = self::get_item($product_id, $branch_id);
+
+        $regular_price = array_key_exists('regular_price', $data)
+            ? ($data['regular_price'] !== '' && $data['regular_price'] !== null ? floatval($data['regular_price']) : null)
+            : ($existing ? $existing->regular_price : null);
+
+        $sale_price = array_key_exists('sale_price', $data)
+            ? ($data['sale_price'] !== '' && $data['sale_price'] !== null ? floatval($data['sale_price']) : null)
+            : ($existing ? $existing->sale_price : null);
+
+        $stock_status = array_key_exists('stock_status', $data)
+            ? (in_array($data['stock_status'], ['instock', 'outofstock']) ? $data['stock_status'] : 'instock')
+            : ($existing ? $existing->stock_status : 'instock');
+
+        $is_available = array_key_exists('is_available', $data)
+            ? (int) (bool) $data['is_available']
+            : ($existing ? (int) $existing->is_available : ($stock_status === 'instock' ? 1 : 0));
 
         $sql = "INSERT INTO {$table} (product_id, branch_id, regular_price, sale_price, stock_status, is_available, updated_at)
                 VALUES (%d, %d, %s, %s, %s, %d, NOW())
@@ -124,7 +139,7 @@ class InventoryRepository {
     }
 
     /**
-     * Fast toggle stock status
+     * Fast toggle stock status (partial update - preserves existing prices)
      */
     public static function toggle_stock($product_id, $branch_id, $stock_status) {
         $product_id   = absint($product_id);
@@ -132,24 +147,63 @@ class InventoryRepository {
         $stock_status = ($stock_status === 'outofstock') ? 'outofstock' : 'instock';
         $is_available = ($stock_status === 'instock') ? 1 : 0;
 
-        return self::upsert([
-            'product_id'   => $product_id,
-            'branch_id'    => $branch_id,
-            'stock_status' => $stock_status,
-            'is_available' => $is_available
-        ]);
+        if (!$product_id || !$branch_id) {
+            return false;
+        }
+
+        unset(self::$cache["{$product_id}_{$branch_id}"]);
+
+        global $wpdb;
+        $table = self::table();
+
+        $sql = "INSERT INTO {$table} (product_id, branch_id, stock_status, is_available, updated_at)
+                VALUES (%d, %d, %s, %d, NOW())
+                ON DUPLICATE KEY UPDATE
+                    stock_status = VALUES(stock_status),
+                    is_available = VALUES(is_available),
+                    updated_at   = NOW()";
+
+        return $wpdb->query($wpdb->prepare(
+            $sql,
+            $product_id,
+            $branch_id,
+            $stock_status,
+            $is_available
+        ));
     }
 
     /**
-     * Update branch-specific price
+     * Update branch-specific price (partial update - preserves existing stock status)
      */
     public static function update_price($product_id, $branch_id, $regular_price, $sale_price = null) {
-        return self::upsert([
-            'product_id'    => $product_id,
-            'branch_id'     => $branch_id,
-            'regular_price' => $regular_price,
-            'sale_price'    => $sale_price
-        ]);
+        $product_id    = absint($product_id);
+        $branch_id     = absint($branch_id);
+        $regular_price = ($regular_price !== '' && $regular_price !== null) ? floatval($regular_price) : null;
+        $sale_price    = ($sale_price !== '' && $sale_price !== null) ? floatval($sale_price) : null;
+
+        if (!$product_id || !$branch_id) {
+            return false;
+        }
+
+        unset(self::$cache["{$product_id}_{$branch_id}"]);
+
+        global $wpdb;
+        $table = self::table();
+
+        $sql = "INSERT INTO {$table} (product_id, branch_id, regular_price, sale_price, updated_at)
+                VALUES (%d, %d, %s, %s, NOW())
+                ON DUPLICATE KEY UPDATE
+                    regular_price = VALUES(regular_price),
+                    sale_price    = VALUES(sale_price),
+                    updated_at    = NOW()";
+
+        return $wpdb->query($wpdb->prepare(
+            $sql,
+            $product_id,
+            $branch_id,
+            $regular_price,
+            $sale_price
+        ));
     }
 
     /**

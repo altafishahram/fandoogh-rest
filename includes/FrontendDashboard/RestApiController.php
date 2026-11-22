@@ -13,131 +13,147 @@ class RestApiController {
         add_action('rest_api_init', [$this, 'register_routes']);
     }
 
+    /**
+     * Explicit role/route matrix. A single boolean permission for every route is
+     * not acceptable: kitchen staff may only read orders and update their status.
+     *
+     | Route | Permission callback |
+     | --- | --- |
+     | stats / products / categories / branches (read) | can_view |
+     | toggle-stock / update-price | can_manage_inventory |
+     | save-product / delete-product / category writes | can_manage_menu |
+     | save-branch | can_manage_branches |
+     | live-orders / order-receipt | can_view_orders |
+     | update-order-status | can_update_orders |
+     | toggle-branch | can_manage_inventory |
+     | ai-translate | can_manage_menu |
+     | upload-image | can_upload |
+     */
     public function register_routes() {
         // Stats
         register_rest_route(self::NAMESPACE, '/portal/stats', [
             'methods'             => 'GET',
             'callback'            => [$this, 'get_stats'],
-            'permission_callback' => [$this, 'check_permission'],
+            'permission_callback' => [$this, 'can_view'],
         ]);
 
         // Products for Menu & Stock manager
         register_rest_route(self::NAMESPACE, '/portal/products', [
             'methods'             => 'GET',
             'callback'            => [$this, 'get_products'],
-            'permission_callback' => [$this, 'check_permission'],
+            'permission_callback' => [$this, 'can_view'],
         ]);
 
         // Quick toggle stock status
         register_rest_route(self::NAMESPACE, '/portal/toggle-stock', [
             'methods'             => 'POST',
             'callback'            => [$this, 'toggle_stock'],
-            'permission_callback' => [$this, 'check_permission'],
+            'permission_callback' => [$this, 'can_manage_inventory'],
         ]);
 
         // Quick update price
         register_rest_route(self::NAMESPACE, '/portal/update-price', [
             'methods'             => 'POST',
             'callback'            => [$this, 'update_price'],
-            'permission_callback' => [$this, 'check_permission'],
+            'permission_callback' => [$this, 'can_manage_inventory'],
         ]);
 
         // Create or Edit Food item
         register_rest_route(self::NAMESPACE, '/portal/save-product', [
             'methods'             => 'POST',
             'callback'            => [$this, 'save_product'],
-            'permission_callback' => [$this, 'check_permission'],
+            'permission_callback' => [$this, 'can_manage_menu'],
         ]);
 
         // Delete Food item
         register_rest_route(self::NAMESPACE, '/portal/delete-product', [
             'methods'             => 'POST',
             'callback'            => [$this, 'delete_product'],
-            'permission_callback' => [$this, 'check_permission'],
+            'permission_callback' => [$this, 'can_manage_menu'],
         ]);
 
         // Product categories list
         register_rest_route(self::NAMESPACE, '/portal/categories', [
             'methods'             => 'GET',
             'callback'            => [$this, 'get_categories'],
-            'permission_callback' => [$this, 'check_permission'],
+            'permission_callback' => [$this, 'can_view'],
         ]);
 
         // Reorder Categories (Prioritization)
         register_rest_route(self::NAMESPACE, '/portal/reorder-categories', [
             'methods'             => 'POST',
             'callback'            => [$this, 'reorder_categories'],
-            'permission_callback' => [$this, 'check_permission'],
+            'permission_callback' => [$this, 'can_manage_menu'],
         ]);
 
         // Save Category (Create or Edit)
         register_rest_route(self::NAMESPACE, '/portal/save-category', [
             'methods'             => 'POST',
             'callback'            => [$this, 'save_category'],
-            'permission_callback' => [$this, 'check_permission'],
+            'permission_callback' => [$this, 'can_manage_menu'],
         ]);
 
         // Delete Category
         register_rest_route(self::NAMESPACE, '/portal/delete-category', [
             'methods'             => 'POST',
             'callback'            => [$this, 'delete_category'],
-            'permission_callback' => [$this, 'check_permission'],
+            'permission_callback' => [$this, 'can_manage_menu'],
         ]);
 
         // Branches list
         register_rest_route(self::NAMESPACE, '/portal/branches', [
             'methods'             => 'GET',
             'callback'            => [$this, 'get_portal_branches'],
-            'permission_callback' => [$this, 'check_permission'],
+            'permission_callback' => [$this, 'can_view'],
         ]);
 
         // Save Branch (Create or Edit)
         register_rest_route(self::NAMESPACE, '/portal/save-branch', [
             'methods'             => 'POST',
             'callback'            => [$this, 'save_branch'],
-            'permission_callback' => [$this, 'check_permission'],
+            'permission_callback' => [$this, 'can_manage_branches'],
         ]);
 
         // Live orders feed for Kitchen Display (KDS)
         register_rest_route(self::NAMESPACE, '/portal/live-orders', [
             'methods'             => 'GET',
             'callback'            => [$this, 'get_live_orders'],
-            'permission_callback' => [$this, 'check_permission'],
+            'permission_callback' => [$this, 'can_view_orders'],
         ]);
 
         // Update order status (Processing -> Completed etc.)
         register_rest_route(self::NAMESPACE, '/portal/update-order-status', [
             'methods'             => 'POST',
             'callback'            => [$this, 'update_order_status'],
-            'permission_callback' => [$this, 'check_permission'],
+            'permission_callback' => [$this, 'can_update_orders'],
         ]);
 
         // Toggle branch open/closed
         register_rest_route(self::NAMESPACE, '/portal/toggle-branch', [
             'methods'             => 'POST',
             'callback'            => [$this, 'toggle_branch_open_status'],
-            'permission_callback' => [$this, 'check_permission'],
+            'permission_callback' => [$this, 'can_manage_inventory'],
         ]);
 
         // Get single order for 80mm thermal receipt
         register_rest_route(self::NAMESPACE, '/portal/order-receipt', [
             'methods'             => 'GET',
             'callback'            => [$this, 'get_order_receipt_data'],
-            'permission_callback' => [$this, 'check_permission'],
+            'permission_callback' => [$this, 'can_view_orders'],
         ]);
 
         // AI Translation endpoint
         register_rest_route(self::NAMESPACE, '/portal/ai-translate', [
             'methods'             => 'POST',
             'callback'            => [$this, 'handle_ai_translate'],
-            'permission_callback' => [$this, 'check_permission'],
+            'permission_callback' => [$this, 'can_manage_menu'],
         ]);
 
         // Upload Image endpoint (Featured & Gallery)
         register_rest_route(self::NAMESPACE, '/portal/upload-image', [
             'methods'             => 'POST',
             'callback'            => [$this, 'upload_image'],
-            'permission_callback' => [$this, 'check_permission'],
+            'permission_callback' => [$this, 'can_upload'],
         ]);
     }
 
@@ -145,13 +161,92 @@ class RestApiController {
         return AuthController::is_authorized();
     }
 
+    public function can_view() {
+        return AuthController::can_view_catalog();
+    }
+
+    public function can_manage_menu() {
+        return AuthController::can_manage_menu();
+    }
+
+    public function can_manage_inventory() {
+        return AuthController::can_manage_inventory();
+    }
+
+    public function can_manage_branches() {
+        return AuthController::can_manage_branches();
+    }
+
+    public function can_view_orders() {
+        return AuthController::can_view_orders();
+    }
+
+    public function can_update_orders() {
+        return AuthController::can_update_order_status();
+    }
+
+    public function can_upload() {
+        return AuthController::can_upload_media();
+    }
+
+    /**
+     * Central branch guard. The client-supplied branch_id is a claim, not a
+     * permission: it is always checked against AuthController::get_user_branches().
+     *
+     * @param \WP_REST_Request $request
+     * @return int|\WP_Error
+     */
+    private function resolve_request_branch(\WP_REST_Request $request) {
+        $branch_id = absint($request->get_param('branch_id'));
+        if (!$branch_id) {
+            $branch_id = absint(\RMM\Branches\BranchContext::get_active_branch_id());
+        }
+
+        if (!$branch_id || !term_exists($branch_id, \RMM\Branches\BranchTaxonomy::TAXONOMY)) {
+            return new \WP_Error('rmm_invalid_branch', __('شعبه نامعتبر است.', 'fondogh-online-menu'), ['status' => 404]);
+        }
+
+        if (!AuthController::user_can_access_branch($branch_id)) {
+            return new \WP_Error('rmm_forbidden_branch', __('شما به این شعبه دسترسی ندارید.', 'fondogh-online-menu'), ['status' => 403]);
+        }
+
+        return $branch_id;
+    }
+
+    /**
+     * Verify ownership of an order based on its stored branch, not on a param.
+     *
+     * @param \WC_Order|false $order
+     * @return true|\WP_Error
+     */
+    private function assert_order_branch($order) {
+        if (!$order) {
+            return new \WP_Error('rmm_order_not_found', __('سفارش یافت نشد.', 'fondogh-online-menu'), ['status' => 404]);
+        }
+
+        $branch_id = absint($order->get_meta('_rmm_order_branch_id'));
+        if (!$branch_id) {
+            // Legacy orders without a branch are visible to global managers only.
+            if (!current_user_can('manage_options') && !current_user_can('manage_woocommerce')) {
+                return new \WP_Error('rmm_forbidden_order', __('شما به این سفارش دسترسی ندارید.', 'fondogh-online-menu'), ['status' => 403]);
+            }
+            return true;
+        }
+
+        if (!AuthController::user_can_access_branch($branch_id)) {
+            return new \WP_Error('rmm_forbidden_order', __('شما به این سفارش دسترسی ندارید.', 'fondogh-online-menu'), ['status' => 403]);
+        }
+
+        return true;
+    }
+
     /**
      * Dashboard Stats
      */
     public function get_stats(\WP_REST_Request $request) {
-        $branch_id = absint($request->get_param('branch_id'));
-        if (!$branch_id) {
-            $branch_id = \RMM\Branches\BranchContext::get_active_branch_id();
+        $branch_id = $this->resolve_request_branch($request);
+        if (is_wp_error($branch_id)) {
+            return $branch_id;
         }
 
         // Count today's orders
@@ -201,9 +296,9 @@ class RestApiController {
      * Food Products list for fast inventory management
      */
     public function get_products(\WP_REST_Request $request) {
-        $branch_id = absint($request->get_param('branch_id'));
-        if (!$branch_id) {
-            $branch_id = \RMM\Branches\BranchContext::get_active_branch_id();
+        $branch_id = $this->resolve_request_branch($request);
+        if (is_wp_error($branch_id)) {
+            return $branch_id;
         }
 
         $branch_inventory = \RMM\Branches\InventoryRepository::get_branch_inventory($branch_id);
@@ -285,33 +380,27 @@ class RestApiController {
      */
     public function toggle_stock(\WP_REST_Request $request) {
         $product_id = absint($request->get_param('product_id'));
-        $branch_id  = absint($request->get_param('branch_id'));
         $status     = sanitize_text_field($request->get_param('status')); // 'instock' or 'outofstock'
 
-        if (!$product_id || !$branch_id) {
-            return new \WP_Error('rmm_missing_params', __('شناسه محصول یا شعبه الزامی است.', 'restaurant-menu-manager'), ['status' => 400]);
+        if (!$product_id) {
+            return new \WP_Error('rmm_missing_params', __('شناسه محصول الزامی است.', 'fondogh-online-menu'), ['status' => 400]);
         }
 
+        $branch_id = $this->resolve_request_branch($request);
+        if (is_wp_error($branch_id)) {
+            return $branch_id;
+        }
+
+        // Branch-scoped change only. Never touch the global WooCommerce product:
+        // wc_update_product_stock_status()/set_stock_status() would change stock for
+        // every branch and overwrite the store-wide product record.
         \RMM\Branches\InventoryRepository::toggle_stock($product_id, $branch_id, $status);
-
-        // Update WooCommerce product native stock status & clear caches
-        if (function_exists('wc_update_product_stock_status')) {
-            wc_update_product_stock_status($product_id, $status);
-        } else {
-            update_post_meta($product_id, '_stock_status', $status);
-        }
-
-        $wc_prod = wc_get_product($product_id);
-        if ($wc_prod) {
-            $wc_prod->set_stock_status($status);
-            $wc_prod->save();
-        }
 
         return rest_ensure_response([
             'success'      => true,
             'product_id'   => $product_id,
             'branch_id'    => $branch_id,
-            'stock_status' => $status,
+            'stock_status' => ($status === 'outofstock') ? 'outofstock' : 'instock',
             'is_available' => ($status === 'instock'),
         ]);
     }
@@ -321,32 +410,25 @@ class RestApiController {
      */
     public function update_price(\WP_REST_Request $request) {
         $product_id    = absint($request->get_param('product_id'));
-        $branch_id     = absint($request->get_param('branch_id'));
         $regular_price = floatval($request->get_param('regular_price'));
         $sale_price    = $request->get_param('sale_price') !== null ? floatval($request->get_param('sale_price')) : null;
 
-        if (!$product_id || !$branch_id) {
-            return new \WP_Error('rmm_missing_params', __('پارامترها ناقص است.', 'restaurant-menu-manager'), ['status' => 400]);
+        if (!$product_id) {
+            return new \WP_Error('rmm_missing_params', __('پارامترها ناقص است.', 'fondogh-online-menu'), ['status' => 400]);
         }
 
+        $branch_id = $this->resolve_request_branch($request);
+        if (is_wp_error($branch_id)) {
+            return $branch_id;
+        }
+
+        // Branch-scoped price only. Never call set_regular_price()/set_price() on
+        // the global WooCommerce product; that would reprice every other branch.
         \RMM\Branches\InventoryRepository::update_price($product_id, $branch_id, $regular_price, $sale_price);
-
-        // Also update WooCommerce product price
-        $wc_prod = wc_get_product($product_id);
-        if ($wc_prod) {
-            $wc_prod->set_regular_price($regular_price);
-            if ($sale_price !== null && $sale_price > 0) {
-                $wc_prod->set_sale_price($sale_price);
-                $wc_prod->set_price($sale_price);
-            } else {
-                $wc_prod->set_sale_price('');
-                $wc_prod->set_price($regular_price);
-            }
-            $wc_prod->save();
-        }
 
         return rest_ensure_response([
             'success'       => true,
+            'branch_id'     => $branch_id,
             'regular_price' => $regular_price,
             'sale_price'    => $sale_price,
         ]);
@@ -356,8 +438,11 @@ class RestApiController {
      * Live Orders for KDS
      */
     public function get_live_orders(\WP_REST_Request $request) {
-        $branch_id = absint($request->get_param('branch_id'));
-        $last_id   = absint($request->get_param('last_order_id'));
+        $branch_id = $this->resolve_request_branch($request);
+        if (is_wp_error($branch_id)) {
+            return $branch_id;
+        }
+        $last_id = absint($request->get_param('last_order_id'));
 
         $query_args = [
             'status'  => ['processing', 'pending', 'on-hold', 'completed'],
@@ -398,7 +483,7 @@ class RestApiController {
                 'status'        => $order->get_status(),
                 'status_name'   => wc_get_order_status_name($order->get_status()),
                 'created_at'    => $order->get_date_created()->date_i18n('H:i - Y/m/d'),
-                'customer_name' => $order->get_formatted_billing_full_name() ?: __('مشتری حضوری', 'restaurant-menu-manager'),
+                'customer_name' => $order->get_formatted_billing_full_name() ?: __('مشتری حضوری', 'fondogh-online-menu'),
                 'phone'         => $order->get_billing_phone(),
                 'table_number'  => $table_no,
                 'order_type'    => $order_type,
@@ -423,11 +508,12 @@ class RestApiController {
         $new_status = sanitize_text_field($request->get_param('status'));
 
         $order = wc_get_order($order_id);
-        if (!$order) {
-            return new \WP_Error('rmm_order_not_found', __('سفارش یافت نشد.', 'restaurant-menu-manager'), ['status' => 404]);
+        $guard = $this->assert_order_branch($order);
+        if (is_wp_error($guard)) {
+            return $guard;
         }
 
-        $order->update_status($new_status, sprintf(__('تغییر وضعیت از طریق پنل آشپزخانه رستوران به %s', 'restaurant-menu-manager'), $new_status));
+        $order->update_status($new_status, sprintf(__('تغییر وضعیت از طریق پنل آشپزخانه رستوران به %s', 'fondogh-online-menu'), $new_status));
 
         return rest_ensure_response([
             'success'     => true,
@@ -441,8 +527,11 @@ class RestApiController {
      * Toggle branch open status
      */
     public function toggle_branch_open_status(\WP_REST_Request $request) {
-        $branch_id = absint($request->get_param('branch_id'));
-        $is_open   = sanitize_text_field($request->get_param('is_open')); // '1' or '0'
+        $branch_id = $this->resolve_request_branch($request);
+        if (is_wp_error($branch_id)) {
+            return $branch_id;
+        }
+        $is_open = sanitize_text_field($request->get_param('is_open')); // '1' or '0'
 
         update_term_meta($branch_id, '_rmm_is_open', $is_open);
 
@@ -460,8 +549,9 @@ class RestApiController {
         $order_id = absint($request->get_param('order_id'));
         $order = wc_get_order($order_id);
 
-        if (!$order) {
-            return new \WP_Error('rmm_order_not_found', __('سفارش یافت نشد.', 'restaurant-menu-manager'), ['status' => 404]);
+        $guard = $this->assert_order_branch($order);
+        if (is_wp_error($guard)) {
+            return $guard;
         }
 
         $table_no = $order->get_meta('_rmm_table_number');
@@ -489,7 +579,7 @@ class RestApiController {
             'branch_name'   => ($branch && !is_wp_error($branch)) ? $branch->name : '',
             'branch_phone'  => $branch_id ? get_term_meta($branch_id, '_rmm_phone', true) : '',
             'table_number'  => $table_no,
-            'customer_name' => $order->get_formatted_billing_full_name() ?: __('مشتری حضوری', 'restaurant-menu-manager'),
+            'customer_name' => $order->get_formatted_billing_full_name() ?: __('مشتری حضوری', 'fondogh-online-menu'),
             'phone'         => $order->get_billing_phone(),
             'notes'         => $order->get_customer_note(),
             'total'         => $order->get_total(),
@@ -554,7 +644,7 @@ class RestApiController {
     public function reorder_categories(\WP_REST_Request $request) {
         $category_ids = $request->get_param('category_ids');
         if (!is_array($category_ids)) {
-            return new \WP_Error('rmm_invalid_data', __('اطلاعات دسته‌بندی نامعتبر است.', 'restaurant-menu-manager'), ['status' => 400]);
+            return new \WP_Error('rmm_invalid_data', __('اطلاعات دسته‌بندی نامعتبر است.', 'fondogh-online-menu'), ['status' => 400]);
         }
 
         if (class_exists('\RMM\Menu\CategoryOrder')) {
@@ -563,7 +653,7 @@ class RestApiController {
 
         return rest_ensure_response([
             'success'    => true,
-            'message'    => __('ترتیب اولویت دسته‌بندی‌ها با موفقیت ذخیره شد.', 'restaurant-menu-manager'),
+            'message'    => __('ترتیب اولویت دسته‌بندی‌ها با موفقیت ذخیره شد.', 'fondogh-online-menu'),
             'categories' => $this->get_categories_data(),
         ]);
     }
@@ -580,7 +670,7 @@ class RestApiController {
         $order       = $request->get_param('order');
 
         if (empty($name)) {
-            return new \WP_Error('rmm_invalid_name', __('نام دسته‌بندی الزامی است.', 'restaurant-menu-manager'), ['status' => 400]);
+            return new \WP_Error('rmm_invalid_name', __('نام دسته‌بندی الزامی است.', 'fondogh-online-menu'), ['status' => 400]);
         }
 
         if ($cat_id > 0) {
@@ -639,7 +729,7 @@ class RestApiController {
                 'translations'  => get_term_meta($cat_id, '_rmm_translations', true) ?: (object)[],
                 'order'         => get_term_meta($cat_id, 'order', true),
             ],
-            'message'  => __('دسته‌بندی با موفقیت ذخیره شد.', 'restaurant-menu-manager'),
+            'message'  => __('دسته‌بندی با موفقیت ذخیره شد.', 'fondogh-online-menu'),
         ]);
     }
 
@@ -649,18 +739,18 @@ class RestApiController {
     public function delete_category(\WP_REST_Request $request) {
         $cat_id = absint($request->get_param('id'));
         if (!$cat_id) {
-            return new \WP_Error('rmm_invalid_id', __('شناسه دسته‌بندی نامعتبر است.', 'restaurant-menu-manager'), ['status' => 400]);
+            return new \WP_Error('rmm_invalid_id', __('شناسه دسته‌بندی نامعتبر است.', 'fondogh-online-menu'), ['status' => 400]);
         }
 
         $res = wp_delete_term($cat_id, 'product_cat');
         if (is_wp_error($res) || !$res) {
-            return new \WP_Error('rmm_delete_failed', __('خطا در حذف دسته‌بندی.', 'restaurant-menu-manager'), ['status' => 500]);
+            return new \WP_Error('rmm_delete_failed', __('خطا در حذف دسته‌بندی.', 'fondogh-online-menu'), ['status' => 500]);
         }
 
         return rest_ensure_response([
             'success' => true,
             'id'      => $cat_id,
-            'message' => __('دسته‌بندی با موفقیت حذف شد.', 'restaurant-menu-manager'),
+            'message' => __('دسته‌بندی با موفقیت حذف شد.', 'fondogh-online-menu'),
         ]);
     }
 
@@ -668,11 +758,20 @@ class RestApiController {
      * Get Branches List for Portal
      */
     public function get_portal_branches() {
+        $allowed = AuthController::get_user_branches();
+        if (empty($allowed)) {
+            return rest_ensure_response([
+                'success'  => true,
+                'branches' => [],
+            ]);
+        }
         $terms = get_terms([
             'taxonomy'   => \RMM\Branches\BranchTaxonomy::TAXONOMY,
             'hide_empty' => false,
             'orderby'    => 'term_id',
             'order'      => 'ASC',
+            // Filter at query time: post-fetch filtering still leaks term data.
+            'include'    => $allowed,
         ]);
 
         $branches = [];
@@ -715,7 +814,11 @@ class RestApiController {
         $tables_count = absint($request->get_param('tables_count') ?? 10);
 
         if (empty($name)) {
-            return new \WP_Error('rmm_invalid_name', __('نام شعبه الزامی است.', 'restaurant-menu-manager'), ['status' => 400]);
+            return new \WP_Error('rmm_invalid_name', __('نام شعبه الزامی است.', 'fondogh-online-menu'), ['status' => 400]);
+        }
+
+        if ($branch_id > 0 && !AuthController::user_can_access_branch($branch_id)) {
+            return new \WP_Error('rmm_forbidden_branch', __('شما به این شعبه دسترسی ندارید.', 'fondogh-online-menu'), ['status' => 403]);
         }
 
         if ($branch_id > 0) {
@@ -756,7 +859,7 @@ class RestApiController {
                 'min_order'    => $min_order,
                 'tables_count' => $tables_count,
             ],
-            'message' => __('اطلاعات شعبه با موفقیت ذخیره شد.', 'restaurant-menu-manager'),
+            'message' => __('اطلاعات شعبه با موفقیت ذخیره شد.', 'fondogh-online-menu'),
         ]);
     }
 
@@ -768,13 +871,25 @@ class RestApiController {
         $name       = sanitize_text_field($request->get_param('name'));
 
         if (empty($name)) {
-            return new \WP_Error('rmm_invalid_name', __('نام غذا الزامی است.', 'restaurant-menu-manager'), ['status' => 400]);
+            return new \WP_Error('rmm_invalid_name', __('نام غذا الزامی است.', 'fondogh-online-menu'), ['status' => 400]);
+        }
+
+        // A branch assignment is also a claim: reject any branch the current
+        // user is not allowed to manage before writing the product.
+        $branches_param = $request->get_param('branches');
+        $clean_branches = is_array($branches_param)
+            ? array_values(array_filter(array_map('absint', $branches_param)))
+            : [];
+        foreach ($clean_branches as $b_id) {
+            if (!AuthController::user_can_access_branch($b_id)) {
+                return new \WP_Error('rmm_forbidden_branch', __('شما به یکی از شعبات اختصاصدادهشده دسترسی ندارید.', 'fondogh-online-menu'), ['status' => 403]);
+            }
         }
 
         if ($product_id > 0) {
             $product = wc_get_product($product_id);
             if (!$product) {
-                return new \WP_Error('rmm_not_found', __('محصول مورد نظر یافت نشد.', 'restaurant-menu-manager'), ['status' => 404]);
+                return new \WP_Error('rmm_not_found', __('محصول مورد نظر یافت نشد.', 'fondogh-online-menu'), ['status' => 404]);
             }
         } else {
             $product = new \WC_Product_Simple();
@@ -823,7 +938,7 @@ class RestApiController {
         $saved_id = $product->save();
 
         if (!$saved_id) {
-            return new \WP_Error('rmm_save_failed', __('ذخیره‌سازی با خطا مواجه شد.', 'restaurant-menu-manager'), ['status' => 500]);
+            return new \WP_Error('rmm_save_failed', __('ذخیره‌سازی با خطا مواجه شد.', 'fondogh-online-menu'), ['status' => 500]);
         }
 
         // Category
@@ -874,10 +989,8 @@ class RestApiController {
             }
         }
 
-        // Branches assignment
-        $branches = $request->get_param('branches');
-        if (is_array($branches)) {
-            $clean_branches = array_map('absint', $branches);
+        // Branches assignment (validated against the access matrix above)
+        if (is_array($branches_param)) {
             update_post_meta($saved_id, '_rmm_branches', $clean_branches);
 
             // Also update inventory table for each assigned branch
@@ -898,7 +1011,7 @@ class RestApiController {
         return rest_ensure_response([
             'success'    => true,
             'product_id' => $saved_id,
-            'message'    => __('اطلاعات غذا با موفقیت ذخیره شد.', 'restaurant-menu-manager'),
+            'message'    => __('اطلاعات غذا با موفقیت ذخیره شد.', 'fondogh-online-menu'),
         ]);
     }
 
@@ -909,13 +1022,13 @@ class RestApiController {
         $product_id = absint($request->get_param('product_id'));
 
         if (!$product_id) {
-            return new \WP_Error('rmm_invalid_id', __('شناسه نامعتبر است.', 'restaurant-menu-manager'), ['status' => 400]);
+            return new \WP_Error('rmm_invalid_id', __('شناسه نامعتبر است.', 'fondogh-online-menu'), ['status' => 400]);
         }
 
         $res = wp_trash_post($product_id);
 
         if (!$res) {
-            return new \WP_Error('rmm_delete_failed', __('حذف با خطا مواجه شد.', 'restaurant-menu-manager'), ['status' => 500]);
+            return new \WP_Error('rmm_delete_failed', __('حذف با خطا مواجه شد.', 'fondogh-online-menu'), ['status' => 500]);
         }
 
         \RMM\Branches\InventoryRepository::delete_for_product($product_id);
@@ -923,7 +1036,7 @@ class RestApiController {
         return rest_ensure_response([
             'success'    => true,
             'product_id' => $product_id,
-            'message'    => __('غذا به سطل زباله منتقل شد.', 'restaurant-menu-manager'),
+            'message'    => __('غذا به سطل زباله منتقل شد.', 'fondogh-online-menu'),
         ]);
     }
 
@@ -935,7 +1048,7 @@ class RestApiController {
         $target_lang = sanitize_key($request->get_param('target_lang') ?: 'en');
 
         if (!is_array($texts) || empty($texts)) {
-            return new \WP_Error('rmm_invalid_texts', __('متن‌های ورودی جهت ترجمه معتبر نیستند.', 'restaurant-menu-manager'), ['status' => 400]);
+            return new \WP_Error('rmm_invalid_texts', __('متن‌های ورودی جهت ترجمه معتبر نیستند.', 'fondogh-online-menu'), ['status' => 400]);
         }
 
         $clean_texts = [];
@@ -964,7 +1077,7 @@ class RestApiController {
      */
     public function upload_image(\WP_REST_Request $request) {
         if (empty($_FILES['file'])) {
-            return new \WP_Error('rmm_no_file', __('هیچ فایلی برای آپلود ارسال نشده است.', 'restaurant-menu-manager'), ['status' => 400]);
+            return new \WP_Error('rmm_no_file', __('هیچ فایلی برای آپلود ارسال نشده است.', 'fondogh-online-menu'), ['status' => 400]);
         }
 
         $file = $_FILES['file'];
@@ -972,7 +1085,7 @@ class RestApiController {
         // Check max filesize
         $max_size_kb = \RMM\Core\Settings::get('image_max_size_kb', 3072);
         if ($file['size'] > ($max_size_kb * 1024)) {
-            return new \WP_Error('rmm_file_too_large', sprintf(__('حجم فایل (%s) بیشتر از سقف مجاز (%d کیلوبایت) است.', 'restaurant-menu-manager'), size_format($file['size']), $max_size_kb), ['status' => 400]);
+            return new \WP_Error('rmm_file_too_large', sprintf(__('حجم فایل (%s) بیشتر از سقف مجاز (%d کیلوبایت) است.', 'fondogh-online-menu'), size_format($file['size']), $max_size_kb), ['status' => 400]);
         }
 
         $enable_webp = \RMM\Core\Settings::get('enable_webp_conversion', 'yes') === 'yes';

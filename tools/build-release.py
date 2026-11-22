@@ -29,8 +29,10 @@ ROOT_FILES = (
 # پوشه‌هایی که کامل و بدون استثنا در بسته قرار می‌گیرند.
 INCLUDE_DIRS = (
     "includes",
+    "admin",
     os.path.join("assets", "css"),
     os.path.join("assets", "js"),
+    os.path.join("assets", "images"),
     os.path.join("assets", "templates-json"),
 )
 
@@ -50,7 +52,7 @@ def collect() -> list[str]:
     for directory in INCLUDE_DIRS:
         base = os.path.join(ROOT, directory)
         if not os.path.isdir(base):
-            sys.exit(f"پوشهٔ الزامی پیدا نشد: {directory}")
+            continue  # اگر هنوز پوشه‌ای خالی یا اختیاری بود عبور کن
         for dirpath, dirnames, filenames in os.walk(base):
             dirnames[:] = sorted(d for d in dirnames if not d.startswith("."))
             for filename in sorted(filenames):

@@ -18,15 +18,15 @@ class FoodMeta {
      */
     public function register_food_taxonomies() {
         $labels = [
-            'name'                       => __('نشان‌های غذایی (Dietary Badges)', 'restaurant-menu-manager'),
-            'singular_name'              => __('نشان غذایی', 'restaurant-menu-manager'),
-            'search_items'               => __('جستجوی نشان‌ها', 'restaurant-menu-manager'),
-            'all_items'                  => __('همه نشان‌ها', 'restaurant-menu-manager'),
-            'edit_item'                  => __('ویرایش نشان', 'restaurant-menu-manager'),
-            'update_item'                => __('به‌روزرسانی نشان', 'restaurant-menu-manager'),
-            'add_new_item'               => __('افزودن نشان جدید (مثل تند، گیاهی، ویژه)', 'restaurant-menu-manager'),
-            'new_item_name'              => __('نام نشان تازه', 'restaurant-menu-manager'),
-            'menu_name'                  => __('نشان‌های غذایی', 'restaurant-menu-manager'),
+            'name'                       => __('نشان‌های غذایی (Dietary Badges)', 'fondogh-online-menu'),
+            'singular_name'              => __('نشان غذایی', 'fondogh-online-menu'),
+            'search_items'               => __('جستجوی نشان‌ها', 'fondogh-online-menu'),
+            'all_items'                  => __('همه نشان‌ها', 'fondogh-online-menu'),
+            'edit_item'                  => __('ویرایش نشان', 'fondogh-online-menu'),
+            'update_item'                => __('به‌روزرسانی نشان', 'fondogh-online-menu'),
+            'add_new_item'               => __('افزودن نشان جدید (مثل تند، گیاهی، ویژه)', 'fondogh-online-menu'),
+            'new_item_name'              => __('نام نشان تازه', 'fondogh-online-menu'),
+            'menu_name'                  => __('نشان‌های غذایی', 'fondogh-online-menu'),
         ];
 
         register_taxonomy('rmm_dietary_badge', ['product'], [
@@ -45,7 +45,7 @@ class FoodMeta {
     public function register_food_meta_box() {
         add_meta_box(
             'rmm_food_attributes_box',
-            __('🍱 مشخصات رستورانی و ارزش غذایی (TastyMenu)', 'restaurant-menu-manager'),
+            __('🍱 مشخصات رستورانی و ارزش غذایی (TastyMenu)', 'fondogh-online-menu'),
             [$this, 'render_meta_box'],
             'product',
             'normal',
@@ -70,13 +70,13 @@ class FoodMeta {
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px;">
                 <div>
                     <label style="font-weight: 600; display: block; margin-bottom: 5px;">
-                        <?php _e('عنوان به زبان دوم (انگلیسی):', 'restaurant-menu-manager'); ?>
+                        <?php _e('عنوان به زبان دوم (انگلیسی):', 'fondogh-online-menu'); ?>
                     </label>
                     <input type="text" name="_rmm_title_en" value="<?php echo esc_attr($title_en); ?>" style="width: 100%;" placeholder="e.g. Double Beef Cheeseburger">
                 </div>
                 <div>
                     <label style="font-weight: 600; display: block; margin-bottom: 5px;">
-                        <?php _e('زمان تقریبی آماده‌سازی (دقیقه):', 'restaurant-menu-manager'); ?>
+                        <?php _e('زمان تقریبی آماده‌سازی (دقیقه):', 'fondogh-online-menu'); ?>
                     </label>
                     <input type="number" name="_rmm_prep_time" value="<?php echo esc_attr($prep_time); ?>" style="width: 100%;" placeholder="مثلاً: 20">
                 </div>
@@ -85,45 +85,45 @@ class FoodMeta {
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px;">
                 <div>
                     <label style="font-weight: 600; display: block; margin-bottom: 5px;">
-                        <?php _e('کالری و ارزش غذایی (Kcal):', 'restaurant-menu-manager'); ?>
+                        <?php _e('کالری و ارزش غذایی (Kcal):', 'fondogh-online-menu'); ?>
                     </label>
                     <input type="text" name="_rmm_calories" value="<?php echo esc_attr($calories); ?>" style="width: 100%;" placeholder="مثلاً: 480 Kcal">
                 </div>
                 <div>
                     <label style="font-weight: 600; display: block; margin-bottom: 5px;">
-                        <?php _e('نشان ویژه یا برجسته:', 'restaurant-menu-manager'); ?>
+                        <?php _e('نشان ویژه یا برجسته:', 'fondogh-online-menu'); ?>
                     </label>
                     <select name="_rmm_badge_icon" style="width: 100%;">
-                        <option value="none" <?php selected($badge_icon, 'none'); ?>><?php _e('بدون نشان', 'restaurant-menu-manager'); ?></option>
-                        <option value="chef" <?php selected($badge_icon, 'chef'); ?>><?php _e('⭐ پیشنهاد ویژه سرآشپز', 'restaurant-menu-manager'); ?></option>
-                        <option value="spicy" <?php selected($badge_icon, 'spicy'); ?>><?php _e('🌶️ تند و اسپایسی', 'restaurant-menu-manager'); ?></option>
-                        <option value="vegan" <?php selected($badge_icon, 'vegan'); ?>><?php _e('🌱 گیاهی (گیاه‌خواران)', 'restaurant-menu-manager'); ?></option>
-                        <option value="popular" <?php selected($badge_icon, 'popular'); ?>><?php _e('🔥 پرفروش‌ترین', 'restaurant-menu-manager'); ?></option>
-                        <option value="new" <?php selected($badge_icon, 'new'); ?>><?php _e('✨ غذای جدید', 'restaurant-menu-manager'); ?></option>
-                        <option value="custom" <?php selected($badge_icon, 'custom'); ?>><?php _e('🎨 نشان اختصاصی و دلخواه', 'restaurant-menu-manager'); ?></option>
+                        <option value="none" <?php selected($badge_icon, 'none'); ?>><?php _e('بدون نشان', 'fondogh-online-menu'); ?></option>
+                        <option value="chef" <?php selected($badge_icon, 'chef'); ?>><?php _e('⭐ پیشنهاد ویژه سرآشپز', 'fondogh-online-menu'); ?></option>
+                        <option value="spicy" <?php selected($badge_icon, 'spicy'); ?>><?php _e('🌶️ تند و اسپایسی', 'fondogh-online-menu'); ?></option>
+                        <option value="vegan" <?php selected($badge_icon, 'vegan'); ?>><?php _e('🌱 گیاهی (گیاه‌خواران)', 'fondogh-online-menu'); ?></option>
+                        <option value="popular" <?php selected($badge_icon, 'popular'); ?>><?php _e('🔥 پرفروش‌ترین', 'fondogh-online-menu'); ?></option>
+                        <option value="new" <?php selected($badge_icon, 'new'); ?>><?php _e('✨ غذای جدید', 'fondogh-online-menu'); ?></option>
+                        <option value="custom" <?php selected($badge_icon, 'custom'); ?>><?php _e('🎨 نشان اختصاصی و دلخواه', 'fondogh-online-menu'); ?></option>
                     </select>
                 </div>
             </div>
 
             <!-- تنظیمات شخصی‌سازی نشان ویژه -->
             <div style="background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 8px; padding: 12px; margin-bottom: 15px;">
-                <span style="font-weight: 700; display: block; margin-bottom: 8px; color: #334155;">✨ <?php _e('شخصی‌سازی عنوان، آیکون و تصویر نشان ویژه غذا:', 'restaurant-menu-manager'); ?></span>
+                <span style="font-weight: 700; display: block; margin-bottom: 8px; color: #334155;">✨ <?php _e('شخصی‌سازی عنوان، آیکون و تصویر نشان ویژه غذا:', 'fondogh-online-menu'); ?></span>
                 <div style="display: grid; grid-template-columns: 1.2fr 1fr 1.5fr; gap: 15px;">
                     <div>
                         <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">
-                            <?php _e('متن / عنوان دلخواه نشان:', 'restaurant-menu-manager'); ?>
+                            <?php _e('متن / عنوان دلخواه نشان:', 'fondogh-online-menu'); ?>
                         </label>
                         <input type="text" name="_rmm_badge_text" value="<?php echo esc_attr($badge_text); ?>" style="width: 100%;" placeholder="مثلاً: ویژه سرآشپز، تخفیف روز">
                     </div>
                     <div>
                         <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">
-                            <?php _e('آیکون یا ایموجی نشان:', 'restaurant-menu-manager'); ?>
+                            <?php _e('آیکون یا ایموجی نشان:', 'fondogh-online-menu'); ?>
                         </label>
                         <input type="text" name="_rmm_badge_custom_icon" value="<?php echo esc_attr($badge_custom_icon); ?>" style="width: 100%;" placeholder="مثلاً: 👑، 💎، 🌶️، ⭐">
                     </div>
                     <div>
                         <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">
-                            <?php _e('آدرس تصویر یا لوگوی نشان:', 'restaurant-menu-manager'); ?>
+                            <?php _e('آدرس تصویر یا لوگوی نشان:', 'fondogh-online-menu'); ?>
                         </label>
                         <input type="text" name="_rmm_badge_image" value="<?php echo esc_attr($badge_image); ?>" style="width: 100%;" placeholder="https://... یا آدرس عکس">
                     </div>
@@ -132,14 +132,14 @@ class FoodMeta {
 
             <div style="margin-bottom: 15px;">
                 <label style="font-weight: 600; display: block; margin-bottom: 5px;">
-                    <?php _e('ترکیبات و مواد تشکیل‌دهنده (Ingredients):', 'restaurant-menu-manager'); ?>
+                    <?php _e('ترکیبات و مواد تشکیل‌دهنده (Ingredients):', 'fondogh-online-menu'); ?>
                 </label>
                 <input type="text" name="_rmm_ingredients" value="<?php echo esc_attr($ingredients); ?>" style="width: 100%;" placeholder="مثلاً: راسته گوساله، پنیر چدار، سس باربیکیو، قارچ، گوجه...">
             </div>
 
             <div>
                 <label style="font-weight: 600; display: block; margin-bottom: 5px;">
-                    <?php _e('توضیحات کوتاه به زبان دوم (انگلیسی):', 'restaurant-menu-manager'); ?>
+                    <?php _e('توضیحات کوتاه به زبان دوم (انگلیسی):', 'fondogh-online-menu'); ?>
                 </label>
                 <textarea name="_rmm_desc_en" rows="2" style="width: 100%;" placeholder="Brief ingredients or English description..."><?php echo esc_textarea($desc_en); ?></textarea>
             </div>

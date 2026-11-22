@@ -16,7 +16,7 @@ class DietaryBadgesTag extends \Elementor\Core\DynamicTags\Tag {
     }
 
     public function get_title() {
-        return __('نشان غذایی (TastyMenu Badge)', 'restaurant-menu-manager');
+        return __('نشان غذایی (TastyMenu Badge)', 'fondogh-online-menu');
     }
 
     public function get_group() {

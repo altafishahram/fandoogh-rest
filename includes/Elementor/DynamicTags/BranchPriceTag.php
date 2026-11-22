@@ -16,7 +16,7 @@ class BranchPriceTag extends \Elementor\Core\DynamicTags\Tag {
     }
 
     public function get_title() {
-        return __('قیمت شعبه فعال (TastyMenu)', 'restaurant-menu-manager');
+        return __('قیمت شعبه فعال (TastyMenu)', 'fondogh-online-menu');
     }
 
     public function get_group() {

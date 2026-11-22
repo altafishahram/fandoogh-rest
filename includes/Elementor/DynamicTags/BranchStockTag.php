@@ -16,7 +16,7 @@ class BranchStockTag extends \Elementor\Core\DynamicTags\Tag {
     }
 
     public function get_title() {
-        return __('وضعیت موجودی شعبه (TastyMenu)', 'restaurant-menu-manager');
+        return __('وضعیت موجودی شعبه (TastyMenu)', 'fondogh-online-menu');
     }
 
     public function get_group() {
@@ -35,9 +35,9 @@ class BranchStockTag extends \Elementor\Core\DynamicTags\Tag {
 
         $in_stock = $product->is_in_stock();
         if ($in_stock) {
-            echo '<span class="rmm-stock-in">' . esc_html__('موجود', 'restaurant-menu-manager') . '</span>';
+            echo '<span class="rmm-stock-in">' . esc_html__('موجود', 'fondogh-online-menu') . '</span>';
         } else {
-            echo '<span class="rmm-stock-out">' . esc_html__('ناموجود', 'restaurant-menu-manager') . '</span>';
+            echo '<span class="rmm-stock-out">' . esc_html__('ناموجود', 'fondogh-online-menu') . '</span>';
         }
     }
 }

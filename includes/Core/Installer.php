@@ -21,6 +21,12 @@ class Installer {
         }
 
         try {
+            self::migrate_role_capabilities();
+        } catch (\Throwable $e) {
+            error_log('RMM Activation Role Migration Error: ' . $e->getMessage());
+        }
+
+        try {
             self::init_default_settings();
         } catch (\Throwable $e) {
             error_log('RMM Activation Settings Error: ' . $e->getMessage());
@@ -100,13 +106,13 @@ class Installer {
             // Restaurant Manager
             add_role(
                 'restaurant_manager',
-                __('مدیر رستوران / شعبه', 'restaurant-menu-manager'),
+                __('مدیر رستوران / شعبه', 'fondogh-online-menu'),
                 [
                     'read'                      => true,
                     'edit_posts'                => true,
                     'upload_files'              => true,
                     'manage_restaurant_menu'    => true,
-                    'manage_woocommerce'        => true,
+                    // A branch manager must never be a global WooCommerce manager.
                     'view_woocommerce_reports'  => true,
                     'edit_products'             => true,
                     'publish_products'          => true,
@@ -117,7 +123,7 @@ class Installer {
             // Kitchen Staff (Minimal role for kitchen display)
             add_role(
                 'kitchen_staff',
-                __('پرسنل آشپزخانه', 'restaurant-menu-manager'),
+                __('پرسنل آشپزخانه', 'fondogh-online-menu'),
                 [
                     'read'                      => true,
                     'view_kitchen_orders'       => true,
@@ -140,6 +146,18 @@ class Installer {
             }
         } catch (\Throwable $e) {
             error_log('RMM Register roles error: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Remove the legacy global WooCommerce capability from existing branch
+     * managers. add_role() does not update roles that already exist, so this
+     * runs on every activation for installations upgraded from older versions.
+     */
+    public static function migrate_role_capabilities() {
+        $manager = get_role('restaurant_manager');
+        if ($manager && is_object($manager) && method_exists($manager, 'remove_cap')) {
+            $manager->remove_cap('manage_woocommerce');
         }
     }
 

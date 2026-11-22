@@ -16,7 +16,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
     }
 
     public function get_title() {
-        return __('شبکه و لیست منوی غذا (TastyMenu Grid)', 'restaurant-menu-manager');
+        return __('شبکه و لیست منوی غذا (TastyMenu Grid)', 'fondogh-online-menu');
     }
 
     public function get_icon() {
@@ -29,7 +29,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
 
     private function get_elementor_templates_options() {
         $options = [
-            '0' => __('— انتخاب قالب المنتور —', 'restaurant-menu-manager'),
+            '0' => __('— انتخاب قالب المنتور —', 'fondogh-online-menu'),
         ];
         $posts = get_posts([
             'post_type'      => 'elementor_library',
@@ -48,22 +48,22 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->start_controls_section(
             'section_layout',
             [
-                'label' => __('طراحی و چیدمان منو', 'restaurant-menu-manager'),
+                'label' => __('طراحی و چیدمان منو', 'fondogh-online-menu'),
             ]
         );
 
         $this->add_control(
             'layout_style',
             [
-                'label'   => __('سبک نمایش منو', 'restaurant-menu-manager'),
+                'label'   => __('سبک نمایش منو', 'fondogh-online-menu'),
                 'type'    => \Elementor\Controls_Manager::SELECT,
                 'default' => 'modern_grid',
                 'options' => [
-                    'modern_grid' => __('شبکه مدرن (Modern Grid)', 'restaurant-menu-manager'),
-                    'oriental'    => __('تم شرقی (Oriental / Asian Luxury)', 'restaurant-menu-manager'),
-                    'app_list'    => __('لیستی اپلیکیشنی (اسنپ‌فودی / UberEats)', 'restaurant-menu-manager'),
-                    'fine_dining' => __('لوکس و کافه‌ای (Fine Dining / Minimal)', 'restaurant-menu-manager'),
-                    'compact_grid'=> __('کارت فشرده (Compact)', 'restaurant-menu-manager'),
+                    'modern_grid' => __('شبکه مدرن (Modern Grid)', 'fondogh-online-menu'),
+                    'oriental'    => __('تم شرقی (Oriental / Asian Luxury)', 'fondogh-online-menu'),
+                    'app_list'    => __('لیستی اپلیکیشنی (اسنپ‌فودی / UberEats)', 'fondogh-online-menu'),
+                    'fine_dining' => __('لوکس و کافه‌ای (Fine Dining / Minimal)', 'fondogh-online-menu'),
+                    'compact_grid'=> __('کارت فشرده (Compact)', 'fondogh-online-menu'),
                 ],
             ]
         );
@@ -72,7 +72,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_responsive_control(
             'columns',
             [
-                'label'   => __('تعداد ستون‌های حالت شبکه‌ای (Grid)', 'restaurant-menu-manager'),
+                'label'   => __('تعداد ستون‌های حالت شبکه‌ای (Grid)', 'fondogh-online-menu'),
                 'type'    => \Elementor\Controls_Manager::SELECT,
                 'default' => '3',
                 'tablet_default' => '2',
@@ -95,7 +95,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_responsive_control(
             'list_columns',
             [
-                'label'   => __('تعداد ستون‌های حالت لیستی (List)', 'restaurant-menu-manager'),
+                'label'   => __('تعداد ستون‌های حالت لیستی (List)', 'fondogh-online-menu'),
                 'type'    => \Elementor\Controls_Manager::SELECT,
                 'default' => '2',
                 'tablet_default' => '1',
@@ -116,23 +116,23 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'enable_view_switcher',
             [
-                'label'        => __('دکمه تغییر زنده حالت شبکه / لیست برای مشتری', 'restaurant-menu-manager'),
+                'label'        => __('دکمه تغییر زنده حالت شبکه / لیست برای مشتری', 'fondogh-online-menu'),
                 'type'         => \Elementor\Controls_Manager::SWITCHER,
                 'default'      => 'yes',
                 'return_value' => 'yes',
-                'description'  => __('به مشتری اجازه می‌دهد بین نمای شبکه‌ای و نمای لیستی سریع جابجا شود.', 'restaurant-menu-manager'),
+                'description'  => __('به مشتری اجازه می‌دهد بین نمای شبکه‌ای و نمای لیستی سریع جابجا شود.', 'fondogh-online-menu'),
             ]
         );
 
         $this->add_control(
             'default_view',
             [
-                'label'   => __('نمای پیش‌فرض منو', 'restaurant-menu-manager'),
+                'label'   => __('نمای پیش‌فرض منو', 'fondogh-online-menu'),
                 'type'    => \Elementor\Controls_Manager::SELECT,
                 'default' => 'grid',
                 'options' => [
-                    'grid' => __('شبکه‌ای (Grid)', 'restaurant-menu-manager'),
-                    'list' => __('لیستی (List)', 'restaurant-menu-manager'),
+                    'grid' => __('شبکه‌ای (Grid)', 'fondogh-online-menu'),
+                    'list' => __('لیستی (List)', 'fondogh-online-menu'),
                 ],
             ]
         );
@@ -140,7 +140,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'show_search',
             [
-                'label'        => __('نمایش باکس جستجوی زنده غذا', 'restaurant-menu-manager'),
+                'label'        => __('نمایش باکس جستجوی زنده غذا', 'fondogh-online-menu'),
                 'type'         => \Elementor\Controls_Manager::SWITCHER,
                 'default'      => 'yes',
                 'return_value' => 'yes',
@@ -150,7 +150,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'show_badges',
             [
-                'label'        => __('نمایش نشان‌های رژیمی (تند، گیاهی و...)', 'restaurant-menu-manager'),
+                'label'        => __('نمایش نشان‌های رژیمی (تند، گیاهی و...)', 'fondogh-online-menu'),
                 'type'         => \Elementor\Controls_Manager::SWITCHER,
                 'default'      => 'yes',
                 'return_value' => 'yes',
@@ -160,7 +160,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'show_calories',
             [
-                'label'        => __('نمایش کالری و زمان آماده‌سازی', 'restaurant-menu-manager'),
+                'label'        => __('نمایش کالری و زمان آماده‌سازی', 'fondogh-online-menu'),
                 'type'         => \Elementor\Controls_Manager::SWITCHER,
                 'default'      => 'yes',
                 'return_value' => 'yes',
@@ -170,29 +170,29 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'hide_out_of_stock',
             [
-                'label'        => __('مخفی‌سازی غذاهای ناموجود', 'restaurant-menu-manager'),
+                'label'        => __('مخفی‌سازی غذاهای ناموجود', 'fondogh-online-menu'),
                 'type'         => \Elementor\Controls_Manager::SWITCHER,
                 'default'      => 'yes',
                 'return_value' => 'yes',
-                'description'  => __('در صورت غیرفعال بودن موجودی غذا، کارت آن از منوی مشتریان حذف می‌شود.', 'restaurant-menu-manager'),
+                'description'  => __('در صورت غیرفعال بودن موجودی غذا، کارت آن از منوی مشتریان حذف می‌شود.', 'fondogh-online-menu'),
             ]
         );
 
         $this->add_control(
             'show_category_headers',
             [
-                'label'        => __('نمایش عناوین دسته‌بندی‌ها به عنوان جداکننده', 'restaurant-menu-manager'),
+                'label'        => __('نمایش عناوین دسته‌بندی‌ها به عنوان جداکننده', 'fondogh-online-menu'),
                 'type'         => \Elementor\Controls_Manager::SWITCHER,
                 'default'      => 'yes',
                 'return_value' => 'yes',
-                'description'  => __('در ابتدای هر بخش از منو، عنوان و نشان دسته‌بندی با اولویت تنظیم‌شده در مدیریت نمایش داده می‌شود.', 'restaurant-menu-manager'),
+                'description'  => __('در ابتدای هر بخش از منو، عنوان و نشان دسته‌بندی با اولویت تنظیم‌شده در مدیریت نمایش داده می‌شود.', 'fondogh-online-menu'),
             ]
         );
 
         $this->add_control(
             'show_cat_count',
             [
-                'label'        => __('نمایش تعداد غذاها در عنوان دسته', 'restaurant-menu-manager'),
+                'label'        => __('نمایش تعداد غذاها در عنوان دسته', 'fondogh-online-menu'),
                 'type'         => \Elementor\Controls_Manager::SWITCHER,
                 'default'      => 'yes',
                 'return_value' => 'yes',
@@ -205,7 +205,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'show_cat_thumb',
             [
-                'label'        => __('نمایش تصویر دسته‌بندی در کنار عنوان', 'restaurant-menu-manager'),
+                'label'        => __('نمایش تصویر دسته‌بندی در کنار عنوان', 'fondogh-online-menu'),
                 'type'         => \Elementor\Controls_Manager::SWITCHER,
                 'default'      => 'yes',
                 'return_value' => 'yes',
@@ -218,7 +218,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'show_cat_desc',
             [
-                'label'        => __('نمایش توضیحات دسته‌بندی', 'restaurant-menu-manager'),
+                'label'        => __('نمایش توضیحات دسته‌بندی', 'fondogh-online-menu'),
                 'type'         => \Elementor\Controls_Manager::SWITCHER,
                 'default'      => 'yes',
                 'return_value' => 'yes',
@@ -231,11 +231,11 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'show_theme_toggle',
             [
-                'label'        => __('دکمه تغییر تم (روز / شب)', 'restaurant-menu-manager'),
+                'label'        => __('دکمه تغییر تم (روز / شب)', 'fondogh-online-menu'),
                 'type'         => \Elementor\Controls_Manager::SWITCHER,
                 'default'      => 'no',
                 'return_value' => 'yes',
-                'description'  => __('دکمه شناور تغییر حالت تیره و روشن را برای کل منو فعال می‌کند (می‌توانید از ویجت اختصاصی سوئیچر روز و شب نیز استفاده کنید).', 'restaurant-menu-manager'),
+                'description'  => __('دکمه شناور تغییر حالت تیره و روشن را برای کل منو فعال می‌کند (می‌توانید از ویجت اختصاصی سوئیچر روز و شب نیز استفاده کنید).', 'fondogh-online-menu'),
             ]
         );
 
@@ -245,21 +245,21 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->start_controls_section(
             'section_card_click',
             [
-                'label' => __('رفتار کلیک روی کارت غذا (پاپ‌آپ جزئیات)', 'restaurant-menu-manager'),
+                'label' => __('رفتار کلیک روی کارت غذا (پاپ‌آپ جزئیات)', 'fondogh-online-menu'),
             ]
         );
 
         $this->add_control(
             'card_click_action',
             [
-                'label'   => __('عملیات با لمس / کلیک روی کارت', 'restaurant-menu-manager'),
+                'label'   => __('عملیات با لمس / کلیک روی کارت', 'fondogh-online-menu'),
                 'type'    => \Elementor\Controls_Manager::SELECT,
                 'default' => 'default_modal',
                 'options' => [
-                    'default_modal'      => __('✨ باز شدن پاپ‌آپ هوشمند فندق (استایل پیش‌فرض و کامل)', 'restaurant-menu-manager'),
-                    'elementor_template' => __('🎨 بارگذاری قالب ذخیره‌شده المنتور (قالب اختصاصی)', 'restaurant-menu-manager'),
-                    'elementor_popup'    => __('🚀 باز شدن پاپ‌آپ المنتور پرو (Elementor Pro Popup)', 'restaurant-menu-manager'),
-                    'none'               => __('غیرفعال (فقط دکمه خرید داخل کارت کار کند)', 'restaurant-menu-manager'),
+                    'default_modal'      => __('✨ باز شدن پاپ‌آپ هوشمند فندق (استایل پیش‌فرض و کامل)', 'fondogh-online-menu'),
+                    'elementor_template' => __('🎨 بارگذاری قالب ذخیره‌شده المنتور (قالب اختصاصی)', 'fondogh-online-menu'),
+                    'elementor_popup'    => __('🚀 باز شدن پاپ‌آپ المنتور پرو (Elementor Pro Popup)', 'fondogh-online-menu'),
+                    'none'               => __('غیرفعال (فقط دکمه خرید داخل کارت کار کند)', 'fondogh-online-menu'),
                 ],
             ]
         );
@@ -267,27 +267,27 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'elementor_template_id',
             [
-                'label'     => __('انتخاب قالب المنتور برای پاپ‌آپ', 'restaurant-menu-manager'),
+                'label'     => __('انتخاب قالب المنتور برای پاپ‌آپ', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::SELECT,
                 'default'   => '0',
                 'options'   => $this->get_elementor_templates_options(),
                 'condition' => [
                     'card_click_action' => 'elementor_template',
                 ],
-                'description' => __('می‌توانید هر قالبی را در قالب‌های ذخیره‌شده المنتور طراحی کنید؛ اطلاعات غذا (تصویر، عنوان، قیمت، کالری، ترکیبات) با تگ‌های داینامیک فندق به صورت زنده در آن لود می‌شوند.', 'restaurant-menu-manager'),
+                'description' => __('می‌توانید هر قالبی را در قالب‌های ذخیره‌شده المنتور طراحی کنید؛ اطلاعات غذا (تصویر، عنوان، قیمت، کالری، ترکیبات) با تگ‌های داینامیک فندق به صورت زنده در آن لود می‌شوند.', 'fondogh-online-menu'),
             ]
         );
 
         $this->add_control(
             'elementor_popup_id',
             [
-                'label'       => __('شناسه پاپ‌آپ المنتور پرو (Popup ID)', 'restaurant-menu-manager'),
+                'label'       => __('شناسه پاپ‌آپ المنتور پرو (Popup ID)', 'fondogh-online-menu'),
                 'type'        => \Elementor\Controls_Manager::TEXT,
                 'placeholder' => '1234',
                 'condition'   => [
                     'card_click_action' => 'elementor_popup',
                 ],
-                'description' => __('شناسه پاپ‌آپ المنتور پرو خود را اینجا وارد کنید.', 'restaurant-menu-manager'),
+                'description' => __('شناسه پاپ‌آپ المنتور پرو خود را اینجا وارد کنید.', 'fondogh-online-menu'),
             ]
         );
 
@@ -299,7 +299,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->start_controls_section(
             'section_style_search',
             [
-                'label' => __('استایل باکس جستجو', 'restaurant-menu-manager'),
+                'label' => __('استایل باکس جستجو', 'fondogh-online-menu'),
                 'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
                 'condition' => [
                     'show_search' => 'yes',
@@ -310,7 +310,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'search_bg_color',
             [
-                'label'     => __('رنگ پس‌زمینه جستجو', 'restaurant-menu-manager'),
+                'label'     => __('رنگ پس‌زمینه جستجو', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .rmm-menu-search-field' => 'background-color: {{VALUE}};',
@@ -321,7 +321,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'search_text_color',
             [
-                'label'     => __('رنگ متن جستجو', 'restaurant-menu-manager'),
+                'label'     => __('رنگ متن جستجو', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .rmm-menu-search-field' => 'color: {{VALUE}};',
@@ -332,7 +332,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'search_icon_color',
             [
-                'label'     => __('رنگ آیکون ذره‌بین', 'restaurant-menu-manager'),
+                'label'     => __('رنگ آیکون ذره‌بین', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .rmm-search-icon' => 'color: {{VALUE}};',
@@ -344,7 +344,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
             \Elementor\Group_Control_Typography::get_type(),
             [
                 'name'     => 'search_typography',
-                'label'    => __('تایپوگرافی متن جستجو', 'restaurant-menu-manager'),
+                'label'    => __('تایپوگرافی متن جستجو', 'fondogh-online-menu'),
                 'selector' => '{{WRAPPER}} .rmm-menu-search-field',
             ]
         );
@@ -360,7 +360,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'search_border_radius',
             [
-                'label'      => __('گردی کادر جستجو (Border Radius)', 'restaurant-menu-manager'),
+                'label'      => __('گردی کادر جستجو (Border Radius)', 'fondogh-online-menu'),
                 'type'       => \Elementor\Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%'],
                 'selectors'  => [
@@ -383,7 +383,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->start_controls_section(
             'section_style_cards',
             [
-                'label' => __('استایل کارت غذاها', 'restaurant-menu-manager'),
+                'label' => __('استایل کارت غذاها', 'fondogh-online-menu'),
                 'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
             ]
         );
@@ -391,7 +391,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'card_bg_color',
             [
-                'label'     => __('رنگ پس‌زمینه کارت', 'restaurant-menu-manager'),
+                'label'     => __('رنگ پس‌زمینه کارت', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .rmm-food-card' => 'background-color: {{VALUE}};',
@@ -402,7 +402,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'card_bg_hover_color',
             [
-                'label'     => __('رنگ پس‌زمینه در هاور', 'restaurant-menu-manager'),
+                'label'     => __('رنگ پس‌زمینه در هاور', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .rmm-food-card:hover' => 'background-color: {{VALUE}};',
@@ -421,7 +421,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'card_border_radius',
             [
-                'label'      => __('انحنای لبه کارت (Border Radius)', 'restaurant-menu-manager'),
+                'label'      => __('انحنای لبه کارت (Border Radius)', 'fondogh-online-menu'),
                 'type'       => \Elementor\Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%'],
                 'selectors'  => [
@@ -441,7 +441,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'card_padding',
             [
-                'label'      => __('فاصله داخلی کارت (Padding)', 'restaurant-menu-manager'),
+                'label'      => __('فاصله داخلی کارت (Padding)', 'fondogh-online-menu'),
                 'type'       => \Elementor\Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', 'em'],
                 'selectors'  => [
@@ -453,7 +453,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'cards_gap',
             [
-                'label'      => __('فاصله بین کارت‌ها (Grid Gap)', 'restaurant-menu-manager'),
+                'label'      => __('فاصله بین کارت‌ها (Grid Gap)', 'fondogh-online-menu'),
                 'type'       => \Elementor\Controls_Manager::SLIDER,
                 'size_units' => ['px'],
                 'range'      => [
@@ -472,7 +472,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'card_image_heading',
             [
-                'label'     => __('تصویر کارت غذا', 'restaurant-menu-manager'),
+                'label'     => __('تصویر کارت غذا', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::HEADING,
                 'separator' => 'before',
             ]
@@ -481,7 +481,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'card_image_height',
             [
-                'label'      => __('ارتفاع تصویر', 'restaurant-menu-manager'),
+                'label'      => __('ارتفاع تصویر', 'fondogh-online-menu'),
                 'type'       => \Elementor\Controls_Manager::SLIDER,
                 'size_units' => ['px', 'vh'],
                 'range'      => [
@@ -499,7 +499,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'card_image_border_radius',
             [
-                'label'      => __('گردی کادر تصویر', 'restaurant-menu-manager'),
+                'label'      => __('گردی کادر تصویر', 'fondogh-online-menu'),
                 'type'       => \Elementor\Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%'],
                 'selectors'  => [
@@ -514,7 +514,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->start_controls_section(
             'section_style_typography',
             [
-                'label' => __('تایپوگرافی و رنگ‌های متن', 'restaurant-menu-manager'),
+                'label' => __('تایپوگرافی و رنگ‌های متن', 'fondogh-online-menu'),
                 'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
             ]
         );
@@ -523,7 +523,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'title_heading',
             [
-                'label'     => __('عنوان غذا', 'restaurant-menu-manager'),
+                'label'     => __('عنوان غذا', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::HEADING,
                 'separator' => 'before',
             ]
@@ -532,7 +532,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'title_color',
             [
-                'label'     => __('رنگ عنوان غذا', 'restaurant-menu-manager'),
+                'label'     => __('رنگ عنوان غذا', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .rmm-food-title' => 'color: {{VALUE}};',
@@ -544,7 +544,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
             \Elementor\Group_Control_Typography::get_type(),
             [
                 'name'     => 'title_typography',
-                'label'    => __('تایپوگرافی عنوان', 'restaurant-menu-manager'),
+                'label'    => __('تایپوگرافی عنوان', 'fondogh-online-menu'),
                 'selector' => '{{WRAPPER}} .rmm-food-title',
             ]
         );
@@ -553,7 +553,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'price_heading',
             [
-                'label'     => __('قیمت غذا', 'restaurant-menu-manager'),
+                'label'     => __('قیمت غذا', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::HEADING,
                 'separator' => 'before',
             ]
@@ -562,7 +562,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'price_color',
             [
-                'label'     => __('رنگ قیمت', 'restaurant-menu-manager'),
+                'label'     => __('رنگ قیمت', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .rmm-food-price, {{WRAPPER}} .rmm-food-price .woocommerce-Price-amount' => 'color: {{VALUE}};',
@@ -574,7 +574,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
             \Elementor\Group_Control_Typography::get_type(),
             [
                 'name'     => 'price_typography',
-                'label'    => __('تایپوگرافی قیمت', 'restaurant-menu-manager'),
+                'label'    => __('تایپوگرافی قیمت', 'fondogh-online-menu'),
                 'selector' => '{{WRAPPER}} .rmm-food-price',
             ]
         );
@@ -583,7 +583,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'ingredients_heading',
             [
-                'label'     => __('ترکیبات و توضیحات', 'restaurant-menu-manager'),
+                'label'     => __('ترکیبات و توضیحات', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::HEADING,
                 'separator' => 'before',
             ]
@@ -592,7 +592,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'ingredients_color',
             [
-                'label'     => __('رنگ متن ترکیبات', 'restaurant-menu-manager'),
+                'label'     => __('رنگ متن ترکیبات', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .rmm-food-ingredients' => 'color: {{VALUE}};',
@@ -604,7 +604,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
             \Elementor\Group_Control_Typography::get_type(),
             [
                 'name'     => 'ingredients_typography',
-                'label'    => __('تایپوگرافی ترکیبات', 'restaurant-menu-manager'),
+                'label'    => __('تایپوگرافی ترکیبات', 'fondogh-online-menu'),
                 'selector' => '{{WRAPPER}} .rmm-food-ingredients',
             ]
         );
@@ -613,7 +613,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'meta_heading',
             [
-                'label'     => __('کالری و زمان پخت', 'restaurant-menu-manager'),
+                'label'     => __('کالری و زمان پخت', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::HEADING,
                 'separator' => 'before',
             ]
@@ -622,7 +622,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'meta_color',
             [
-                'label'     => __('رنگ اطلاعات کالری و زمان', 'restaurant-menu-manager'),
+                'label'     => __('رنگ اطلاعات کالری و زمان', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .rmm-food-meta-row' => 'color: {{VALUE}};',
@@ -634,7 +634,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
             \Elementor\Group_Control_Typography::get_type(),
             [
                 'name'     => 'meta_typography',
-                'label'    => __('تایپوگرافی کالری و زمان', 'restaurant-menu-manager'),
+                'label'    => __('تایپوگرافی کالری و زمان', 'fondogh-online-menu'),
                 'selector' => '{{WRAPPER}} .rmm-food-meta-row',
             ]
         );
@@ -645,7 +645,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->start_controls_section(
             'section_style_badges',
             [
-                'label' => __('استایل نشان‌های رژیمی', 'restaurant-menu-manager'),
+                'label' => __('استایل نشان‌های رژیمی', 'fondogh-online-menu'),
                 'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
                 'condition' => [
                     'show_badges' => 'yes',
@@ -657,7 +657,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
             \Elementor\Group_Control_Typography::get_type(),
             [
                 'name'     => 'badge_typography',
-                'label'    => __('تایپوگرافی نشان‌ها', 'restaurant-menu-manager'),
+                'label'    => __('تایپوگرافی نشان‌ها', 'fondogh-online-menu'),
                 'selector' => '{{WRAPPER}} .rmm-card-badge',
             ]
         );
@@ -665,7 +665,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'badge_border_radius',
             [
-                'label'      => __('انحنای لبه نشان‌ها', 'restaurant-menu-manager'),
+                'label'      => __('انحنای لبه نشان‌ها', 'fondogh-online-menu'),
                 'type'       => \Elementor\Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%'],
                 'selectors'  => [
@@ -677,7 +677,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'badge_padding',
             [
-                'label'      => __('فاصله داخلی نشان‌ها', 'restaurant-menu-manager'),
+                'label'      => __('فاصله داخلی نشان‌ها', 'fondogh-online-menu'),
                 'type'       => \Elementor\Controls_Manager::DIMENSIONS,
                 'size_units' => ['px'],
                 'selectors'  => [
@@ -689,7 +689,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'badge_box_shadow',
             [
-                'label'     => __('سایه نشان‌ها', 'restaurant-menu-manager'),
+                'label'     => __('سایه نشان‌ها', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::SWITCHER,
                 'default'   => 'yes',
                 'selectors' => [
@@ -702,7 +702,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'out_of_stock_heading',
             [
-                'label'     => __('نشان «ناموجود»', 'restaurant-menu-manager'),
+                'label'     => __('نشان «ناموجود»', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::HEADING,
                 'separator' => 'before',
             ]
@@ -711,7 +711,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'out_of_stock_bg_color',
             [
-                'label'     => __('رنگ پس‌زمینه ناموجود', 'restaurant-menu-manager'),
+                'label'     => __('رنگ پس‌زمینه ناموجود', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .rmm-out-badge' => 'background-color: {{VALUE}};',
@@ -722,7 +722,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'out_of_stock_text_color',
             [
-                'label'     => __('رنگ متن ناموجود', 'restaurant-menu-manager'),
+                'label'     => __('رنگ متن ناموجود', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .rmm-out-badge' => 'color: {{VALUE}};',
@@ -733,7 +733,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'out_of_stock_radius',
             [
-                'label'      => __('گردی کادر ناموجود', 'restaurant-menu-manager'),
+                'label'      => __('گردی کادر ناموجود', 'fondogh-online-menu'),
                 'type'       => \Elementor\Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%'],
                 'selectors'  => [
@@ -748,7 +748,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->start_controls_section(
             'section_style_button',
             [
-                'label' => __('استایل دکمه خرید و سفارش', 'restaurant-menu-manager'),
+                'label' => __('استایل دکمه خرید و سفارش', 'fondogh-online-menu'),
                 'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
             ]
         );
@@ -757,7 +757,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
             \Elementor\Group_Control_Typography::get_type(),
             [
                 'name'     => 'btn_typography',
-                'label'    => __('تایپوگرافی دکمه', 'restaurant-menu-manager'),
+                'label'    => __('تایپوگرافی دکمه', 'fondogh-online-menu'),
                 'selector' => '{{WRAPPER}} .rmm-btn-order',
             ]
         );
@@ -767,14 +767,14 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->start_controls_tab(
             'tab_button_normal',
             [
-                'label' => __('عادی', 'restaurant-menu-manager'),
+                'label' => __('عادی', 'fondogh-online-menu'),
             ]
         );
 
         $this->add_control(
             'btn_bg_color',
             [
-                'label'     => __('رنگ پس‌زمینه دکمه', 'restaurant-menu-manager'),
+                'label'     => __('رنگ پس‌زمینه دکمه', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .rmm-btn-order' => 'background-color: {{VALUE}};',
@@ -785,7 +785,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'btn_text_color',
             [
-                'label'     => __('رنگ متن دکمه', 'restaurant-menu-manager'),
+                'label'     => __('رنگ متن دکمه', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .rmm-btn-order' => 'color: {{VALUE}};',
@@ -798,14 +798,14 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->start_controls_tab(
             'tab_button_hover',
             [
-                'label' => __('هاور (Hover)', 'restaurant-menu-manager'),
+                'label' => __('هاور (Hover)', 'fondogh-online-menu'),
             ]
         );
 
         $this->add_control(
             'btn_bg_hover_color',
             [
-                'label'     => __('رنگ پس‌زمینه در هاور', 'restaurant-menu-manager'),
+                'label'     => __('رنگ پس‌زمینه در هاور', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .rmm-btn-order:hover' => 'background-color: {{VALUE}};',
@@ -816,7 +816,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'btn_text_hover_color',
             [
-                'label'     => __('رنگ متن در هاور', 'restaurant-menu-manager'),
+                'label'     => __('رنگ متن در هاور', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .rmm-btn-order:hover' => 'color: {{VALUE}};',
@@ -831,7 +831,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'btn_border_radius',
             [
-                'label'      => __('گردی لبه دکمه (Border Radius)', 'restaurant-menu-manager'),
+                'label'      => __('گردی لبه دکمه (Border Radius)', 'fondogh-online-menu'),
                 'type'       => \Elementor\Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%'],
                 'separator'  => 'before',
@@ -844,7 +844,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'btn_padding',
             [
-                'label'      => __('فاصله داخلی دکمه (Padding)', 'restaurant-menu-manager'),
+                'label'      => __('فاصله داخلی دکمه (Padding)', 'fondogh-online-menu'),
                 'type'       => \Elementor\Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', 'em'],
                 'selectors'  => [
@@ -867,7 +867,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->start_controls_section(
             'section_style_modal',
             [
-                'label' => __('استایل پاپ‌آپ جزئیات غذا (Food Modal Style)', 'restaurant-menu-manager'),
+                'label' => __('استایل پاپ‌آپ جزئیات غذا (Food Modal Style)', 'fondogh-online-menu'),
                 'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
             ]
         );
@@ -875,7 +875,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'modal_box_bg',
             [
-                'label'     => __('رنگ پس‌زمینه پنجره پاپ‌آپ', 'restaurant-menu-manager'),
+                'label'     => __('رنگ پس‌زمینه پنجره پاپ‌آپ', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .rmm-modal-box' => 'background-color: {{VALUE}};',
@@ -886,7 +886,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'modal_box_radius',
             [
-                'label'      => __('گردی لبه پنجره (Border Radius)', 'restaurant-menu-manager'),
+                'label'      => __('گردی لبه پنجره (Border Radius)', 'fondogh-online-menu'),
                 'type'       => \Elementor\Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%'],
                 'selectors'  => [
@@ -906,7 +906,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'modal_title_heading',
             [
-                'label'     => __('عنوان غذا در پاپ‌آپ', 'restaurant-menu-manager'),
+                'label'     => __('عنوان غذا در پاپ‌آپ', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::HEADING,
                 'separator' => 'before',
             ]
@@ -915,7 +915,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'modal_title_color',
             [
-                'label'     => __('رنگ عنوان غذا', 'restaurant-menu-manager'),
+                'label'     => __('رنگ عنوان غذا', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .rmm-modal-food-title' => 'color: {{VALUE}};',
@@ -934,7 +934,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'modal_price_heading',
             [
-                'label'     => __('قیمت در پاپ‌آپ', 'restaurant-menu-manager'),
+                'label'     => __('قیمت در پاپ‌آپ', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::HEADING,
                 'separator' => 'before',
             ]
@@ -943,7 +943,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'modal_price_color',
             [
-                'label'     => __('رنگ قیمت', 'restaurant-menu-manager'),
+                'label'     => __('رنگ قیمت', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .rmm-modal-food-price' => 'color: {{VALUE}};',
@@ -962,7 +962,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'modal_desc_heading',
             [
-                'label'     => __('توضیحات و ترکیبات در پاپ‌آپ', 'restaurant-menu-manager'),
+                'label'     => __('توضیحات و ترکیبات در پاپ‌آپ', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::HEADING,
                 'separator' => 'before',
             ]
@@ -971,7 +971,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'modal_desc_color',
             [
-                'label'     => __('رنگ متن ترکیبات', 'restaurant-menu-manager'),
+                'label'     => __('رنگ متن ترکیبات', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .rmm-modal-ingredients-text' => 'color: {{VALUE}};',
@@ -993,7 +993,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->start_controls_section(
             'section_style_cat_headers',
             [
-                'label'     => __('استایل عناوین دسته‌بندی‌ها (Category Headers)', 'restaurant-menu-manager'),
+                'label'     => __('استایل عناوین دسته‌بندی‌ها (Category Headers)', 'fondogh-online-menu'),
                 'tab'       => \Elementor\Controls_Manager::TAB_STYLE,
                 'condition' => [
                     'show_category_headers' => 'yes',
@@ -1004,7 +1004,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'cat_title_color',
             [
-                'label'     => __('رنگ عنوان دسته‌بندی', 'restaurant-menu-manager'),
+                'label'     => __('رنگ عنوان دسته‌بندی', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .rmm-category-title' => 'color: {{VALUE}};',
@@ -1016,7 +1016,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
             \Elementor\Group_Control_Typography::get_type(),
             [
                 'name'     => 'cat_title_typography',
-                'label'    => __('تایپوگرافی عنوان دسته‌بندی', 'restaurant-menu-manager'),
+                'label'    => __('تایپوگرافی عنوان دسته‌بندی', 'fondogh-online-menu'),
                 'selector' => '{{WRAPPER}} .rmm-category-title',
             ]
         );
@@ -1024,7 +1024,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'cat_badge_bg',
             [
-                'label'     => __('رنگ پس‌زمینه نشان تعداد', 'restaurant-menu-manager'),
+                'label'     => __('رنگ پس‌زمینه نشان تعداد', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .rmm-cat-count-badge' => 'background: {{VALUE}} !important;',
@@ -1035,7 +1035,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'cat_badge_color',
             [
-                'label'     => __('رنگ متن نشان تعداد', 'restaurant-menu-manager'),
+                'label'     => __('رنگ متن نشان تعداد', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .rmm-cat-count-badge' => 'color: {{VALUE}} !important;',
@@ -1046,7 +1046,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'cat_divider_color',
             [
-                'label'     => __('رنگ خط جداکننده دسته‌بندی', 'restaurant-menu-manager'),
+                'label'     => __('رنگ خط جداکننده دسته‌بندی', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .rmm-cat-divider-line' => 'background: {{VALUE}} !important;',
@@ -1058,7 +1058,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'cat_section_spacing',
             [
-                'label'      => __('فاصله بالای هر دسته‌بندی', 'restaurant-menu-manager'),
+                'label'      => __('فاصله بالای هر دسته‌بندی', 'fondogh-online-menu'),
                 'type'       => \Elementor\Controls_Manager::SLIDER,
                 'size_units' => ['px'],
                 'range'      => [
@@ -1091,16 +1091,16 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
 
         // Multilingual active strings
         $active_lang = class_exists('\RMM\I18n\MultiLangManager') ? \RMM\I18n\MultiLangManager::get_current_language() : 'fa';
-        $search_placeholder = class_exists('\RMM\I18n\MultiLangManager') ? \RMM\I18n\MultiLangManager::get_ui_string('search_placeholder', $active_lang) : __('جستجو در منو (مثلاً پیتزا، برگر، سالاد...)', 'restaurant-menu-manager');
-        $str_minutes = class_exists('\RMM\I18n\MultiLangManager') ? \RMM\I18n\MultiLangManager::get_ui_string('minutes', $active_lang) : __('دقیقه', 'restaurant-menu-manager');
-        $str_out_of_stock = class_exists('\RMM\I18n\MultiLangManager') ? \RMM\I18n\MultiLangManager::get_ui_string('out_of_stock', $active_lang) : __('ناموجود در این شعبه', 'restaurant-menu-manager');
-        $str_order_wa = class_exists('\RMM\I18n\MultiLangManager') ? \RMM\I18n\MultiLangManager::get_ui_string('order_whatsapp', $active_lang) : __('سفارش در واتساپ', 'restaurant-menu-manager');
-        $str_call = class_exists('\RMM\I18n\MultiLangManager') ? \RMM\I18n\MultiLangManager::get_ui_string('call_order', $active_lang) : __('تماس تلفنی', 'restaurant-menu-manager');
-        $str_options = class_exists('\RMM\I18n\MultiLangManager') ? \RMM\I18n\MultiLangManager::get_ui_string('choose_options', $active_lang) : __('انتخاب مخلفات', 'restaurant-menu-manager');
-        $str_add = class_exists('\RMM\I18n\MultiLangManager') ? \RMM\I18n\MultiLangManager::get_ui_string('add_to_cart', $active_lang) : __('افزودن به سبد', 'restaurant-menu-manager');
-        $str_digital = class_exists('\RMM\I18n\MultiLangManager') ? \RMM\I18n\MultiLangManager::get_ui_string('digital_menu', $active_lang) : __('منو دیجیتال', 'restaurant-menu-manager');
-        $str_grid_view = class_exists('\RMM\I18n\MultiLangManager') ? \RMM\I18n\MultiLangManager::get_ui_string('grid_view', $active_lang) : __('نمایش شبکه‌ای', 'restaurant-menu-manager');
-        $str_list_view = class_exists('\RMM\I18n\MultiLangManager') ? \RMM\I18n\MultiLangManager::get_ui_string('list_view', $active_lang) : __('نمایش لیستی', 'restaurant-menu-manager');
+        $search_placeholder = class_exists('\RMM\I18n\MultiLangManager') ? \RMM\I18n\MultiLangManager::get_ui_string('search_placeholder', $active_lang) : __('جستجو در منو (مثلاً پیتزا، برگر، سالاد...)', 'fondogh-online-menu');
+        $str_minutes = class_exists('\RMM\I18n\MultiLangManager') ? \RMM\I18n\MultiLangManager::get_ui_string('minutes', $active_lang) : __('دقیقه', 'fondogh-online-menu');
+        $str_out_of_stock = class_exists('\RMM\I18n\MultiLangManager') ? \RMM\I18n\MultiLangManager::get_ui_string('out_of_stock', $active_lang) : __('ناموجود در این شعبه', 'fondogh-online-menu');
+        $str_order_wa = class_exists('\RMM\I18n\MultiLangManager') ? \RMM\I18n\MultiLangManager::get_ui_string('order_whatsapp', $active_lang) : __('سفارش در واتساپ', 'fondogh-online-menu');
+        $str_call = class_exists('\RMM\I18n\MultiLangManager') ? \RMM\I18n\MultiLangManager::get_ui_string('call_order', $active_lang) : __('تماس تلفنی', 'fondogh-online-menu');
+        $str_options = class_exists('\RMM\I18n\MultiLangManager') ? \RMM\I18n\MultiLangManager::get_ui_string('choose_options', $active_lang) : __('انتخاب مخلفات', 'fondogh-online-menu');
+        $str_add = class_exists('\RMM\I18n\MultiLangManager') ? \RMM\I18n\MultiLangManager::get_ui_string('add_to_cart', $active_lang) : __('افزودن به سبد', 'fondogh-online-menu');
+        $str_digital = class_exists('\RMM\I18n\MultiLangManager') ? \RMM\I18n\MultiLangManager::get_ui_string('digital_menu', $active_lang) : __('منو دیجیتال', 'fondogh-online-menu');
+        $str_grid_view = class_exists('\RMM\I18n\MultiLangManager') ? \RMM\I18n\MultiLangManager::get_ui_string('grid_view', $active_lang) : __('نمایش شبکه‌ای', 'fondogh-online-menu');
+        $str_list_view = class_exists('\RMM\I18n\MultiLangManager') ? \RMM\I18n\MultiLangManager::get_ui_string('list_view', $active_lang) : __('نمایش لیستی', 'fondogh-online-menu');
 
         $enable_switcher = ($settings['enable_view_switcher'] ?? 'yes') === 'yes';
         $default_view = $settings['default_view'] ?? ($style === 'app_list' ? 'list' : 'grid');
@@ -1119,7 +1119,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
 
         $query = new \WP_Query($args);
         if (!$query->have_posts()) {
-            echo '<p class="rmm-no-foods">' . esc_html__('هیچ غذایی در این منو یافت نشد.', 'restaurant-menu-manager') . '</p>';
+            echo '<p class="rmm-no-foods">' . esc_html__('هیچ غذایی در این منو یافت نشد.', 'fondogh-online-menu') . '</p>';
             return;
         }
 
@@ -1181,7 +1181,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         wp_reset_postdata();
 
         if (empty($all_active_products)) {
-            echo '<p class="rmm-no-foods">' . esc_html__('هیچ غذای موجودی در این منو یافت نشد.', 'restaurant-menu-manager') . '</p>';
+            echo '<p class="rmm-no-foods">' . esc_html__('هیچ غذای موجودی در این منو یافت نشد.', 'fondogh-online-menu') . '</p>';
             return;
         }
 
@@ -1201,7 +1201,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
                 <?php endif; ?>
 
                 <?php if ($enable_switcher) : ?>
-                    <div class="rmm-view-switcher" role="group" aria-label="<?php esc_attr_e('حالت نمایش منو', 'restaurant-menu-manager'); ?>">
+                    <div class="rmm-view-switcher" role="group" aria-label="<?php esc_attr_e('حالت نمایش منو', 'fondogh-online-menu'); ?>">
                         <button type="button" class="rmm-view-btn rmm-btn-grid <?php echo ($default_view === 'grid') ? 'is-active' : ''; ?>" data-view="grid" title="<?php echo esc_attr($str_grid_view); ?>">
                             <span class="rmm-view-icon">⊞</span>
                             <span class="rmm-view-text"><?php echo esc_html($str_grid_view); ?></span>
@@ -1274,7 +1274,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
                                 <div class="rmm-cat-header-main">
                                     <div class="rmm-cat-header-info">
                                         <div class="rmm-cat-title-row">
-                                            <h2 class="rmm-category-title"><?php esc_html_e('سایر غذاها و موارد متفرقه', 'restaurant-menu-manager'); ?></h2>
+                                            <h2 class="rmm-category-title"><?php esc_html_e('سایر غذاها و موارد متفرقه', 'fondogh-online-menu'); ?></h2>
                                             <?php if ($settings['show_cat_count'] === 'yes') : ?>
                                                 <span class="rmm-cat-count-badge"><?php echo count($uncategorized_products); ?></span>
                                             <?php endif; ?>
@@ -1320,9 +1320,9 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
 
             <?php if (($settings['show_theme_toggle'] ?? 'yes') === 'yes') : ?>
                 <!-- Day / Night Theme Toggle Button (تم شرقی و کل افزونه) -->
-                <button id="theme-toggle-btn" class="rmm-theme-toggle-btn" type="button" aria-label="<?php esc_attr_e('تغییر تم (روز / شب)', 'restaurant-menu-manager'); ?>" title="<?php esc_attr_e('تغییر تم (روز / شب)', 'restaurant-menu-manager'); ?>">
+                <button id="theme-toggle-btn" class="rmm-theme-toggle-btn" type="button" aria-label="<?php esc_attr_e('تغییر تم (روز / شب)', 'fondogh-online-menu'); ?>" title="<?php esc_attr_e('تغییر تم (روز / شب)', 'fondogh-online-menu'); ?>">
                     <span class="rmm-theme-icon">🌓</span>
-                    <span class="rmm-theme-text"><?php echo esc_html__('تغییر تم (روز / شب)', 'restaurant-menu-manager'); ?></span>
+                    <span class="rmm-theme-text"><?php echo esc_html__('تغییر تم (روز / شب)', 'fondogh-online-menu'); ?></span>
                 </button>
             <?php endif; ?>
 
@@ -1475,7 +1475,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
                         $phone = \RMM\Core\Settings::get('phone_number', '');
                         ?>
                         <?php if ($action_btn === 'whatsapp' && $whatsapp) : ?>
-                            <a href="<?php echo esc_url('https://wa.me/' . $whatsapp . '?text=' . rawurlencode(sprintf(__('سلام، مایل به استعلام و سفارش غذای %s هستم.', 'restaurant-menu-manager'), $food_title))); ?>" target="_blank" class="rmm-btn-order whatsapp">
+                            <a href="<?php echo esc_url('https://wa.me/' . $whatsapp . '?text=' . rawurlencode(sprintf(__('سلام، مایل به استعلام و سفارش غذای %s هستم.', 'fondogh-online-menu'), $food_title))); ?>" target="_blank" class="rmm-btn-order whatsapp">
                                 💬 <?php echo esc_html($context_data['str_order_wa']); ?>
                             </a>
                         <?php elseif ($action_btn === 'call' && $phone) : ?>

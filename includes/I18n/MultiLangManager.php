@@ -686,7 +686,7 @@ class MultiLangManager {
 
                 <div class="rmm-entrance-footer">
                     <label class="rmm-remember-checkbox">
-                        <input type="checkbox" id="rmm-entrance-remember" checked>
+                        <input type="checkbox" id="rmm-entrance-remember">
                         <span><?php _e('به خاطر سپردن انتخاب من (Remember choice)', 'restaurant-menu-manager'); ?></span>
                     </label>
                 </div>

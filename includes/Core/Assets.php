@@ -35,6 +35,8 @@ class Assets {
         $branch_mode = \RMM\Branches\BranchContext::get_branch_mode($active_branch_id);
         $curr_lang = class_exists('RMM\\I18n\\MultiLangManager') ? \RMM\I18n\MultiLangManager::get_current_language() : 'fa';
         $ui_strings = class_exists('RMM\\I18n\\MultiLangManager') ? \RMM\I18n\MultiLangManager::get_all_ui_strings($curr_lang) : [];
+        $ds_settings = class_exists('RMM\\DesignSystem\\SettingsPage') ? \RMM\DesignSystem\SettingsPage::get_settings() : [];
+        $default_theme = $ds_settings['default_theme'] ?? 'dark';
 
         wp_localize_script('rmm-frontend-menu', 'rmmConfig', [
             'ajax_url'        => admin_url('admin-ajax.php'),
@@ -43,6 +45,7 @@ class Assets {
             'rest_nonce'      => wp_create_nonce('wp_rest'),
             'active_branch'   => $active_branch_id,
             'active_lang'     => $curr_lang,
+            'default_theme'   => $default_theme,
             'operation_mode'  => $branch_mode,
             'is_view_only'    => ($branch_mode === 'view_only'),
             'currency_symbol' => function_exists('get_woocommerce_currency_symbol') ? get_woocommerce_currency_symbol() : 'تومان',

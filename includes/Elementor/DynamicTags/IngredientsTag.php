@@ -16,7 +16,7 @@ class IngredientsTag extends \Elementor\Core\DynamicTags\Tag {
     }
 
     public function get_title() {
-        return __('ترکیبات و مواد اولیه غذا (TastyMenu)', 'restaurant-menu-manager');
+        return __('ترکیبات و مواد اولیه غذا (TastyMenu)', 'fondogh-online-menu');
     }
 
     public function get_group() {

@@ -25,7 +25,7 @@ class Plugin {
 
     private function init_i18n() {
         load_plugin_textdomain(
-            'restaurant-menu-manager',
+            'fondogh-online-menu',
             false,
             dirname(RMM_PLUGIN_BASENAME) . '/languages'
         );
@@ -55,38 +55,43 @@ class Plugin {
         $this->modules['table_qr']    = new OperationModes\TableQRGenerator();
 
         // Phase 2 Modules (Conditional check so Phase 1 runs cleanly even before Phase 2 files are created)
-        if (class_exists('RMM\\Menu\\FoodMeta')) {
+        if (class_exists('RMM\Menu\FoodMeta')) {
             $this->modules['food_meta'] = new Menu\FoodMeta();
         }
-        if (class_exists('RMM\\Menu\\ModifiersEngine')) {
+        if (class_exists('RMM\Menu\ModifiersEngine')) {
             $this->modules['modifiers'] = new Menu\ModifiersEngine();
         }
-        if (class_exists('RMM\\Menu\\HappyHour')) {
+        if (class_exists('RMM\Menu\HappyHour')) {
             $this->modules['happy_hour'] = new Menu\HappyHour();
         }
-        if (class_exists('RMM\\I18n\\MultiLangManager')) {
+        if (class_exists('RMM\I18n\MultiLangManager')) {
             $this->modules['multilang'] = new I18n\MultiLangManager();
         }
 
         // Phase 3 Modules (Frontend Dashboard)
-        if (class_exists('RMM\\FrontendDashboard\\PortalRouter')) {
+        if (class_exists('RMM\FrontendDashboard\PortalRouter')) {
             $this->modules['portal_router'] = new FrontendDashboard\PortalRouter();
         }
-        if (class_exists('RMM\\FrontendDashboard\\AuthController')) {
+        if (class_exists('RMM\FrontendDashboard\AuthController')) {
             $this->modules['auth_ctrl'] = new FrontendDashboard\AuthController();
         }
-        if (class_exists('RMM\\FrontendDashboard\\RestApiController')) {
+        if (class_exists('RMM\FrontendDashboard\RestApiController')) {
             $this->modules['rest_api'] = new FrontendDashboard\RestApiController();
         }
 
         // Phase 4 Modules (Elementor)
-        if (class_exists('RMM\\Elementor\\ElementorIntegration')) {
+        if (class_exists('RMM\Elementor\ElementorIntegration')) {
             $this->modules['elementor'] = new Elementor\ElementorIntegration();
         }
 
         // Phase 5 Modules (Template Library)
-        if (class_exists('RMM\\Elementor\\TemplateLibrary\\TemplateManager')) {
+        if (class_exists('RMM\Elementor\TemplateLibrary\TemplateManager')) {
             $this->modules['templates'] = new Elementor\TemplateLibrary\TemplateManager();
+        }
+
+        // Phase 6 Module (Design System Studio & Engine)
+        if (class_exists('RMM\DesignSystem\DesignSystem')) {
+            $this->modules['design_system'] = new DesignSystem\DesignSystem();
         }
     }
 
