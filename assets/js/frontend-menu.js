@@ -7,13 +7,14 @@
 
     $(document).ready(function () {
 
-        // 0. Day / Night Theme Engine (Persistent via LocalStorage)
+        // 0. Day / Night Theme Engine (Persistent via LocalStorage with configurable default)
         function initThemeEngine() {
-            var savedTheme = localStorage.getItem('rmm_theme_mode');
+            var defaultTheme = (window.rmmConfig && window.rmmConfig.default_theme) ? window.rmmConfig.default_theme : 'dark';
+            var savedTheme = localStorage.getItem('rmm_theme_mode') || defaultTheme;
             if (savedTheme === 'light') {
-                $('body, html, .rmm-menu-widget-wrapper').addClass('light-theme');
-            } else if (savedTheme === 'dark') {
-                $('body, html, .rmm-menu-widget-wrapper').removeClass('light-theme');
+                $('body, html, .rmm-menu-widget-wrapper').addClass('light-theme').removeClass('dark-theme');
+            } else {
+                $('body, html, .rmm-menu-widget-wrapper').removeClass('light-theme').addClass('dark-theme');
             }
 
             function updateBtn(isLight) {
@@ -44,10 +45,15 @@
 
             $(document).on('click', '#theme-toggle-btn, .rmm-theme-toggle-btn', function (e) {
                 e.preventDefault();
-                var isLight = $('body').toggleClass('light-theme').hasClass('light-theme');
-                $('html, .rmm-menu-widget-wrapper').toggleClass('light-theme', isLight);
-                localStorage.setItem('rmm_theme_mode', isLight ? 'light' : 'dark');
-                updateBtn(isLight);
+                var willBeLight = !$('body').hasClass('light-theme');
+                if (willBeLight) {
+                    $('body, html, .rmm-menu-widget-wrapper').addClass('light-theme').removeClass('dark-theme');
+                    localStorage.setItem('rmm_theme_mode', 'light');
+                } else {
+                    $('body, html, .rmm-menu-widget-wrapper').removeClass('light-theme').addClass('dark-theme');
+                    localStorage.setItem('rmm_theme_mode', 'dark');
+                }
+                updateBtn(willBeLight);
             });
         }
         initThemeEngine();
@@ -129,7 +135,7 @@
             $('.rmm-cat-pill').removeClass('active');
             $(this).addClass('active');
 
-            var catId = $(this).data('cat-id');
+            var catId = $(this).data('cat-id') || $(this).data('category');
 
             if (catId === 'all') {
                 $('.rmm-category-section').show();
@@ -193,6 +199,84 @@
             });
         });
 
+        // Client-side instant memory cache for food modals
+        var modalDataCache = {};
+        var prefetchTimers = {};
+
+        // Intelligent prefetch on hover or touchstart
+        $(document).on('mouseenter touchstart', '.rmm-food-card.rmm-card-clickable', function () {
+            var $c = $(this);
+            var pid = $c.data('id');
+            var action = $c.data('action') || 'default_modal';
+            if (!pid || action !== 'default_modal') return;
+
+            var langVal = (window.rmmConfig && window.rmmConfig.active_lang) ? window.rmmConfig.active_lang : 'fa';
+            var cacheKey = pid + '_' + langVal;
+            if (modalDataCache[cacheKey]) return;
+
+            if (prefetchTimers[cacheKey]) clearTimeout(prefetchTimers[cacheKey]);
+            prefetchTimers[cacheKey] = setTimeout(function () {
+                var nonceVal = (window.rmmConfig && window.rmmConfig.nonce) ? window.rmmConfig.nonce : '';
+                $.ajax({
+                    url: (window.rmmConfig && window.rmmConfig.ajax_url) ? window.rmmConfig.ajax_url : '/wp-admin/admin-ajax.php',
+                    type: 'GET',
+                    data: {
+                        action: 'rmm_get_product_modifiers',
+                        product_id: pid,
+                        security: nonceVal,
+                        lang: langVal
+                    },
+                    success: function (res) {
+                        if (res && res.success && res.data) {
+                            modalDataCache[cacheKey] = res.data;
+                        }
+                    }
+                });
+            }, 60);
+        });
+
+        // 4. Open Food Details / Modifiers Modal (on Card Click or Button Click)
+        // Standalone & Loop Widgets Order button handler
+        $(document).on('click', '.rmm-food-card-standalone .rmm-btn-order, .rmm-food-loop-grid .rmm-btn-order', function (e) {
+            e.preventDefault();
+            var pid = $(this).data('product-id');
+            if (!pid) return;
+
+            var $btn = $(this);
+            $btn.prop('disabled', true);
+
+            $.ajax({
+                url: window.rmmConfig ? window.rmmConfig.ajax_url : '/wp-admin/admin-ajax.php',
+                type: 'POST',
+                data: {
+                    action: 'woocommerce_add_to_cart',
+                    product_id: pid,
+                    quantity: 1
+                },
+                success: function (res) {
+                    $btn.prop('disabled', false);
+                    $(document.body).trigger('wc_fragment_refresh');
+                    updateFloatingCart();
+                },
+                error: function () {
+                    $btn.prop('disabled', false);
+                }
+            });
+        });
+
+        // Standalone & Loop Widgets Details / Modal handler (.rmm-open-modal)
+        $(document).on('click', '.rmm-open-modal', function (e) {
+            if ($(e.target).closest('.rmm-quick-add-btn, .rmm-btn-order').length) {
+                return;
+            }
+            e.preventDefault();
+            var pid = $(this).data('product-id') || $(this).closest('.rmm-food-card').data('product-id');
+            if (!pid) return;
+
+            var $card = $(this).closest('.rmm-food-card');
+            loadDefaultModal(pid, $card);
+        });
+
         // 4. Open Food Details / Modifiers Modal (on Card Click or Button Click)
         $(document).on('click', '.rmm-food-card.rmm-card-clickable, .rmm-open-modifiers-btn', function (e) {
             // Ignore click if user clicked directly on catalog WhatsApp/call button or quick-add
@@ -243,18 +327,18 @@
                         if (res && res.success && res.data && res.data.html) {
                             modalContent.html('<button class="rmm-modal-close-btn" type="button" aria-label="Close">&times;</button><div class="rmm-custom-template-wrap">' + res.data.html + '</div>');
                         } else {
-                            loadDefaultModal(productId);
+                            loadDefaultModal(productId, $card);
                         }
                     },
                     error: function () {
-                        loadDefaultModal(productId);
+                        loadDefaultModal(productId, $card);
                     }
                 });
                 return;
             }
 
             // C) Default Rich Modal
-            loadDefaultModal(productId);
+            loadDefaultModal(productId, $card);
         });
 
         // Helper for localized strings
@@ -273,18 +357,51 @@
             return clean.toLocaleString(locale);
         }
 
-        function loadDefaultModal(productId) {
+        function loadDefaultModal(productId, $card) {
             var container = ensureModalContainer();
             var $curModal = container.modal;
             var $curContent = container.modalContent;
-
-            $curContent.html('<div class="rmm-modal-loading-box"><span class="rmm-modal-spinner">🍲</span><p style="margin:0; font-weight:600; color:#475569;">' + t('loading', 'در حال بارگذاری جزئیات غذا...') + '</p></div>');
-            $curModal.fadeIn(200);
-            $('body, html').addClass('rmm-modal-open');
-
             var nonceVal = (window.rmmConfig && window.rmmConfig.nonce) ? window.rmmConfig.nonce : '';
             var langVal = (window.rmmConfig && window.rmmConfig.active_lang) ? window.rmmConfig.active_lang : 'fa';
+            var cacheKey = productId + '_' + langVal;
 
+            // 1. Instant hit in client-side memory cache (0ms latency!)
+            if (modalDataCache[cacheKey]) {
+                renderFoodDetailsModal(modalDataCache[cacheKey]);
+                $curModal.fadeIn(150);
+                $('body, html').addClass('rmm-modal-open');
+                return;
+            }
+
+            // 2. Instant optimistic preview extracted from clicked card (Zero-delay feel)
+            if ($card && $card.length) {
+                var cardImg = $card.find('.rmm-card-img').attr('src') || '';
+                var cardTitle = $card.find('.rmm-food-title').text().trim() || '';
+                var cardPriceHtml = $card.find('.rmm-food-price').html() || '';
+                var cardDesc = $card.find('.rmm-food-desc').text().trim() || '';
+                var cardIngredients = $card.find('.rmm-food-ingredients').text().trim() || '';
+
+                var optHtml = '<div class="rmm-modal-hero-wrap">' +
+                    '<button class="rmm-modal-close-btn" type="button" aria-label="' + t('close', 'بستن') + '">&times;</button>' +
+                    (cardImg ? '<img src="' + cardImg + '" class="rmm-modal-hero-img" alt="' + cardTitle + '">' : '') +
+                    '</div>' +
+                    '<div class="rmm-modal-body">' +
+                    '<div class="rmm-modal-title-row"><h3 class="rmm-modal-food-title">' + cardTitle + '</h3></div>' +
+                    '<div class="rmm-modal-price-row"><div class="rmm-modal-food-price">' + cardPriceHtml + '</div></div>' +
+                    (cardDesc ? '<div class="rmm-modal-desc-box"><p class="rmm-modal-desc-text">' + cardDesc + '</p></div>' : '') +
+                    (cardIngredients ? '<div class="rmm-modal-ingredients-box"><p class="rmm-modal-ingredients-text">' + cardIngredients + '</p></div>' : '') +
+                    '<div class="rmm-modal-loading-box" style="padding:15px 0;"><span class="rmm-modal-spinner">🍲</span><p style="margin:0; font-size:12px; font-weight:600; color:#64748b;">' + t('loading', 'در حال دریافت گزینه‌ها...') + '</p></div>' +
+                    '</div>';
+
+                $curContent.html(optHtml);
+            } else {
+                $curContent.html('<div class="rmm-modal-loading-box"><span class="rmm-modal-spinner">🍲</span><p style="margin:0; font-weight:600; color:#475569;">' + t('loading', 'در حال بارگذاری جزئیات غذا...') + '</p></div>');
+            }
+
+            $curModal.fadeIn(150);
+            $('body, html').addClass('rmm-modal-open');
+
+            // 3. Perform background fetch
             $.ajax({
                 url: (window.rmmConfig && window.rmmConfig.ajax_url) ? window.rmmConfig.ajax_url : '/wp-admin/admin-ajax.php',
                 type: 'GET',
@@ -297,6 +414,7 @@
                 success: function (res) {
                     try {
                         if (res && res.success && res.data) {
+                            modalDataCache[cacheKey] = res.data;
                             renderFoodDetailsModal(res.data);
                         } else {
                             var errMsg = (res && res.data && res.data.message) ? res.data.message : t('error_loading', 'خطا در دریافت اطلاعات غذا.');
@@ -825,9 +943,10 @@
         if (entranceModal.length) {
             var cookieChosen = document.cookie.match(/(?:^|;\s*)rmm_lang_chosen=([^;]*)/);
             var localChosen = localStorage.getItem('rmm_lang_chosen');
-            var urlHasLang = window.location.search.indexOf('lang=') !== -1;
+            var sessionChosen = sessionStorage.getItem('rmm_lang_session_chosen');
 
-            if (!cookieChosen && !localChosen && !urlHasLang) {
+            // Show popup if remember was not chosen on previous visits and not yet chosen in this tab
+            if (!cookieChosen && !localChosen && !sessionChosen) {
                 setTimeout(function () {
                     entranceModal.css('display', 'flex').hide().fadeIn(250);
                 }, 300);
@@ -836,6 +955,7 @@
             $('#rmm-entrance-close-btn, #rmm-entrance-modal').on('click', function (e) {
                 if (e.target === this) {
                     entranceModal.fadeOut(200);
+                    sessionStorage.setItem('rmm_lang_session_chosen', '1');
                 }
             });
 
@@ -849,6 +969,11 @@
                     var date = new Date();
                     date.setTime(date.getTime() + (30 * 24 * 60 * 60 * 1000));
                     document.cookie = 'rmm_lang_chosen=1; path=/; expires=' + date.toUTCString();
+                } else {
+                    localStorage.removeItem('rmm_lang_chosen');
+                    document.cookie = 'rmm_lang_chosen=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;';
+                    // Temporary flag for this tab session only so page redirect does not re-open modal
+                    sessionStorage.setItem('rmm_lang_session_chosen', '1');
                 }
 
                 var dateLang = new Date();

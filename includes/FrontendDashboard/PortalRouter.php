@@ -108,8 +108,8 @@ class PortalRouter {
     private function serve_manifest() {
         header('Content-Type: application/json; charset=utf-8');
         echo json_encode([
-            'name'             => __('پیشخوان هوشمند رستوران | منو آنلاین فندق', 'restaurant-menu-manager'),
-            'short_name'       => __('منو فندق', 'restaurant-menu-manager'),
+            'name'             => __('پیشخوان هوشمند رستوران | منو آنلاین فندق', 'fondogh-online-menu'),
+            'short_name'       => __('منو فندق', 'fondogh-online-menu'),
             'start_url'        => home_url('/' . self::get_portal_slug() . '/'),
             'display'          => 'standalone',
             'background_color' => '#0f172a',

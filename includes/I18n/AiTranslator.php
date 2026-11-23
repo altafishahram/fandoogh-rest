@@ -44,11 +44,12 @@ class AiTranslator {
         ];
         $target_name = $lang_names[$target_lang] ?? $target_lang;
 
-        $prompt = "You are a professional restaurant menu translator. Translate the following restaurant food information into {$target_name}. Preserve food appetite appeal, tone, and culinary terms accurately.\n";
+        $prompt  = "You are a professional restaurant menu translator. Translate the following restaurant food information into {$target_name}. Preserve food appetite appeal, tone, and culinary terms accurately.\n";
         $prompt .= "Return ONLY a valid JSON object matching the exact keys provided, with no extra text or markdown formatting.\n";
         $prompt .= "Input JSON:\n" . wp_json_encode($texts, JSON_UNESCAPED_UNICODE);
 
-        $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' . rawurlencode($api_key);
+        // Pass API key via header rather than URL query parameter to avoid logging secrets
+        $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
 
         $body = [
             'contents' => [
@@ -66,17 +67,20 @@ class AiTranslator {
 
         $response = wp_remote_post($url, [
             'timeout' => 20,
-            'headers' => ['Content-Type' => 'application/json'],
+            'headers' => [
+                'Content-Type'   => 'application/json',
+                'x-goog-api-key' => $api_key,
+            ],
             'body'    => wp_json_encode($body)
         ]);
 
         if (is_wp_error($response)) {
-            return $response;
+            return new \WP_Error('gemini_err', __('خطا در برقراری ارتباط با سرویس هوش مصنوعی.', 'fondogh-online-menu'));
         }
 
         $code = wp_remote_retrieve_response_code($response);
         if ($code !== 200) {
-            return new \WP_Error('gemini_err', 'Gemini API Error: ' . wp_remote_retrieve_body($response));
+            return new \WP_Error('gemini_err', __('پاسخ نامعتبر از سرویس هوش مصنوعی دریافت شد.', 'fondogh-online-menu'));
         }
 
         $data = json_decode(wp_remote_retrieve_body($response), true);
@@ -87,7 +91,7 @@ class AiTranslator {
             return $clean_json;
         }
 
-        return new \WP_Error('json_err', 'Failed to parse Gemini response');
+        return new \WP_Error('json_err', __('خطا در پردازش پاسخ ترجمه هوش مصنوعی.', 'fondogh-online-menu'));
     }
 
     /**

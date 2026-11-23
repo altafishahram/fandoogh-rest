@@ -7,6 +7,17 @@
 (function () {
         'use strict';
 
+    // Helper: Escape HTML to prevent DOM-based XSS
+    function escapeHtml(unsafe) {
+        if (unsafe === null || unsafe === undefined) return '';
+        return String(unsafe)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
     // Helper: format prices with thousands separators and strip decimal zeros
     function formatThousand(val) {
         if (val === null || val === undefined || val === '') return '';
@@ -318,16 +329,17 @@
         var html = '';
         orders.forEach(function (order) {
             var typeBadge = (order.order_type === 'dine_in')
-                ? '<span class="rmm-order-type-badge rmm-type-dine_in">🍽️ میز ' + (order.table_number || '-') + '</span>'
+                ? '<span class="rmm-order-type-badge rmm-type-dine_in">🍽️ میز ' + escapeHtml(order.table_number || '-') + '</span>'
                 : '<span class="rmm-order-type-badge rmm-type-delivery">🛵 بیرون‌بر</span>';
 
             var itemsHtml = '';
             order.items.forEach(function (it) {
                 var metaHtml = '';
                 if (it.meta && it.meta.length) {
-                    metaHtml = '<div class="rmm-item-mods">' + it.meta.join(' | ') + '</div>';
+                    var safeMeta = it.meta.map(function(m) { return escapeHtml(m); });
+                    metaHtml = '<div class="rmm-item-mods">' + safeMeta.join(' | ') + '</div>';
                 }
-                itemsHtml += '<li class="rmm-card-item"><div><strong>' + it.quantity + 'x</strong> ' + it.name + metaHtml + '</div><span>' + Number(it.total).toLocaleString('fa-IR') + '</span></li>';
+                itemsHtml += '<li class="rmm-card-item"><div><strong>' + escapeHtml(it.quantity) + 'x</strong> ' + escapeHtml(it.name) + metaHtml + '</div><span>' + Number(it.total).toLocaleString('fa-IR') + '</span></li>';
             });
 
             var nextStatusBtn = '';
@@ -337,15 +349,15 @@
                 nextStatusBtn = '<span style="font-size:12px; color:var(--rmm-success); font-weight:bold;">✔ انجام شده</span>';
             }
 
-            html += '<div class="rmm-order-card ' + order.status + '">' +
+            html += '<div class="rmm-order-card ' + escapeHtml(order.status) + '">' +
                 '<div class="rmm-card-header">' +
-                '<div><div class="rmm-order-id">سفارش #' + order.id + '</div><div style="font-size:12px; color:var(--rmm-text-muted); margin-top:2px;">' + order.created_at + ' | ' + order.customer_name + '</div></div>' +
+                '<div><div class="rmm-order-id">سفارش #' + escapeHtml(order.id) + '</div><div style="font-size:12px; color:var(--rmm-text-muted); margin-top:2px;">' + escapeHtml(order.created_at) + ' | ' + escapeHtml(order.customer_name) + '</div></div>' +
                 '<div>' + typeBadge + '</div>' +
                 '</div>' +
                 '<ul class="rmm-card-items">' + itemsHtml + '</ul>' +
-                (order.notes ? '<div style="font-size:12px; background:var(--rmm-warning-bg); color:var(--rmm-warning); padding:6px 10px; border-radius:8px; margin-bottom:10px; border:1px solid var(--rmm-warning);">📝 ' + order.notes + '</div>' : '') +
+                (order.notes ? '<div style="font-size:12px; background:var(--rmm-warning-bg); color:var(--rmm-warning); padding:6px 10px; border-radius:8px; margin-bottom:10px; border:1px solid var(--rmm-warning);">📝 ' + escapeHtml(order.notes) + '</div>' : '') +
                 '<div class="rmm-card-footer">' +
-                '<div style="font-weight:800; font-size:14px; color:var(--rmm-text);">مجموع: ' + Number(order.total).toLocaleString('fa-IR') + ' ' + order.currency + '</div>' +
+                '<div style="font-weight:800; font-size:14px; color:var(--rmm-text);">مجموع: ' + Number(order.total).toLocaleString('fa-IR') + ' ' + escapeHtml(order.currency) + '</div>' +
                 '<div style="display:flex; gap:8px;">' +
                 '<button class="rmm-btn-print-receipt" onclick="window.rmmPrintReceipt(' + order.id + ')">🖨️ فیش</button>' +
                 nextStatusBtn +
@@ -391,31 +403,33 @@
 
                 var itemsRows = '';
                 data.items.forEach(function (it) {
-                    var mods = (it.modifiers && it.modifiers.length) ? '<div class="item-mods">' + it.modifiers.join(', ') + '</div>' : '';
+                    var safeMods = (it.modifiers && it.modifiers.length)
+                        ? '<div class="item-mods">' + it.modifiers.map(escapeHtml).join(', ') + '</div>'
+                        : '';
                     itemsRows += '<tr>' +
-                        '<td>' + it.name + mods + '</td>' +
-                        '<td style="text-align:center;">' + it.qty + '</td>' +
+                        '<td>' + escapeHtml(it.name) + safeMods + '</td>' +
+                        '<td style="text-align:center;">' + escapeHtml(it.qty) + '</td>' +
                         '<td style="text-align:left;">' + Number(it.total).toLocaleString('fa-IR') + '</td>' +
                         '</tr>';
                 });
 
-                var tableBanner = data.table_number ? '<div class="table-banner">میز شماره ' + data.table_number + '</div>' : '';
+                var tableBanner = data.table_number ? '<div class="table-banner">میز شماره ' + escapeHtml(data.table_number) + '</div>' : '';
 
                 var receiptHtml = '<div class="receipt-header">' +
-                    '<h2 class="restaurant-title">' + data.restaurant + '</h2>' +
-                    '<div class="branch-info">' + (data.branch_name || '') + ' - ' + (data.branch_phone || '') + '</div>' +
+                    '<h2 class="restaurant-title">' + escapeHtml(data.restaurant) + '</h2>' +
+                    '<div class="branch-info">' + escapeHtml(data.branch_name || '') + (data.branch_phone ? ' - ' + escapeHtml(data.branch_phone) : '') + '</div>' +
                     '</div>' +
                     tableBanner +
-                    '<div class="meta-line"><span>شماره فاکتور: #' + data.order_id + '</span><span>' + data.date + '</span></div>' +
-                    '<div class="meta-line"><span>مشتری: ' + data.customer_name + '</span><span>' + (data.phone || '') + '</span></div>' +
+                    '<div class="meta-line"><span>شماره فاکتور: #' + escapeHtml(data.order_id) + '</span><span>' + escapeHtml(data.date) + '</span></div>' +
+                    '<div class="meta-line"><span>مشتری: ' + escapeHtml(data.customer_name) + '</span><span>' + escapeHtml(data.phone || '') + '</span></div>' +
                     '<table class="items-table">' +
                     '<thead><tr><th>غذا</th><th style="text-align:center;">تعداد</th><th style="text-align:left;">قیمت</th></tr></thead>' +
                     '<tbody>' + itemsRows + '</tbody>' +
                     '</table>' +
                     '<div class="receipt-total">' +
-                    '<div class="total-row"><span>مبلغ کل:</span><span>' + Number(data.total).toLocaleString('fa-IR') + ' ' + data.currency + '</span></div>' +
+                    '<div class="total-row"><span>مبلغ کل:</span><span>' + Number(data.total).toLocaleString('fa-IR') + ' ' + escapeHtml(data.currency) + '</span></div>' +
                     '</div>' +
-                    (data.notes ? '<div class="notes-box">یادداشت: ' + data.notes + '</div>' : '') +
+                    (data.notes ? '<div class="notes-box">یادداشت: ' + escapeHtml(data.notes) + '</div>' : '') +
                     '<div class="receipt-footer">با تشکر از انتخاب شما | بازگشت مجدد شما افتخار ماست</div>';
 
                 var doc = printFrame.contentDocument || printFrame.contentWindow.document;

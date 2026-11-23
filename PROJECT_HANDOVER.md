@@ -247,9 +247,14 @@ E:\رستوران فندوق/
 > ```
 > این اسکریپت فقط فایل اصلی افزونه، `uninstall.php`، `readme.txt`، `includes/` و `assets/css`، `assets/js` و `assets/templates-json` را وارد بسته می‌کند. فایل‌های `.md`، `.py`، `.pyc`، `__pycache__`، پوشه‌های مهارت، `bot-operations` و `assets/design-source` وارد ZIP نمی‌شوند. ساختار پوشهٔ ریشه داخل ZIP با نام `fondogh-online-menu/` حفظ می‌شود.
 
-> [!CAUTION]
-> **۵. بدهی فنی تأییدشدهٔ نسخهٔ ۱.۰.۰:**  
-> پیش از دادن حساب کارکنان یا فعال‌سازی چندشعبه‌ای، موارد ثبت‌شده در `bot-operations/reports/project-review.md` را رفع کنید: بازنویسی فیلدهای ارسال‌نشده در `InventoryRepository::upsert()`، اعمال‌نشدن کنترل دسترسی شعبه در REST API، و نشت تغییر قیمت/موجودی شعبه به محصول سراسری WooCommerce. همچنین Text Domain واقعی هدر افزونه `fondogh-online-menu` است ولی بیشتر رشته‌های ترجمه با `restaurant-menu-manager` ثبت شده‌اند و باید یکدست شوند.
+> [!NOTE]
+> **۵. بدهی‌های فنی رفع‌شده (نسخه ۱.۱.۰-dev):**  
+> تمامی موارد ثبت‌شده در بازبینی فنی و بدهی‌های فنی اولیه برطرف شدند:
+> - متد پرتابل write_row جایگزین upsert شد و از نشت یا پاک شدن فیلدهای نانوشته جلوگیری می‌کند.
+> - دسترسی شعب در تمام مسیرهای REST با AuthController::user_can_access_branch محافظت شده است.
+> - قیمت افزودنی‌ها سمت سرور قفل شد.
+> - جدول موجودی با dbDelta استاندارد و خودترمیمی در dmin_init پایدار شد.
+> - همه رشته‌های ترجمه به fondogh-online-menu یکدست شدند.
 
 ---
 

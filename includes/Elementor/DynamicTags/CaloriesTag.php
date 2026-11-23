@@ -16,7 +16,7 @@ class CaloriesTag extends \Elementor\Core\DynamicTags\Tag {
     }
 
     public function get_title() {
-        return __('کالری و زمان پخت (TastyMenu)', 'restaurant-menu-manager');
+        return __('کالری و زمان پخت (TastyMenu)', 'fondogh-online-menu');
     }
 
     public function get_group() {
@@ -37,7 +37,7 @@ class CaloriesTag extends \Elementor\Core\DynamicTags\Tag {
             $out[] = '🔥 ' . esc_html($calories);
         }
         if ($prep_time) {
-            $out[] = '⏱️ ' . sprintf(esc_html__('%d دقیقه', 'restaurant-menu-manager'), $prep_time);
+            $out[] = '⏱️ ' . sprintf(esc_html__('%d دقیقه', 'fondogh-online-menu'), $prep_time);
         }
 
         echo esc_html(implode(' | ', $out));

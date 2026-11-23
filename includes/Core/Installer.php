@@ -7,6 +7,31 @@ if (!defined('ABSPATH')) {
 
 class Installer {
 
+    const DB_VERSION = '1.0.1';
+
+    /**
+     * Check if custom branch inventory table exists in DB
+     */
+    public static function table_exists() {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'rmm_branch_inventory';
+        // Portable check across MySQL and SQLite
+        $suppress = $wpdb->suppress_errors(true);
+        $found = $wpdb->get_var("SELECT 1 FROM {$table_name} LIMIT 1");
+        $wpdb->suppress_errors($suppress);
+        return $wpdb->last_error === '';
+    }
+
+    /**
+     * Self-healing DB check and migration on admin_init
+     */
+    public static function maybe_upgrade() {
+        $installed_ver = get_option('rmm_db_version', '0.0.0');
+        if (version_compare($installed_ver, self::DB_VERSION, '<') || !self::table_exists()) {
+            self::create_tables();
+        }
+    }
+
     public static function activate() {
         try {
             self::create_tables();
@@ -18,6 +43,12 @@ class Installer {
             self::register_roles();
         } catch (\Throwable $e) {
             error_log('RMM Activation Role Error: ' . $e->getMessage());
+        }
+
+        try {
+            self::migrate_role_capabilities();
+        } catch (\Throwable $e) {
+            error_log('RMM Activation Role Migration Error: ' . $e->getMessage());
         }
 
         try {
@@ -59,7 +90,8 @@ class Installer {
             $charset_collate = $wpdb->get_charset_collate();
 
             // Note: Two spaces between PRIMARY KEY and definition as required by dbDelta
-            $sql = "CREATE TABLE IF NOT EXISTS {$table_name} (
+            // Standard dbDelta syntax: no IF NOT EXISTS, updated_at datetime DEFAULT NULL, 2 spaces after PRIMARY KEY
+            $sql = "CREATE TABLE {$table_name} (
                 id bigint(20) NOT NULL AUTO_INCREMENT,
                 product_id bigint(20) NOT NULL,
                 branch_id bigint(20) NOT NULL,
@@ -67,11 +99,10 @@ class Installer {
                 sale_price decimal(10,2) DEFAULT NULL,
                 stock_status varchar(20) NOT NULL DEFAULT 'instock',
                 is_available tinyint(1) NOT NULL DEFAULT 1,
-                updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                updated_at datetime DEFAULT NULL,
                 PRIMARY KEY  (id),
                 UNIQUE KEY product_branch (product_id, branch_id),
-                KEY idx_branch (branch_id),
-                KEY idx_product (product_id)
+                KEY idx_branch (branch_id)
             ) {$charset_collate};";
 
             if (!function_exists('dbDelta')) {
@@ -86,7 +117,11 @@ class Installer {
                 $wpdb->query($sql);
             }
 
-            update_option('rmm_db_version', '1.0.0');
+            if (self::table_exists()) {
+                update_option('rmm_db_version', self::DB_VERSION);
+            } else {
+                error_log('RMM Table creation verification failed: ' . ($wpdb->last_error ?: 'Unknown DB error'));
+            }
         } catch (\Throwable $e) {
             error_log('RMM Table creation error: ' . $e->getMessage());
         }
@@ -100,13 +135,13 @@ class Installer {
             // Restaurant Manager
             add_role(
                 'restaurant_manager',
-                __('مدیر رستوران / شعبه', 'restaurant-menu-manager'),
+                __('مدیر رستوران / شعبه', 'fondogh-online-menu'),
                 [
                     'read'                      => true,
                     'edit_posts'                => true,
                     'upload_files'              => true,
                     'manage_restaurant_menu'    => true,
-                    'manage_woocommerce'        => true,
+                    // A branch manager must never be a global WooCommerce manager.
                     'view_woocommerce_reports'  => true,
                     'edit_products'             => true,
                     'publish_products'          => true,
@@ -117,7 +152,7 @@ class Installer {
             // Kitchen Staff (Minimal role for kitchen display)
             add_role(
                 'kitchen_staff',
-                __('پرسنل آشپزخانه', 'restaurant-menu-manager'),
+                __('پرسنل آشپزخانه', 'fondogh-online-menu'),
                 [
                     'read'                      => true,
                     'view_kitchen_orders'       => true,
@@ -140,6 +175,18 @@ class Installer {
             }
         } catch (\Throwable $e) {
             error_log('RMM Register roles error: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Remove the legacy global WooCommerce capability from existing branch
+     * managers. add_role() does not update roles that already exist, so this
+     * runs on every activation for installations upgraded from older versions.
+     */
+    public static function migrate_role_capabilities() {
+        $manager = get_role('restaurant_manager');
+        if ($manager && is_object($manager) && method_exists($manager, 'remove_cap')) {
+            $manager->remove_cap('manage_woocommerce');
         }
     }
 

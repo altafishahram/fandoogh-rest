@@ -16,7 +16,7 @@ class FloatingCartWidget extends \Elementor\Widget_Base {
     }
 
     public function get_title() {
-        return __('سبد خرید شناور منو (Floating Mini Cart)', 'restaurant-menu-manager');
+        return __('سبد خرید شناور منو (Floating Mini Cart)', 'fondogh-online-menu');
     }
 
     public function get_icon() {
@@ -27,20 +27,28 @@ class FloatingCartWidget extends \Elementor\Widget_Base {
         return ['tastymenu-category'];
     }
 
+    public function get_script_depends() {
+        return ['rmm-frontend-menu'];
+    }
+
+    public function get_style_depends() {
+        return ['rmm-frontend-menu'];
+    }
+
     protected function register_controls() {
         $this->start_controls_section(
             'section_content',
             [
-                'label' => __('تنظیمات سبد خرید شناور', 'restaurant-menu-manager'),
+                'label' => __('تنظیمات سبد خرید شناور', 'fondogh-online-menu'),
             ]
         );
 
         $this->add_control(
             'cart_btn_text',
             [
-                'label'   => __('متن دکمه تکمیل سفارش', 'restaurant-menu-manager'),
+                'label'   => __('متن دکمه تکمیل سفارش', 'fondogh-online-menu'),
                 'type'    => \Elementor\Controls_Manager::TEXT,
-                'default' => __('مشاهده سفارش و تسویه‌حساب', 'restaurant-menu-manager'),
+                'default' => __('مشاهده سفارش و تسویه‌حساب', 'fondogh-online-menu'),
             ]
         );
 
@@ -51,7 +59,7 @@ class FloatingCartWidget extends \Elementor\Widget_Base {
         $this->start_controls_section(
             'section_style_cart_btn',
             [
-                'label' => __('استایل دکمه سبد خرید شناور', 'restaurant-menu-manager'),
+                'label' => __('استایل دکمه سبد خرید شناور', 'fondogh-online-menu'),
                 'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
             ]
         );
@@ -59,7 +67,7 @@ class FloatingCartWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'cart_bar_bg',
             [
-                'label'     => __('رنگ پس‌زمینه نوار سبد', 'restaurant-menu-manager'),
+                'label'     => __('رنگ پس‌زمینه نوار سبد', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .rmm-floating-cart-btn' => 'background-color: {{VALUE}};',
@@ -70,7 +78,7 @@ class FloatingCartWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'cart_bar_text_color',
             [
-                'label'     => __('رنگ متن و مبلغ', 'restaurant-menu-manager'),
+                'label'     => __('رنگ متن و مبلغ', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .rmm-floating-cart-btn, {{WRAPPER}} .rmm-cart-total' => 'color: {{VALUE}};',
@@ -82,7 +90,7 @@ class FloatingCartWidget extends \Elementor\Widget_Base {
             \Elementor\Group_Control_Typography::get_type(),
             [
                 'name'     => 'cart_typography',
-                'label'    => __('تایپوگرافی متن سبد', 'restaurant-menu-manager'),
+                'label'    => __('تایپوگرافی متن سبد', 'fondogh-online-menu'),
                 'selector' => '{{WRAPPER}} .rmm-cart-label, {{WRAPPER}} .rmm-cart-total',
             ]
         );
@@ -90,7 +98,7 @@ class FloatingCartWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'badge_heading',
             [
-                'label'     => __('شمارنده اقلام (Badge)', 'restaurant-menu-manager'),
+                'label'     => __('شمارنده اقلام (Badge)', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::HEADING,
                 'separator' => 'before',
             ]
@@ -99,7 +107,7 @@ class FloatingCartWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'badge_bg_color',
             [
-                'label'     => __('رنگ پس‌زمینه شمارنده', 'restaurant-menu-manager'),
+                'label'     => __('رنگ پس‌زمینه شمارنده', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .rmm-cart-badge-count' => 'background-color: {{VALUE}};',
@@ -110,7 +118,7 @@ class FloatingCartWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'badge_text_color',
             [
-                'label'     => __('رنگ عدد شمارنده', 'restaurant-menu-manager'),
+                'label'     => __('رنگ عدد شمارنده', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .rmm-cart-badge-count' => 'color: {{VALUE}};',
@@ -121,7 +129,7 @@ class FloatingCartWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'cart_border_radius',
             [
-                'label'      => __('گردی کادر سبد (Border Radius)', 'restaurant-menu-manager'),
+                'label'      => __('گردی کادر سبد (Border Radius)', 'fondogh-online-menu'),
                 'type'       => \Elementor\Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%'],
                 'separator'  => 'before',
@@ -142,7 +150,7 @@ class FloatingCartWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'cart_padding',
             [
-                'label'      => __('فاصله داخلی (Padding)', 'restaurant-menu-manager'),
+                'label'      => __('فاصله داخلی (Padding)', 'fondogh-online-menu'),
                 'type'       => \Elementor\Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', 'em'],
                 'selectors'  => [

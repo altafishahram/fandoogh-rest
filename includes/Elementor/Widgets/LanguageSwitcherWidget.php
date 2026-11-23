@@ -16,7 +16,7 @@ class LanguageSwitcherWidget extends \Elementor\Widget_Base {
     }
 
     public function get_title() {
-        return __('انتخاب زبان منو (Language Switcher)', 'restaurant-menu-manager');
+        return __('انتخاب زبان منو (Language Switcher)', 'fondogh-online-menu');
     }
 
     public function get_icon() {
@@ -40,19 +40,19 @@ class LanguageSwitcherWidget extends \Elementor\Widget_Base {
         $this->start_controls_section(
             'section_content',
             [
-                'label' => __('تنظیمات انتخاب زبان', 'restaurant-menu-manager'),
+                'label' => __('تنظیمات انتخاب زبان', 'fondogh-online-menu'),
             ]
         );
 
         $this->add_control(
             'display_mode',
             [
-                'label'   => __('حالت نمایش', 'restaurant-menu-manager'),
+                'label'   => __('حالت نمایش', 'fondogh-online-menu'),
                 'type'    => \Elementor\Controls_Manager::SELECT,
                 'default' => 'dropdown',
                 'options' => [
-                    'dropdown' => __('دراپ‌دان شناور (Dropdown Modal)', 'restaurant-menu-manager'),
-                    'pills'    => __('دکمه‌های کنار هم (Pills)', 'restaurant-menu-manager'),
+                    'dropdown' => __('دراپ‌دان شناور (Dropdown Modal)', 'fondogh-online-menu'),
+                    'pills'    => __('دکمه‌های کنار هم (Pills)', 'fondogh-online-menu'),
                 ],
             ]
         );
@@ -60,7 +60,7 @@ class LanguageSwitcherWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'show_globe_icon',
             [
-                'label'        => __('نمایش آیکون کره زمین (Globe)', 'restaurant-menu-manager'),
+                'label'        => __('نمایش آیکون کره زمین (Globe)', 'fondogh-online-menu'),
                 'type'         => \Elementor\Controls_Manager::SWITCHER,
                 'default'      => 'yes',
                 'return_value' => 'yes',
@@ -70,7 +70,7 @@ class LanguageSwitcherWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'show_flag',
             [
-                'label'        => __('نمایش پرچم کشورها', 'restaurant-menu-manager'),
+                'label'        => __('نمایش پرچم کشورها', 'fondogh-online-menu'),
                 'type'         => \Elementor\Controls_Manager::SWITCHER,
                 'default'      => 'no',
                 'return_value' => 'yes',
@@ -80,7 +80,7 @@ class LanguageSwitcherWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'show_arrow',
             [
-                'label'        => __('نمایش فلش دراپ‌دان (Chevron)', 'restaurant-menu-manager'),
+                'label'        => __('نمایش فلش دراپ‌دان (Chevron)', 'fondogh-online-menu'),
                 'type'         => \Elementor\Controls_Manager::SWITCHER,
                 'default'      => 'yes',
                 'return_value' => 'yes',
@@ -93,13 +93,13 @@ class LanguageSwitcherWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'lang_name_format',
             [
-                'label'   => __('فرمت نام زبان‌ها', 'restaurant-menu-manager'),
+                'label'   => __('فرمت نام زبان‌ها', 'fondogh-online-menu'),
                 'type'    => \Elementor\Controls_Manager::SELECT,
                 'default' => 'native',
                 'options' => [
-                    'native' => __('نام بومی (فارسی، English، Türkçe)', 'restaurant-menu-manager'),
-                    'name'   => __('نام انگلیسی (Persian, English, Turkish)', 'restaurant-menu-manager'),
-                    'code'   => __('کد کوتاه ۲ حرفی (FA, EN, TR)', 'restaurant-menu-manager'),
+                    'native' => __('نام بومی (فارسی، English، Türkçe)', 'fondogh-online-menu'),
+                    'name'   => __('نام انگلیسی (Persian, English, Turkish)', 'fondogh-online-menu'),
+                    'code'   => __('کد کوتاه ۲ حرفی (FA, EN, TR)', 'fondogh-online-menu'),
                 ],
             ]
         );
@@ -107,19 +107,19 @@ class LanguageSwitcherWidget extends \Elementor\Widget_Base {
         $this->add_responsive_control(
             'align',
             [
-                'label'     => __('تراز ویجت', 'restaurant-menu-manager'),
+                'label'     => __('تراز ویجت', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::CHOOSE,
                 'options'   => [
                     'left'   => [
-                        'title' => __('چپ', 'restaurant-menu-manager'),
+                        'title' => __('چپ', 'fondogh-online-menu'),
                         'icon'  => 'eicon-text-align-left',
                     ],
                     'center' => [
-                        'title' => __('وسط', 'restaurant-menu-manager'),
+                        'title' => __('وسط', 'fondogh-online-menu'),
                         'icon'  => 'eicon-text-align-center',
                     ],
                     'right'  => [
-                        'title' => __('راست', 'restaurant-menu-manager'),
+                        'title' => __('راست', 'fondogh-online-menu'),
                         'icon'  => 'eicon-text-align-right',
                     ],
                 ],
@@ -136,7 +136,7 @@ class LanguageSwitcherWidget extends \Elementor\Widget_Base {
         $this->start_controls_section(
             'section_style_button',
             [
-                'label' => __('استایل دکمه بازکننده (Trigger Button)', 'restaurant-menu-manager'),
+                'label' => __('استایل دکمه بازکننده (Trigger Button)', 'fondogh-online-menu'),
                 'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
             ]
         );
@@ -145,7 +145,7 @@ class LanguageSwitcherWidget extends \Elementor\Widget_Base {
             \Elementor\Group_Control_Typography::get_type(),
             [
                 'name'     => 'button_typography',
-                'label'    => __('تایپوگرافی دکمه', 'restaurant-menu-manager'),
+                'label'    => __('تایپوگرافی دکمه', 'fondogh-online-menu'),
                 'selector' => '{{WRAPPER}} .rmm-lang-trigger-btn',
             ]
         );
@@ -153,7 +153,7 @@ class LanguageSwitcherWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'button_text_color',
             [
-                'label'     => __('رنگ متن دکمه', 'restaurant-menu-manager'),
+                'label'     => __('رنگ متن دکمه', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'default'   => '#ffffff',
                 'selectors' => [
@@ -165,7 +165,7 @@ class LanguageSwitcherWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'button_bg_color',
             [
-                'label'     => __('رنگ پس‌زمینه دکمه', 'restaurant-menu-manager'),
+                'label'     => __('رنگ پس‌زمینه دکمه', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'default'   => '#8b1e28',
                 'selectors' => [
@@ -185,7 +185,7 @@ class LanguageSwitcherWidget extends \Elementor\Widget_Base {
         $this->add_responsive_control(
             'button_border_radius',
             [
-                'label'      => __('گردی لبه (Border Radius)', 'restaurant-menu-manager'),
+                'label'      => __('گردی لبه (Border Radius)', 'fondogh-online-menu'),
                 'type'       => \Elementor\Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%'],
                 'default'    => [
@@ -205,7 +205,7 @@ class LanguageSwitcherWidget extends \Elementor\Widget_Base {
         $this->add_responsive_control(
             'button_padding',
             [
-                'label'      => __('فاصله داخلی (Padding)', 'restaurant-menu-manager'),
+                'label'      => __('فاصله داخلی (Padding)', 'fondogh-online-menu'),
                 'type'       => \Elementor\Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', 'em'],
                 'default'    => [
@@ -233,7 +233,7 @@ class LanguageSwitcherWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'icon_size',
             [
-                'label'      => __('اندازه آیکون کره زمین / پرچم', 'restaurant-menu-manager'),
+                'label'      => __('اندازه آیکون کره زمین / پرچم', 'fondogh-online-menu'),
                 'type'       => \Elementor\Controls_Manager::SLIDER,
                 'size_units' => ['px'],
                 'range'      => [
@@ -255,7 +255,7 @@ class LanguageSwitcherWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'icon_color',
             [
-                'label'     => __('رنگ آیکون کره زمین', 'restaurant-menu-manager'),
+                'label'     => __('رنگ آیکون کره زمین', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'default'   => '#eab308',
                 'selectors' => [
@@ -270,7 +270,7 @@ class LanguageSwitcherWidget extends \Elementor\Widget_Base {
         $this->start_controls_section(
             'section_style_dropdown',
             [
-                'label'     => __('استایل باکس منوی دراپ‌دان (Dropdown Box)', 'restaurant-menu-manager'),
+                'label'     => __('استایل باکس منوی دراپ‌دان (Dropdown Box)', 'fondogh-online-menu'),
                 'tab'       => \Elementor\Controls_Manager::TAB_STYLE,
                 'condition' => [
                     'display_mode' => 'dropdown',
@@ -281,7 +281,7 @@ class LanguageSwitcherWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'dropdown_bg_color',
             [
-                'label'     => __('رنگ پس‌زمینه منو', 'restaurant-menu-manager'),
+                'label'     => __('رنگ پس‌زمینه منو', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'default'   => '#ffffff',
                 'selectors' => [
@@ -293,7 +293,7 @@ class LanguageSwitcherWidget extends \Elementor\Widget_Base {
         $this->add_responsive_control(
             'dropdown_width',
             [
-                'label'      => __('حداقل عرض باکس منو (Min-Width)', 'restaurant-menu-manager'),
+                'label'      => __('حداقل عرض باکس منو (Min-Width)', 'fondogh-online-menu'),
                 'type'       => \Elementor\Controls_Manager::SLIDER,
                 'size_units' => ['px'],
                 'range'      => [
@@ -323,7 +323,7 @@ class LanguageSwitcherWidget extends \Elementor\Widget_Base {
         $this->add_responsive_control(
             'dropdown_border_radius',
             [
-                'label'      => __('گردی لبه منو (Border Radius)', 'restaurant-menu-manager'),
+                'label'      => __('گردی لبه منو (Border Radius)', 'fondogh-online-menu'),
                 'type'       => \Elementor\Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%'],
                 'default'    => [
@@ -352,7 +352,7 @@ class LanguageSwitcherWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'active_item_heading',
             [
-                'label'     => __('استایل زبان فعال در بالای منو', 'restaurant-menu-manager'),
+                'label'     => __('استایل زبان فعال در بالای منو', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::HEADING,
                 'separator' => 'before',
             ]
@@ -361,7 +361,7 @@ class LanguageSwitcherWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'active_item_bg',
             [
-                'label'     => __('رنگ پس‌زمینه زبان فعال', 'restaurant-menu-manager'),
+                'label'     => __('رنگ پس‌زمینه زبان فعال', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'default'   => '#fef3c7',
                 'selectors' => [
@@ -373,7 +373,7 @@ class LanguageSwitcherWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'active_item_color',
             [
-                'label'     => __('رنگ متن زبان فعال', 'restaurant-menu-manager'),
+                'label'     => __('رنگ متن زبان فعال', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'default'   => '#0f172a',
                 'selectors' => [
@@ -385,7 +385,7 @@ class LanguageSwitcherWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'active_checkmark_color',
             [
-                'label'     => __('رنگ تیک انتخاب (✓)', 'restaurant-menu-manager'),
+                'label'     => __('رنگ تیک انتخاب (✓)', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'default'   => '#991b1b',
                 'selectors' => [
@@ -398,7 +398,7 @@ class LanguageSwitcherWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'inactive_item_heading',
             [
-                'label'     => __('استایل سایر زبان‌ها در منو', 'restaurant-menu-manager'),
+                'label'     => __('استایل سایر زبان‌ها در منو', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::HEADING,
                 'separator' => 'before',
             ]
@@ -407,7 +407,7 @@ class LanguageSwitcherWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'item_text_color',
             [
-                'label'     => __('رنگ متن زبان‌ها', 'restaurant-menu-manager'),
+                'label'     => __('رنگ متن زبان‌ها', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'default'   => '#334155',
                 'selectors' => [
@@ -419,7 +419,7 @@ class LanguageSwitcherWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'item_hover_bg',
             [
-                'label'     => __('رنگ پس‌زمینه هاور', 'restaurant-menu-manager'),
+                'label'     => __('رنگ پس‌زمینه هاور', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'default'   => '#f8fafc',
                 'selectors' => [
@@ -431,7 +431,7 @@ class LanguageSwitcherWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'item_hover_color',
             [
-                'label'     => __('رنگ متن هاور', 'restaurant-menu-manager'),
+                'label'     => __('رنگ متن هاور', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'default'   => '#0284c7',
                 'selectors' => [
@@ -473,7 +473,7 @@ class LanguageSwitcherWidget extends \Elementor\Widget_Base {
         <div class="rmm-lang-widget-wrap">
             <?php if ($mode === 'dropdown') : ?>
                 <div class="rmm-lang-dropdown-component" data-current="<?php echo esc_attr($current_lang); ?>">
-                    <button type="button" class="rmm-lang-trigger-btn" aria-haspopup="true" aria-expanded="false" title="<?php esc_attr_e('انتخاب زبان منو', 'restaurant-menu-manager'); ?>">
+                    <button type="button" class="rmm-lang-trigger-btn" aria-haspopup="true" aria-expanded="false" title="<?php esc_attr_e('انتخاب زبان منو', 'fondogh-online-menu'); ?>">
                         <span class="rmm-lang-btn-text"><?php echo esc_html($curr_label); ?></span>
 
                         <?php if ($show_flag) : ?>

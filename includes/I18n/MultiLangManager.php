@@ -28,7 +28,7 @@ class MultiLangManager {
         return [
             'fa' => [
                 'code'      => 'fa',
-                'name'      => __('فارسی', 'restaurant-menu-manager'),
+                'name'      => __('فارسی', 'fondogh-online-menu'),
                 'native'    => 'فارسی',
                 'flag'      => '🇮🇷',
                 'direction' => 'rtl',
@@ -36,7 +36,7 @@ class MultiLangManager {
             ],
             'en' => [
                 'code'      => 'en',
-                'name'      => __('انگلیسی', 'restaurant-menu-manager'),
+                'name'      => __('انگلیسی', 'fondogh-online-menu'),
                 'native'    => 'English',
                 'flag'      => '🇬🇧',
                 'direction' => 'ltr',
@@ -44,7 +44,7 @@ class MultiLangManager {
             ],
             'ar' => [
                 'code'      => 'ar',
-                'name'      => __('عربی', 'restaurant-menu-manager'),
+                'name'      => __('عربی', 'fondogh-online-menu'),
                 'native'    => 'العربية',
                 'flag'      => '🇸🇦',
                 'direction' => 'rtl',
@@ -52,7 +52,7 @@ class MultiLangManager {
             ],
             'tr' => [
                 'code'      => 'tr',
-                'name'      => __('ترکی', 'restaurant-menu-manager'),
+                'name'      => __('ترکی', 'fondogh-online-menu'),
                 'native'    => 'Türkçe',
                 'flag'      => '🇹🇷',
                 'direction' => 'ltr',
@@ -60,7 +60,7 @@ class MultiLangManager {
             ],
             'fr' => [
                 'code'      => 'fr',
-                'name'      => __('فرانسوی', 'restaurant-menu-manager'),
+                'name'      => __('فرانسوی', 'fondogh-online-menu'),
                 'native'    => 'Français',
                 'flag'      => '🇫🇷',
                 'direction' => 'ltr',
@@ -68,7 +68,7 @@ class MultiLangManager {
             ],
             'de' => [
                 'code'      => 'de',
-                'name'      => __('آلمانی', 'restaurant-menu-manager'),
+                'name'      => __('آلمانی', 'fondogh-online-menu'),
                 'native'    => 'Deutsch',
                 'flag'      => '🇩🇪',
                 'direction' => 'ltr',
@@ -76,7 +76,7 @@ class MultiLangManager {
             ],
             'ru' => [
                 'code'      => 'ru',
-                'name'      => __('روسی', 'restaurant-menu-manager'),
+                'name'      => __('روسی', 'fondogh-online-menu'),
                 'native'    => 'Русский',
                 'flag'      => '🇷🇺',
                 'direction' => 'ltr',
@@ -84,7 +84,7 @@ class MultiLangManager {
             ],
             'zh' => [
                 'code'      => 'zh',
-                'name'      => __('چینی', 'restaurant-menu-manager'),
+                'name'      => __('چینی', 'fondogh-online-menu'),
                 'native'    => '中文',
                 'flag'      => '🇨🇳',
                 'direction' => 'ltr',
@@ -668,7 +668,7 @@ class MultiLangManager {
                 <button type="button" class="rmm-entrance-close" id="rmm-entrance-close-btn" aria-label="Close">&times;</button>
                 <div class="rmm-entrance-header">
                     <div class="rmm-entrance-icon">🍽️</div>
-                    <h3 class="rmm-entrance-title"><?php _e('زبان خود را انتخاب کنید', 'restaurant-menu-manager'); ?></h3>
+                    <h3 class="rmm-entrance-title"><?php _e('زبان خود را انتخاب کنید', 'fondogh-online-menu'); ?></h3>
                     <p class="rmm-entrance-subtitle">Select your preferred language / اختر لغتك المفضلة</p>
                 </div>
 
@@ -686,8 +686,8 @@ class MultiLangManager {
 
                 <div class="rmm-entrance-footer">
                     <label class="rmm-remember-checkbox">
-                        <input type="checkbox" id="rmm-entrance-remember" checked>
-                        <span><?php _e('به خاطر سپردن انتخاب من (Remember choice)', 'restaurant-menu-manager'); ?></span>
+                        <input type="checkbox" id="rmm-entrance-remember">
+                        <span><?php _e('به خاطر سپردن انتخاب من (Remember choice)', 'fondogh-online-menu'); ?></span>
                     </label>
                 </div>
             </div>

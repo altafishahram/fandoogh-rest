@@ -52,15 +52,15 @@ class TableQRGenerator {
                 <?php echo esc_html($branch_name); ?>
             </div>
             <h3 style="margin: 0 0 15px; font-size: 22px; color: #0f172a;">
-                <?php printf(esc_html__('میز شماره %d', 'restaurant-menu-manager'), $table_number); ?>
+                <?php printf(esc_html__('میز شماره %d', 'fondogh-online-menu'), $table_number); ?>
             </h3>
             
             <div style="background: #f8fafc; padding: 15px; border-radius: 12px; display: inline-block; margin-bottom: 15px; border: 1px solid #e2e8f0;">
-                <img src="<?php echo esc_url($qr_url); ?>" alt="<?php printf(esc_attr__('QR کد میز %d', 'restaurant-menu-manager'), $table_number); ?>" style="width: 200px; height: 200px; display: block; margin: 0 auto;">
+                <img src="<?php echo esc_url($qr_url); ?>" alt="<?php printf(esc_attr__('QR کد میز %d', 'fondogh-online-menu'), $table_number); ?>" style="width: 200px; height: 200px; display: block; margin: 0 auto;">
             </div>
 
             <p style="margin: 0 0 6px; font-size: 14px; font-weight: bold; color: #1e293b;">
-                <?php _e('برای مشاهده منو و ثبت سفارش اسکن کنید', 'restaurant-menu-manager'); ?>
+                <?php _e('برای مشاهده منو و ثبت سفارش اسکن کنید', 'fondogh-online-menu'); ?>
             </p>
             <p style="margin: 0; font-size: 12px; color: #94a3b8; word-break: break-all;">
                 <?php echo esc_html($menu_url); ?>
