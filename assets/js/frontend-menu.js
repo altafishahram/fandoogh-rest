@@ -135,7 +135,7 @@
             $('.rmm-cat-pill').removeClass('active');
             $(this).addClass('active');
 
-            var catId = $(this).data('cat-id');
+            var catId = $(this).data('cat-id') || $(this).data('category');
 
             if (catId === 'all') {
                 $('.rmm-category-section').show();
@@ -233,6 +233,48 @@
                     }
                 });
             }, 60);
+        });
+
+        // 4. Open Food Details / Modifiers Modal (on Card Click or Button Click)
+        // Standalone & Loop Widgets Order button handler
+        $(document).on('click', '.rmm-food-card-standalone .rmm-btn-order, .rmm-food-loop-grid .rmm-btn-order', function (e) {
+            e.preventDefault();
+            var pid = $(this).data('product-id');
+            if (!pid) return;
+
+            var $btn = $(this);
+            $btn.prop('disabled', true);
+
+            $.ajax({
+                url: window.rmmConfig ? window.rmmConfig.ajax_url : '/wp-admin/admin-ajax.php',
+                type: 'POST',
+                data: {
+                    action: 'woocommerce_add_to_cart',
+                    product_id: pid,
+                    quantity: 1
+                },
+                success: function (res) {
+                    $btn.prop('disabled', false);
+                    $(document.body).trigger('wc_fragment_refresh');
+                    updateFloatingCart();
+                },
+                error: function () {
+                    $btn.prop('disabled', false);
+                }
+            });
+        });
+
+        // Standalone & Loop Widgets Details / Modal handler (.rmm-open-modal)
+        $(document).on('click', '.rmm-open-modal', function (e) {
+            if ($(e.target).closest('.rmm-quick-add-btn, .rmm-btn-order').length) {
+                return;
+            }
+            e.preventDefault();
+            var pid = $(this).data('product-id') || $(this).closest('.rmm-food-card').data('product-id');
+            if (!pid) return;
+
+            var $card = $(this).closest('.rmm-food-card');
+            loadDefaultModal(pid, $card);
         });
 
         // 4. Open Food Details / Modifiers Modal (on Card Click or Button Click)

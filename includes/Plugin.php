@@ -21,6 +21,9 @@ class Plugin {
         $this->init_i18n();
         $this->init_price_formatting();
         $this->init_modules();
+
+        // Self-healing database check
+        add_action('admin_init', ['\\RMM\\Core\\Installer', 'maybe_upgrade']);
     }
 
     private function init_i18n() {
@@ -32,10 +35,17 @@ class Plugin {
     }
 
     private function init_price_formatting() {
-        // Strip trailing zero decimals (like .00) from WooCommerce prices
-        add_filter('woocommerce_price_trim_zeros', '__return_true');
+        // Strip trailing zero decimals only for zero-decimal currencies (Rials / Tomans)
+        add_filter('woocommerce_price_trim_zeros', function ($trim) {
+            $currency = function_exists('get_woocommerce_currency') ? get_woocommerce_currency() : '';
+            return in_array($currency, ['IRT', 'IRR', 'IRHT', 'IRHR', 'TOMAN', 'RIAL'], true);
+        });
+
         add_filter('wc_price_args', function ($args) {
-            $args['decimals'] = 0;
+            $currency = function_exists('get_woocommerce_currency') ? get_woocommerce_currency() : '';
+            if (in_array($currency, ['IRT', 'IRR', 'IRHT', 'IRHR', 'TOMAN', 'RIAL'], true)) {
+                $args['decimals'] = 0;
+            }
             return $args;
         });
     }

@@ -254,14 +254,42 @@ class ModifiersEngine {
             $chosen_addons = [];
             $extra_addons_price = 0;
 
+            // Fetch server-side modifier groups to prevent client-side price tampering
+            $saved_groups = get_post_meta($product_id, '_rmm_modifier_groups', true);
+            $saved_groups = is_array($saved_groups) ? $saved_groups : [];
+
+            $modifiers_map = [];
+            foreach ($saved_groups as $group) {
+                $g_title = sanitize_text_field($group['title'] ?? '');
+                if (!isset($modifiers_map[$g_title])) {
+                    $modifiers_map[$g_title] = [];
+                }
+                if (!empty($group['options']) && is_array($group['options'])) {
+                    foreach ($group['options'] as $opt) {
+                        $opt_name = sanitize_text_field($opt['name'] ?? '');
+                        if ($opt_name !== '') {
+                            $modifiers_map[$g_title][$opt_name] = max(0, floatval($opt['price'] ?? 0));
+                        }
+                    }
+                }
+            }
+
             foreach ($_POST['rmm_addons'] as $addon_json) {
                 $decoded = json_decode(stripslashes($addon_json), true);
                 if ($decoded && !empty($decoded['name'])) {
-                    $price = floatval($decoded['price'] ?? 0);
+                    $addon_name  = sanitize_text_field($decoded['name']);
+                    $addon_group = sanitize_text_field($decoded['group'] ?? '');
+
+                    // Enforce server-side price lookup; discard unconfigured or forged addons
+                    if (!isset($modifiers_map[$addon_group][$addon_name])) {
+                        continue;
+                    }
+
+                    $price = $modifiers_map[$addon_group][$addon_name];
                     $chosen_addons[] = [
-                        'name'  => sanitize_text_field($decoded['name']),
+                        'name'  => $addon_name,
                         'price' => $price,
-                        'group' => sanitize_text_field($decoded['group'] ?? '')
+                        'group' => $addon_group,
                     ];
                     $extra_addons_price += $price;
                 }
@@ -291,6 +319,10 @@ class ModifiersEngine {
      */
     public function calculate_modifier_totals($cart) {
         if (is_admin() && !defined('DOING_AJAX')) {
+            return;
+        }
+
+        if (did_action('woocommerce_before_calculate_totals') >= 2) {
             return;
         }
 
@@ -370,9 +402,7 @@ class ModifiersEngine {
      * AJAX endpoint to return JSON for the Front-end Food Modal & Modifiers
      */
     public function ajax_get_product_modifiers() {
-        if (!empty($_REQUEST['security'])) {
-            check_ajax_referer('rmm_frontend_nonce', 'security', false);
-        }
+        // Public read-only endpoint for front-end food modal; cached via transients and compatible with page-caching plugins.
 
         $product_id = absint($_GET['product_id'] ?? 0);
         $active_branch = \RMM\Branches\BranchContext::get_active_branch_id();
@@ -530,9 +560,7 @@ class ModifiersEngine {
      * AJAX endpoint to render an Elementor template populated with a specific product
      */
     public function ajax_render_food_elementor_template() {
-        if (!empty($_REQUEST['security'])) {
-            check_ajax_referer('rmm_frontend_nonce', 'security', false);
-        }
+        // Public read-only endpoint for Elementor food template preview; compatible with page-caching plugins.
 
         $template_id = absint($_GET['template_id'] ?? 0);
         $product_id  = absint($_GET['product_id'] ?? 0);

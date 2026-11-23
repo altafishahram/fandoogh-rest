@@ -80,24 +80,126 @@ class InventoryRepository {
     }
 
     /**
+     * Get bulk inventory for specific products in a branch (eliminates N+1 queries)
+     *
+     * @param int $branch_id
+     * @param array $product_ids
+     * @return array [product_id => object]
+     */
+    public static function get_bulk_branch_inventory($branch_id, array $product_ids) {
+        $branch_id = absint($branch_id);
+        $product_ids = array_filter(array_map('absint', $product_ids));
+
+        if (!$branch_id || empty($product_ids)) {
+            return [];
+        }
+
+        $result = [];
+        $missing_ids = [];
+
+        foreach ($product_ids as $pid) {
+            $cache_key = "{$pid}_{$branch_id}";
+            if (isset(self::$cache[$cache_key])) {
+                $result[$pid] = self::$cache[$cache_key];
+            } else {
+                $missing_ids[] = $pid;
+            }
+        }
+
+        if (empty($missing_ids)) {
+            return $result;
+        }
+
+        global $wpdb;
+        $table = self::table();
+        $placeholders = implode(',', array_fill(0, count($missing_ids), '%d'));
+
+        $query = $wpdb->prepare(
+            "SELECT * FROM {$table} WHERE branch_id = %d AND product_id IN ({$placeholders})",
+            array_merge([$branch_id], $missing_ids)
+        );
+
+        $rows = $wpdb->get_results($query);
+        $found_pids = [];
+
+        if ($rows) {
+            foreach ($rows as $row) {
+                $pid = (int) $row->product_id;
+                $result[$pid] = $row;
+                $found_pids[$pid] = true;
+                self::$cache["{$pid}_{$branch_id}"] = $row;
+            }
+        }
+
+        // Cache negative lookup for products without branch overrides to eliminate remaining queries
+        foreach ($missing_ids as $mid) {
+            if (!isset($found_pids[$mid])) {
+                self::$cache["{$mid}_{$branch_id}"] = null;
+            }
+        }
+
+        return $result;
+    }
+
+        /**
+     * Write row portably across MySQL and SQLite without ON DUPLICATE KEY UPDATE / NOW()
+     *
+     * @param int $product_id
+     * @param int $branch_id
+     * @param array $fields
+     * @return bool
+     */
+    private static function write_row($product_id, $branch_id, array $fields) {
+        global $wpdb;
+        $table = self::table();
+        $product_id = absint($product_id);
+        $branch_id  = absint($branch_id);
+
+        if (!$product_id || !$branch_id) {
+            return false;
+        }
+
+        unset(self::$cache["{$product_id}_{$branch_id}"]);
+
+        $existing_id = $wpdb->get_var($wpdb->prepare(
+            "SELECT id FROM {$table} WHERE product_id = %d AND branch_id = %d LIMIT 1",
+            $product_id,
+            $branch_id
+        ));
+
+        $fields['updated_at'] = gmdate('Y-m-d H:i:s');
+
+        if ($existing_id) {
+            $updated = $wpdb->update(
+                $table,
+                $fields,
+                ['id' => $existing_id]
+            );
+            return $updated !== false;
+        } else {
+            $fields['product_id'] = $product_id;
+            $fields['branch_id']  = $branch_id;
+            $inserted = $wpdb->insert(
+                $table,
+                $fields
+            );
+            return $inserted !== false;
+        }
+    }
+
+    /**
      * Upsert single item with partial merging to avoid nulling out omitted columns
      *
      * @param array $data
-     * @return bool|int
+     * @return bool
      */
     public static function upsert($data) {
-        global $wpdb;
-        $table = self::table();
-
         $product_id = absint($data['product_id'] ?? 0);
         $branch_id  = absint($data['branch_id'] ?? 0);
 
         if (!$product_id || !$branch_id) {
             return false;
         }
-
-        // Invalidate internal cache
-        unset(self::$cache["{$product_id}_{$branch_id}"]);
 
         // Fetch existing record to prevent nulling omitted columns
         $existing = self::get_item($product_id, $branch_id);
@@ -118,24 +220,12 @@ class InventoryRepository {
             ? (int) (bool) $data['is_available']
             : ($existing ? (int) $existing->is_available : ($stock_status === 'instock' ? 1 : 0));
 
-        $sql = "INSERT INTO {$table} (product_id, branch_id, regular_price, sale_price, stock_status, is_available, updated_at)
-                VALUES (%d, %d, %s, %s, %s, %d, NOW())
-                ON DUPLICATE KEY UPDATE
-                    regular_price = VALUES(regular_price),
-                    sale_price    = VALUES(sale_price),
-                    stock_status  = VALUES(stock_status),
-                    is_available  = VALUES(is_available),
-                    updated_at    = NOW()";
-
-        return $wpdb->query($wpdb->prepare(
-            $sql,
-            $product_id,
-            $branch_id,
-            $regular_price,
-            $sale_price,
-            $stock_status,
-            $is_available
-        ));
+        return self::write_row($product_id, $branch_id, [
+            'regular_price' => $regular_price,
+            'sale_price'    => $sale_price,
+            'stock_status'  => $stock_status,
+            'is_available'  => $is_available,
+        ]);
     }
 
     /**
@@ -151,25 +241,10 @@ class InventoryRepository {
             return false;
         }
 
-        unset(self::$cache["{$product_id}_{$branch_id}"]);
-
-        global $wpdb;
-        $table = self::table();
-
-        $sql = "INSERT INTO {$table} (product_id, branch_id, stock_status, is_available, updated_at)
-                VALUES (%d, %d, %s, %d, NOW())
-                ON DUPLICATE KEY UPDATE
-                    stock_status = VALUES(stock_status),
-                    is_available = VALUES(is_available),
-                    updated_at   = NOW()";
-
-        return $wpdb->query($wpdb->prepare(
-            $sql,
-            $product_id,
-            $branch_id,
-            $stock_status,
-            $is_available
-        ));
+        return self::write_row($product_id, $branch_id, [
+            'stock_status' => $stock_status,
+            'is_available' => $is_available,
+        ]);
     }
 
     /**
@@ -185,25 +260,10 @@ class InventoryRepository {
             return false;
         }
 
-        unset(self::$cache["{$product_id}_{$branch_id}"]);
-
-        global $wpdb;
-        $table = self::table();
-
-        $sql = "INSERT INTO {$table} (product_id, branch_id, regular_price, sale_price, updated_at)
-                VALUES (%d, %d, %s, %s, NOW())
-                ON DUPLICATE KEY UPDATE
-                    regular_price = VALUES(regular_price),
-                    sale_price    = VALUES(sale_price),
-                    updated_at    = NOW()";
-
-        return $wpdb->query($wpdb->prepare(
-            $sql,
-            $product_id,
-            $branch_id,
-            $regular_price,
-            $sale_price
-        ));
+        return self::write_row($product_id, $branch_id, [
+            'regular_price' => $regular_price,
+            'sale_price'    => $sale_price,
+        ]);
     }
 
     /**

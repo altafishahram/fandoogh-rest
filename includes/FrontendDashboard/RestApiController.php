@@ -206,7 +206,7 @@ class RestApiController {
             return new \WP_Error('rmm_invalid_branch', __('شعبه نامعتبر است.', 'fondogh-online-menu'), ['status' => 404]);
         }
 
-        if (!AuthController::user_can_access_branch($branch_id)) {
+        if (!current_user_can('manage_options') && !AuthController::user_can_access_branch($branch_id)) {
             return new \WP_Error('rmm_forbidden_branch', __('شما به این شعبه دسترسی ندارید.', 'fondogh-online-menu'), ['status' => 403]);
         }
 
@@ -233,7 +233,7 @@ class RestApiController {
             return true;
         }
 
-        if (!AuthController::user_can_access_branch($branch_id)) {
+        if (!current_user_can('manage_options') && !AuthController::user_can_access_branch($branch_id)) {
             return new \WP_Error('rmm_forbidden_order', __('شما به این سفارش دسترسی ندارید.', 'fondogh-online-menu'), ['status' => 403]);
         }
 
@@ -1082,6 +1082,10 @@ class RestApiController {
 
         $file = $_FILES['file'];
 
+        if (!empty($file['error']) && $file['error'] !== UPLOAD_ERR_OK) {
+            return new \WP_Error('rmm_upload_failed', __('خطا در دریافت فایل آپلود شده.', 'fondogh-online-menu'), ['status' => 400]);
+        }
+
         // Check max filesize
         $max_size_kb = \RMM\Core\Settings::get('image_max_size_kb', 3072);
         if ($file['size'] > ($max_size_kb * 1024)) {
@@ -1104,6 +1108,14 @@ class RestApiController {
             $tmp_path = $file['tmp_name'];
             $img_data = @file_get_contents($tmp_path);
             if ($img_data) {
+                // Safeguard against memory exhaustion from maliciously crafted excessive pixel dimensions
+                $size_info = @getimagesizefromstring($img_data);
+                if ($size_info && (!empty($size_info[0]) && !empty($size_info[1]))) {
+                    if ($size_info[0] > 8000 || $size_info[1] > 8000 || ($size_info[0] * $size_info[1]) > 40000000) {
+                        return new \WP_Error('rmm_image_too_large', __('ابعاد تصویر فراتر از حد مجاز (حداکثر ۸۰۰۰×۸۰۰۰ پیکسل) است.', 'fondogh-online-menu'), ['status' => 400]);
+                    }
+                }
+
                 $src_img = @imagecreatefromstring($img_data);
                 if ($src_img) {
                     $orig_w = imagesx($src_img);

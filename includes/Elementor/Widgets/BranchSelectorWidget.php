@@ -27,6 +27,14 @@ class BranchSelectorWidget extends \Elementor\Widget_Base {
         return ['tastymenu-category'];
     }
 
+    public function get_script_depends() {
+        return ['rmm-frontend-menu'];
+    }
+
+    public function get_style_depends() {
+        return ['rmm-frontend-menu'];
+    }
+
     protected function register_controls() {
         $this->start_controls_section(
             'section_content',

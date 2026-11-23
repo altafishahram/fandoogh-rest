@@ -128,13 +128,13 @@ class CategoryBarWidget extends Widget_Base {
                 ],
                 'default'              => 'right',
                 'selectors_dictionary' => [
-                    'right'  => 'flex-direction: row; align-items: center;',
-                    'left'   => 'flex-direction: row-reverse; align-items: center;',
-                    'top'    => 'flex-direction: column; align-items: center; justify-content: center;',
-                    'bottom' => 'flex-direction: column-reverse; align-items: center; justify-content: center;',
+                    'right'  => 'row',
+                    'left'   => 'row-reverse',
+                    'top'    => 'column',
+                    'bottom' => 'column-reverse',
                 ],
                 'selectors'            => [
-                    '{{WRAPPER}} .rmm-cat-pill' => '{{VALUE}}',
+                    '{{WRAPPER}} .rmm-cat-pill' => 'flex-direction: {{VALUE}};',
                 ],
             ]
         );
@@ -224,10 +224,10 @@ class CategoryBarWidget extends Widget_Base {
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', 'em'],
                 'default'    => [
-                    'top'      => 8,
-                    'right'    => 16,
-                    'bottom'   => 8,
-                    'left'     => 16,
+                    'top'      => '8',
+                    'right'    => '16',
+                    'bottom'   => '8',
+                    'left'     => '16',
                     'unit'     => 'px',
                     'isLinked' => false,
                 ],
@@ -244,10 +244,10 @@ class CategoryBarWidget extends Widget_Base {
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%'],
                 'default'    => [
-                    'top'      => 24,
-                    'right'    => 24,
-                    'bottom'   => 24,
-                    'left'     => 24,
+                    'top'      => '24',
+                    'right'    => '24',
+                    'bottom'   => '24',
+                    'left'     => '24',
                     'unit'     => 'px',
                     'isLinked' => true,
                 ],
@@ -441,16 +441,16 @@ class CategoryBarWidget extends Widget_Base {
             ]);
 
         if (empty($categories) || is_wp_error($categories)) {
+            if (\Elementor\Plugin::$instance->editor->is_edit_mode()) {
+                echo '<div class="rmm-empty-cat-notice" style="padding: 15px; text-align: center; color: #888; border: 1px dashed #cbd5e1; border-radius: 8px;">' . esc_html__('نوار دسته‌بندی: هیچ دسته‌بندی غذای فعالی در سیستم یافت نشد.', 'fondogh-online-menu') . '</div>';
+            }
             return;
         }
-
-        wp_enqueue_style('rmm-frontend-menu');
-        wp_enqueue_script('rmm-frontend-menu');
         ?>
         <nav class="rmm-category-nav-wrapper <?php echo esc_attr($sticky_class); ?>" aria-label="<?php esc_attr_e('دسته‌بندی‌های منو', 'fondogh-online-menu'); ?>">
             <div class="rmm-cat-scroll-container">
                 <?php if ($settings['show_all_button'] === 'yes') : ?>
-                    <button type="button" class="rmm-cat-pill active" data-category="all">
+                    <button type="button" class="rmm-cat-pill active" data-category="all" data-cat-id="all">
                         <span class="rmm-cat-icon" aria-hidden="true">
                             <?php
                             if (!empty($settings['all_icon']['value'])) {
@@ -467,7 +467,8 @@ class CategoryBarWidget extends Widget_Base {
                 <?php foreach ($categories as $cat) :
                     $thumb_id  = get_term_meta($cat->term_id, 'thumbnail_id', true);
                     $image_url = $thumb_id ? wp_get_attachment_image_url($thumb_id, 'thumbnail') : '';
-                    $title     = class_exists('\RMM\I18n\MultiLangManager') ? \RMM\I18n\MultiLangManager::get_translated_term_title($cat->term_id, $active_lang) : $cat->name;
+                    $t_name    = class_exists('\RMM\I18n\MultiLangManager') ? \RMM\I18n\MultiLangManager::get_term_translation($cat->term_id, $active_lang) : '';
+                    $title     = !empty($t_name) ? $t_name : $cat->name;
                     ?>
                     <button type="button" class="rmm-cat-pill" data-category="<?php echo esc_attr($cat->slug); ?>" data-cat-id="<?php echo esc_attr($cat->term_id); ?>">
                         <span class="rmm-cat-icon" aria-hidden="true">

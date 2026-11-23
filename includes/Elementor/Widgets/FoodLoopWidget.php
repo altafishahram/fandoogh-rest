@@ -501,7 +501,15 @@ class FoodLoopWidget extends Widget_Base {
         ];
 
         if (!empty($settings['category_filter'])) {
-            $args['category'] = [$settings['category_filter']];
+            $cat_val = $settings['category_filter'];
+            if (is_numeric($cat_val)) {
+                $term = get_term(absint($cat_val), 'product_cat');
+                if ($term && !is_wp_error($term)) {
+                    $args['category'] = [$term->slug];
+                }
+            } else {
+                $args['category'] = [$cat_val];
+            }
         }
 
         if (($settings['only_in_stock'] ?? 'no') === 'yes') {
@@ -509,6 +517,13 @@ class FoodLoopWidget extends Widget_Base {
         }
 
         $products = function_exists('wc_get_products') ? wc_get_products($args) : [];
+
+        $branch_id = class_exists('\RMM\Branches\BranchContext') ? \RMM\Branches\BranchContext::get_active_branch_id() : 0;
+        $branch_inventory = [];
+        if ($branch_id && class_exists('\RMM\Branches\InventoryRepository') && !empty($products)) {
+            $product_ids = array_map(function ($p) { return $p->get_id(); }, $products);
+            $branch_inventory = \RMM\Branches\InventoryRepository::get_bulk_branch_inventory($branch_id, $product_ids);
+        }
 
         $layout_class = 'rmm-layout-' . esc_attr($settings['card_style_type'] ?? 'vertical');
 
@@ -524,6 +539,18 @@ class FoodLoopWidget extends Widget_Base {
                         $desc        = $product->get_short_description() ?: $product->get_description();
                         $price_html  = $product->get_price_html();
                         $is_in_stock = $product->is_in_stock();
+
+                        // Check branch-specific inventory overrides
+                        if ($branch_id && isset($branch_inventory[$prod_id])) {
+                            $inv = $branch_inventory[$prod_id];
+                            if ($inv->stock_status === 'outofstock' || empty($inv->is_available)) {
+                                $is_in_stock = false;
+                            }
+                        }
+
+                        if (($settings['only_in_stock'] ?? 'no') === 'yes' && !$is_in_stock) {
+                            continue;
+                        }
                         $image_id    = $product->get_image_id();
                         $image_url   = $image_id ? wp_get_attachment_image_url($image_id, 'medium_large') : '';
                         $card_class  = 'rmm-food-card ' . $layout_class . ($is_in_stock ? '' : ' rmm-out-of-stock');

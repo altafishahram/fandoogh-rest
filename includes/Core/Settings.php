@@ -154,7 +154,8 @@ class Settings {
         // "keep the stored key" rather than "erase the key".
         $stored_settings = get_option('rmm_settings', []);
         $submitted_key   = sanitize_text_field($input['gemini_api_key'] ?? '');
-        $clean['gemini_api_key'] = ($submitted_key === '')
+        $is_masked       = (bool) preg_match('/^[\*•·\s]+$/', $submitted_key);
+        $clean['gemini_api_key'] = ($submitted_key === '' || $is_masked)
             ? sanitize_text_field($stored_settings['gemini_api_key'] ?? '')
             : $submitted_key;
 

@@ -12,7 +12,7 @@ class BranchContext {
 
     public function __construct() {
         // Init branch context early
-        add_action('init', [$this, 'init_branch_from_request'], 5);
+        add_action('init', [$this, 'init_branch_from_request'], 20);
         add_action('rest_api_init', [$this, 'register_rest_endpoints']);
 
         // WooCommerce Price and Stock Filters
@@ -42,6 +42,10 @@ class BranchContext {
      * Resolve current branch ID from URL param, Cookie, or Default
      */
     public static function get_active_branch_id() {
+        if (!taxonomy_exists(BranchTaxonomy::TAXONOMY)) {
+            return 0; // Taxonomy not registered yet; do not cache 0 prematurely
+        }
+
         if (self::$current_branch_id !== null) {
             return self::$current_branch_id;
         }

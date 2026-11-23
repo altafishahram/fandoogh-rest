@@ -27,6 +27,14 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         return ['tastymenu-category'];
     }
 
+    public function get_script_depends() {
+        return ['rmm-frontend-menu'];
+    }
+
+    public function get_style_depends() {
+        return ['rmm-frontend-menu'];
+    }
+
     private function get_elementor_templates_options() {
         $options = [
             '0' => __('— انتخاب قالب المنتور —', 'fondogh-online-menu'),
@@ -1105,9 +1113,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $enable_switcher = ($settings['enable_view_switcher'] ?? 'yes') === 'yes';
         $default_view = $settings['default_view'] ?? ($style === 'app_list' ? 'list' : 'grid');
 
-        // Enqueue frontend scripts & styles
-        wp_enqueue_style('rmm-frontend-menu');
-        wp_enqueue_script('rmm-frontend-menu');
+
 
         $args = [
             'post_type'      => 'product',
@@ -1148,6 +1154,12 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $uncategorized_products = [];
         $all_active_products = [];
         $branch_id = class_exists('\RMM\Branches\BranchContext') ? \RMM\Branches\BranchContext::get_active_branch_id() : 0;
+
+        // Bulk prefetch branch inventory for all query products to eliminate N+1 queries
+        if ($branch_id && class_exists('\RMM\Branches\InventoryRepository') && !empty($query->posts)) {
+            $product_ids = wp_list_pluck($query->posts, 'ID');
+            \RMM\Branches\InventoryRepository::get_bulk_branch_inventory($branch_id, $product_ids);
+        }
 
         while ($query->have_posts()) {
             $query->the_post();

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * TastyMenu Pro - Frontend Menu Styles (Elementor & Core)
  */
 
@@ -116,6 +116,7 @@
     white-space: nowrap;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
     transition: all 0.2s ease;
 }
@@ -439,6 +440,7 @@
 .rmm-cart-right {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
     font-weight: 700;
 }
@@ -1706,10 +1708,10 @@
 }
 
 /* ==========================================================================
-   ROHAM THEME ENGINE: ORIENTAL / CHINESE LUXURY (تم شرقی - DARK & LIGHT MODE)
+   ROHAM THEME ENGINE: ORIENTAL / CHINESE LUXURY (ØªÙ… Ø´Ø±Ù‚ÛŒ - DARK & LIGHT MODE)
    ========================================================================== */
 
-/* ---------------- 1. متغیرهای تم تیره (Dark Mode - پیش‌فرض) ---------------- */
+/* ---------------- 1. Ù…ØªØºÛŒØ±Ù‡Ø§ÛŒ ØªÙ… ØªÛŒØ±Ù‡ (Dark Mode - Ù¾ÛŒØ´â€ŒÙØ±Ø¶) ---------------- */
 :root,
 body,
 .rmm-menu-widget-wrapper,
@@ -1737,7 +1739,7 @@ body,
     --rmm-red-accent: #C82333;
 }
 
-/* ---------------- 2. متغیرهای تم روشن (Light Mode) ---------------- */
+/* ---------------- 2. Ù…ØªØºÛŒØ±Ù‡Ø§ÛŒ ØªÙ… Ø±ÙˆØ´Ù† (Light Mode) ---------------- */
 body.light-theme,
 html.light-theme,
 .light-theme .rmm-menu-widget-wrapper,
@@ -1765,7 +1767,7 @@ html.light-theme,
     --rmm-red-accent: #B21F2D;
 }
 
-/* ---------------- 3. حذف پس‌زمینه و پدینگ والد تم شرقی ---------------- */
+/* ---------------- 3. Ø­Ø°Ù Ù¾Ø³â€ŒØ²Ù…ÛŒÙ†Ù‡ Ùˆ Ù¾Ø¯ÛŒÙ†Ú¯ ÙˆØ§Ù„Ø¯ ØªÙ… Ø´Ø±Ù‚ÛŒ ---------------- */
 .rmm-menu-widget-wrapper.rmm-theme-oriental,
 .rmm-theme-oriental,
 .rmm-menu-container.rmm-style-oriental {
@@ -1802,7 +1804,7 @@ html.light-theme,
     box-shadow: 0 0 12px var(--rmm-gold-glow) !important;
 }
 
-/* ---------------- 4. استایل کارت گرید تم شرقی (Grid Card) ---------------- */
+/* ---------------- 4. Ø§Ø³ØªØ§ÛŒÙ„ Ú©Ø§Ø±Øª Ú¯Ø±ÛŒØ¯ ØªÙ… Ø´Ø±Ù‚ÛŒ (Grid Card) ---------------- */
 .rmm-style-oriental.rmm-view-grid .rmm-food-card,
 .rmm-style-oriental:not(.rmm-view-list) .rmm-food-card {
     background: var(--rmm-card-bg) !important;
@@ -1896,7 +1898,7 @@ html.light-theme,
     margin: 0 !important;
 }
 
-/* ---------------- 5. استایل کارت لیست اختصاصی تم شرقی (List Card) ---------------- */
+/* ---------------- 5. Ø§Ø³ØªØ§ÛŒÙ„ Ú©Ø§Ø±Øª Ù„ÛŒØ³Øª Ø§Ø®ØªØµØ§ØµÛŒ ØªÙ… Ø´Ø±Ù‚ÛŒ (List Card) ---------------- */
 .rmm-style-oriental.rmm-view-list .rmm-food-card {
     position: relative !important;
     display: flex !important;
@@ -1944,7 +1946,7 @@ html.light-theme,
     gap: 6px !important;
 }
 
-/* ۱. عنوان غذا در یک سطر */
+/* Û±. Ø¹Ù†ÙˆØ§Ù† ØºØ°Ø§ Ø¯Ø± ÛŒÚ© Ø³Ø·Ø± */
 .rmm-style-oriental .rmm-food-title,
 .rmm-food-title {
     font-size: 16px !important;
@@ -1963,7 +1965,7 @@ html.light-theme,
     text-overflow: ellipsis !important;
 }
 
-/* ۲. سطر مبلغ و ویژگی‌ها در یک خط (مبلغ سمت راست، ویژگی/بج سمت چپ) */
+/* Û². Ø³Ø·Ø± Ù…Ø¨Ù„Øº Ùˆ ÙˆÛŒÚ˜Ú¯ÛŒâ€ŒÙ‡Ø§ Ø¯Ø± ÛŒÚ© Ø®Ø· (Ù…Ø¨Ù„Øº Ø³Ù…Øª Ø±Ø§Ø³ØªØŒ ÙˆÛŒÚ˜Ú¯ÛŒ/Ø¨Ø¬ Ø³Ù…Øª Ú†Ù¾) */
 .rmm-card-price-badge-row {
     display: flex !important;
     align-items: center !important;
@@ -1988,7 +1990,7 @@ html.light-theme,
     order: 1 !important;
 }
 
-/* نشان‌ها و ویژگی‌های غذا (بج سرآشپز، تند، و...) در سمت چپ سطر */
+/* Ù†Ø´Ø§Ù†â€ŒÙ‡Ø§ Ùˆ ÙˆÛŒÚ˜Ú¯ÛŒâ€ŒÙ‡Ø§ÛŒ ØºØ°Ø§ (Ø¨Ø¬ Ø³Ø±Ø¢Ø´Ù¾Ø²ØŒ ØªÙ†Ø¯ØŒ Ùˆ...) Ø¯Ø± Ø³Ù…Øª Ú†Ù¾ Ø³Ø·Ø± */
 .rmm-card-price-badge-row .rmm-card-badge {
     position: static !important;
     order: 2 !important;
@@ -2004,7 +2006,7 @@ html.light-theme,
     gap: 4px !important;
 }
 
-/* در حالت لیست: بج روی تصویر بندانگشتی مخفی و فقط درون سطر نشان داده می‌شود */
+/* Ø¯Ø± Ø­Ø§Ù„Øª Ù„ÛŒØ³Øª: Ø¨Ø¬ Ø±ÙˆÛŒ ØªØµÙˆÛŒØ± Ø¨Ù†Ø¯Ø§Ù†Ú¯Ø´ØªÛŒ Ù…Ø®ÙÛŒ Ùˆ ÙÙ‚Ø· Ø¯Ø±ÙˆÙ† Ø³Ø·Ø± Ù†Ø´Ø§Ù† Ø¯Ø§Ø¯Ù‡ Ù…ÛŒâ€ŒØ´ÙˆØ¯ */
 .rmm-view-list .rmm-card-image-wrap .rmm-card-badge {
     display: none !important;
 }
@@ -2018,7 +2020,7 @@ html.light-theme,
     top: auto !important;
 }
 
-/* ۳. توضیحات و ترکیبات بعد از مبلغ و ویژگی‌ها (حداکثر ۱ خط با سه‌نقطه) */
+/* Û³. ØªÙˆØ¶ÛŒØ­Ø§Øª Ùˆ ØªØ±Ú©ÛŒØ¨Ø§Øª Ø¨Ø¹Ø¯ Ø§Ø² Ù…Ø¨Ù„Øº Ùˆ ÙˆÛŒÚ˜Ú¯ÛŒâ€ŒÙ‡Ø§ (Ø­Ø¯Ø§Ú©Ø«Ø± Û± Ø®Ø· Ø¨Ø§ Ø³Ù‡â€ŒÙ†Ù‚Ø·Ù‡) */
 .rmm-food-desc,
 .rmm-view-list .rmm-food-desc,
 .rmm-style-oriental .rmm-food-desc {
@@ -2054,7 +2056,7 @@ html.light-theme,
     opacity: 0.85 !important;
 }
 
-/* دکمه‌های سفارش در تم شرقی */
+/* Ø¯Ú©Ù…Ù‡â€ŒÙ‡Ø§ÛŒ Ø³ÙØ§Ø±Ø´ Ø¯Ø± ØªÙ… Ø´Ø±Ù‚ÛŒ */
 .rmm-style-oriental .rmm-btn-order {
     background: var(--rmm-red-accent) !important;
     color: #ffffff !important;
@@ -2070,7 +2072,7 @@ html.light-theme,
     filter: brightness(1.1) !important;
 }
 
-/* ---------------- 6. پاپ‌آپ و مـودال ---------------- */
+/* ---------------- 6. Ù¾Ø§Ù¾â€ŒØ¢Ù¾ Ùˆ Ù…Ù€ÙˆØ¯Ø§Ù„ ---------------- */
 .rmm-modal-backdrop {
     background: rgba(10, 2, 4, 0.8) !important;
     backdrop-filter: blur(14px) !important;
@@ -2081,7 +2083,7 @@ html.light-theme,
     padding: 16px !important;
 }
 
-/* قفل کردن قطعی اسکرول پس‌زمینه هنگام باز بودن پاپ‌آپ */
+/* Ù‚ÙÙ„ Ú©Ø±Ø¯Ù† Ù‚Ø·Ø¹ÛŒ Ø§Ø³Ú©Ø±ÙˆÙ„ Ù¾Ø³â€ŒØ²Ù…ÛŒÙ†Ù‡ Ù‡Ù†Ú¯Ø§Ù… Ø¨Ø§Ø² Ø¨ÙˆØ¯Ù† Ù¾Ø§Ù¾â€ŒØ¢Ù¾ */
 body.rmm-modal-open,
 html.rmm-modal-open {
     overflow: hidden !important;
@@ -2089,14 +2091,14 @@ html.rmm-modal-open {
     touch-action: none !important;
 }
 
-/* تضمین قطعی مخفی بودن پاپ‌آپ هنگام بسته بودن */
+/* ØªØ¶Ù…ÛŒÙ† Ù‚Ø·Ø¹ÛŒ Ù…Ø®ÙÛŒ Ø¨ÙˆØ¯Ù† Ù¾Ø§Ù¾â€ŒØ¢Ù¾ Ù‡Ù†Ú¯Ø§Ù… Ø¨Ø³ØªÙ‡ Ø¨ÙˆØ¯Ù† */
 .rmm-modal-backdrop[style*="display: none"],
 .rmm-modal-backdrop[style*="display:none"],
 .rmm-modal-backdrop.is-hidden {
     display: none !important;
 }
 
-/* نمایش پاپ‌آپ فقط در صورت باز بودن */
+/* Ù†Ù…Ø§ÛŒØ´ Ù¾Ø§Ù¾â€ŒØ¢Ù¾ ÙÙ‚Ø· Ø¯Ø± ØµÙˆØ±Øª Ø¨Ø§Ø² Ø¨ÙˆØ¯Ù† */
 .rmm-modal-backdrop:not([style*="display: none"]):not([style*="display:none"]) {
     display: flex !important;
 }
@@ -2198,7 +2200,7 @@ html.rmm-modal-open {
     box-shadow: 0 6px 20px var(--rmm-gold-glow) !important;
 }
 
-/* ریسپانسیو موبایل: پاپ‌آپ همواره وسط صفحه باشد و پایین باز نشود */
+/* Ø±ÛŒØ³Ù¾Ø§Ù†Ø³ÛŒÙˆ Ù…ÙˆØ¨Ø§ÛŒÙ„: Ù¾Ø§Ù¾â€ŒØ¢Ù¾ Ù‡Ù…ÙˆØ§Ø±Ù‡ ÙˆØ³Ø· ØµÙØ­Ù‡ Ø¨Ø§Ø´Ø¯ Ùˆ Ù¾Ø§ÛŒÛŒÙ† Ø¨Ø§Ø² Ù†Ø´ÙˆØ¯ */
 @media (max-width: 767px) {
     .rmm-modal-backdrop {
         align-items: center !important;
@@ -2225,7 +2227,7 @@ html.rmm-modal-open {
 }
 
 /* ============================================================
-   تثبیت رنگ قیمت‌ها در حالت شب (جلوگیری از سیاه شدن مبالغ)
+   ØªØ«Ø¨ÛŒØª Ø±Ù†Ú¯ Ù‚ÛŒÙ…Øªâ€ŒÙ‡Ø§ Ø¯Ø± Ø­Ø§Ù„Øª Ø´Ø¨ (Ø¬Ù„ÙˆÚ¯ÛŒØ±ÛŒ Ø§Ø² Ø³ÛŒØ§Ù‡ Ø´Ø¯Ù† Ù…Ø¨Ø§Ù„Øº)
    ============================================================ */
 body:not(.light-theme) .rmm-food-price,
 body:not(.light-theme) .rmm-food-price *,
@@ -2279,7 +2281,7 @@ body.light-theme .woocommerce-Price-amount * {
 }
 
 /* ============================================================
-   ویجت اختصاصی سوئیچر روز و شب (Theme Toggle Widget)
+   ÙˆÛŒØ¬Øª Ø§Ø®ØªØµØ§ØµÛŒ Ø³ÙˆØ¦ÛŒÚ†Ø± Ø±ÙˆØ² Ùˆ Ø´Ø¨ (Theme Toggle Widget)
    ============================================================ */
 .rmm-theme-toggle-widget-wrap {
     display: inline-block;
@@ -2394,7 +2396,7 @@ body.light-theme .rmm-toggle-style-floating_corner {
 .rmm-floating-pos-top_left { top: 24px; left: 24px; }
 .rmm-floating-pos-top_right { top: 24px; right: 24px; }
 
-/* دکمه پیش‌فرض شناور */
+/* Ø¯Ú©Ù…Ù‡ Ù¾ÛŒØ´â€ŒÙØ±Ø¶ Ø´Ù†Ø§ÙˆØ± */
 #theme-toggle-btn,
 .rmm-theme-toggle-btn:not(.rmm-theme-toggle-widget-btn) {
     position: fixed;
@@ -2434,7 +2436,7 @@ body.light-theme .rmm-theme-toggle-btn:not(.rmm-theme-toggle-widget-btn) {
 
 
 /* ============================================================
-   ۸. سرفصل‌ها و جداکننده‌های عناوین دسته‌بندی‌ها (Category Section Headers)
+   Û¸. Ø³Ø±ÙØµÙ„â€ŒÙ‡Ø§ Ùˆ Ø¬Ø¯Ø§Ú©Ù†Ù†Ø¯Ù‡â€ŒÙ‡Ø§ÛŒ Ø¹Ù†Ø§ÙˆÛŒÙ† Ø¯Ø³ØªÙ‡â€ŒØ¨Ù†Ø¯ÛŒâ€ŒÙ‡Ø§ (Category Section Headers)
    ============================================================ */
 .rmm-category-section {
     width: 100% !important;
@@ -2505,7 +2507,7 @@ body.light-theme .rmm-theme-toggle-btn:not(.rmm-theme-toggle-widget-btn) {
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5) !important;
 }
 
-/* تغییر هوشمند رنگ تایتل دسته‌بندی در حالت روز (Light Mode) */
+/* ØªØºÛŒÛŒØ± Ù‡ÙˆØ´Ù…Ù†Ø¯ Ø±Ù†Ú¯ ØªØ§ÛŒØªÙ„ Ø¯Ø³ØªÙ‡â€ŒØ¨Ù†Ø¯ÛŒ Ø¯Ø± Ø­Ø§Ù„Øª Ø±ÙˆØ² (Light Mode) */
 body.light-theme .rmm-category-title,
 html.light-theme .rmm-category-title,
 .light-theme .rmm-category-title,
@@ -2517,7 +2519,7 @@ body.light-theme .rmm-style-oriental .rmm-category-title,
     text-shadow: none !important;
 }
 
-/* حالت شب صریح */
+/* Ø­Ø§Ù„Øª Ø´Ø¨ ØµØ±ÛŒØ­ */
 body:not(.light-theme) .rmm-category-title,
 html:not(.light-theme) .rmm-category-title {
     color: #FFFFFF !important;
@@ -2544,7 +2546,7 @@ html:not(.light-theme) .rmm-category-title {
     line-height: 1.5 !important;
 }
 
-/* خط تزئینی جداکننده دسته‌ها */
+/* Ø®Ø· ØªØ²Ø¦ÛŒÙ†ÛŒ Ø¬Ø¯Ø§Ú©Ù†Ù†Ø¯Ù‡ Ø¯Ø³ØªÙ‡â€ŒÙ‡Ø§ */
 .rmm-cat-header-divider {
     display: flex !important;
     align-items: center !important;
@@ -2587,7 +2589,7 @@ html:not(.light-theme) .rmm-category-title {
 
 
 /* ============================================================
-   نشان ویژه غذا (پشتیبانی از آیکون، تصویر، و نشان دلخواه)
+   Ù†Ø´Ø§Ù† ÙˆÛŒÚ˜Ù‡ ØºØ°Ø§ (Ù¾Ø´ØªÛŒØ¨Ø§Ù†ÛŒ Ø§Ø² Ø¢ÛŒÚ©ÙˆÙ†ØŒ ØªØµÙˆÛŒØ±ØŒ Ùˆ Ù†Ø´Ø§Ù† Ø¯Ù„Ø®ÙˆØ§Ù‡)
    ============================================================ */
 .rmm-card-badge {
     display: inline-flex !important;
