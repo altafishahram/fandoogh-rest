@@ -1099,6 +1099,7 @@
             var queryData = $btn.data('query') || {};
 
             var nextPage = page + 1;
+            var nonceVal = $btn.data('nonce') || (window.rmmConfig && window.rmmConfig.nonce ? window.rmmConfig.nonce : '');
             $btn.data('loading', true).addClass('is-loading');
             var originalText = $btn.html();
             $btn.html('<span>⏳ ' + (window.rmmConfig && window.rmmConfig.strings && window.rmmConfig.strings.loading ? window.rmmConfig.strings.loading : 'در حال بارگذاری...') + '</span>');
@@ -1110,12 +1111,17 @@
                 data: {
                     action: 'rmm_load_more_loop_products',
                     page: nextPage,
+                    security: nonceVal,
                     query: queryData
                 },
                 success: function (res) {
                     if (res && res.success && res.data && res.data.html) {
                         $grid.append(res.data.html);
                         $btn.data('page', nextPage);
+
+                        if (res.data.nonce) {
+                            $btn.attr('data-nonce', res.data.nonce).data('nonce', res.data.nonce);
+                        }
 
                         if (!res.data.has_more || nextPage >= maxPages) {
                             $btn.fadeOut(300, function () { $(this).remove(); });

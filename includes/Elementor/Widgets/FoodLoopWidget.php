@@ -660,6 +660,7 @@ class FoodLoopWidget extends Widget_Base {
                     <button type="button" class="rmm-food-loop-load-more-btn"
                             data-page="1"
                             data-max-pages="<?php echo esc_attr($max_pages); ?>"
+                            data-nonce="<?php echo esc_attr(wp_create_nonce('rmm_frontend_nonce')); ?>"
                             data-query="<?php echo esc_attr(wp_json_encode([
                                 'posts_per_page'  => $per_page,
                                 'category'        => $cat_val,
@@ -680,6 +681,13 @@ class FoodLoopWidget extends Widget_Base {
      * AJAX endpoint for Food Loop Load More pagination
      */
     public static function ajax_load_more_products() {
+        if (!check_ajax_referer('rmm_frontend_nonce', 'security', false)) {
+            wp_send_json_error([
+                'message' => __('درخواست نامعتبر است. صفحه را دوباره بارگذاری کنید.', 'fondogh-online-menu'),
+                'code'    => 'rmm_invalid_nonce',
+            ], 403);
+        }
+
         $page = max(1, absint($_POST['page'] ?? 1));
         $query_data = is_array($_POST['query'] ?? null) ? $_POST['query'] : [];
 
@@ -722,6 +730,7 @@ class FoodLoopWidget extends Widget_Base {
                 'html'     => '',
                 'has_more' => false,
                 'page'     => $page,
+                'nonce'    => wp_create_nonce('rmm_frontend_nonce'),
             ]);
         }
 
@@ -749,6 +758,7 @@ class FoodLoopWidget extends Widget_Base {
             'has_more'  => ($page < $max_pages),
             'page'      => $page,
             'max_pages' => $max_pages,
+            'nonce'     => wp_create_nonce('rmm_frontend_nonce'),
         ]);
     }
 }
