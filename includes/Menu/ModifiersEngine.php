@@ -588,10 +588,12 @@ class ModifiersEngine {
             wp_send_json_error(['message' => __('محصول یافت نشد.', 'fondogh-online-menu')]);
         }
 
-        // Setup global post context so Elementor dynamic tags and WooCommerce widgets resolve to this product
-        global $post;
-        $prev_post = $post;
-        $post = get_post($product_id);
+        // Setup global post/product context so Elementor dynamic tags and WooCommerce widgets resolve to this product
+        global $post, $product;
+        $prev_post    = $post;
+        $prev_product = $product;
+        $post         = get_post($product_id);
+        $product      = wc_get_product($product_id);
         setup_postdata($post);
 
         $html = '';
@@ -600,7 +602,8 @@ class ModifiersEngine {
         }
 
         wp_reset_postdata();
-        $post = $prev_post;
+        $post    = $prev_post;
+        $product = $prev_product;
 
         if (empty($html)) {
             wp_send_json_error(['message' => __('محتوای قالب خالی است یا یافت نشد.', 'fondogh-online-menu')]);
