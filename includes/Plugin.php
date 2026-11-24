@@ -54,6 +54,7 @@ class Plugin {
         // Core Modules
         $this->modules['settings']    = new Core\Settings();
         $this->modules['assets']      = new Core\Assets();
+        $this->modules['svg']         = new Core\SvgSupport();
 
         // Branches Modules
         $this->modules['branch_tax']  = new Branches\BranchTaxonomy();

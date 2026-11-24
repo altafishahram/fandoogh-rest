@@ -11,6 +11,7 @@ class FoodMeta {
         add_action('init', [$this, 'register_food_taxonomies']);
         add_action('add_meta_boxes', [$this, 'register_food_meta_box']);
         add_action('woocommerce_process_product_meta', [$this, 'save_food_meta']);
+        add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_assets']);
     }
 
     /**
@@ -50,6 +51,32 @@ class FoodMeta {
             'product',
             'normal',
             'high'
+        );
+    }
+
+    /**
+     * Load the media picker for the food badge image field on the product editor.
+     *
+     * @param string $hook
+     * @return void
+     */
+    public function enqueue_admin_assets($hook) {
+        if (!in_array($hook, ['post.php', 'post-new.php'], true)) {
+            return;
+        }
+
+        $screen = function_exists('get_current_screen') ? get_current_screen() : null;
+        if (!$screen || $screen->post_type !== 'product') {
+            return;
+        }
+
+        wp_enqueue_media();
+        wp_enqueue_script(
+            'rmm-admin-food-meta',
+            RMM_PLUGIN_URL . 'assets/js/admin-food-meta.js',
+            ['jquery'],
+            RMM_VERSION,
+            true
         );
     }
 
@@ -121,11 +148,21 @@ class FoodMeta {
                         </label>
                         <input type="text" name="_rmm_badge_custom_icon" value="<?php echo esc_attr($badge_custom_icon); ?>" style="width: 100%;" placeholder="مثلاً: 👑، 💎، 🌶️، ⭐">
                     </div>
-                    <div>
+                    <div class="rmm-badge-image-field">
                         <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">
                             <?php _e('آدرس تصویر یا لوگوی نشان:', 'fondogh-online-menu'); ?>
                         </label>
                         <input type="text" name="_rmm_badge_image" value="<?php echo esc_attr($badge_image); ?>" style="width: 100%;" placeholder="https://... یا آدرس عکس">
+                        <div style="margin-top: 6px; display: flex; gap: 10px; align-items: center;">
+                            <button type="button" class="button rmm-badge-image-upload">
+                                <?php _e('انتخاب از کتابخانه', 'fondogh-online-menu'); ?>
+                            </button>
+                            <button type="button" class="button-link rmm-badge-image-remove" style="<?php echo $badge_image ? '' : 'display:none;'; ?>">
+                                <?php _e('حذف', 'fondogh-online-menu'); ?>
+                            </button>
+                        </div>
+                        <img src="<?php echo esc_url($badge_image); ?>" alt="" class="rmm-badge-image-preview"
+                             style="max-width: 56px; max-height: 56px; margin-top: 6px; display: <?php echo $badge_image ? 'block' : 'none'; ?>;">
                     </div>
                 </div>
             </div>
