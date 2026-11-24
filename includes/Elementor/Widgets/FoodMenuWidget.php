@@ -41,7 +41,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         ];
         $posts = get_posts([
             'post_type'      => 'elementor_library',
-            'posts_per_page' => -1,
+            'posts_per_page' => 100,
             'post_status'    => 'publish',
         ]);
         if (!empty($posts)) {
@@ -57,6 +57,19 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
             'section_layout',
             [
                 'label' => __('طراحی و چیدمان منو', 'fondogh-online-menu'),
+            ]
+        );
+
+        $this->add_control(
+            'max_products',
+            [
+                'label'       => __('حداکثر تعداد محصولات', 'fondogh-online-menu'),
+                'type'        => \Elementor\Controls_Manager::NUMBER,
+                'min'         => 10,
+                'max'         => 500,
+                'step'        => 10,
+                'default'     => 200,
+                'description' => __('سقف مجاز بارگذاری یکباره غذاها (برای منوهای خیلی بزرگ پیشنهاد می‌شود از ویجت Loop به همراه صفحه‌بندی استفاده فرمایید).', 'fondogh-online-menu'),
             ]
         );
 
@@ -1115,12 +1128,16 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
 
 
 
+        $max_items = absint($settings['max_products'] ?? 200) ?: 200;
+
         $args = [
-            'post_type'      => 'product',
-            'post_status'    => 'publish',
-            'posts_per_page' => -1,
-            'orderby'        => 'menu_order',
-            'order'          => 'ASC',
+            'post_type'              => 'product',
+            'post_status'            => 'publish',
+            'posts_per_page'         => $max_items,
+            'orderby'                => 'menu_order',
+            'order'                  => 'ASC',
+            'update_post_meta_cache' => true,
+            'update_post_term_cache' => true,
         ];
 
         $query = new \WP_Query($args);

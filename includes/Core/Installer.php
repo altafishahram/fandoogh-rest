@@ -26,10 +26,32 @@ class Installer {
      * Self-healing DB check and migration on admin_init
      */
     public static function maybe_upgrade() {
+        // Prevent continuous retry spam if table creation recently failed
+        if (get_transient('rmm_db_upgrade_failed')) {
+            add_action('admin_notices', [__CLASS__, 'render_db_error_notice']);
+            return;
+        }
+
         $installed_ver = get_option('rmm_db_version', '0.0.0');
         if (version_compare($installed_ver, self::DB_VERSION, '<') || !self::table_exists()) {
-            self::create_tables();
+            $created = self::create_tables();
+            if (!$created || !self::table_exists()) {
+                // Throttle retries for 15 minutes to prevent spamming dbDelta on heartbeat/AJAX
+                set_transient('rmm_db_upgrade_failed', 1, 15 * MINUTE_IN_SECONDS);
+                add_action('admin_notices', [__CLASS__, 'render_db_error_notice']);
+            } else {
+                delete_transient('rmm_db_upgrade_failed');
+            }
         }
+    }
+
+    public static function render_db_error_notice() {
+        if (!current_user_can('activate_plugins')) {
+            return;
+        }
+        global $wpdb;
+        $err = $wpdb->last_error ? esc_html($wpdb->last_error) : esc_html__('خطای نامشخص پایگاه داده', 'fondogh-online-menu');
+        echo '<div class="notice notice-error"><p>' . sprintf(esc_html__('افزونه منو آنلاین فندق: ساخت جدول پایگاه داده با خطا مواجه شد (%s). لطفاً دسترسی‌های پایگاه داده را بررسی کنید.', 'fondogh-online-menu'), $err) . '</p></div>';
     }
 
     public static function activate() {
@@ -119,11 +141,15 @@ class Installer {
 
             if (self::table_exists()) {
                 update_option('rmm_db_version', self::DB_VERSION);
+                delete_transient('rmm_db_upgrade_failed');
+                return true;
             } else {
                 error_log('RMM Table creation verification failed: ' . ($wpdb->last_error ?: 'Unknown DB error'));
+                return false;
             }
         } catch (\Throwable $e) {
             error_log('RMM Table creation error: ' . $e->getMessage());
+            return false;
         }
     }
 
