@@ -129,6 +129,31 @@ class FoodLoopWidget extends Widget_Base {
             ]
         );
 
+        $this->add_control(
+            'pagination_type',
+            [
+                'label'   => __('نوع صفحه‌بندی', 'fondogh-online-menu'),
+                'type'    => Controls_Manager::SELECT,
+                'default' => 'none',
+                'options' => [
+                    'none'      => __('بدون صفحه‌بندی (ثابت)', 'fondogh-online-menu'),
+                    'load_more' => __('دکمه «بارگذاری بیشتر» (Load More)', 'fondogh-online-menu'),
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'load_more_text',
+            [
+                'label'     => __('متن دکمه بارگذاری بیشتر', 'fondogh-online-menu'),
+                'type'      => Controls_Manager::TEXT,
+                'default'   => __('مشاهده غذاهای بیشتر ▾', 'fondogh-online-menu'),
+                'condition' => [
+                    'pagination_type' => 'load_more',
+                ],
+            ]
+        );
+
         $this->end_controls_section();
 
         // ==================== LAYOUT SECTION ==================== //
@@ -490,18 +515,105 @@ class FoodLoopWidget extends Widget_Base {
         $this->end_controls_section();
     }
 
+    /**
+     * Render single food card HTML (shared between initial render and AJAX Load More)
+     */
+    public static function render_card_html($product, $settings = [], $branch_id = 0, $branch_inventory = []) {
+        $prod_id     = $product->get_id();
+        $title       = $product->get_name();
+        $desc        = $product->get_short_description() ?: $product->get_description();
+        $price_html  = $product->get_price_html();
+        $is_in_stock = $product->is_in_stock();
+
+        // Check branch-specific inventory overrides
+        if ($branch_id && isset($branch_inventory[$prod_id])) {
+            $inv = $branch_inventory[$prod_id];
+            if ($inv->stock_status === 'outofstock' || empty($inv->is_available)) {
+                $is_in_stock = false;
+            }
+        }
+
+        if (($settings['only_in_stock'] ?? 'no') === 'yes' && !$is_in_stock) {
+            return;
+        }
+
+        $layout_class = 'rmm-layout-' . esc_attr($settings['card_style_type'] ?? 'vertical');
+        $image_id    = $product->get_image_id();
+        $image_url   = $image_id ? wp_get_attachment_image_url($image_id, 'medium_large') : '';
+        $card_class  = 'rmm-food-card ' . $layout_class . ($is_in_stock ? '' : ' rmm-out-of-stock');
+        ?>
+        <div class="<?php echo esc_attr($card_class); ?>" data-product-id="<?php echo esc_attr($prod_id); ?>">
+            <div class="rmm-food-image-wrap rmm-open-modal" data-product-id="<?php echo esc_attr($prod_id); ?>" style="cursor:pointer; position:relative;">
+                <?php if (!empty($image_url)) : ?>
+                    <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($title); ?>" class="rmm-food-img" loading="lazy">
+                <?php else : ?>
+                    <div class="rmm-food-placeholder-img" style="width:100%; height:180px; display:flex; align-items:center; justify-content:center; background:#f1f5f9; color:#94a3b8;">
+                        <i class="fas fa-utensils fa-2x" aria-hidden="true"></i>
+                    </div>
+                <?php endif; ?>
+            </div>
+
+            <div class="rmm-food-info-wrap" style="flex:1; display:flex; flex-direction:column; justify-content:space-between; margin-top:10px;">
+                <div>
+                    <h3 class="rmm-food-title rmm-open-modal" data-product-id="<?php echo esc_attr($prod_id); ?>" style="cursor:pointer; margin:0 0 6px 0;">
+                        <?php echo esc_html($title); ?>
+                    </h3>
+
+                    <?php if (!empty($desc)) : ?>
+                        <div class="rmm-food-ingredients" style="font-size:13px; line-height:1.6; margin-bottom:8px;">
+                            <?php echo wp_kses_post(wp_trim_words($desc, 14)); ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
+
+                <div class="rmm-food-bottom-bar" style="display:flex; align-items:center; justify-content:space-between; margin-top:8px;">
+                    <div class="rmm-food-price">
+                        <?php echo wp_kses_post($price_html); ?>
+                    </div>
+
+                    <div class="rmm-food-actions" style="display:flex; gap:6px;">
+                        <button type="button" class="rmm-btn-details rmm-open-modal" data-product-id="<?php echo esc_attr($prod_id); ?>" aria-label="<?php esc_attr_e('مشاهده جزئیات', 'fondogh-online-menu'); ?>" style="border:none; background:transparent; padding:6px; cursor:pointer;">
+                            <?php
+                            if (!empty($settings['details_btn_icon']['value'])) {
+                                Icons_Manager::render_icon($settings['details_btn_icon'], ['aria-hidden' => 'true']);
+                            } else {
+                                echo '<i class="fas fa-eye" aria-hidden="true"></i>';
+                            }
+                            ?>
+                        </button>
+
+                        <button type="button" class="rmm-btn-order" data-product-id="<?php echo esc_attr($prod_id); ?>" style="display:inline-flex; align-items:center; gap:4px; border:none; cursor:pointer; padding:6px 12px; border-radius:8px;">
+                            <?php if (!empty($settings['order_btn_icon']['value'])) : ?>
+                                <span class="rmm-btn-icon" aria-hidden="true">
+                                    <?php Icons_Manager::render_icon($settings['order_btn_icon'], ['aria-hidden' => 'true']); ?>
+                                </span>
+                            <?php endif; ?>
+                            <span><?php esc_html_e('افزودن', 'fondogh-online-menu'); ?></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
+
     protected function render() {
         $settings = $this->get_settings_for_display();
 
+        $per_page = !empty($settings['posts_per_page']) ? intval($settings['posts_per_page']) : 12;
         $args = [
-            'status'  => 'publish',
-            'limit'   => !empty($settings['posts_per_page']) ? intval($settings['posts_per_page']) : 12,
-            'orderby' => $settings['orderby'] ?? 'menu_order',
-            'order'   => $settings['order'] ?? 'ASC',
+            'status'                 => 'publish',
+            'limit'                  => $per_page,
+            'page'                   => 1,
+            'paginate'               => true,
+            'orderby'                => $settings['orderby'] ?? 'menu_order',
+            'order'                  => $settings['order'] ?? 'ASC',
+            'update_post_meta_cache' => true,
+            'update_post_term_cache' => true,
         ];
 
-        if (!empty($settings['category_filter'])) {
-            $cat_val = $settings['category_filter'];
+        $cat_val = $settings['category_filter'] ?? '';
+        if (!empty($cat_val)) {
             if (is_numeric($cat_val)) {
                 $term = get_term(absint($cat_val), 'product_cat');
                 if ($term && !is_wp_error($term)) {
@@ -516,7 +628,9 @@ class FoodLoopWidget extends Widget_Base {
             $args['stock_status'] = 'instock';
         }
 
-        $products = function_exists('wc_get_products') ? wc_get_products($args) : [];
+        $results = function_exists('wc_get_products') ? wc_get_products($args) : null;
+        $products = ($results && is_object($results) && isset($results->products)) ? $results->products : [];
+        $max_pages = ($results && is_object($results) && isset($results->max_num_pages)) ? $results->max_num_pages : 1;
 
         $branch_id = class_exists('\RMM\Branches\BranchContext') ? \RMM\Branches\BranchContext::get_active_branch_id() : 0;
         $branch_inventory = [];
@@ -525,88 +639,14 @@ class FoodLoopWidget extends Widget_Base {
             $branch_inventory = \RMM\Branches\InventoryRepository::get_bulk_branch_inventory($branch_id, $product_ids);
         }
 
-        $layout_class = 'rmm-layout-' . esc_attr($settings['card_style_type'] ?? 'vertical');
-
         wp_enqueue_style('rmm-frontend-menu');
         wp_enqueue_script('rmm-frontend-menu');
         ?>
         <div class="rmm-food-loop-wrapper">
             <div class="rmm-food-grid rmm-food-loop-grid" style="display:grid;">
                 <?php if (!empty($products)) : ?>
-                    <?php foreach ($products as $product) :
-                        $prod_id     = $product->get_id();
-                        $title       = $product->get_name();
-                        $desc        = $product->get_short_description() ?: $product->get_description();
-                        $price_html  = $product->get_price_html();
-                        $is_in_stock = $product->is_in_stock();
-
-                        // Check branch-specific inventory overrides
-                        if ($branch_id && isset($branch_inventory[$prod_id])) {
-                            $inv = $branch_inventory[$prod_id];
-                            if ($inv->stock_status === 'outofstock' || empty($inv->is_available)) {
-                                $is_in_stock = false;
-                            }
-                        }
-
-                        if (($settings['only_in_stock'] ?? 'no') === 'yes' && !$is_in_stock) {
-                            continue;
-                        }
-                        $image_id    = $product->get_image_id();
-                        $image_url   = $image_id ? wp_get_attachment_image_url($image_id, 'medium_large') : '';
-                        $card_class  = 'rmm-food-card ' . $layout_class . ($is_in_stock ? '' : ' rmm-out-of-stock');
-                        ?>
-                        <div class="<?php echo esc_attr($card_class); ?>" data-product-id="<?php echo esc_attr($prod_id); ?>">
-                            <div class="rmm-food-image-wrap rmm-open-modal" data-product-id="<?php echo esc_attr($prod_id); ?>" style="cursor:pointer; position:relative;">
-                                <?php if (!empty($image_url)) : ?>
-                                    <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($title); ?>" class="rmm-food-img" loading="lazy">
-                                <?php else : ?>
-                                    <div class="rmm-food-placeholder-img" style="width:100%; height:180px; display:flex; align-items:center; justify-content:center; background:#f1f5f9; color:#94a3b8;">
-                                        <i class="fas fa-utensils fa-2x" aria-hidden="true"></i>
-                                    </div>
-                                <?php endif; ?>
-                            </div>
-
-                            <div class="rmm-food-info-wrap" style="flex:1; display:flex; flex-direction:column; justify-content:space-between; margin-top:10px;">
-                                <div>
-                                    <h3 class="rmm-food-title rmm-open-modal" data-product-id="<?php echo esc_attr($prod_id); ?>" style="cursor:pointer; margin:0 0 6px 0;">
-                                        <?php echo esc_html($title); ?>
-                                    </h3>
-
-                                    <?php if (!empty($desc)) : ?>
-                                        <div class="rmm-food-ingredients" style="font-size:13px; line-height:1.6; margin-bottom:8px;">
-                                            <?php echo wp_kses_post(wp_trim_words($desc, 14)); ?>
-                                        </div>
-                                    <?php endif; ?>
-                                </div>
-
-                                <div class="rmm-food-bottom-bar" style="display:flex; align-items:center; justify-content:space-between; margin-top:8px;">
-                                    <div class="rmm-food-price">
-                                        <?php echo wp_kses_post($price_html); ?>
-                                    </div>
-
-                                    <div class="rmm-food-actions" style="display:flex; gap:6px;">
-                                        <button type="button" class="rmm-btn-details rmm-open-modal" data-product-id="<?php echo esc_attr($prod_id); ?>" aria-label="<?php esc_attr_e('مشاهده جزئیات', 'fondogh-online-menu'); ?>" style="border:none; background:transparent; padding:6px; cursor:pointer;">
-                                            <?php
-                                            if (!empty($settings['details_btn_icon']['value'])) {
-                                                Icons_Manager::render_icon($settings['details_btn_icon'], ['aria-hidden' => 'true']);
-                                            } else {
-                                                echo '<i class="fas fa-eye" aria-hidden="true"></i>';
-                                            }
-                                            ?>
-                                        </button>
-
-                                        <button type="button" class="rmm-btn-order" data-product-id="<?php echo esc_attr($prod_id); ?>" style="display:inline-flex; align-items:center; gap:4px; border:none; cursor:pointer; padding:6px 12px; border-radius:8px;">
-                                            <?php if (!empty($settings['order_btn_icon']['value'])) : ?>
-                                                <span class="rmm-btn-icon" aria-hidden="true">
-                                                    <?php Icons_Manager::render_icon($settings['order_btn_icon'], ['aria-hidden' => 'true']); ?>
-                                                </span>
-                                            <?php endif; ?>
-                                            <span><?php esc_html_e('افزودن', 'fondogh-online-menu'); ?></span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <?php foreach ($products as $product) : ?>
+                        <?php self::render_card_html($product, $settings, $branch_id, $branch_inventory); ?>
                     <?php endforeach; ?>
                 <?php else : ?>
                     <p class="rmm-no-foods-found" style="text-align:center; padding:30px; opacity:0.7;">
@@ -614,7 +654,101 @@ class FoodLoopWidget extends Widget_Base {
                     </p>
                 <?php endif; ?>
             </div>
+
+            <?php if (($settings['pagination_type'] ?? 'none') === 'load_more' && $max_pages > 1) : ?>
+                <div class="rmm-food-loop-load-more-wrap" style="text-align:center; margin-top:24px;">
+                    <button type="button" class="rmm-food-loop-load-more-btn"
+                            data-page="1"
+                            data-max-pages="<?php echo esc_attr($max_pages); ?>"
+                            data-query="<?php echo esc_attr(wp_json_encode([
+                                'posts_per_page'  => $per_page,
+                                'category'        => $cat_val,
+                                'orderby'         => $settings['orderby'] ?? 'menu_order',
+                                'order'           => $settings['order'] ?? 'ASC',
+                                'only_in_stock'   => $settings['only_in_stock'] ?? 'no',
+                                'card_style_type' => $settings['card_style_type'] ?? 'vertical',
+                            ])); ?>">
+                        <?php echo esc_html(!empty($settings['load_more_text']) ? $settings['load_more_text'] : __('مشاهده غذاهای بیشتر ▾', 'fondogh-online-menu')); ?>
+                    </button>
+                </div>
+            <?php endif; ?>
         </div>
         <?php
+    }
+
+    /**
+     * AJAX endpoint for Food Loop Load More pagination
+     */
+    public static function ajax_load_more_products() {
+        $page = max(1, absint($_POST['page'] ?? 1));
+        $query_data = is_array($_POST['query'] ?? null) ? $_POST['query'] : [];
+
+        $per_page      = min(48, max(1, absint($query_data['posts_per_page'] ?? 12)));
+        $category      = sanitize_text_field($query_data['category'] ?? '');
+        $orderby       = sanitize_key($query_data['orderby'] ?? 'menu_order');
+        $order         = strtoupper(sanitize_key($query_data['order'] ?? 'ASC')) === 'DESC' ? 'DESC' : 'ASC';
+        $only_in_stock = ($query_data['only_in_stock'] ?? 'no') === 'yes';
+        $card_layout   = sanitize_key($query_data['card_style_type'] ?? 'vertical');
+
+        $args = [
+            'status'                 => 'publish',
+            'limit'                  => $per_page,
+            'page'                   => $page,
+            'paginate'               => true,
+            'orderby'                => $orderby,
+            'order'                  => $order,
+            'update_post_meta_cache' => true,
+            'update_post_term_cache' => true,
+        ];
+
+        if (!empty($category)) {
+            if (is_numeric($category)) {
+                $term = get_term(absint($category), 'product_cat');
+                if ($term && !is_wp_error($term)) {
+                    $args['category'] = [$term->slug];
+                }
+            } else {
+                $args['category'] = [$category];
+            }
+        }
+
+        if ($only_in_stock) {
+            $args['stock_status'] = 'instock';
+        }
+
+        $results = function_exists('wc_get_products') ? wc_get_products($args) : null;
+        if (!$results || empty($results->products)) {
+            wp_send_json_success([
+                'html'     => '',
+                'has_more' => false,
+                'page'     => $page,
+            ]);
+        }
+
+        $products  = $results->products;
+        $max_pages = $results->max_num_pages;
+
+        $branch_id = class_exists('\RMM\Branches\BranchContext') ? \RMM\Branches\BranchContext::get_active_branch_id() : 0;
+        $branch_inventory = [];
+        if ($branch_id && class_exists('\RMM\Branches\InventoryRepository') && !empty($products)) {
+            $product_ids = array_map(function ($p) { return $p->get_id(); }, $products);
+            $branch_inventory = \RMM\Branches\InventoryRepository::get_bulk_branch_inventory($branch_id, $product_ids);
+        }
+
+        ob_start();
+        foreach ($products as $product) {
+            self::render_card_html($product, [
+                'card_style_type' => $card_layout,
+                'only_in_stock'   => $only_in_stock ? 'yes' : 'no',
+            ], $branch_id, $branch_inventory);
+        }
+        $html = ob_get_clean();
+
+        wp_send_json_success([
+            'html'      => $html,
+            'has_more'  => ($page < $max_pages),
+            'page'      => $page,
+            'max_pages' => $max_pages,
+        ]);
     }
 }

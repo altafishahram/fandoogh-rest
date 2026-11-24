@@ -2635,3 +2635,62 @@ body.light-theme .rmm-badge-custom,
     border-color: rgba(184, 134, 11, 0.35) !important;
     box-shadow: none !important;
 }
+
+/* ==========================================================================
+   Food Loop Load More Pagination
+   ========================================================================== */
+.rmm-food-loop-load-more-wrap {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 28px;
+    clear: both;
+}
+
+.rmm-food-loop-load-more-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 28px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--rmm-text-primary, #1e293b);
+    background: var(--rmm-bg-card, #ffffff);
+    border: 1.5px solid var(--rmm-border-color, #e2e8f0);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.rmm-food-loop-load-more-btn:hover {
+    background: var(--rmm-bg-hover, #f8fafc);
+    border-color: var(--rmm-primary, #e11d48);
+    color: var(--rmm-primary, #e11d48);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.rmm-food-loop-load-more-btn.is-loading {
+    opacity: 0.7;
+    cursor: wait;
+    pointer-events: none;
+}
+
+[data-theme="dark"] .rmm-food-loop-load-more-btn,
+.dark .rmm-food-loop-load-more-btn,
+body.dark-theme .rmm-food-loop-load-more-btn {
+    background: #1e293b;
+    color: #f1f5f9;
+    border-color: #334155;
+}
+
+[data-theme="dark"] .rmm-food-loop-load-more-btn:hover,
+.dark .rmm-food-loop-load-more-btn:hover,
+body.dark-theme .rmm-food-loop-load-more-btn:hover {
+    background: #334155;
+    border-color: var(--rmm-primary, #f43f5e);
+    color: var(--rmm-primary, #f43f5e);
+}

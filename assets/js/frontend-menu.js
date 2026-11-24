@@ -1086,6 +1086,55 @@
             }
         });
 
+        // Food Loop Widget Load More Handler
+        $(document).on('click', '.rmm-food-loop-load-more-btn', function (e) {
+            e.preventDefault();
+            var $btn = $(this);
+            if ($btn.data('loading')) return;
+
+            var $wrapper = $btn.closest('.rmm-food-loop-wrapper');
+            var $grid = $wrapper.find('.rmm-food-loop-grid');
+            var page = parseInt($btn.data('page') || 1, 10);
+            var maxPages = parseInt($btn.data('max-pages') || 1, 10);
+            var queryData = $btn.data('query') || {};
+
+            var nextPage = page + 1;
+            $btn.data('loading', true).addClass('is-loading');
+            var originalText = $btn.html();
+            $btn.html('<span>⏳ ' + (window.rmmConfig && window.rmmConfig.strings && window.rmmConfig.strings.loading ? window.rmmConfig.strings.loading : 'در حال بارگذاری...') + '</span>');
+
+            $.ajax({
+                url: (window.rmmConfig && window.rmmConfig.ajax_url) ? window.rmmConfig.ajax_url : '/wp-admin/admin-ajax.php',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    action: 'rmm_load_more_loop_products',
+                    page: nextPage,
+                    query: queryData
+                },
+                success: function (res) {
+                    if (res && res.success && res.data && res.data.html) {
+                        $grid.append(res.data.html);
+                        $btn.data('page', nextPage);
+
+                        if (!res.data.has_more || nextPage >= maxPages) {
+                            $btn.fadeOut(300, function () { $(this).remove(); });
+                        } else {
+                            $btn.html(originalText);
+                        }
+                    } else {
+                        $btn.fadeOut(300, function () { $(this).remove(); });
+                    }
+                },
+                error: function () {
+                    $btn.html(originalText);
+                },
+                complete: function () {
+                    $btn.data('loading', false).removeClass('is-loading');
+                }
+            });
+        });
+
     });
 
 })(jQuery);

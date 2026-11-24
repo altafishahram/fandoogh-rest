@@ -11,6 +11,10 @@ class ElementorIntegration {
         add_action('elementor/elements/categories_registered', [$this, 'register_category']);
         add_action('elementor/widgets/register', [$this, 'register_widgets']);
         add_action('elementor/dynamic_tags/register', [$this, 'register_dynamic_tags']);
+
+        // Public AJAX for Food Loop Load More pagination
+        add_action('wp_ajax_rmm_load_more_loop_products', ['\RMM\Elementor\Widgets\FoodLoopWidget', 'ajax_load_more_products']);
+        add_action('wp_ajax_nopriv_rmm_load_more_loop_products', ['\RMM\Elementor\Widgets\FoodLoopWidget', 'ajax_load_more_products']);
     }
 
     public function register_category($elements_manager) {
