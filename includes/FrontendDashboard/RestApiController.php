@@ -1065,6 +1065,23 @@ class RestApiController {
             ]);
         }
 
+        // Check if anything actually translated for non-Persian target
+        if ($target_lang !== 'fa') {
+            $has_diff = false;
+            foreach ($clean_texts as $k => $orig) {
+                if (!empty($orig) && !empty($translated[$k]) && $translated[$k] !== $orig) {
+                    $has_diff = true;
+                    break;
+                }
+            }
+            if (!$has_diff && !empty(array_filter($clean_texts))) {
+                return rest_ensure_response([
+                    'success' => false,
+                    'message' => __('متن‌ها ترجمه نشدند. لطفاً ارتباط سرور با سرویس ترجمه یا کلید هوش مصنوعی را بررسی کنید.', 'fondogh-online-menu'),
+                ]);
+            }
+        }
+
         return rest_ensure_response([
             'success'     => true,
             'target_lang' => $target_lang,

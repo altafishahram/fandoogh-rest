@@ -1270,30 +1270,48 @@
                     target_lang: langCode
                 }).then(function (res) {
                     if (res && res.success && res.translated) {
-                        if (nameInput && res.translated.name) {
+                        if (nameInput && res.translated.name && (langCode === 'fa' || res.translated.name !== nameFa)) {
                             nameInput.value = res.translated.name;
                         }
-                        if (descInput && res.translated.desc) {
+                        if (descInput && res.translated.desc && (langCode === 'fa' || res.translated.desc !== descFa)) {
                             descInput.value = res.translated.desc;
                         }
-                        if (ingInput && res.translated.ingredients) {
+                        if (ingInput && res.translated.ingredients && (langCode === 'fa' || res.translated.ingredients !== ingFa)) {
                             ingInput.value = res.translated.ingredients;
                         }
+                        return true;
+                    } else if (res && !res.success) {
+                        throw new Error(res.message || 'خطا در ترجمه');
                     }
+                    return false;
                 }).catch(function (err) {
                     console.error('Translation error for ' + langCode, err);
+                    return Promise.reject(err);
                 });
 
                 promises.push(p);
             });
 
-            Promise.all(promises).then(function () {
+            Promise.allSettled(promises).then(function (results) {
                 aiTranslateBtn.disabled = false;
-                if (btnText) btnText.textContent = '✨ ترجمه انجام شد!';
-                showToast('ترجمه‌ها به صورت هوشمند تکمیل شدند.', 'success');
+                var succeeded = results.filter(function (r) { return r.status === 'fulfilled' && r.value === true; }).length;
+                var failed = results.filter(function (r) { return r.status === 'rejected'; });
+
+                if (succeeded > 0 && failed.length === 0) {
+                    if (btnText) btnText.textContent = '✨ ترجمه انجام شد!';
+                    showToast('ترجمه‌ها به صورت هوشمند تکمیل شدند.', 'success');
+                } else if (succeeded > 0 && failed.length > 0) {
+                    if (btnText) btnText.textContent = '⚠️ ترجمه ناقص';
+                    showToast('برخی زبان‌ها با خطا مواجه شدند، اما باقی ترجمه شدند.', 'info');
+                } else {
+                    if (btnText) btnText.textContent = '❌ خطا در ترجمه';
+                    var errMsg = (failed[0] && failed[0].reason && failed[0].reason.message) ? failed[0].reason.message : 'خطا در برقراری ارتباط با سرویس هوش مصنوعی.';
+                    showToast(errMsg, 'error');
+                }
+
                 setTimeout(function () {
                     if (btnText) btnText.textContent = origText;
-                }, 2500);
+                }, 3000);
             });
         });
     }
@@ -1713,16 +1731,32 @@
                     if (res && res.success && res.translated) {
                         var nameInput = document.querySelector('.rmm-cat-trans-name[data-lang="' + targetLang + '"]');
                         var descInput = document.querySelector('.rmm-cat-trans-desc[data-lang="' + targetLang + '"]');
-                        if (nameInput && res.translated.name) nameInput.value = res.translated.name;
-                        if (descInput && res.translated.desc) descInput.value = res.translated.desc;
+                        if (nameInput && res.translated.name && (targetLang === 'fa' || res.translated.name !== textPayload.name)) {
+                            nameInput.value = res.translated.name;
+                        }
+                        if (descInput && res.translated.desc && (targetLang === 'fa' || res.translated.desc !== textPayload.desc)) {
+                            descInput.value = res.translated.desc;
+                        }
+                        return true;
+                    } else if (res && !res.success) {
+                        throw new Error(res.message || 'خطا در ترجمه دسته');
                     }
+                    return false;
                 });
             });
 
-            Promise.all(promises).then(function () {
-                showToast('ترجمه هوشمند دسته با موفقیت انجام شد! ✨', 'success');
-            }).catch(function () {
-                showToast('برخی از ترجمه‌ها با خطا مواجه شدند.', 'info');
+            Promise.allSettled(promises).then(function (results) {
+                var succeeded = results.filter(function (r) { return r.status === 'fulfilled' && r.value === true; }).length;
+                var failed = results.filter(function (r) { return r.status === 'rejected'; });
+
+                if (succeeded > 0 && failed.length === 0) {
+                    showToast('ترجمه هوشمند دسته با موفقیت انجام شد! ✨', 'success');
+                } else if (succeeded > 0 && failed.length > 0) {
+                    showToast('برخی از ترجمه‌های دسته با خطا مواجه شدند.', 'info');
+                } else {
+                    var errMsg = (failed[0] && failed[0].reason && failed[0].reason.message) ? failed[0].reason.message : 'خطا در برقراری ارتباط با سرویس هوش مصنوعی.';
+                    showToast(errMsg, 'error');
+                }
             }).finally(function () {
                 if (sparkle) sparkle.style.display = 'inline-block';
                 if (loader) loader.style.display = 'none';
