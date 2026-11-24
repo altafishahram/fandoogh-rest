@@ -28,6 +28,8 @@ class ModifiersEngine {
         // Transient cache invalidation
         add_action('save_post_product', [$this, 'clear_product_modal_cache']);
         add_action('woocommerce_update_product', [$this, 'clear_product_modal_cache']);
+        add_action('woocommerce_product_set_stock_status', [$this, 'clear_product_modal_cache']);
+        add_action('rmm_branch_inventory_updated', [$this, 'clear_product_modal_cache']);
     }
 
     public function add_modifiers_metabox() {
@@ -275,6 +277,9 @@ class ModifiersEngine {
             }
 
             foreach ($_POST['rmm_addons'] as $addon_json) {
+                if (!is_string($addon_json)) {
+                    continue;
+                }
                 $decoded = json_decode(stripslashes($addon_json), true);
                 if ($decoded && !empty($decoded['name'])) {
                     $addon_name  = sanitize_text_field($decoded['name']);
@@ -405,10 +410,17 @@ class ModifiersEngine {
         // Public read-only endpoint for front-end food modal; cached via transients and compatible with page-caching plugins.
 
         $product_id = absint($_GET['product_id'] ?? 0);
-        $active_branch = \RMM\Branches\BranchContext::get_active_branch_id();
-        $active_lang = !empty($_GET['lang']) ? sanitize_key($_GET['lang']) : (class_exists('RMM\\I18n\\MultiLangManager') ? \RMM\I18n\MultiLangManager::get_current_language() : 'fa');
+        if (!$product_id) {
+            wp_send_json_error(['message' => __('غذا یافت نشد.', 'fondogh-online-menu')]);
+        }
 
-        $cache_key = 'rmm_modal_' . $product_id . '_' . $active_branch . '_' . $active_lang;
+        $active_branch = \RMM\Branches\BranchContext::get_active_branch_id();
+        $active_lang   = class_exists('RMM\I18n\MultiLangManager') ? \RMM\I18n\MultiLangManager::get_current_language() : 'fa';
+
+        $global_ver = (int) get_option('rmm_modal_global_ver', 1);
+        $prod_ver   = (int) get_post_meta($product_id, '_rmm_modal_ver', true) ?: 1;
+
+        $cache_key = "rmm_m_{$global_ver}_{$prod_ver}_{$product_id}_{$active_branch}_{$active_lang}";
         $cached_data = get_transient($cache_key);
         if ($cached_data && is_array($cached_data)) {
             wp_send_json_success($cached_data);
@@ -417,7 +429,7 @@ class ModifiersEngine {
 
         $product = wc_get_product($product_id);
 
-        if (!$product) {
+        if (!$product || $product->get_status() !== 'publish' || !$product->is_visible() || post_password_required($product_id)) {
             wp_send_json_error(['message' => __('غذا یافت نشد.', 'fondogh-online-menu')]);
         }
 
@@ -446,9 +458,6 @@ class ModifiersEngine {
         $prep_time   = absint(get_post_meta($product_id, '_rmm_prep_time', true));
         $ingredients = get_post_meta($product_id, '_rmm_ingredients', true);
         $desc        = $product->get_short_description() ?: $product->get_description();
-
-        // Resolve active language
-        $active_lang = !empty($_GET['lang']) ? sanitize_key($_GET['lang']) : (class_exists('RMM\\I18n\\MultiLangManager') ? \RMM\I18n\MultiLangManager::get_current_language() : 'fa');
 
         $food_name = $product->get_name();
         // Multilingual fallback
@@ -569,20 +578,24 @@ class ModifiersEngine {
             wp_send_json_error(['message' => __('شناسه قالب یا محصول نامعتبر است.', 'fondogh-online-menu')]);
         }
 
-        $post_obj = get_post($product_id);
-        if (!$post_obj || $post_obj->post_type !== 'product') {
+        $tpl_post = get_post($template_id);
+        if (!$tpl_post || $tpl_post->post_status !== 'publish' || $tpl_post->post_type !== 'elementor_library' || post_password_required($template_id)) {
+            wp_send_json_error(['message' => __('قالب یافت نشد.', 'fondogh-online-menu')]);
+        }
+
+        $product = wc_get_product($product_id);
+        if (!$product || $product->get_status() !== 'publish' || !$product->is_visible() || post_password_required($product_id)) {
             wp_send_json_error(['message' => __('محصول یافت نشد.', 'fondogh-online-menu')]);
         }
 
         // Setup global post context so Elementor dynamic tags and WooCommerce widgets resolve to this product
-        global $post, $product;
+        global $post;
         $prev_post = $post;
-        $post = $post_obj;
+        $post = get_post($product_id);
         setup_postdata($post);
-        $product = wc_get_product($product_id);
 
         $html = '';
-        if (class_exists('\\Elementor\\Plugin')) {
+        if (class_exists('\Elementor\Plugin')) {
             $html = \Elementor\Plugin::instance()->frontend->get_builder_content_for_display($template_id, true);
         }
 
@@ -599,16 +612,19 @@ class ModifiersEngine {
         ]);
     }
 
-    public function clear_product_modal_cache($post_id) {
-        global $wpdb;
-        if (!empty($post_id)) {
-            $wpdb->query(
-                $wpdb->prepare(
-                    "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name LIKE %s",
-                    '_transient_rmm_modal_' . absint($post_id) . '_%',
-                    '_transient_timeout_rmm_modal_' . absint($post_id) . '_%'
-                )
-            );
+    /**
+     * Invalidate modal cache using version bumping (compatible with persistent object caching like Redis/Memcached)
+     *
+     * @param int $post_id
+     */
+    public function clear_product_modal_cache($post_id = 0) {
+        $post_id = absint($post_id);
+        if ($post_id > 0) {
+            $ver = (int) get_post_meta($post_id, '_rmm_modal_ver', true) ?: 1;
+            update_post_meta($post_id, '_rmm_modal_ver', $ver + 1);
+        } else {
+            $global_ver = (int) get_option('rmm_modal_global_ver', 1);
+            update_option('rmm_modal_global_ver', $global_ver + 1);
         }
     }
 }

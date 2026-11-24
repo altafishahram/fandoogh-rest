@@ -169,13 +169,14 @@ class InventoryRepository {
 
         $fields['updated_at'] = gmdate('Y-m-d H:i:s');
 
+        $success = false;
         if ($existing_id) {
             $updated = $wpdb->update(
                 $table,
                 $fields,
                 ['id' => $existing_id]
             );
-            return $updated !== false;
+            $success = ($updated !== false);
         } else {
             $fields['product_id'] = $product_id;
             $fields['branch_id']  = $branch_id;
@@ -183,8 +184,14 @@ class InventoryRepository {
                 $table,
                 $fields
             );
-            return $inserted !== false;
+            $success = ($inserted !== false);
         }
+
+        if ($success) {
+            do_action('rmm_branch_inventory_updated', $product_id, $branch_id);
+        }
+
+        return $success;
     }
 
     /**

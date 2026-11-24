@@ -1008,6 +1008,8 @@ class RestApiController {
             }
         }
 
+        do_action('rmm_branch_inventory_updated', $saved_id, 0);
+
         return rest_ensure_response([
             'success'    => true,
             'product_id' => $saved_id,
@@ -1032,6 +1034,7 @@ class RestApiController {
         }
 
         \RMM\Branches\InventoryRepository::delete_for_product($product_id);
+        do_action('rmm_branch_inventory_updated', $product_id, 0);
 
         return rest_ensure_response([
             'success'    => true,
