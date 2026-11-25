@@ -60,9 +60,95 @@
 
         var modal = $('#rmm-modifiers-modal');
         var modalContent = $('#rmm-modal-content');
-        var floatingCart = $('#rmm-floating-cart-bar');
-        var cartCount = $('#rmm-cart-count');
-        var cartTotal = $('#rmm-cart-total');
+
+        function getAddToCartUrl() {
+            if (window.rmmConfig && window.rmmConfig.wc_ajax_url) {
+                return window.rmmConfig.wc_ajax_url.toString().replace('%%endpoint%%', 'add_to_cart');
+            }
+            return (window.rmmConfig && window.rmmConfig.ajax_url) ? window.rmmConfig.ajax_url : '/wp-admin/admin-ajax.php';
+        }
+
+        function getFragmentsUrl() {
+            if (window.rmmConfig && window.rmmConfig.wc_ajax_url) {
+                return window.rmmConfig.wc_ajax_url.toString().replace('%%endpoint%%', 'get_refreshed_fragments');
+            }
+            return (window.rmmConfig && window.rmmConfig.ajax_url) ? window.rmmConfig.ajax_url : '/wp-admin/admin-ajax.php';
+        }
+
+        function syncFloatingCartVisibility() {
+            var $bar = $('#rmm-floating-cart-bar, .rmm-floating-cart-wrapper');
+            if (!$bar.length) return;
+            var $cnt = $('#rmm-cart-count');
+            if (!$cnt.length) return;
+            var rawCount = $cnt.attr('data-count');
+            var count = rawCount !== undefined ? parseInt(rawCount, 10) : parseInt($cnt.text().replace(/[^\d]/g, ''), 10);
+            if (!isNaN(count) && count > 0) {
+                $bar.removeClass('rmm-hidden-cart');
+            } else if (!isNaN(count) && count === 0) {
+                $bar.addClass('rmm-hidden-cart');
+            }
+        }
+
+        function applyCartFragments(fragments) {
+            if (!fragments || typeof fragments !== 'object') return false;
+            var applied = false;
+            $.each(fragments, function (key, value) {
+                if (typeof key === 'string' && typeof value === 'string') {
+                    var $targets = $(key);
+                    if ($targets.length) {
+                        $targets.replaceWith(value);
+                        applied = true;
+                    }
+                }
+            });
+            syncFloatingCartVisibility();
+            return applied;
+        }
+
+        function updateFloatingCart(res) {
+            if (res && res.fragments) {
+                applyCartFragments(res.fragments);
+                return;
+            }
+            var useWcAjax = !!(window.rmmConfig && window.rmmConfig.wc_ajax_url);
+            $.ajax({
+                url: getFragmentsUrl(),
+                type: 'POST',
+                dataType: 'json',
+                data: useWcAjax ? {} : { action: 'woocommerce_get_refreshed_fragments' },
+                success: function (fragRes) {
+                    if (fragRes && fragRes.fragments) {
+                        applyCartFragments(fragRes.fragments);
+                    }
+                }
+            });
+        }
+
+        $(document.body).on('added_to_cart wc_fragments_refreshed wc_fragments_loaded', function (e, fragments) {
+            if (fragments && typeof fragments === 'object') {
+                applyCartFragments(fragments);
+            } else {
+                syncFloatingCartVisibility();
+            }
+        });
+
+        $(document.body).on('removed_from_cart updated_cart_totals', function (e, fragments) {
+            if (fragments && typeof fragments === 'object') {
+                applyCartFragments(fragments);
+            } else {
+                updateFloatingCart();
+            }
+        });
+
+        // If full-page cache served count=0 while WC cart cookie exists, refresh fragments once
+        if (!(window.rmmConfig && window.rmmConfig.is_view_only)) {
+            if ($('#rmm-floating-cart-bar').length && document.cookie.indexOf('woocommerce_cart_hash=') !== -1) {
+                var initCount = parseInt($('#rmm-cart-count').attr('data-count') || $('#rmm-cart-count').text(), 10) || 0;
+                if (initCount === 0) {
+                    updateFloatingCart();
+                }
+            }
+        }
 
         // Lightbox state variables
         var activeModalImages = [];
@@ -172,29 +258,45 @@
             e.preventDefault();
             var $btn = $(this);
             var productId = $btn.data('id');
+            if (!productId) return;
 
+            var originalHtml = $btn.data('rmm-orig-html') || $btn.html();
+            $btn.data('rmm-orig-html', originalHtml);
             $btn.prop('disabled', true).text('⏳...');
 
+            var useWcAjax = !!(window.rmmConfig && window.rmmConfig.wc_ajax_url);
+            var payload = {
+                product_id: productId,
+                quantity: 1
+            };
+            if (!useWcAjax) {
+                payload.action = 'woocommerce_add_to_cart';
+            }
+
             $.ajax({
-                url: window.rmmConfig ? window.rmmConfig.ajax_url : '/wp-admin/admin-ajax.php',
+                url: getAddToCartUrl(),
                 type: 'POST',
-                data: {
-                    action: 'woocommerce_add_to_cart',
-                    product_id: productId,
-                    quantity: 1
-                },
+                dataType: 'json',
+                data: payload,
                 success: function (res) {
-                    $btn.prop('disabled', false).text('✓ اضافه شد');
+                    if (!res || res.error) {
+                        $btn.prop('disabled', false).text(t('error_adding', 'خطا در افزودن!'));
+                        setTimeout(function () {
+                            $btn.html(originalHtml);
+                        }, 1500);
+                        return;
+                    }
+
+                    $btn.prop('disabled', false).text('✓ ' + t('added_to_cart', 'اضافه شد'));
                     setTimeout(function () {
-                        $btn.text('+ افزودن به سبد');
+                        $btn.html(originalHtml);
                     }, 1500);
 
-                    // Refresh cart fragments
-                    $(document.body).trigger('wc_fragment_refresh');
-                    updateFloatingCart();
+                    updateFloatingCart(res);
+                    $(document.body).trigger('added_to_cart', [res.fragments || {}, res.cart_hash || '', $btn]);
                 },
                 error: function () {
-                    $btn.prop('disabled', false).text('+ افزودن به سبد');
+                    $btn.prop('disabled', false).html(originalHtml);
                 }
             });
         });
@@ -239,27 +341,70 @@
         // Standalone & Loop Widgets Order button handler
         $(document).on('click', '.rmm-food-card-standalone .rmm-btn-order, .rmm-food-loop-grid .rmm-btn-order', function (e) {
             e.preventDefault();
-            var pid = $(this).data('product-id');
+            e.stopPropagation();
+            var $btn = $(this);
+            var pid = $btn.data('product-id') || $btn.data('id');
             if (!pid) return;
 
+            if (isViewOnly()) {
+                var $card = $btn.closest('.rmm-food-card');
+                var title = $btn.attr('data-title') || $card.find('.rmm-food-title').first().text().trim() || '';
+                var rawPrice = parseFloat($btn.attr('data-price'));
+                if (isNaN(rawPrice)) {
+                    var priceTxt = $card.find('.rmm-food-price ins .amount, .rmm-food-price .amount').first().text().replace(/[^\d]/g, '');
+                    rawPrice = parseFloat(priceTxt) || 0;
+                }
+                var img = $btn.attr('data-image') || $card.find('img.rmm-food-img').first().attr('src') || '';
+                addToCatalogList({
+                    id: parseInt(pid, 10),
+                    title: title,
+                    price: isNaN(rawPrice) ? 0 : rawPrice,
+                    image: img,
+                    qty: 1,
+                    meta: ''
+                }, $btn);
+                return;
+            }
+
             var $btn = $(this);
+            var originalHtml = $btn.data('rmm-orig-html') || $btn.html();
+            $btn.data('rmm-orig-html', originalHtml);
             $btn.prop('disabled', true);
 
+            var useWcAjax = !!(window.rmmConfig && window.rmmConfig.wc_ajax_url);
+            var payload = {
+                product_id: pid,
+                quantity: 1
+            };
+            if (!useWcAjax) {
+                payload.action = 'woocommerce_add_to_cart';
+            }
+
             $.ajax({
-                url: window.rmmConfig ? window.rmmConfig.ajax_url : '/wp-admin/admin-ajax.php',
+                url: getAddToCartUrl(),
                 type: 'POST',
-                data: {
-                    action: 'woocommerce_add_to_cart',
-                    product_id: pid,
-                    quantity: 1
-                },
+                dataType: 'json',
+                data: payload,
                 success: function (res) {
                     $btn.prop('disabled', false);
-                    $(document.body).trigger('wc_fragment_refresh');
-                    updateFloatingCart();
+                    if (!res || res.error) {
+                        $btn.text(t('error_adding', 'خطا!'));
+                        setTimeout(function () {
+                            $btn.html(originalHtml);
+                        }, 1500);
+                        return;
+                    }
+
+                    $btn.text('✓ ' + t('added_to_cart', 'اضافه شد'));
+                    setTimeout(function () {
+                        $btn.html(originalHtml);
+                    }, 1200);
+
+                    updateFloatingCart(res);
+                    $(document.body).trigger('added_to_cart', [res.fragments || {}, res.cart_hash || '', $btn]);
                 },
                 error: function () {
-                    $btn.prop('disabled', false);
+                    $btn.prop('disabled', false).html(originalHtml);
                 }
             });
         });
@@ -280,7 +425,7 @@
         // 4. Open Food Details / Modifiers Modal (on Card Click or Button Click)
         $(document).on('click', '.rmm-food-card.rmm-card-clickable, .rmm-open-modifiers-btn', function (e) {
             // Ignore click if user clicked directly on catalog WhatsApp/call button or quick-add
-            if ($(e.target).closest('.rmm-quick-add-btn, .rmm-btn-order.whatsapp, .rmm-btn-order.call').length) {
+            if ($(e.target).closest('.rmm-quick-add-btn, .rmm-catalog-add-btn, .rmm-btn-order.whatsapp, .rmm-btn-order.call').length) {
                 return;
             }
             e.preventDefault();
@@ -597,8 +742,29 @@
                     '</button>' +
                     '</div>';
             } else {
-                // View-Only Catalog Action Button
-                html += '<div class="rmm-modal-submit-action">';
+                // View-Only Catalog Mode: allow adding to floating selection list with qty & options
+                html += '<div class="rmm-modal-qty-container">' +
+                    '<span class="rmm-modal-qty-label">' + t('quantity', 'تعداد انتخاب:') + '</span>' +
+                    '<div class="rmm-qty-controls">' +
+                    '<button type="button" class="rmm-qty-btn rmm-qty-minus">−</button>' +
+                    '<input type="number" class="rmm-qty-val" name="quantity" value="1" min="1" max="99" readonly>' +
+                    '<button type="button" class="rmm-qty-btn rmm-qty-plus">+</button>' +
+                    '</div>' +
+                    '</div>';
+
+                var hideCatalogPrice = !!(window.rmmConfig && window.rmmConfig.catalog_hide_price) || !!data.catalog_hide_price;
+                var modalBtnPriceHtml = hideCatalogPrice ? '' : '<span id="rmm-modal-btn-total-price">' + formatPriceNumber(data.base_price) + ' ' + data.currency_symbol + '</span>';
+
+                html += '<div class="rmm-modal-submit-action" style="display:flex; flex-direction:column; gap:10px;">' +
+                    '<button type="button" class="rmm-modal-btn-submit rmm-modal-catalog-add-btn" id="rmm-modal-catalog-add-btn" ' +
+                    'data-id="' + data.id + '" ' +
+                    'data-title="' + escHtml(data.name) + '" ' +
+                    'data-image="' + escHtml(data.image || '') + '" ' +
+                    'data-hide-price="' + (hideCatalogPrice ? '1' : '0') + '">' +
+                    '<span>+ افزودن به لیست انتخاب</span>' +
+                    modalBtnPriceHtml +
+                    '</button>';
+
                 if (data.action_btn === 'whatsapp' && data.whatsapp_url) {
                     html += '<a href="' + data.whatsapp_url + '" target="_blank" class="rmm-modal-btn-submit" style="background:#25d366; text-decoration:none; justify-content:center; gap:8px;">' +
                         '💬 ' + t('order_whatsapp', 'سفارش و استعلام در واتساپ') +
@@ -768,15 +934,20 @@
             var $form = $(this);
             var $btn = $('#rmm-modal-submit-btn');
             var pId = $form.data('product-id');
+            var originalBtnHtml = $btn.data('rmm-orig-html') || $btn.html();
+            $btn.data('rmm-orig-html', originalBtnHtml);
 
             $btn.prop('disabled', true).text(t('submitting', 'در حال ثبت سفارش...'));
 
+            var useWcAjax = !!(window.rmmConfig && window.rmmConfig.wc_ajax_url);
             var formData = $form.serializeArray();
             var postData = {
-                action: 'woocommerce_add_to_cart',
                 product_id: pId,
                 quantity: 1
             };
+            if (!useWcAjax) {
+                postData.action = 'woocommerce_add_to_cart';
+            }
 
             formData.forEach(function (item) {
                 if (item.name === 'rmm_addons[]' || item.name.indexOf('rmm_radio_addon_') === 0) {
@@ -788,22 +959,34 @@
             });
 
             $.ajax({
-                url: window.rmmConfig ? window.rmmConfig.ajax_url : '/wp-admin/admin-ajax.php',
+                url: getAddToCartUrl(),
                 type: 'POST',
+                dataType: 'json',
                 data: postData,
-                success: function () {
+                success: function (res) {
+                    if (!res || res.error) {
+                        $btn.prop('disabled', false).text(t('error_adding', 'خطا در افزودن!'));
+                        setTimeout(function () {
+                            $btn.html(originalBtnHtml);
+                        }, 1500);
+                        return;
+                    }
+
                     $btn.text('✓ ' + t('added_to_cart', 'به سبد اضافه شد'));
                     setTimeout(function () {
-                        modal.fadeOut(200);
+                        $('#rmm-modifiers-modal').fadeOut(200);
                         $('body, html').removeClass('rmm-modal-open');
-                        $btn.prop('disabled', false).text(t('add_to_cart', 'افزودن به سبد خرید'));
+                        $btn.prop('disabled', false).html(originalBtnHtml);
                     }, 700);
 
-                    $(document.body).trigger('wc_fragment_refresh');
-                    updateFloatingCart();
+                    updateFloatingCart(res);
+                    $(document.body).trigger('added_to_cart', [res.fragments || {}, res.cart_hash || '', $btn]);
                 },
                 error: function () {
                     $btn.prop('disabled', false).text(t('error_adding', 'خطا در افزودن!'));
+                    setTimeout(function () {
+                        $btn.html(originalBtnHtml);
+                    }, 1500);
                 }
             });
         });
@@ -932,11 +1115,7 @@
             }
         } catch (err) {}
 
-        // Update floating cart state
-        function updateFloatingCart() {
-            if (!floatingCart.length) return;
-            floatingCart.removeClass('rmm-hidden-cart');
-        }
+
 
         // 7. Entrance Language Selection Modal
         var entranceModal = $('#rmm-entrance-modal');
@@ -1139,6 +1318,449 @@
                     $btn.data('loading', false).removeClass('is-loading');
                 }
             });
+        });
+
+        // =====================================================================
+        // 10. Catalog Mode (View-Only) Floating Selection List
+        // =====================================================================
+        function escHtml(str) {
+            return String(str === null || str === undefined ? '' : str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function isViewOnly() {
+            return !!(window.rmmConfig && window.rmmConfig.is_view_only);
+        }
+
+        function isCatalogPriceHidden() {
+            return !!(window.rmmConfig && window.rmmConfig.catalog_hide_price);
+        }
+
+        function getCatalogStorageKey() {
+            var branchId = (window.rmmConfig && window.rmmConfig.active_branch) ? window.rmmConfig.active_branch : '0';
+            return 'rmm_catalog_list_' + branchId;
+        }
+
+        function loadCatalogList() {
+            try {
+                var raw = localStorage.getItem(getCatalogStorageKey());
+                if (raw) {
+                    var parsed = JSON.parse(raw);
+                    if (Array.isArray(parsed)) return parsed;
+                }
+            } catch (err) {}
+            return [];
+        }
+
+        function saveCatalogList(list) {
+            try {
+                localStorage.setItem(getCatalogStorageKey(), JSON.stringify(list));
+            } catch (err) {}
+        }
+
+        var catalogList = loadCatalogList();
+
+        function getCurrencyLabel() {
+            return (window.rmmConfig && window.rmmConfig.currency_symbol) ? window.rmmConfig.currency_symbol : 'تومان';
+        }
+
+        function formatCatalogPrice(amount) {
+            if (isCatalogPriceHidden()) {
+                return t('digital_menu', 'منو دیجیتال');
+            }
+            return formatPriceNumber(amount) + ' ' + getCurrencyLabel();
+        }
+
+        function ensureCatalogFloatingBar() {
+            if (!isViewOnly()) return $();
+            var $bar = $('#rmm-catalog-floating-bar');
+            if (!$bar.length && ($('.rmm-catalog-add-btn').length || $('.rmm-menu-widget-wrapper').length || $('.rmm-food-card').length || catalogList.length > 0)) {
+                $('body').append(
+                    '<div id="rmm-catalog-floating-bar" class="rmm-floating-cart-wrapper rmm-catalog-floating-wrapper rmm-hidden-cart">' +
+                    '  <button type="button" class="rmm-floating-cart-btn rmm-catalog-floating-btn" id="rmm-catalog-open-drawer-btn" aria-haspopup="dialog">' +
+                    '    <div class="rmm-cart-left">' +
+                    '      <span class="rmm-cart-badge-count" id="rmm-catalog-count" data-count="0">0</span>' +
+                    '      <span class="rmm-cart-label">لیست انتخاب‌های من</span>' +
+                    '    </div>' +
+                    '    <div class="rmm-cart-right">' +
+                    '      <span class="rmm-cart-total" id="rmm-catalog-total">0</span>' +
+                    '      <span class="rmm-cart-arrow">&#9650;</span>' +
+                    '    </div>' +
+                    '  </button>' +
+                    '</div>'
+                );
+                $bar = $('#rmm-catalog-floating-bar');
+            }
+            return $bar;
+        }
+
+        function ensureCatalogDrawer() {
+            var $drawer = $('#rmm-catalog-drawer-backdrop');
+            if (!$drawer.length) {
+                var whatsappNum = (window.rmmConfig && window.rmmConfig.whatsapp_number) ? String(window.rmmConfig.whatsapp_number).trim() : '';
+                var waBtnHtml = whatsappNum
+                    ? '<a href="#" target="_blank" class="rmm-catalog-wa-btn" id="rmm-catalog-wa-send-btn">💬 ارسال لیست در واتساپ</a>'
+                    : '';
+
+                $('body').append(
+                    '<div id="rmm-catalog-drawer-backdrop" class="rmm-catalog-drawer-backdrop" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="rmm-catalog-drawer-title">' +
+                    '  <div class="rmm-catalog-drawer">' +
+                    '    <div class="rmm-catalog-drawer-header">' +
+                    '      <div class="rmm-catalog-drawer-title-wrap">' +
+                    '        <h3 id="rmm-catalog-drawer-title" class="rmm-catalog-drawer-title">📝 لیست انتخاب‌های من</h3>' +
+                    '        <span class="rmm-catalog-drawer-count" id="rmm-catalog-drawer-count">0 مورد</span>' +
+                    '      </div>' +
+                    '      <div class="rmm-catalog-drawer-header-actions">' +
+                    '        <button type="button" class="rmm-catalog-clear-btn" id="rmm-catalog-clear-btn" title="پاک کردن لیست">🗑️ پاک کردن</button>' +
+                    '        <button type="button" class="rmm-catalog-close-btn" id="rmm-catalog-close-btn" aria-label="بستن">&times;</button>' +
+                    '      </div>' +
+                    '    </div>' +
+                    '    <div class="rmm-catalog-drawer-body" id="rmm-catalog-drawer-list"></div>' +
+                    '    <div class="rmm-catalog-drawer-footer">' +
+                    '      <div class="rmm-catalog-summary-row">' +
+                    '        <span class="rmm-catalog-summary-label">تعداد کل انتخاب‌ها:</span>' +
+                    '        <strong class="rmm-catalog-summary-qty" id="rmm-catalog-footer-qty">0 عدد</strong>' +
+                    '      </div>' +
+                    '      <div class="rmm-catalog-grand-total-row">' +
+                    '        <span class="rmm-catalog-grand-label">جمع کل:</span>' +
+                    '        <strong class="rmm-catalog-grand-amount" id="rmm-catalog-footer-total">0</strong>' +
+                    '      </div>' +
+                    '      <div class="rmm-catalog-footer-actions">' +
+                    waBtnHtml +
+                    '        <button type="button" class="rmm-catalog-done-btn" id="rmm-catalog-done-btn">ادامه مشاهده منو</button>' +
+                    '      </div>' +
+                    '    </div>' +
+                    '  </div>' +
+                    '</div>'
+                );
+                $drawer = $('#rmm-catalog-drawer-backdrop');
+            }
+            return $drawer;
+        }
+
+        function getCatalogTotals() {
+            var totalQty = 0;
+            var totalAmount = 0;
+            catalogList.forEach(function (item) {
+                var q = parseInt(item.qty, 10) || 0;
+                var p = parseFloat(item.price) || 0;
+                totalQty += q;
+                totalAmount += (q * p);
+            });
+            return { qty: totalQty, amount: totalAmount };
+        }
+
+        function renderCatalogFloatingBar() {
+            if (!isViewOnly()) return;
+            var $bar = ensureCatalogFloatingBar();
+            if (!$bar.length) return;
+
+            var totals = getCatalogTotals();
+            var $countEl = $('#rmm-catalog-count');
+            var $totalEl = $('#rmm-catalog-total');
+
+            $countEl.attr('data-count', totals.qty).text(totals.qty);
+            if (isCatalogPriceHidden()) {
+                $totalEl.text(totals.qty + ' مورد');
+            } else {
+                $totalEl.text(formatCatalogPrice(totals.amount));
+            }
+
+            if (totals.qty > 0) {
+                $bar.removeClass('rmm-hidden-cart');
+            } else {
+                $bar.addClass('rmm-hidden-cart');
+            }
+        }
+
+        function syncCatalogCardButtons() {
+            if (!isViewOnly()) return;
+            var qtyById = {};
+            catalogList.forEach(function (item) {
+                var idKey = String(item.id);
+                qtyById[idKey] = (qtyById[idKey] || 0) + (parseInt(item.qty, 10) || 0);
+            });
+
+            $('.rmm-catalog-add-btn').each(function () {
+                var $btn = $(this);
+                var pid = String($btn.attr('data-id') || '');
+                var count = qtyById[pid] || 0;
+                if (count > 0) {
+                    $btn.addClass('in-list').html('✓ در لیست (' + count + ') +');
+                } else {
+                    $btn.removeClass('in-list').html('+ افزودن به لیست');
+                }
+            });
+        }
+
+        function renderCatalogDrawerList() {
+            var $drawer = ensureCatalogDrawer();
+            var $listEl = $drawer.find('#rmm-catalog-drawer-list');
+            var totals = getCatalogTotals();
+
+            $drawer.find('#rmm-catalog-drawer-count').text(totals.qty + ' مورد');
+            $drawer.find('#rmm-catalog-footer-qty').text(totals.qty + ' عدد');
+            $drawer.find('#rmm-catalog-footer-total').text(formatCatalogPrice(totals.amount));
+
+            if (!catalogList.length) {
+                $listEl.html(
+                    '<div class="rmm-catalog-empty">' +
+                    '  <span class="rmm-catalog-empty-icon">🍽️</span>' +
+                    '  <p>هنوز غذایی به لیست انتخاب شما اضافه نشده است.</p>' +
+                    '  <span>از منو روی دکمه «+ افزودن به لیست» کلیک کنید.</span>' +
+                    '</div>'
+                );
+                $drawer.find('#rmm-catalog-clear-btn').hide();
+                $drawer.find('#rmm-catalog-wa-send-btn').hide();
+                return;
+            }
+
+            $drawer.find('#rmm-catalog-clear-btn').show();
+
+            var html = '';
+            var waLines = ['سلام، لیست غذاهای انتخابی من:'];
+            catalogList.forEach(function (item, idx) {
+                var q = parseInt(item.qty, 10) || 1;
+                var p = parseFloat(item.price) || 0;
+                var lineTotal = q * p;
+                var thumb = item.image ? '<img src="' + escHtml(item.image) + '" class="rmm-catalog-item-thumb" alt="' + escHtml(item.title) + '">' : '<div class="rmm-catalog-item-thumb rmm-catalog-thumb-placeholder">🍽️</div>';
+                var metaHtml = item.meta ? '<div class="rmm-catalog-item-meta">' + escHtml(item.meta) + '</div>' : '';
+
+                html += '<div class="rmm-catalog-item-card" data-index="' + idx + '">' +
+                    thumb +
+                    '<div class="rmm-catalog-item-body">' +
+                    '  <div class="rmm-catalog-item-top">' +
+                    '    <h4 class="rmm-catalog-item-title">' + escHtml(item.title) + '</h4>' +
+                    '    <button type="button" class="rmm-catalog-item-remove" data-index="' + idx + '" title="حذف">&times;</button>' +
+                    '  </div>' +
+                    metaHtml +
+                    '  <div class="rmm-catalog-item-unit-price">قیمت واحد: ' + formatCatalogPrice(p) + '</div>' +
+                    '  <div class="rmm-catalog-item-bottom">' +
+                    '    <div class="rmm-catalog-item-qty">' +
+                    '      <button type="button" class="rmm-cat-qty-btn rmm-cat-qty-minus" data-index="' + idx + '" aria-label="کاهش تعداد">−</button>' +
+                    '      <span class="rmm-cat-qty-num">' + q + '</span>' +
+                    '      <button type="button" class="rmm-cat-qty-btn rmm-cat-qty-plus" data-index="' + idx + '" aria-label="افزایش تعداد">+</button>' +
+                    '    </div>' +
+                    '    <div class="rmm-catalog-item-subtotal">' +
+                    '      <span class="rmm-catalog-sub-label">مبلغ:</span> ' +
+                    '      <strong class="rmm-catalog-sub-val">' + formatCatalogPrice(lineTotal) + '</strong>' +
+                    '    </div>' +
+                    '  </div>' +
+                    '</div>' +
+                    '</div>';
+
+                waLines.push((idx + 1) + '. ' + item.title + (item.meta ? ' (' + item.meta + ')' : '') + ' × ' + q + (isCatalogPriceHidden() ? '' : ' — ' + formatCatalogPrice(lineTotal)));
+            });
+
+            if (!isCatalogPriceHidden()) {
+                waLines.push('جمع کل: ' + formatCatalogPrice(totals.amount));
+            }
+
+            var whatsappNum = (window.rmmConfig && window.rmmConfig.whatsapp_number) ? String(window.rmmConfig.whatsapp_number).trim() : '';
+            if (whatsappNum) {
+                $drawer.find('#rmm-catalog-wa-send-btn')
+                    .attr('href', 'https://wa.me/' + encodeURIComponent(whatsappNum) + '?text=' + encodeURIComponent(waLines.join('\n')))
+                    .show();
+            }
+
+            $listEl.html(html);
+        }
+
+        function addToCatalogList(item, $triggerBtn) {
+            if (!item || !item.id) return;
+            var key = String(item.id) + '|' + String(item.meta || '');
+            var qtyToAdd = parseInt(item.qty, 10) || 1;
+            var existing = null;
+            for (var i = 0; i < catalogList.length; i++) {
+                if (catalogList[i].key === key) {
+                    existing = catalogList[i];
+                    break;
+                }
+            }
+            if (existing) {
+                existing.qty = (parseInt(existing.qty, 10) || 0) + qtyToAdd;
+                if (item.price > 0) existing.price = item.price;
+                if (item.image) existing.image = item.image;
+            } else {
+                catalogList.push({
+                    key: key,
+                    id: item.id,
+                    title: item.title || 'غذا',
+                    price: parseFloat(item.price) || 0,
+                    image: item.image || '',
+                    qty: qtyToAdd,
+                    meta: item.meta || ''
+                });
+            }
+
+            saveCatalogList(catalogList);
+            renderCatalogFloatingBar();
+            syncCatalogCardButtons();
+
+            var $barBtn = $('#rmm-catalog-floating-bar .rmm-floating-cart-btn');
+            $barBtn.removeClass('rmm-pulse-pop');
+            void ($barBtn[0] && $barBtn[0].offsetWidth);
+            $barBtn.addClass('rmm-pulse-pop');
+
+            if ($('#rmm-catalog-drawer-backdrop').is(':visible')) {
+                renderCatalogDrawerList();
+            }
+
+            if ($triggerBtn && $triggerBtn.length && !$triggerBtn.hasClass('rmm-catalog-add-btn')) {
+                var orig = $triggerBtn.data('rmm-orig-html') || $triggerBtn.html();
+                $triggerBtn.data('rmm-orig-html', orig);
+                $triggerBtn.text('✓ به لیست اضافه شد');
+                setTimeout(function () {
+                    $triggerBtn.html(orig);
+                }, 1100);
+            }
+        }
+
+        if (isViewOnly()) {
+            ensureCatalogFloatingBar();
+            renderCatalogFloatingBar();
+            syncCatalogCardButtons();
+        }
+
+        // Card "+ افزودن به لیست" button click
+        $(document).on('click', '.rmm-catalog-add-btn', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var $btn = $(this);
+            var id = parseInt($btn.attr('data-id'), 10);
+            var title = $btn.attr('data-title') || $btn.closest('.rmm-food-card').find('.rmm-food-title').first().text().trim();
+            var price = parseFloat($btn.attr('data-price')) || 0;
+            var image = $btn.attr('data-image') || $btn.closest('.rmm-food-card').find('img.rmm-card-img').first().attr('src') || '';
+
+            addToCatalogList({
+                id: id,
+                title: title,
+                price: price,
+                image: image,
+                qty: 1,
+                meta: ''
+            }, $btn);
+        });
+
+        // Modal "+ افزودن به لیست انتخاب" button click (in view_only mode)
+        $(document).on('click', '#rmm-modal-catalog-add-btn', function (e) {
+            e.preventDefault();
+            var $btn = $(this);
+            var $form = $('#rmm-modal-add-form');
+            var id = parseInt($btn.attr('data-id') || $form.data('product-id'), 10);
+            var title = $btn.attr('data-title') || $('.rmm-modal-food-title').first().text().trim();
+            var image = $btn.attr('data-image') || $('.rmm-modal-hero-img').first().attr('src') || '';
+            var qty = parseInt($form.find('.rmm-qty-val').val(), 10) || 1;
+
+            var unitPrice = parseFloat($form.data('base-price')) || 0;
+            var metaParts = [];
+            var $portion = $form.find('input[name="rmm_portion"]:checked');
+            if ($portion.length) {
+                unitPrice = parseFloat($portion.data('price')) || 0;
+                var portionName = $portion.closest('label').text().trim();
+                if (portionName) metaParts.push(portionName);
+            }
+            $form.find('.rmm-modal-addon-item input:checked').each(function () {
+                unitPrice += parseFloat($(this).data('price')) || 0;
+                try {
+                    var parsed = JSON.parse($(this).val());
+                    if (parsed && parsed.name) metaParts.push(parsed.name);
+                } catch (err) {}
+            });
+
+            if (isCatalogPriceHidden() || $btn.attr('data-hide-price') === '1') {
+                unitPrice = 0;
+            }
+
+            addToCatalogList({
+                id: id,
+                title: title,
+                price: unitPrice,
+                image: image,
+                qty: qty,
+                meta: metaParts.join('، ')
+            }, $btn);
+
+            setTimeout(function () {
+                $('#rmm-modifiers-modal').fadeOut(200);
+                $('body, html').removeClass('rmm-modal-open');
+            }, 450);
+        });
+
+        // Open Catalog Drawer when clicking floating bar
+        $(document).on('click', '#rmm-catalog-open-drawer-btn, #rmm-catalog-floating-bar .rmm-floating-cart-btn', function (e) {
+            e.preventDefault();
+            renderCatalogDrawerList();
+            $('#rmm-catalog-drawer-backdrop').fadeIn(200);
+            $('body, html').addClass('rmm-modal-open');
+        });
+
+        // Close Catalog Drawer
+        $(document).on('click', '#rmm-catalog-close-btn, #rmm-catalog-done-btn, #rmm-catalog-drawer-backdrop', function (e) {
+            if (e.target === this || $(this).is('#rmm-catalog-close-btn, #rmm-catalog-done-btn')) {
+                $('#rmm-catalog-drawer-backdrop').fadeOut(200);
+                $('body, html').removeClass('rmm-modal-open');
+            }
+        });
+
+        // Drawer quantity +/- / remove / clear
+        $(document).on('click', '.rmm-cat-qty-plus', function () {
+            var idx = parseInt($(this).attr('data-index'), 10);
+            if (!isNaN(idx) && catalogList[idx]) {
+                catalogList[idx].qty = (parseInt(catalogList[idx].qty, 10) || 1) + 1;
+                saveCatalogList(catalogList);
+                renderCatalogFloatingBar();
+                syncCatalogCardButtons();
+                renderCatalogDrawerList();
+            }
+        });
+
+        $(document).on('click', '.rmm-cat-qty-minus', function () {
+            var idx = parseInt($(this).attr('data-index'), 10);
+            if (!isNaN(idx) && catalogList[idx]) {
+                var cur = parseInt(catalogList[idx].qty, 10) || 1;
+                if (cur > 1) {
+                    catalogList[idx].qty = cur - 1;
+                } else {
+                    catalogList.splice(idx, 1);
+                }
+                saveCatalogList(catalogList);
+                renderCatalogFloatingBar();
+                syncCatalogCardButtons();
+                renderCatalogDrawerList();
+            }
+        });
+
+        $(document).on('click', '.rmm-catalog-item-remove', function () {
+            var idx = parseInt($(this).attr('data-index'), 10);
+            if (!isNaN(idx) && catalogList[idx]) {
+                catalogList.splice(idx, 1);
+                saveCatalogList(catalogList);
+                renderCatalogFloatingBar();
+                syncCatalogCardButtons();
+                renderCatalogDrawerList();
+            }
+        });
+
+        $(document).on('click', '#rmm-catalog-clear-btn', function () {
+            catalogList = [];
+            saveCatalogList(catalogList);
+            renderCatalogFloatingBar();
+            syncCatalogCardButtons();
+            renderCatalogDrawerList();
+        });
+
+        $(document).on('keydown', function (e) {
+            if (e.key === 'Escape' || e.keyCode === 27) {
+                if ($('#rmm-catalog-drawer-backdrop').is(':visible')) {
+                    $('#rmm-catalog-drawer-backdrop').fadeOut(200);
+                    $('body, html').removeClass('rmm-modal-open');
+                }
+            }
         });
 
     });

@@ -1502,7 +1502,18 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
                         $action_btn = \RMM\Core\Settings::get('catalog_action_btn', 'whatsapp');
                         $whatsapp = \RMM\Core\Settings::get('whatsapp_number', '');
                         $phone = \RMM\Core\Settings::get('phone_number', '');
+                        $cat_thumb_url = has_post_thumbnail($p_id) ? get_the_post_thumbnail_url($p_id, 'thumbnail') : wc_placeholder_img_src();
+                        $hide_cat_price = (\RMM\Core\Settings::get('catalog_hide_price', 'no') === 'yes');
+                        $cat_raw_price = $hide_cat_price ? 0 : floatval($price);
                         ?>
+                        <button type="button"
+                                class="rmm-btn-order rmm-catalog-add-btn"
+                                data-id="<?php echo esc_attr($p_id); ?>"
+                                data-title="<?php echo esc_attr($food_title); ?>"
+                                data-price="<?php echo esc_attr($cat_raw_price); ?>"
+                                data-image="<?php echo esc_url($cat_thumb_url); ?>">
+                            + <?php echo esc_html__('افزودن به لیست', 'fondogh-online-menu'); ?>
+                        </button>
                         <?php if ($action_btn === 'whatsapp' && $whatsapp) : ?>
                             <a href="<?php echo esc_url('https://wa.me/' . $whatsapp . '?text=' . rawurlencode(sprintf(__('سلام، مایل به استعلام و سفارش غذای %s هستم.', 'fondogh-online-menu'), $food_title))); ?>" target="_blank" class="rmm-btn-order whatsapp">
                                 💬 <?php echo esc_html($context_data['str_order_wa']); ?>

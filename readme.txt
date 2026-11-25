@@ -3,7 +3,7 @@ Contributors: Fondogh Team
 Requires at least: 5.8
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.1.1
+Stable tag: 1.3.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Update URI: false
@@ -19,7 +19,7 @@ Update URI: false
 * **حالت‌های کاری منو (Operation Modes):**
   - سفارش آنلاین و دلیوری (Online Delivery)
   - سفارش حضوری سر میز با QR کد (Dine-in Table Ordering)
-  - ویترین و کاتالوگ دیجیتال منو بدون پرداخت (View-Only Showcase) با بهینه‌سازی سرعت و حذف اسکریپت‌های سنگین ووکامرس
+  - ویترین و کاتالوگ دیجیتال منو بدون پرداخت (View-Only Showcase) با بهینه‌سازی سرعت و حذف اسکریپت‌های سنگین ووکامرس و لیست انتخاب‌های شناور
 * **سیستم چندشعبه‌ای پیشرفته (Multi-Branch):**
   - جدول اختصاصی دیتابیس برای ثبت قیمت و موجودی به ازای هر شعبه با سرعت بالا
   - سازگار با افزونه‌های کش (WP Rocket، LiteSpeed Cache)
@@ -33,8 +33,9 @@ Update URI: false
 * **ویجت‌های اختصاصی Elementor & Elementor Pro:**
   - هدر و انتخابگر شعبه و میز
   - نوار دسته‌بندی‌های چسبان (Sticky Bar)
+  - شیت دسته‌بندی تصویری با پاپ‌آپ و گرید ریسپانسیو (Category Sheet)
   - شبکه منو در ۴ استایل مدرن، اسنپ‌فودی، کافه لوکس و سنتی
-  - سبد خرید شناور مخصوص موبایل
+  - سبد خرید شناور و لیست انتخاب‌های کاتالوگ مخصوص موبایل و دسکتاپ
   - پشتیبانی از تگ‌های داینامیک المنتور پرو (Dynamic Tags)
 * **سیستم چندزبانه بومی (Dual-Language):**
   - پشتیبانی همزمان از فارسی و انگلیسی و هماهنگ با WPML/Polylang

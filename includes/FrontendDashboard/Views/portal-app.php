@@ -749,12 +749,16 @@ $login_error = isset($_GET['login_error']) ? urldecode($_GET['login_error']) : '
                             <input type="file" id="rmm-cat-image-file-input" accept="image/*" style="display:none;">
                             <div class="dropzone-empty" id="rmm-cat-dropzone-empty">
                                 <span class="dropzone-icon">🖼️</span>
-                                <p class="dropzone-text"><strong><?php _e('کلیک کنید', 'fondogh-online-menu'); ?></strong> <?php _e('یا تصویر را به اینجا بکشید', 'fondogh-online-menu'); ?></p>
+                                <p class="dropzone-text"><strong><?php _e('کلیک کنید', 'fondogh-online-menu'); ?></strong> <?php _e('یا تصویر دسته‌بندی را به اینجا بکشید', 'fondogh-online-menu'); ?></p>
+                                <span class="dropzone-upload-btn">📷 <?php _e('انتخاب و آپلود تصویر دسته', 'fondogh-online-menu'); ?></span>
                                 <span class="dropzone-hint"><?php _e('فرمت‌های JPG، PNG یا WebP - با فشرده‌سازی خودکار', 'fondogh-online-menu'); ?></span>
                             </div>
                             <div class="dropzone-preview" id="rmm-cat-dropzone-preview" style="display:none;">
                                 <img src="" id="rmm-cat-preview-img" alt="پیش‌نمایش تصویر دسته">
-                                <button type="button" class="dropzone-remove-btn" id="rmm-cat-remove-img-btn" title="<?php _e('حذف تصویر', 'fondogh-online-menu'); ?>">&times;</button>
+                                <div class="dropzone-preview-actions">
+                                    <button type="button" class="rmm-btn-mini rmm-btn-change-image" id="rmm-cat-change-img-btn">🔄 <?php _e('تغییر تصویر', 'fondogh-online-menu'); ?></button>
+                                    <button type="button" class="dropzone-remove-btn" id="rmm-cat-remove-img-btn" title="<?php _e('حذف تصویر', 'fondogh-online-menu'); ?>">🗑️ <?php _e('حذف تصویر', 'fondogh-online-menu'); ?></button>
+                                </div>
                             </div>
                         </div>
                     </div>

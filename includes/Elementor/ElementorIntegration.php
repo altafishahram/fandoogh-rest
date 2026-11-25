@@ -31,6 +31,7 @@ class ElementorIntegration {
         // Base & Navigation Widgets
         $widgets_manager->register(new Widgets\BranchSelectorWidget());
         $widgets_manager->register(new Widgets\CategoryBarWidget());
+        $widgets_manager->register(new Widgets\CategorySheetWidget());
         $widgets_manager->register(new Widgets\SearchBarWidget());
         $widgets_manager->register(new Widgets\ThemeToggleWidget());
         $widgets_manager->register(new Widgets\LanguageSwitcherWidget());

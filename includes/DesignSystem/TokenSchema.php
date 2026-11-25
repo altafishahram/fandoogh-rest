@@ -71,6 +71,20 @@ class TokenSchema {
                 'cat_idle_text'    => '#cbd5e1',
                 'cat_active_bg'    => '#38bdf8',
                 'cat_active_text'  => '#0f172a',
+                /* ── Category Sheet (popup category grid) ── */
+                'sheet_bg'               => '#131b2e',
+                'sheet_title'            => '#f8fafc',
+                'sheet_backdrop'         => 'rgba(0, 0, 0, 0.62)',
+                'sheet_card_bg'          => '#1a233a',
+                'sheet_card_border'      => '#1e293b',
+                'sheet_card_text'        => '#cbd5e1',
+                'sheet_card_active_bg'   => '#38bdf8',
+                'sheet_card_active_text' => '#0f172a',
+                'sheet_radius'           => '24px',
+                'sheet_pad'              => '18px',
+                'sheet_gap'              => '10px',
+                'sheet_icon'             => '56px',
+                'sheet_card_radius'      => '16px',
                 /* ── Search ── */
                 'search_bg'        => '#131b2e',
                 'search_border'    => '#1e293b',
@@ -168,6 +182,20 @@ class TokenSchema {
             'cat_idle_text'    => '#475569',
             'cat_active_bg'    => '#0284c7',
             'cat_active_text'  => '#ffffff',
+            /* ── Category Sheet (popup category grid) ── */
+            'sheet_bg'               => '#ffffff',
+            'sheet_title'            => '#0f172a',
+            'sheet_backdrop'         => 'rgba(15, 23, 42, 0.55)',
+            'sheet_card_bg'          => '#f8fafc',
+            'sheet_card_border'      => '#e2e8f0',
+            'sheet_card_text'        => '#334155',
+            'sheet_card_active_bg'   => '#0284c7',
+            'sheet_card_active_text' => '#ffffff',
+            'sheet_radius'           => '24px',
+            'sheet_pad'              => '18px',
+            'sheet_gap'              => '10px',
+            'sheet_icon'             => '56px',
+            'sheet_card_radius'      => '16px',
             /* ── Search ── */
             'search_bg'        => '#ffffff',
             'search_border'    => '#e2e8f0',
@@ -346,6 +374,10 @@ class TokenSchema {
             'badge_bg', 'badge_text',
             /* Categories */
             'cat_idle_bg', 'cat_idle_text', 'cat_active_bg', 'cat_active_text',
+            /* Category Sheet */
+            'sheet_bg', 'sheet_title', 'sheet_backdrop',
+            'sheet_card_bg', 'sheet_card_border', 'sheet_card_text',
+            'sheet_card_active_bg', 'sheet_card_active_text',
             /* Search */
             'search_bg', 'search_border', 'search_icon', 'search_placeholder',
             /* Language / toggle */
@@ -379,6 +411,8 @@ class TokenSchema {
             'btn_pad_y', 'btn_pad_x',
             /* Categories */
             'cat_gap', 'cat_icon',
+            /* Category Sheet */
+            'sheet_radius', 'sheet_pad', 'sheet_gap', 'sheet_icon', 'sheet_card_radius',
             /* Search */
             'search_radius',
             /* Language */

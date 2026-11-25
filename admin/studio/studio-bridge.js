@@ -205,6 +205,7 @@
     'card_layout', 'card_image_ratio', 'card_image_height', 'card_image_fit',
     'card_image_radius', 'card_image_list_size', 'btn_style', 'btn_pad_y', 'btn_pad_x',
     'cat_style', 'cat_gap', 'cat_icon', 'cart_dock',
+    'sheet_radius', 'sheet_pad', 'sheet_gap', 'sheet_icon', 'sheet_card_radius',
     'lang_modal_radius', 'lang_modal_blur',
     'font_family', 'font_weight', 'title_size', 'desc_size', 'price_size',
     'radius_card', 'radius_btn', 'radius_input', 'pad_card', 'gap_grid'
@@ -364,6 +365,24 @@
     if (modalOverlay) {
       modalOverlay.addEventListener('click', (e) => {
         if (e.target === modalOverlay) modalOverlay.style.display = 'none';
+      });
+    }
+
+    // Category sheet preview open/close
+    const sheetOpenBtn = document.getElementById('rmm-preview-catsheet-open');
+    const sheetOverlay = document.getElementById('rmm-preview-catsheet-overlay');
+    if (sheetOpenBtn && sheetOverlay) {
+      sheetOpenBtn.addEventListener('click', () => sheetOverlay.classList.add('is-open'));
+    }
+    if (sheetOverlay) {
+      sheetOverlay.querySelectorAll('[data-catsheet-preview-close]').forEach((el) => {
+        el.addEventListener('click', () => sheetOverlay.classList.remove('is-open'));
+      });
+      sheetOverlay.querySelectorAll('.rmm-preview-catsheet-card').forEach((card) => {
+        card.addEventListener('click', () => {
+          sheetOverlay.querySelectorAll('.rmm-preview-catsheet-card').forEach((c) => c.classList.remove('is-active'));
+          card.classList.add('is-active');
+        });
       });
     }
 

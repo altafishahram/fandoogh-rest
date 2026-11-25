@@ -163,15 +163,29 @@ class FloatingCartWidget extends \Elementor\Widget_Base {
     }
 
     protected function render() {
-        // Hide completely if in view_only mode
         $active_branch_id = \RMM\Branches\BranchContext::get_active_branch_id();
         $branch_mode = \RMM\Branches\BranchContext::get_branch_mode($active_branch_id);
+        $settings = $this->get_settings_for_display();
+
         if ($branch_mode === 'view_only') {
+            ?>
+            <div id="rmm-catalog-floating-bar" class="rmm-floating-cart-wrapper rmm-catalog-floating-wrapper rmm-hidden-cart">
+                <button type="button" class="rmm-floating-cart-btn rmm-catalog-floating-btn" id="rmm-catalog-open-drawer-btn" aria-haspopup="dialog">
+                    <div class="rmm-cart-left">
+                        <span class="rmm-cart-badge-count" id="rmm-catalog-count" data-count="0">0</span>
+                        <span class="rmm-cart-label"><?php echo esc_html__('لیست انتخاب‌های من', 'fondogh-online-menu'); ?></span>
+                    </div>
+                    <div class="rmm-cart-right">
+                        <span class="rmm-cart-total" id="rmm-catalog-total">0</span>
+                        <span class="rmm-cart-arrow">&#9650;</span>
+                    </div>
+                </button>
+            </div>
+            <?php
             return;
         }
 
-        $settings = $this->get_settings_for_display();
-        $count = (WC()->cart) ? WC()->cart->get_cart_contents_count() : 0;
+        $count = (WC()->cart) ? (int) WC()->cart->get_cart_contents_count() : 0;
         $total = (WC()->cart) ? WC()->cart->get_cart_subtotal() : '0';
         $checkout_url = wc_get_checkout_url();
 
@@ -180,7 +194,7 @@ class FloatingCartWidget extends \Elementor\Widget_Base {
         <div id="rmm-floating-cart-bar" class="rmm-floating-cart-wrapper <?php echo esc_attr($hidden_class); ?>">
             <a href="<?php echo esc_url($checkout_url); ?>" class="rmm-floating-cart-btn">
                 <div class="rmm-cart-left">
-                    <span class="rmm-cart-badge-count" id="rmm-cart-count"><?php echo esc_html($count); ?></span>
+                    <span class="rmm-cart-badge-count" id="rmm-cart-count" data-count="<?php echo esc_attr($count); ?>"><?php echo esc_html($count); ?></span>
                     <span class="rmm-cart-label"><?php echo esc_html($settings['cart_btn_text']); ?></span>
                 </div>
                 <div class="rmm-cart-right">

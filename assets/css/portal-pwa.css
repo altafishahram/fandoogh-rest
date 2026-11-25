@@ -2468,10 +2468,12 @@ input:checked + .rmm-slider:before {
 .rmm-category-list-container {
     max-height: 55vh;
     overflow-y: auto;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
     gap: 10px;
-    padding-right: 4px;
+    padding: 4px 6px;
+    box-sizing: border-box;
 }
 
 .rmm-cat-item-card {
@@ -2483,13 +2485,16 @@ input:checked + .rmm-slider:before {
     border: 1px solid var(--rmm-card-border);
     border-radius: 14px;
     gap: 14px;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .rmm-cat-item-card:hover {
     border-color: var(--rmm-primary);
     background: var(--rmm-glass-bg);
-    transform: translateX(-2px);
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
 }
 
 .rmm-cat-item-info {
@@ -2497,6 +2502,18 @@ input:checked + .rmm-slider:before {
     align-items: center;
     gap: 12px;
     flex: 1;
+    min-width: 0;
+}
+
+.rmm-cat-item-details {
+    flex: 1;
+    min-width: 0;
+}
+
+.rmm-cat-item-details h4,
+.rmm-cat-item-details p {
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 .rmm-cat-item-thumb {
@@ -2535,6 +2552,7 @@ input:checked + .rmm-slider:before {
     display: flex;
     align-items: center;
     gap: 8px;
+    flex-shrink: 0;
 }
 
 .rmm-btn-cat-action {
@@ -2677,7 +2695,7 @@ input:checked + .rmm-slider:before {
     background: var(--rmm-primary, #3b82f6);
     color: #ffffff;
     border-color: var(--rmm-primary, #3b82f6);
-    transform: scale(1.08);
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
 }
 
 .rmm-cat-order-num {
@@ -2697,4 +2715,193 @@ input:checked + .rmm-slider:before {
     color: #2563eb;
     margin-right: 6px;
     vertical-align: middle;
+}
+
+
+/* ============================================================
+   Category Edit Modal: Image Dropzone & AI Translate Controls
+   ============================================================ */
+.rmm-image-dropzone {
+    border: 2px dashed var(--rmm-glass-border-subtle);
+    background: var(--rmm-glass-bg-subtle);
+    border-radius: 14px;
+    padding: 18px 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+    position: relative;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.rmm-image-dropzone:hover,
+.rmm-image-dropzone.dragover {
+    border-color: var(--rmm-primary);
+    background: var(--rmm-primary-glow);
+    box-shadow: 0 4px 16px rgba(79, 70, 229, 0.14);
+}
+
+.rmm-image-dropzone .dropzone-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 6px;
+}
+
+.rmm-image-dropzone .dropzone-icon {
+    font-size: 34px;
+    line-height: 1;
+}
+
+.rmm-image-dropzone .dropzone-text {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--rmm-text);
+}
+
+.rmm-image-dropzone .dropzone-upload-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 18px;
+    border-radius: 10px;
+    background: var(--rmm-primary);
+    color: #ffffff;
+    font-size: 12.5px;
+    font-weight: 700;
+    font-family: var(--rmm-font);
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.rmm-image-dropzone:hover .dropzone-upload-btn {
+    background: var(--rmm-primary-hover);
+    box-shadow: 0 6px 16px rgba(79, 70, 229, 0.4);
+}
+
+.rmm-image-dropzone .dropzone-hint {
+    font-size: 11px;
+    color: var(--rmm-text-muted);
+}
+
+.rmm-image-dropzone .dropzone-preview {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--rmm-card-bg);
+    border: 1px solid var(--rmm-glass-border-subtle);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.rmm-image-dropzone .dropzone-preview img {
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    display: block;
+}
+
+.rmm-image-dropzone .dropzone-preview-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px;
+    background: rgba(15, 23, 42, 0.78);
+}
+
+.rmm-image-dropzone .dropzone-remove-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    background: #ef4444;
+    color: #ffffff;
+    border: none;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.rmm-image-dropzone .dropzone-remove-btn:hover {
+    background: #dc2626;
+}
+
+.rmm-ai-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.rmm-btn-ai {
+    background: var(--rmm-secondary-gradient);
+    color: #ffffff;
+    border: none;
+    padding: 9px 16px;
+    border-radius: 10px;
+    font-size: 12.5px;
+    font-weight: 700;
+    font-family: var(--rmm-font);
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.32);
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    transition: box-shadow 0.2s ease, filter 0.2s ease, opacity 0.2s ease;
+}
+
+.rmm-btn-ai:hover:not(:disabled) {
+    filter: brightness(1.06);
+    box-shadow: 0 6px 18px rgba(2, 132, 199, 0.42);
+}
+
+.rmm-btn-ai:disabled {
+    opacity: 0.65;
+    cursor: wait;
+}
+
+.rmm-translations-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+}
+
+.rmm-lang-box {
+    background: var(--rmm-glass-bg);
+    border: 1px solid var(--rmm-glass-border-subtle);
+    border-radius: 12px;
+    padding: 12px;
+}
+
+.rmm-lang-box-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+    color: var(--rmm-text-secondary);
+}
+
+.rmm-lang-flag {
+    font-size: 16px;
+    line-height: 1;
+}
+
+@media (max-width: 600px) {
+    .rmm-cat-item-card {
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 12px;
+    }
+    .rmm-cat-item-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
 }

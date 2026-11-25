@@ -806,6 +806,9 @@
                 }
 
                 renderCategoryChips();
+                if (catModal && catModal.style.display === 'flex') {
+                    renderCategoryList();
+                }
             }
         });
     }
@@ -1489,7 +1492,7 @@
                 catDropzonePreview.style.display = 'block';
             } else {
                 catPreviewImg.src = '';
-                catDropzoneEmpty.style.display = 'block';
+                catDropzoneEmpty.style.display = 'flex';
                 catDropzonePreview.style.display = 'none';
             }
 
@@ -1508,9 +1511,11 @@
             idEl.value = 0;
             nameEl.value = '';
             descEl.value = '';
+            var orderElNew = document.getElementById('rmm-cat-form-order');
+            if (orderElNew) orderElNew.value = (state.categories ? state.categories.length + 1 : 1);
             catThumbIdInput.value = 0;
             catPreviewImg.src = '';
-            catDropzoneEmpty.style.display = 'block';
+            catDropzoneEmpty.style.display = 'flex';
             catDropzonePreview.style.display = 'none';
 
             document.querySelectorAll('.rmm-cat-trans-name, .rmm-cat-trans-desc').forEach(function (inp) {
@@ -1624,9 +1629,16 @@
     });
 
     // Category Image Dropzone handlers (with WebP conversion)
+    var catChangeImgBtn = document.getElementById('rmm-cat-change-img-btn');
+    if (catChangeImgBtn && catImageFileInput) {
+        catChangeImgBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            catImageFileInput.click();
+        });
+    }
     if (catImageDropzone && catImageFileInput) {
         catImageDropzone.addEventListener('click', function (e) {
-            if (e.target.closest('#rmm-cat-remove-img-btn')) return;
+            if (e.target.closest('#rmm-cat-remove-img-btn') || e.target.closest('#rmm-cat-change-img-btn')) return;
             catImageFileInput.click();
         });
 
@@ -1660,7 +1672,7 @@
             catThumbIdInput.value = 0;
             catPreviewImg.src = '';
             catDropzonePreview.style.display = 'none';
-            catDropzoneEmpty.style.display = 'block';
+            catDropzoneEmpty.style.display = 'flex';
             catImageFileInput.value = '';
         });
     }
@@ -1698,7 +1710,7 @@
         }).catch(function (err) {
             showToast('خطا در ارتباط با سرور: ' + (err.message || 'خطای شبکه'), 'error');
         }).finally(function () {
-            catDropzoneEmpty.innerHTML = '<span class="dropzone-icon">🖼️</span><p class="dropzone-text"><strong>کلیک کنید</strong> یا تصویر را به اینجا بکشید</p><span class="dropzone-hint">فرمت‌های JPG، PNG یا WebP - با فشرده‌سازی خودکار</span>';
+            catDropzoneEmpty.innerHTML = '<span class="dropzone-icon">🖼️</span><p class="dropzone-text"><strong>کلیک کنید</strong> یا تصویر دسته‌بندی را به اینجا بکشید</p><span class="dropzone-upload-btn">📷 انتخاب و آپلود تصویر دسته</span><span class="dropzone-hint">فرمت‌های JPG، PNG یا WebP - با فشرده‌سازی خودکار</span>';
         });
     }
 

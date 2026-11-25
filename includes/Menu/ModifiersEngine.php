@@ -244,7 +244,7 @@ class ModifiersEngine {
      * Add selected modifiers to WooCommerce cart item data
      */
     public function add_modifiers_to_cart_item($cart_item_data, $product_id, $variation_id) {
-        if (!empty($_POST['rmm_portion'])) {
+        if (isset($_POST['rmm_portion']) && $_POST['rmm_portion'] !== '') {
             $portion_index = absint($_POST['rmm_portion']);
             $portions = get_post_meta($product_id, '_rmm_portions', true) ?: [];
             if (isset($portions[$portion_index])) {
@@ -327,12 +327,21 @@ class ModifiersEngine {
             return;
         }
 
-        if (did_action('woocommerce_before_calculate_totals') >= 2) {
-            return;
-        }
+        static $base_prices = [];
 
-        foreach ($cart->get_cart() as $cart_item) {
-            $base_price = floatval($cart_item['data']->get_price());
+        foreach ($cart->get_cart() as $cart_item_key => $cart_item) {
+            if (empty($cart_item['data']) || !is_object($cart_item['data'])) {
+                continue;
+            }
+
+            $product_obj = $cart_item['data'];
+            $cache_key   = $cart_item_key . '|' . spl_object_id($product_obj);
+
+            if (!isset($base_prices[$cache_key])) {
+                $base_prices[$cache_key] = floatval($product_obj->get_price());
+            }
+
+            $base_price = $base_prices[$cache_key];
 
             // Check if portion overrides base price
             if (!empty($cart_item['_rmm_chosen_portion']) && isset($cart_item['_rmm_chosen_portion']['price'])) {
@@ -344,7 +353,7 @@ class ModifiersEngine {
                 $base_price += floatval($cart_item['_rmm_addons_extra_price']);
             }
 
-            $cart_item['data']->set_price($base_price);
+            $product_obj->set_price($base_price);
         }
     }
 

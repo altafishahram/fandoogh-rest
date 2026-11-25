@@ -1,5 +1,5 @@
 /**
- * Fondogh Online Menu â€” Category Sheet
+ * Fondogh Online Menu — Category Sheet
  *
  * Popup category grid used by the CategorySheetWidget.
  * Independent from the classic Category Bar (rmm-category-nav-wrapper).
@@ -7,7 +7,7 @@
  * so the Design System Studio controls this component too.
  */
 
-/* â”€â”€ Trigger â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─────────────────────────────────────────────────────────────────────────── Trigger ───────────────────────────────────────────────────────────────────────────── */
 .rmm-catsheet-widget {
     position: relative;
 }
@@ -214,13 +214,12 @@
     line-height: 1.35;
     text-align: center;
     cursor: pointer;
-    transition: transform .18s ease, border-color .18s ease, background-color .18s ease, color .18s ease, box-shadow .18s ease;
+    transition: border-color .18s ease, background-color .18s ease, color .18s ease, box-shadow .18s ease;
     -webkit-tap-highlight-color: transparent;
 }
 
 @media (hover: hover) {
     .rmm-catsheet-card:hover {
-        transform: translateY(-2px);
         border-color: var(--rmm-ds-sheet-card-active-bg, var(--rmm-ds-primary, #0284c7));
         box-shadow: 0 6px 16px rgba(0, 0, 0, .12);
     }

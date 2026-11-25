@@ -77,6 +77,21 @@
   --rmm-ds-cat-active-bg:    #0284c7;
   --rmm-ds-cat-active-text:  #ffffff;
 
+  /* Category Sheet */
+  --rmm-ds-sheet-bg:               #ffffff;
+  --rmm-ds-sheet-title:            #0f172a;
+  --rmm-ds-sheet-backdrop:         rgba(15, 23, 42, 0.55);
+  --rmm-ds-sheet-card-bg:          #f8fafc;
+  --rmm-ds-sheet-card-border:      #e2e8f0;
+  --rmm-ds-sheet-card-text:        #334155;
+  --rmm-ds-sheet-card-active-bg:   #0284c7;
+  --rmm-ds-sheet-card-active-text: #ffffff;
+  --rmm-ds-sheet-radius:           24px;
+  --rmm-ds-sheet-pad:              18px;
+  --rmm-ds-sheet-gap:              10px;
+  --rmm-ds-sheet-icon:             56px;
+  --rmm-ds-sheet-card-radius:      16px;
+
   /* Search */
   --rmm-ds-search-bg:          #ffffff;
   --rmm-ds-search-border:      #e2e8f0;
@@ -142,6 +157,21 @@ body.dark-theme {
   --rmm-ds-cat-idle-text:    #cbd5e1;
   --rmm-ds-cat-active-bg:    #38bdf8;
   --rmm-ds-cat-active-text:  #0f172a;
+
+  /* Category Sheet */
+  --rmm-ds-sheet-bg:               #131b2e;
+  --rmm-ds-sheet-title:            #f8fafc;
+  --rmm-ds-sheet-backdrop:         rgba(0, 0, 0, 0.62);
+  --rmm-ds-sheet-card-bg:          #1a233a;
+  --rmm-ds-sheet-card-border:      #1e293b;
+  --rmm-ds-sheet-card-text:        #cbd5e1;
+  --rmm-ds-sheet-card-active-bg:   #38bdf8;
+  --rmm-ds-sheet-card-active-text: #0f172a;
+  --rmm-ds-sheet-radius:           24px;
+  --rmm-ds-sheet-pad:              18px;
+  --rmm-ds-sheet-gap:              10px;
+  --rmm-ds-sheet-icon:             56px;
+  --rmm-ds-sheet-card-radius:      16px;
 
   /* Search (dark) */
   --rmm-ds-search-bg:          #131b2e;

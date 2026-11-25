@@ -253,6 +253,109 @@
     }
     #rmm-preview-root .rmm-cat-icon { font-size: var(--rmm-ds-cat-icon); line-height: 1; }
 
+    /* Category sheet preview */
+    #rmm-preview-catsheet-stage { margin: 0 0 16px; }
+    .rmm-preview-catsheet-trigger {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 16px;
+      border-radius: var(--rmm-ds-radius-btn);
+      border: 1px solid var(--rmm-ds-border);
+      background: var(--rmm-ds-card);
+      color: var(--rmm-ds-text);
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    #rmm-preview-catsheet-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 30;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    #rmm-preview-catsheet-overlay.is-open { display: flex; }
+    #rmm-preview-catsheet-overlay .rmm-preview-catsheet-backdrop {
+      position: absolute;
+      inset: 0;
+      background: var(--rmm-ds-sheet-backdrop);
+    }
+    .rmm-preview-catsheet-panel {
+      position: relative;
+      width: min(100%, 520px);
+      max-height: 88%;
+      overflow-y: auto;
+      padding: var(--rmm-ds-sheet-pad);
+      background: var(--rmm-ds-sheet-bg);
+      border: 1px solid var(--rmm-ds-sheet-card-border);
+      border-radius: var(--rmm-ds-sheet-radius);
+      box-shadow: 0 18px 50px rgba(0, 0, 0, .28);
+      font-family: var(--rmm-ds-font-family);
+    }
+    .rmm-preview-catsheet-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .rmm-preview-catsheet-title {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--rmm-ds-sheet-title);
+    }
+    .rmm-preview-catsheet-close {
+      width: 28px;
+      height: 28px;
+      border: 0;
+      border-radius: 50%;
+      background: rgba(148, 163, 184, .15);
+      color: var(--rmm-ds-sheet-title);
+      font-size: 16px;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .rmm-preview-catsheet-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--rmm-ds-sheet-gap);
+    }
+    .rmm-preview-catsheet-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 6px;
+      border: 1px solid var(--rmm-ds-sheet-card-border);
+      border-radius: var(--rmm-ds-sheet-card-radius);
+      background: var(--rmm-ds-sheet-card-bg);
+      color: var(--rmm-ds-sheet-card-text);
+      font-family: inherit;
+      font-size: 10px;
+      font-weight: 600;
+      text-align: center;
+      cursor: pointer;
+    }
+    .rmm-preview-catsheet-card.is-active {
+      background: var(--rmm-ds-sheet-card-active-bg);
+      border-color: var(--rmm-ds-sheet-card-active-bg);
+      color: var(--rmm-ds-sheet-card-active-text);
+    }
+    .rmm-preview-catsheet-media {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--rmm-ds-sheet-icon);
+      height: var(--rmm-ds-sheet-icon);
+      border-radius: 50%;
+      background: rgba(148, 163, 184, .14);
+      font-size: calc(var(--rmm-ds-sheet-icon) * .45);
+    }
+
     #rmm-preview-root[data-cat-style="underline"] .rmm-cat-pill {
       background: transparent !important;
       border-radius: 0 !important;
@@ -489,6 +592,7 @@
         <button type="button" data-rmm-sidebar-tab="card" class="rmm-s-sidebar-tab">🍽️ کارت غذا</button>
         <button type="button" data-rmm-sidebar-tab="modal" class="rmm-s-sidebar-tab">🪟 پاپ‌آپ غذا</button>
         <button type="button" data-rmm-sidebar-tab="cat" class="rmm-s-sidebar-tab">🗂️ دسته‌بندی‌ها</button>
+        <button type="button" data-rmm-sidebar-tab="sheet" class="rmm-s-sidebar-tab">🗃️ شیت دسته‌بندی</button>
         <button type="button" data-rmm-sidebar-tab="search" class="rmm-s-sidebar-tab">🔍 جستجو</button>
         <button type="button" data-rmm-sidebar-tab="lang" class="rmm-s-sidebar-tab">🌐 زبان و تم</button>
         <button type="button" data-rmm-sidebar-tab="cart" class="rmm-s-sidebar-tab">🛒 سبد شناور</button>
@@ -841,6 +945,89 @@
         </div>
       </div>
 
+      <!-- Panel: Category Sheet -->
+      <div class="rmm-s-panel" data-rmm-panel="sheet">
+        <div class="rmm-s-section-title"><span class="rmm-s-dot bg-sky-500"></span> شیت دسته‌بندی تصویری</div>
+        <div class="rmm-s-hint">این بخش ویجت «دسته‌بندی تصویری (Category Sheet)» را می‌سازد. نوار دسته‌بندی کلاسیک جداگانه است و تغییری نمی‌کند.</div>
+        <div class="rmm-s-field">
+          <label>رنگ پرده پشت شیت</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="sheet_backdrop">
+            <input type="text" class="rmm-s-input" data-rmm-companion="sheet_backdrop" data-rmm-token="sheet_backdrop" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>پس‌زمینه شیت</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="sheet_bg">
+            <input type="text" class="rmm-s-input" data-rmm-companion="sheet_bg" data-rmm-token="sheet_bg" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>رنگ عنوان شیت</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="sheet_title">
+            <input type="text" class="rmm-s-input" data-rmm-companion="sheet_title" data-rmm-token="sheet_title" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>گردی گوشه شیت</label>
+          <input type="text" class="rmm-s-input" data-rmm-token="sheet_radius" dir="ltr">
+        </div>
+        <div class="rmm-s-field">
+          <label>فاصله داخلی شیت</label>
+          <input type="text" class="rmm-s-input" data-rmm-token="sheet_pad" dir="ltr">
+        </div>
+        <div class="rmm-s-field">
+          <label>فاصله بین کارت‌ها</label>
+          <input type="text" class="rmm-s-input" data-rmm-token="sheet_gap" dir="ltr">
+        </div>
+        <div class="rmm-s-field">
+          <label>اندازه تصویر / آیکون دسته</label>
+          <input type="text" class="rmm-s-input" data-rmm-token="sheet_icon" dir="ltr">
+        </div>
+        <div class="rmm-s-field">
+          <label>گردی گوشه کارت‌ها</label>
+          <input type="text" class="rmm-s-input" data-rmm-token="sheet_card_radius" dir="ltr">
+        </div>
+        <div class="rmm-s-section-title"><span class="rmm-s-dot bg-emerald-500"></span> کارت دسته</div>
+        <div class="rmm-s-field">
+          <label>پس‌زمینه کارت</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="sheet_card_bg">
+            <input type="text" class="rmm-s-input" data-rmm-companion="sheet_card_bg" data-rmm-token="sheet_card_bg" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>حاشیه کارت</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="sheet_card_border">
+            <input type="text" class="rmm-s-input" data-rmm-companion="sheet_card_border" data-rmm-token="sheet_card_border" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>متن کارت</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="sheet_card_text">
+            <input type="text" class="rmm-s-input" data-rmm-companion="sheet_card_text" data-rmm-token="sheet_card_text" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>پس‌زمینه کارت فعال</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="sheet_card_active_bg">
+            <input type="text" class="rmm-s-input" data-rmm-companion="sheet_card_active_bg" data-rmm-token="sheet_card_active_bg" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>متن کارت فعال</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="sheet_card_active_text">
+            <input type="text" class="rmm-s-input" data-rmm-companion="sheet_card_active_text" data-rmm-token="sheet_card_active_text" dir="ltr">
+          </div>
+        </div>
+      </div>
+
       <!-- Panel: Search -->
       <div class="rmm-s-panel" data-rmm-panel="search">
         <div class="rmm-s-section-title"><span class="rmm-s-dot bg-sky-500"></span> باکس جستجوی زنده</div>
@@ -1059,6 +1246,11 @@
             <button type="button" class="rmm-cat-pill"><span class="rmm-cat-icon">🍹</span> نوشیدنی سرد</button>
           </div>
 
+          <!-- Category Sheet trigger -->
+          <div id="rmm-preview-catsheet-stage">
+            <button type="button" class="rmm-preview-catsheet-trigger" id="rmm-preview-catsheet-open">🗃️ دسته‌بندی‌ها</button>
+          </div>
+
           <!-- Live Search Bar -->
           <div class="rmm-live-search-bar">
             <span class="rmm-search-icon">🔍</span>
@@ -1130,6 +1322,25 @@
           </div>
 
           <p id="rmm-preview-note">این پیش‌نمایش با همان استایل واقعی سایت رندر می‌شود.</p>
+        </div>
+
+        <!-- Category Sheet overlay (contained inside the canvas) -->
+        <div id="rmm-preview-catsheet-overlay">
+          <div class="rmm-preview-catsheet-backdrop" data-catsheet-preview-close></div>
+          <div class="rmm-preview-catsheet-panel">
+            <div class="rmm-preview-catsheet-head">
+              <h3 class="rmm-preview-catsheet-title">دسته‌بندی‌ها</h3>
+              <button type="button" class="rmm-preview-catsheet-close" data-catsheet-preview-close aria-label="بستن">&times;</button>
+            </div>
+            <div class="rmm-preview-catsheet-grid">
+              <button type="button" class="rmm-preview-catsheet-card is-active"><span class="rmm-preview-catsheet-media">🍔</span><span>همه دسته‌ها</span></button>
+              <button type="button" class="rmm-preview-catsheet-card"><span class="rmm-preview-catsheet-media">🍕</span><span>پیتزا</span></button>
+              <button type="button" class="rmm-preview-catsheet-card"><span class="rmm-preview-catsheet-media">🥗</span><span>سالاد</span></button>
+              <button type="button" class="rmm-preview-catsheet-card"><span class="rmm-preview-catsheet-media">🍹</span><span>نوشیدنی</span></button>
+              <button type="button" class="rmm-preview-catsheet-card"><span class="rmm-preview-catsheet-media">🍲</span><span>غذای اصلی</span></button>
+              <button type="button" class="rmm-preview-catsheet-card"><span class="rmm-preview-catsheet-media">🍰</span><span>دسر</span></button>
+            </div>
+          </div>
         </div>
 
         <!-- Modal overlay (contained inside the canvas) -->

@@ -360,10 +360,6 @@ class BranchContext {
             return;
         }
 
-        if (did_action('woocommerce_before_calculate_totals') >= 2) {
-            return;
-        }
-
         foreach ($cart->get_cart() as $cart_item) {
             $branch_id = $cart_item['_rmm_branch_id'] ?? self::get_active_branch_id();
             if (!$branch_id) {
@@ -381,10 +377,9 @@ class BranchContext {
                     $custom_price = $item->regular_price;
                 }
 
-                if ($custom_price !== null) {
-                    // Include any modifier add-on extra price if set
-                    $extra_addons_price = floatval($cart_item['_rmm_addons_extra_price'] ?? 0);
-                    $cart_item['data']->set_price($custom_price + $extra_addons_price);
+                if ($custom_price !== null && isset($cart_item['data']) && is_object($cart_item['data'])) {
+                    // Set base branch price here; ModifiersEngine (priority 25) adds portion/addons idempotently
+                    $cart_item['data']->set_price(floatval($custom_price));
                 }
             }
         }
