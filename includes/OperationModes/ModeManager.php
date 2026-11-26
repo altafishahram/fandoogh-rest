@@ -35,7 +35,14 @@ class ModeManager {
         if (!empty($_GET['table'])) {
             $table_no = absint($_GET['table']);
             if ($table_no > 0 && !headers_sent()) {
-                setcookie(self::TABLE_COOKIE, $table_no, time() + 86400, COOKIEPATH, COOKIE_DOMAIN, is_ssl(), false);
+                setcookie(self::TABLE_COOKIE, $table_no, [
+                    'expires'  => time() + 86400,
+                    'path'     => COOKIEPATH ?: '/',
+                    'domain'   => COOKIE_DOMAIN ?: '',
+                    'secure'   => is_ssl(),
+                    'httponly' => false,
+                    'samesite' => 'Lax',
+                ]);
             }
         }
     }

@@ -142,8 +142,15 @@ class PortalRouter {
     }
 
     public function render_shortcode() {
-        ob_start();
-        $this->render_portal();
-        return ob_get_clean();
+        $portal_url = home_url('/' . self::get_portal_slug() . '/');
+        return sprintf(
+            '<div class="rmm-portal-shortcode-launch" style="text-align:center; padding:30px 20px; border:1px solid #e2e8f0; border-radius:12px; background:#f8fafc;">' .
+            '<p style="margin:0 0 14px; font-weight:600; color:#0f172a;">%s</p>' .
+            '<a href="%s" class="button button-primary" style="display:inline-block; padding:10px 22px; background:#0284c7; color:#fff; border-radius:8px; text-decoration:none; font-weight:700;">%s</a>' .
+            '</div>',
+            esc_html__('برای مدیریت منو و سفارشات وارد پیشخوان مستقل رستوران شوید:', 'fondogh-online-menu'),
+            esc_url($portal_url),
+            esc_html__('ورود به پیشخوان رستوران', 'fondogh-online-menu')
+        );
     }
 }

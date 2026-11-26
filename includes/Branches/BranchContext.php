@@ -247,8 +247,13 @@ class BranchContext {
         }
 
         $item = InventoryRepository::get_item($product->get_id(), $branch_id);
-        if ($item && $item->sale_price !== null && $item->sale_price > 0) {
-            return (string) $item->sale_price;
+        if ($item) {
+            if ($item->sale_price !== null && $item->sale_price > 0) {
+                return (string) $item->sale_price;
+            }
+            if ($item->regular_price !== null && $item->regular_price > 0) {
+                return '';
+            }
         }
 
         return $price;

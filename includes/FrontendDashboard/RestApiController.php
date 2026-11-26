@@ -241,6 +241,31 @@ class RestApiController {
     }
 
     /**
+     * Verify a branch-scoped user can modify/delete an existing product.
+     *
+     * @param int $product_id
+     * @return true|\WP_Error
+     */
+    private function assert_product_branch_access($product_id) {
+        if (current_user_can('manage_options') || current_user_can('manage_woocommerce')) {
+            return true;
+        }
+
+        $prod_branches = array_values(array_filter(array_map('absint', (array) get_post_meta($product_id, '_rmm_branches', true))));
+        if (empty($prod_branches)) {
+            return new \WP_Error('rmm_forbidden_product', __('شما مجاز به تغییر یا حذف محصولات سراسری نیستید.', 'fondogh-online-menu'), ['status' => 403]);
+        }
+
+        foreach ($prod_branches as $b_id) {
+            if (!AuthController::user_can_access_branch($b_id)) {
+                return new \WP_Error('rmm_forbidden_product', __('شما به تمام شعبات این محصول دسترسی ندارید.', 'fondogh-online-menu'), ['status' => 403]);
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Dashboard Stats
      */
     public function get_stats(\WP_REST_Request $request) {
@@ -304,11 +329,13 @@ class RestApiController {
         $branch_inventory = \RMM\Branches\InventoryRepository::get_branch_inventory($branch_id);
 
         $posts = get_posts([
-            'post_type'      => 'product',
-            'post_status'    => 'publish',
-            'posts_per_page' => -1,
-            'orderby'        => 'title',
-            'order'          => 'ASC',
+            'post_type'              => 'product',
+            'post_status'            => 'publish',
+            'posts_per_page'         => -1,
+            'orderby'                => 'title',
+            'order'                  => 'ASC',
+            'update_post_meta_cache' => true,
+            'update_post_term_cache' => true,
         ]);
 
         $items = [];
@@ -325,9 +352,16 @@ class RestApiController {
             $stock_status = ($inv) ? $inv->stock_status : $product->get_stock_status();
             $is_available = ($inv) ? (bool) $inv->is_available : ($stock_status === 'instock');
 
-            // Categories
-            $cats = wp_get_post_terms($post->ID, 'product_cat', ['fields' => 'names']);
-            $cat_ids = wp_get_post_terms($post->ID, 'product_cat', ['fields' => 'ids']);
+            // Categories (single query)
+            $cat_terms = wp_get_post_terms($post->ID, 'product_cat');
+            $cats = [];
+            $cat_ids = [];
+            if (!empty($cat_terms) && !is_wp_error($cat_terms)) {
+                foreach ($cat_terms as $ct) {
+                    $cats[]    = $ct->name;
+                    $cat_ids[] = $ct->term_id;
+                }
+            }
 
             // Gallery images
             $gallery_ids = (array) $product->get_gallery_image_ids();
@@ -505,7 +539,19 @@ class RestApiController {
      */
     public function update_order_status(\WP_REST_Request $request) {
         $order_id   = absint($request->get_param('order_id'));
-        $new_status = sanitize_text_field($request->get_param('status'));
+        $new_status = sanitize_key($request->get_param('status'));
+
+        $allowed_statuses = ['pending', 'processing', 'on-hold', 'completed', 'cancelled'];
+        if (function_exists('wc_get_order_statuses')) {
+            $wc_statuses = array_map(function ($key) {
+                return strpos($key, 'wc-') === 0 ? substr($key, 3) : $key;
+            }, array_keys(wc_get_order_statuses()));
+            $allowed_statuses = array_unique(array_merge($allowed_statuses, $wc_statuses));
+        }
+
+        if (!$new_status || !in_array($new_status, $allowed_statuses, true)) {
+            return new \WP_Error('rmm_invalid_status', __('وضعیت سفارش نامعتبر است.', 'fondogh-online-menu'), ['status' => 400]);
+        }
 
         $order = wc_get_order($order_id);
         $guard = $this->assert_order_branch($order);
@@ -887,6 +933,10 @@ class RestApiController {
         }
 
         if ($product_id > 0) {
+            $guard = $this->assert_product_branch_access($product_id);
+            if (is_wp_error($guard)) {
+                return $guard;
+            }
             $product = wc_get_product($product_id);
             if (!$product) {
                 return new \WP_Error('rmm_not_found', __('محصول مورد نظر یافت نشد.', 'fondogh-online-menu'), ['status' => 404]);
@@ -903,20 +953,24 @@ class RestApiController {
             $product->set_short_description($desc);
         }
 
-        $regular_price = floatval($request->get_param('regular_price'));
-        $product->set_regular_price($regular_price);
-        $product->set_price($regular_price);
-
-        $sale_price = $request->get_param('sale_price');
-        if ($sale_price !== null && $sale_price !== '') {
-            $product->set_sale_price(floatval($sale_price));
-            $product->set_price(floatval($sale_price));
-        } else {
-            $product->set_sale_price('');
-        }
+        $regular_price = max(0, floatval($request->get_param('regular_price')));
+        $raw_sale      = $request->get_param('sale_price');
+        $sale_price    = ($raw_sale !== null && $raw_sale !== '' && floatval($raw_sale) > 0 && floatval($raw_sale) < $regular_price)
+            ? floatval($raw_sale)
+            : null;
 
         $stock_status = sanitize_text_field($request->get_param('stock_status') ?: 'instock');
-        $product->set_stock_status($stock_status);
+        $stock_status = ($stock_status === 'outofstock') ? 'outofstock' : 'instock';
+
+        // Only update global WooCommerce price/stock when creating a new product or when user is a global manager.
+        // Branch-scoped managers update branch inventory rows below without overwriting other branches.
+        $is_global_mgr = current_user_can('manage_options') || current_user_can('manage_woocommerce');
+        if ($product_id === 0 || $is_global_mgr) {
+            $product->set_regular_price($regular_price);
+            $product->set_price($sale_price !== null ? $sale_price : $regular_price);
+            $product->set_sale_price($sale_price !== null ? $sale_price : '');
+            $product->set_stock_status($stock_status);
+        }
 
         // Featured Image
         if ($request->has_param('image_id')) {
@@ -942,9 +996,9 @@ class RestApiController {
         }
 
         // Category
-        $cat_id = absint($request->get_param('category_id'));
-        if ($cat_id > 0) {
-            wp_set_object_terms($saved_id, [$cat_id], 'product_cat');
+        if ($request->has_param('category_id')) {
+            $cat_id = absint($request->get_param('category_id'));
+            wp_set_object_terms($saved_id, $cat_id > 0 ? [$cat_id] : [], 'product_cat');
         }
 
         // Restaurant Meta Fields
@@ -1025,6 +1079,11 @@ class RestApiController {
 
         if (!$product_id) {
             return new \WP_Error('rmm_invalid_id', __('شناسه نامعتبر است.', 'fondogh-online-menu'), ['status' => 400]);
+        }
+
+        $guard = $this->assert_product_branch_access($product_id);
+        if (is_wp_error($guard)) {
+            return $guard;
         }
 
         $res = wp_trash_post($product_id);
@@ -1168,25 +1227,30 @@ class RestApiController {
                     $webp_filename = $clean_slug . '-' . wp_generate_password(6, false) . '.webp';
 
                     $upload_dir = wp_upload_dir();
-                    $target_file = $upload_dir['path'] . '/' . $webp_filename;
+                    if (empty($upload_dir['error']) && wp_mkdir_p($upload_dir['path'])) {
+                        $target_file = $upload_dir['path'] . '/' . $webp_filename;
 
-                    if (imagewebp($dst_img, $target_file, $quality)) {
-                        imagedestroy($dst_img);
-                        imagedestroy($src_img);
+                        if (imagewebp($dst_img, $target_file, $quality)) {
+                            imagedestroy($dst_img);
+                            imagedestroy($src_img);
 
-                        $attachment = [
-                            'post_mime_type' => 'image/webp',
-                            'post_title'     => preg_replace('/\.[^.]+$/', '', $file['name']),
-                            'post_content'   => '',
-                            'post_status'    => 'inherit'
-                        ];
+                            $attachment = [
+                                'post_mime_type' => 'image/webp',
+                                'post_title'     => preg_replace('/\.[^.]+$/', '', $file['name']),
+                                'post_content'   => '',
+                                'post_status'    => 'inherit'
+                            ];
 
-                        $attachment_id = wp_insert_attachment($attachment, $target_file);
-                        if (!is_wp_error($attachment_id) && $attachment_id > 0) {
-                            $attach_data = wp_generate_attachment_metadata($attachment_id, $target_file);
-                            wp_update_attachment_metadata($attachment_id, $attach_data);
+                            $attachment_id = wp_insert_attachment($attachment, $target_file);
+                            if (!is_wp_error($attachment_id) && $attachment_id > 0) {
+                                $attach_data = wp_generate_attachment_metadata($attachment_id, $target_file);
+                                wp_update_attachment_metadata($attachment_id, $attach_data);
+                            } else {
+                                $attachment_id = 0;
+                            }
                         } else {
-                            $attachment_id = 0;
+                            imagedestroy($dst_img);
+                            imagedestroy($src_img);
                         }
                     } else {
                         imagedestroy($dst_img);
@@ -1196,9 +1260,19 @@ class RestApiController {
             }
         }
 
-        // Fallback to standard WP upload handler if WebP wasn't generated
+        // Fallback to standard WP upload handler if WebP wasn't generated (restricted to image MIME types only)
         if (!$attachment_id) {
+            $image_mimes_filter = function ($mimes) {
+                return [
+                    'jpg|jpeg|jpe' => 'image/jpeg',
+                    'png'          => 'image/png',
+                    'gif'          => 'image/gif',
+                    'webp'         => 'image/webp',
+                ];
+            };
+            add_filter('upload_mimes', $image_mimes_filter, 999);
             $attachment_id = media_handle_upload('file', 0);
+            remove_filter('upload_mimes', $image_mimes_filter, 999);
             if (is_wp_error($attachment_id)) {
                 return new \WP_Error('rmm_upload_error', $attachment_id->get_error_message(), ['status' => 500]);
             }

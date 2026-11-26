@@ -5,6 +5,15 @@
 (function ($) {
     'use strict';
 
+    function escHtml(str) {
+        return String(str === null || str === undefined ? '' : str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
     $(document).ready(function () {
 
         // 0. Day / Night Theme Engine (Persistent via LocalStorage with configurable default)
@@ -451,8 +460,9 @@
 
             // B) Custom Elementor Saved Template
             if (action === 'elementor_template' && templateId && templateId != '0') {
-                modalContent.html('<div class="rmm-modal-loading-box"><span class="rmm-modal-spinner">⏳</span><p>در حال بارگذاری قالب المنتور...</p></div>');
-                modal.fadeIn(200);
+                var tplContainer = ensureModalContainer();
+                tplContainer.modalContent.html('<div class="rmm-modal-loading-box"><span class="rmm-modal-spinner">⏳</span><p>در حال بارگذاری قالب المنتور...</p></div>');
+                tplContainer.modal.fadeIn(200);
                 $('body, html').addClass('rmm-modal-open');
 
                 var nonceVal = (window.rmmConfig && window.rmmConfig.nonce) ? window.rmmConfig.nonce : '';
@@ -470,7 +480,7 @@
                     },
                     success: function (res) {
                         if (res && res.success && res.data && res.data.html) {
-                            modalContent.html('<button class="rmm-modal-close-btn" type="button" aria-label="Close">&times;</button><div class="rmm-custom-template-wrap">' + res.data.html + '</div>');
+                            tplContainer.modalContent.html('<button class="rmm-modal-close-btn" type="button" aria-label="Close">&times;</button><div class="rmm-custom-template-wrap">' + res.data.html + '</div>');
                         } else {
                             loadDefaultModal(productId, $card);
                         }
@@ -527,20 +537,20 @@
                 var cardIngredients = $card.find('.rmm-food-ingredients').text().trim() || '';
 
                 var optHtml = '<div class="rmm-modal-hero-wrap">' +
-                    '<button class="rmm-modal-close-btn" type="button" aria-label="' + t('close', 'بستن') + '">&times;</button>' +
-                    (cardImg ? '<img src="' + cardImg + '" class="rmm-modal-hero-img" alt="' + cardTitle + '">' : '') +
+                    '<button class="rmm-modal-close-btn" type="button" aria-label="' + escHtml(t('close', 'بستن')) + '">&times;</button>' +
+                    (cardImg ? '<img src="' + escHtml(cardImg) + '" class="rmm-modal-hero-img" alt="' + escHtml(cardTitle) + '">' : '') +
                     '</div>' +
                     '<div class="rmm-modal-body">' +
-                    '<div class="rmm-modal-title-row"><h3 class="rmm-modal-food-title">' + cardTitle + '</h3></div>' +
+                    '<div class="rmm-modal-title-row"><h3 class="rmm-modal-food-title">' + escHtml(cardTitle) + '</h3></div>' +
                     '<div class="rmm-modal-price-row"><div class="rmm-modal-food-price">' + cardPriceHtml + '</div></div>' +
-                    (cardDesc ? '<div class="rmm-modal-desc-box"><p class="rmm-modal-desc-text">' + cardDesc + '</p></div>' : '') +
-                    (cardIngredients ? '<div class="rmm-modal-ingredients-box"><p class="rmm-modal-ingredients-text">' + cardIngredients + '</p></div>' : '') +
-                    '<div class="rmm-modal-loading-box" style="padding:15px 0;"><span class="rmm-modal-spinner">🍲</span><p style="margin:0; font-size:12px; font-weight:600; color:#64748b;">' + t('loading', 'در حال دریافت گزینه‌ها...') + '</p></div>' +
+                    (cardDesc ? '<div class="rmm-modal-desc-box"><p class="rmm-modal-desc-text">' + escHtml(cardDesc) + '</p></div>' : '') +
+                    (cardIngredients ? '<div class="rmm-modal-ingredients-box"><p class="rmm-modal-ingredients-text">' + escHtml(cardIngredients) + '</p></div>' : '') +
+                    '<div class="rmm-modal-loading-box" style="padding:15px 0;"><span class="rmm-modal-spinner">🍲</span><p style="margin:0; font-size:12px; font-weight:600; color:#64748b;">' + escHtml(t('loading', 'در حال دریافت گزینه‌ها...')) + '</p></div>' +
                     '</div>';
 
                 $curContent.html(optHtml);
             } else {
-                $curContent.html('<div class="rmm-modal-loading-box"><span class="rmm-modal-spinner">🍲</span><p style="margin:0; font-weight:600; color:#475569;">' + t('loading', 'در حال بارگذاری جزئیات غذا...') + '</p></div>');
+                $curContent.html('<div class="rmm-modal-loading-box"><span class="rmm-modal-spinner">🍲</span><p style="margin:0; font-weight:600; color:#475569;">' + escHtml(t('loading', 'در حال بارگذاری جزئیات غذا...')) + '</p></div>');
             }
 
             $curModal.fadeIn(150);
@@ -563,16 +573,16 @@
                             renderFoodDetailsModal(res.data);
                         } else {
                             var errMsg = (res && res.data && res.data.message) ? res.data.message : t('error_loading', 'خطا در دریافت اطلاعات غذا.');
-                            $curContent.html('<button class="rmm-modal-close-btn" type="button" aria-label="Close">&times;</button><p style="color:#ef4444; text-align:center; padding:40px 20px;">' + errMsg + '</p>');
+                            $curContent.html('<button class="rmm-modal-close-btn" type="button" aria-label="Close">&times;</button><p style="color:#ef4444; text-align:center; padding:40px 20px;">' + escHtml(errMsg) + '</p>');
                         }
                     } catch (renderErr) {
                         console.error('Error rendering food modal:', renderErr);
-                        $curContent.html('<button class="rmm-modal-close-btn" type="button" aria-label="Close">&times;</button><p style="color:#ef4444; text-align:center; padding:40px 20px;">' + t('error_loading', 'خطا در نمایش اطلاعات غذا.') + '</p>');
+                        $curContent.html('<button class="rmm-modal-close-btn" type="button" aria-label="Close">&times;</button><p style="color:#ef4444; text-align:center; padding:40px 20px;">' + escHtml(t('error_loading', 'خطا در نمایش اطلاعات غذا.')) + '</p>');
                     }
                 },
                 error: function (xhr, status, error) {
                     console.error('AJAX error loading food modal:', status, error);
-                    $curContent.html('<button class="rmm-modal-close-btn" type="button" aria-label="Close">&times;</button><p style="color:#ef4444; text-align:center; padding:40px 20px;">' + t('error_server', 'خطای ارتباط با سرور.') + '</p>');
+                    $curContent.html('<button class="rmm-modal-close-btn" type="button" aria-label="Close">&times;</button><p style="color:#ef4444; text-align:center; padding:40px 20px;">' + escHtml(t('error_server', 'خطای ارتباط با سرور.')) + '</p>');
                 }
             });
         }
@@ -591,13 +601,13 @@
                 data.images.forEach(function (img, idx) {
                     var activeClass = (idx === 0) ? ' active' : '';
                     slidesHtml += '<div class="rmm-modal-slide' + activeClass + '" data-index="' + idx + '">' +
-                        '<img src="' + img + '" class="rmm-modal-hero-img" alt="' + data.name + '">' +
+                        '<img src="' + escHtml(img) + '" class="rmm-modal-hero-img" alt="' + escHtml(data.name) + '">' +
                         '</div>';
                     dotsHtml += '<span class="rmm-slider-dot' + activeClass + '" data-index="' + idx + '"></span>';
                 });
 
                 html += '<div class="rmm-modal-hero-wrap rmm-modal-slider-wrap" data-current-slide="0" data-total-slides="' + data.images.length + '">' +
-                    '<button class="rmm-modal-close-btn" type="button" aria-label="' + t('close', 'بستن') + '">&times;</button>' +
+                    '<button class="rmm-modal-close-btn" type="button" aria-label="' + escHtml(t('close', 'بستن')) + '">&times;</button>' +
                     '<div class="rmm-modal-slider-viewport">' +
                     '<div class="rmm-modal-slider-track">' + slidesHtml + '</div>' +
                     '</div>' +
@@ -605,19 +615,19 @@
                     '<button type="button" class="rmm-slider-arrow rmm-slider-next" aria-label="بعدی">&#10095;</button>' +
                     '<div class="rmm-slider-dots">' + dotsHtml + '</div>' +
                     '<span class="rmm-slider-counter"><span class="rmm-slide-current">1</span> / <span class="rmm-slide-total">' + data.images.length + '</span></span>' +
-                    '<div class="rmm-modal-zoom-hint">🔍 ' + t('view_image', 'مشاهده بزرگ‌تر') + '</div>' +
-                    (data.badge ? '<span class="rmm-modal-badge-overlay ' + (data.badge.class || '') + '">' + (data.badge.image ? '<img src="' + data.badge.image + '" class="rmm-badge-icon-img" alt=""> ' : (data.badge.icon ? data.badge.icon + ' ' : '')) + (data.badge.label || '') + '</span>' : '') +
+                    '<div class="rmm-modal-zoom-hint">🔍 ' + escHtml(t('view_image', 'مشاهده بزرگ‌تر')) + '</div>' +
+                    (data.badge ? '<span class="rmm-modal-badge-overlay ' + escHtml(data.badge.class || '') + '">' + (data.badge.image ? '<img src="' + escHtml(data.badge.image) + '" class="rmm-badge-icon-img" alt=""> ' : (data.badge.icon ? escHtml(data.badge.icon) + ' ' : '')) + escHtml(data.badge.label || '') + '</span>' : '') +
                     '</div>';
             } else if (data.image) {
                 html += '<div class="rmm-modal-hero-wrap">' +
-                    '<button class="rmm-modal-close-btn" type="button" aria-label="' + t('close', 'بستن') + '">&times;</button>' +
-                    '<img src="' + data.image + '" class="rmm-modal-hero-img" alt="' + data.name + '">' +
-                    '<div class="rmm-modal-zoom-hint">🔍 ' + t('view_image', 'مشاهده بزرگ‌تر') + '</div>' +
-                    (data.badge ? '<span class="rmm-modal-badge-overlay ' + (data.badge.class || '') + '">' + (data.badge.image ? '<img src="' + data.badge.image + '" class="rmm-badge-icon-img" alt=""> ' : (data.badge.icon ? data.badge.icon + ' ' : '')) + (data.badge.label || '') + '</span>' : '') +
+                    '<button class="rmm-modal-close-btn" type="button" aria-label="' + escHtml(t('close', 'بستن')) + '">&times;</button>' +
+                    '<img src="' + escHtml(data.image) + '" class="rmm-modal-hero-img" alt="' + escHtml(data.name) + '">' +
+                    '<div class="rmm-modal-zoom-hint">🔍 ' + escHtml(t('view_image', 'مشاهده بزرگ‌تر')) + '</div>' +
+                    (data.badge ? '<span class="rmm-modal-badge-overlay ' + escHtml(data.badge.class || '') + '">' + (data.badge.image ? '<img src="' + escHtml(data.badge.image) + '" class="rmm-badge-icon-img" alt=""> ' : (data.badge.icon ? escHtml(data.badge.icon) + ' ' : '')) + escHtml(data.badge.label || '') + '</span>' : '') +
                     '</div>';
             } else {
                 html += '<div style="position:relative; padding-top:20px; padding-left:20px;">' +
-                    '<button class="rmm-modal-close-btn" type="button" aria-label="' + t('close', 'بستن') + '" style="top:14px; left:14px;">&times;</button>' +
+                    '<button class="rmm-modal-close-btn" type="button" aria-label="' + escHtml(t('close', 'بستن')) + '" style="top:14px; left:14px;">&times;</button>' +
                     '</div>';
             }
 
@@ -627,7 +637,7 @@
             // Title & Price Row (Proper strikethrough sale price vs regular)
             var priceMarkup = '';
             if (data.catalog_hide_price && data.is_view_only) {
-                priceMarkup = '<span class="rmm-price-hidden">' + t('digital_menu', 'منو دیجیتال') + '</span>';
+                priceMarkup = '<span class="rmm-price-hidden">' + escHtml(t('digital_menu', 'منو دیجیتال')) + '</span>';
             } else if (data.is_on_sale && data.formatted_regular) {
                 priceMarkup = '<div class="rmm-modal-price-wrap"><del class="rmm-modal-old-price">' + data.formatted_regular + '</del> <ins class="rmm-modal-sale-price">' + data.formatted_price + '</ins></div>';
             } else {
@@ -636,7 +646,7 @@
 
             // 1. Food Name Row (Full Width Line)
             html += '<div class="rmm-modal-title-row">' +
-                '<h3 class="rmm-modal-food-title">' + data.name + '</h3>' +
+                '<h3 class="rmm-modal-food-title">' + escHtml(data.name) + '</h3>' +
                 '</div>';
 
             // 2. Food Price Row (Full Width Line Below Name)
@@ -647,15 +657,15 @@
             // 3. Chips Row (Badges, Features, Prep Time, Calories)
             var chips = [];
             if (data.badge && (data.badge.label || data.badge.image)) {
-                var bImg = data.badge.image ? '<img src="' + data.badge.image + '" class="rmm-badge-icon-img" alt=""> ' : '';
-                var bIcon = (!data.badge.image && data.badge.icon) ? data.badge.icon + ' ' : '';
-                chips.push('<span class="rmm-modal-chip ' + (data.badge.class || '') + '">' + bImg + bIcon + (data.badge.label || '') + '</span>');
+                var bImg = data.badge.image ? '<img src="' + escHtml(data.badge.image) + '" class="rmm-badge-icon-img" alt=""> ' : '';
+                var bIcon = (!data.badge.image && data.badge.icon) ? escHtml(data.badge.icon) + ' ' : '';
+                chips.push('<span class="rmm-modal-chip ' + escHtml(data.badge.class || '') + '">' + bImg + bIcon + escHtml(data.badge.label || '') + '</span>');
             }
             if (data.prep_time) {
-                chips.push('<span class="rmm-modal-chip">⏱️ ' + data.prep_time + ' ' + t('minutes', 'دقیقه') + '</span>');
+                chips.push('<span class="rmm-modal-chip">⏱️ ' + escHtml(data.prep_time) + ' ' + escHtml(t('minutes', 'دقیقه')) + '</span>');
             }
             if (data.calories) {
-                chips.push('<span class="rmm-modal-chip calories">🔥 ' + t('calories_label', 'ارزش غذایی و کالری:') + ' ' + data.calories + ' ' + t('kcal', 'کالری') + '</span>');
+                chips.push('<span class="rmm-modal-chip calories">🔥 ' + escHtml(t('calories_label', 'ارزش غذایی و کالری:')) + ' ' + escHtml(data.calories) + ' ' + escHtml(t('kcal', 'کالری')) + '</span>');
             }
             if (chips.length) {
                 html += '<div class="rmm-modal-chips-row">' + chips.join('') + '</div>';
@@ -664,31 +674,31 @@
             // 4. Description Box (توضیحات محصول)
             if (data.description) {
                 html += '<div class="rmm-modal-desc-box">' +
-                    '<p class="rmm-modal-desc-text">' + data.description + '</p>' +
+                    '<p class="rmm-modal-desc-text">' + escHtml(data.description) + '</p>' +
                     '</div>';
             }
 
             // 5. Ingredients Box (موارد تشکیل‌دهنده و ترکیبات)
             if (data.ingredients) {
                 html += '<div class="rmm-modal-ingredients-box">' +
-                    '<h4>🥗 ' + t('ingredients', 'موارد تشکیل‌دهنده و ترکیبات:') + '</h4>' +
-                    '<p class="rmm-modal-ingredients-text">' + data.ingredients + '</p>' +
+                    '<h4>🥗 ' + escHtml(t('ingredients', 'موارد تشکیل‌دهنده و ترکیبات:')) + '</h4>' +
+                    '<p class="rmm-modal-ingredients-text">' + escHtml(data.ingredients) + '</p>' +
                     '</div>';
             }
 
             // Form container
-            html += '<form id="rmm-modal-add-form" data-product-id="' + data.id + '" data-base-price="' + data.base_price + '" data-currency="' + data.currency_symbol + '">';
+            html += '<form id="rmm-modal-add-form" data-product-id="' + escHtml(data.id) + '" data-base-price="' + escHtml(data.base_price) + '" data-currency="' + escHtml(data.currency_symbol) + '">';
 
             // Portions / Sizes
             if (data.portions && data.portions.length > 0) {
                 html += '<div class="rmm-modal-section-box">' +
-                    '<span class="rmm-modal-section-title">📏 ' + t('portions', 'انتخاب سایز یا پرس:') + '</span>';
+                    '<span class="rmm-modal-section-title">📏 ' + escHtml(t('portions', 'انتخاب سایز یا پرس:')) + '</span>';
                 data.portions.forEach(function (port, idx) {
                     var isChecked = (idx === 0) ? 'checked' : '';
                     var isSelected = (idx === 0) ? 'is-selected' : '';
                     html += '<label class="rmm-modal-portion-item ' + isSelected + '">' +
-                        '<span><input type="radio" name="rmm_portion" value="' + idx + '" data-price="' + port.price + '" ' + isChecked + '> ' + port.name + '</span>' +
-                        '<span class="rmm-modal-addon-price">' + formatPriceNumber(port.price) + ' ' + data.currency_symbol + '</span>' +
+                        '<span><input type="radio" name="rmm_portion" value="' + idx + '" data-price="' + escHtml(port.price) + '" ' + isChecked + '> ' + escHtml(port.name) + '</span>' +
+                        '<span class="rmm-modal-addon-price">' + escHtml(formatPriceNumber(port.price) + ' ' + data.currency_symbol) + '</span>' +
                         '</label>';
                 });
                 html += '</div>';
@@ -698,7 +708,7 @@
             if (data.modifier_groups && data.modifier_groups.length > 0) {
                 data.modifier_groups.forEach(function (group, gIdx) {
                     html += '<div class="rmm-modal-section-box">' +
-                        '<span class="rmm-modal-section-title">🥗 ' + group.title + ':</span>';
+                        '<span class="rmm-modal-section-title">🥗 ' + escHtml(group.title) + ':</span>';
 
                     if (group.options && group.options.length > 0) {
                         group.options.forEach(function (opt) {
@@ -708,8 +718,8 @@
                             var priceTag = (opt.price > 0) ? '(+' + formatPriceNumber(opt.price) + ' ' + data.currency_symbol + ')' : '(' + t('free', 'رایگان') + ')';
 
                             html += '<label class="rmm-modal-addon-item">' +
-                                '<span><input type="' + inputType + '" name="' + inputName + '" value=\'' + optJson + '\' data-price="' + opt.price + '"> ' + opt.name + '</span>' +
-                                '<span class="rmm-modal-addon-price">' + priceTag + '</span>' +
+                                '<span><input type="' + inputType + '" name="' + inputName + '" value="' + escHtml(optJson) + '" data-price="' + escHtml(opt.price) + '"> ' + escHtml(opt.name) + '</span>' +
+                                '<span class="rmm-modal-addon-price">' + escHtml(priceTag) + '</span>' +
                                 '</label>';
                         });
                     }
@@ -721,7 +731,7 @@
             if (!data.is_view_only) {
                 // Quantity Counter
                 html += '<div class="rmm-modal-qty-container">' +
-                    '<span class="rmm-modal-qty-label">' + t('quantity', 'تعداد سفارش:') + '</span>' +
+                    '<span class="rmm-modal-qty-label">' + escHtml(t('quantity', 'تعداد سفارش:')) + '</span>' +
                     '<div class="rmm-qty-controls">' +
                     '<button type="button" class="rmm-qty-btn rmm-qty-minus">−</button>' +
                     '<input type="number" class="rmm-qty-val" name="quantity" value="1" min="1" max="99" readonly>' +
@@ -731,20 +741,20 @@
 
                 // Kitchen Note
                 html += '<div class="rmm-modal-kitchen-note" style="margin-bottom:14px;">' +
-                    '<input type="text" name="rmm_order_notes" placeholder="' + t('kitchen_note_placeholder', 'یادداشت برای آشپزخانه (مثلاً: بدون پیاز، سس جداگانه...)') + '">' +
+                    '<input type="text" name="rmm_order_notes" placeholder="' + escHtml(t('kitchen_note_placeholder', 'یادداشت برای آشپزخانه (مثلاً: بدون پیاز، سس جداگانه...)')) + '">' +
                     '</div>';
 
                 // Submit Button
                 html += '<div class="rmm-modal-submit-action">' +
                     '<button type="submit" class="rmm-modal-btn-submit" id="rmm-modal-submit-btn">' +
-                    '<span>+ ' + t('add_to_cart', 'افزودن به سبد خرید') + '</span>' +
-                    '<span id="rmm-modal-btn-total-price">' + formatPriceNumber(data.base_price) + ' ' + data.currency_symbol + '</span>' +
+                    '<span>+ ' + escHtml(t('add_to_cart', 'افزودن به سبد خرید')) + '</span>' +
+                    '<span id="rmm-modal-btn-total-price">' + escHtml(formatPriceNumber(data.base_price) + ' ' + data.currency_symbol) + '</span>' +
                     '</button>' +
                     '</div>';
             } else {
                 // View-Only Catalog Mode: allow adding to floating selection list with qty & options
                 html += '<div class="rmm-modal-qty-container">' +
-                    '<span class="rmm-modal-qty-label">' + t('quantity', 'تعداد انتخاب:') + '</span>' +
+                    '<span class="rmm-modal-qty-label">' + escHtml(t('quantity', 'تعداد انتخاب:')) + '</span>' +
                     '<div class="rmm-qty-controls">' +
                     '<button type="button" class="rmm-qty-btn rmm-qty-minus">−</button>' +
                     '<input type="number" class="rmm-qty-val" name="quantity" value="1" min="1" max="99" readonly>' +
@@ -753,11 +763,11 @@
                     '</div>';
 
                 var hideCatalogPrice = !!(window.rmmConfig && window.rmmConfig.catalog_hide_price) || !!data.catalog_hide_price;
-                var modalBtnPriceHtml = hideCatalogPrice ? '' : '<span id="rmm-modal-btn-total-price">' + formatPriceNumber(data.base_price) + ' ' + data.currency_symbol + '</span>';
+                var modalBtnPriceHtml = hideCatalogPrice ? '' : '<span id="rmm-modal-btn-total-price">' + escHtml(formatPriceNumber(data.base_price) + ' ' + data.currency_symbol) + '</span>';
 
                 html += '<div class="rmm-modal-submit-action" style="display:flex; flex-direction:column; gap:10px;">' +
                     '<button type="button" class="rmm-modal-btn-submit rmm-modal-catalog-add-btn" id="rmm-modal-catalog-add-btn" ' +
-                    'data-id="' + data.id + '" ' +
+                    'data-id="' + escHtml(data.id) + '" ' +
                     'data-title="' + escHtml(data.name) + '" ' +
                     'data-image="' + escHtml(data.image || '') + '" ' +
                     'data-hide-price="' + (hideCatalogPrice ? '1' : '0') + '">' +
@@ -766,12 +776,12 @@
                     '</button>';
 
                 if (data.action_btn === 'whatsapp' && data.whatsapp_url) {
-                    html += '<a href="' + data.whatsapp_url + '" target="_blank" class="rmm-modal-btn-submit" style="background:#25d366; text-decoration:none; justify-content:center; gap:8px;">' +
-                        '💬 ' + t('order_whatsapp', 'سفارش و استعلام در واتساپ') +
+                    html += '<a href="' + escHtml(data.whatsapp_url) + '" target="_blank" class="rmm-modal-btn-submit" style="background:#25d366; text-decoration:none; justify-content:center; gap:8px;">' +
+                        '💬 ' + escHtml(t('order_whatsapp', 'سفارش و استعلام در واتساپ')) +
                         '</a>';
                 } else if (data.action_btn === 'call' && data.phone_number) {
-                    html += '<a href="tel:' + data.phone_number + '" class="rmm-modal-btn-submit" style="background:#0284c7; text-decoration:none; justify-content:center; gap:8px;">' +
-                        '📞 ' + t('call_order', 'تماس تلفنی با رستوران') +
+                    html += '<a href="tel:' + escHtml(data.phone_number) + '" class="rmm-modal-btn-submit" style="background:#0284c7; text-decoration:none; justify-content:center; gap:8px;">' +
+                        '📞 ' + escHtml(t('call_order', 'تماس تلفنی با رستوران')) +
                         '</a>';
                 }
                 html += '</div>';

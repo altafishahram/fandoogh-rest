@@ -171,7 +171,14 @@ class MultiLangManager {
 
     public static function set_cookie($lang) {
         if (!headers_sent()) {
-            setcookie(self::LANG_COOKIE, sanitize_key($lang), time() + (86400 * 30), COOKIEPATH, COOKIE_DOMAIN, is_ssl(), false);
+            setcookie(self::LANG_COOKIE, sanitize_key($lang), [
+                'expires'  => time() + (86400 * 30),
+                'path'     => COOKIEPATH ?: '/',
+                'domain'   => COOKIE_DOMAIN ?: '',
+                'secure'   => is_ssl(),
+                'httponly' => false,
+                'samesite' => 'Lax',
+            ]);
         }
     }
 

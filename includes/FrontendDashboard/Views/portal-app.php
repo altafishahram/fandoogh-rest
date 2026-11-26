@@ -10,20 +10,33 @@ $user = wp_get_current_user();
 $is_auth = $is_logged_in && AuthController::is_authorized($user);
 $slug = \RMM\Core\Settings::get('dashboard_slug', 'restaurant-portal');
 
-// Branches available
-$branches = get_terms([
-    'taxonomy'   => \RMM\Branches\BranchTaxonomy::TAXONOMY,
-    'hide_empty' => false,
-]);
-if (is_wp_error($branches)) {
-    $branches = [];
+// Branches available (scoped to authorized user branches)
+$branches = [];
+if ($is_auth) {
+    $allowed_branch_ids = AuthController::get_user_branches($user->ID);
+    if (!empty($allowed_branch_ids)) {
+        $branches = get_terms([
+            'taxonomy'   => \RMM\Branches\BranchTaxonomy::TAXONOMY,
+            'hide_empty' => false,
+            'include'    => $allowed_branch_ids,
+        ]);
+        if (is_wp_error($branches)) {
+            $branches = [];
+        }
+    }
 }
 $active_branch_id = \RMM\Branches\BranchContext::get_active_branch_id();
+if (!empty($branches)) {
+    $allowed_ids_map = wp_list_pluck($branches, 'term_id');
+    if (!in_array($active_branch_id, $allowed_ids_map, true)) {
+        $active_branch_id = (int) $allowed_ids_map[0];
+    }
+}
 
 $all_enabled_langs = \RMM\I18n\MultiLangManager::get_enabled_languages();
 $trans_langs = array_filter($all_enabled_langs, function($k) { return $k !== 'fa'; }, ARRAY_FILTER_USE_KEY);
 
-$login_error = isset($_GET['login_error']) ? urldecode($_GET['login_error']) : '';
+$login_error = isset($_GET['login_error']) ? wp_strip_all_tags(urldecode($_GET['login_error'])) : '';
 ?>
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">

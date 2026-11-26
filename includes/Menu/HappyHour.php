@@ -33,8 +33,8 @@ class HappyHour {
             return false;
         }
 
-        // Check day of week
-        $current_day = date('N'); // 1 (Monday) through 7 (Sunday)
+        // Check day of week (site timezone)
+        $current_day = current_time('N'); // 1 (Monday) through 7 (Sunday)
         if (!empty($hh['days']) && !in_array($current_day, (array)$hh['days'])) {
             return false;
         }

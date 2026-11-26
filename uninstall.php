@@ -18,11 +18,15 @@ if ($remove_data) {
     $table_inventory = $wpdb->prefix . 'rmm_branch_inventory';
     $wpdb->query("DROP TABLE IF EXISTS {$table_inventory}");
 
-    // 2. Delete plugin options
+    // 2. Delete plugin options and transients
     delete_option('rmm_settings');
     delete_option('rmm_db_version');
     delete_option('rmm_category_order');
     delete_option('rmm_design_system');
+    delete_option('rmm_ds_compiled_version');
+    delete_option('rmm_modal_global_ver');
+    delete_option('rmm_happy_hour_rules');
+    delete_transient('rmm_db_upgrade_failed');
 
     // 3-4. Delete all plugin post/term meta. esc_like() escapes the "_"
     // wildcards so unrelated meta keys are never removed by accident.

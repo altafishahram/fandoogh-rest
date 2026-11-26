@@ -141,7 +141,7 @@
 
         var toast = document.createElement('div');
         toast.className = 'rmm-toast ' + type;
-        toast.innerHTML = '<span>' + (icons[type] || '🔔') + '</span><span>' + message + '</span>';
+        toast.innerHTML = '<span>' + (icons[type] || '🔔') + '</span><span>' + escapeHtml(message) + '</span>';
 
         toastContainer.appendChild(toast);
 
@@ -282,7 +282,7 @@
 
     // 7. Kitchen Orders Display System (KDS)
     function fetchOrders() {
-        apiRequest('orders', 'GET', { branch_id: state.branchId })
+        apiRequest('live-orders', 'GET', { branch_id: state.branchId })
             .then(function (res) {
                 if (res && res.success && res.orders) {
                     state.orders = res.orders;
@@ -502,10 +502,10 @@
             }).length;
 
             var isActive = (state.activeCategory == cat.id) ? 'active' : '';
-            html += '<button class="rmm-cat-chip ' + isActive + '" data-cat="' + cat.id + '">' +
+            html += '<button class="rmm-cat-chip ' + isActive + '" data-cat="' + escapeHtml(cat.id) + '">' +
                 '<span>🍲</span>' +
-                '<span>' + cat.name + '</span>' +
-                '<span class="rmm-chip-count">' + count + '</span>' +
+                '<span>' + escapeHtml(cat.name) + '</span>' +
+                '<span class="rmm-chip-count">' + escapeHtml(count) + '</span>' +
                 '</button>';
         });
 
@@ -573,18 +573,18 @@
             var cats = (p.categories && p.categories.length) ? p.categories.join('، ') : '-';
             var badgeLabel = (p.badge_text) ? p.badge_text : (badgeMap[p.badge] || (p.badge !== 'none' && p.badge !== 'custom' ? p.badge : ''));
             var badgeIcon = (p.badge_custom_icon) ? p.badge_custom_icon : '';
-            var badgeImg = (p.badge_image) ? '<img src="' + p.badge_image + '" style="width:14px;height:14px;object-fit:contain;vertical-align:middle;margin-left:3px;border-radius:3px;">' : '';
-            var badgeHtml = (badgeLabel || badgeImg || (p.badge && p.badge !== 'none')) ? '<span class="rmm-card-badge-pill">' + badgeImg + (badgeIcon ? badgeIcon + ' ' : '') + badgeLabel + '</span>' : '';
+            var badgeImg = (p.badge_image) ? '<img src="' + escapeHtml(p.badge_image) + '" style="width:14px;height:14px;object-fit:contain;vertical-align:middle;margin-left:3px;border-radius:3px;">' : '';
+            var badgeHtml = (badgeLabel || badgeImg || (p.badge && p.badge !== 'none')) ? '<span class="rmm-card-badge-pill">' + badgeImg + (badgeIcon ? escapeHtml(badgeIcon) + ' ' : '') + escapeHtml(badgeLabel) + '</span>' : '';
 
             html += '<tr class="rmm-food-row-card">' +
-                '<td class="rmm-cell-thumb"><img src="' + p.image + '" class="rmm-food-thumb" alt="" loading="lazy"></td>' +
+                '<td class="rmm-cell-thumb"><img src="' + escapeHtml(p.image) + '" class="rmm-food-thumb" alt="" loading="lazy"></td>' +
                 '<td class="rmm-cell-info">' +
                 '  <div class="rmm-row-title-wrap">' +
-                '    <div class="rmm-row-title">' + p.name + badgeHtml + '</div>' +
-                (p.name_en ? '    <div class="rmm-row-title-en">' + p.name_en + '</div>' : '') +
+                '    <div class="rmm-row-title">' + escapeHtml(p.name) + badgeHtml + '</div>' +
+                (p.name_en ? '    <div class="rmm-row-title-en">' + escapeHtml(p.name_en) + '</div>' : '') +
                 '  </div>' +
                 '</td>' +
-                '<td class="rmm-cell-cat"><span class="rmm-cat-badge">' + cats + '</span></td>' +
+                '<td class="rmm-cell-cat"><span class="rmm-cat-badge">' + escapeHtml(cats) + '</span></td>' +
                 '<td class="rmm-cell-reg-price">' +
                 '  <div class="rmm-price-control-group">' +
                 '    <span class="rmm-mobile-cell-label">قیمت عادی:</span>' +
@@ -800,7 +800,7 @@
                 if (categorySelect) {
                     var html = '<option value="0">-- بدون دسته‌بندی --</option>';
                     res.categories.forEach(function (cat) {
-                        html += '<option value="' + cat.id + '">' + cat.name + '</option>';
+                        html += '<option value="' + escapeHtml(cat.id) + '">' + escapeHtml(cat.name) + '</option>';
                     });
                     categorySelect.innerHTML = html;
                 }
@@ -892,8 +892,6 @@
             idEl.value = 0;
             nameEl.value = '';
             if (descEl) descEl.value = '';
-            var orderEl = document.getElementById('rmm-cat-form-order');
-            if (orderEl) orderEl.value = (state.categories ? state.categories.length + 1 : 1);
             priceEl.value = '';
             salePriceEl.value = '';
             caloriesEl.value = '';
@@ -968,7 +966,7 @@
         var html = '';
         state.currentGallery.forEach(function (item, idx) {
             html += '<div class="rmm-gallery-thumb-card" data-idx="' + idx + '">' +
-                '<img src="' + item.url + '" class="rmm-gallery-thumb-img" alt="عکس آلبوم">' +
+                '<img src="' + escapeHtml(item.url) + '" class="rmm-gallery-thumb-img" alt="عکس آلبوم">' +
                 '<button type="button" class="rmm-gallery-del-btn" data-idx="' + idx + '" title="حذف از آلبوم">&times;</button>' +
                 '<span class="rmm-gallery-badge-order">' + (idx + 1) + '</span>' +
                 '</div>';
@@ -1417,23 +1415,23 @@
             var isFirst = (index === 0);
             var isLast = (index === total - 1);
 
-            html += '<div class="rmm-cat-item-card" data-id="' + cat.id + '" data-index="' + index + '">' +
+            html += '<div class="rmm-cat-item-card" data-id="' + escapeHtml(cat.id) + '" data-index="' + index + '">' +
                 '<div class="rmm-cat-order-col">' +
-                '<button type="button" class="rmm-btn-order-move rmm-btn-order-up" data-id="' + cat.id + '" title="انتقال به بالا (اولویت بیشتر)" ' + (isFirst ? 'disabled style="opacity:0.25;cursor:not-allowed;"' : '') + '>▲</button>' +
+                '<button type="button" class="rmm-btn-order-move rmm-btn-order-up" data-id="' + escapeHtml(cat.id) + '" title="انتقال به بالا (اولویت بیشتر)" ' + (isFirst ? 'disabled style="opacity:0.25;cursor:not-allowed;"' : '') + '>▲</button>' +
                 '<span class="rmm-cat-order-num" title="رتبه اولویت">#' + (index + 1) + '</span>' +
-                '<button type="button" class="rmm-btn-order-move rmm-btn-order-down" data-id="' + cat.id + '" title="انتقال به پایین (اولویت کمتر)" ' + (isLast ? 'disabled style="opacity:0.25;cursor:not-allowed;"' : '') + '>▼</button>' +
+                '<button type="button" class="rmm-btn-order-move rmm-btn-order-down" data-id="' + escapeHtml(cat.id) + '" title="انتقال به پایین (اولویت کمتر)" ' + (isLast ? 'disabled style="opacity:0.25;cursor:not-allowed;"' : '') + '>▼</button>' +
                 '</div>' +
                 '<div class="rmm-cat-item-info">' +
-                '<img src="' + thumbSrc + '" class="rmm-cat-item-thumb" alt="' + cat.name + '">' +
+                '<img src="' + escapeHtml(thumbSrc) + '" class="rmm-cat-item-thumb" alt="' + escapeHtml(cat.name) + '">' +
                 '<div class="rmm-cat-item-details">' +
-                '<h4>' + cat.name + ' <span class="rmm-cat-priority-pill">اولویت ' + (index + 1) + '</span></h4>' +
-                (cat.description ? '<p>' + cat.description + '</p>' : '') +
+                '<h4>' + escapeHtml(cat.name) + ' <span class="rmm-cat-priority-pill">اولویت ' + (index + 1) + '</span></h4>' +
+                (cat.description ? '<p>' + escapeHtml(cat.description) + '</p>' : '') +
                 '</div>' +
                 '</div>' +
                 '<div class="rmm-cat-item-actions">' +
-                '<span class="rmm-cat-item-count">' + (cat.count || 0) + ' غذا</span>' +
-                '<button type="button" class="rmm-btn-cat-action edit rmm-edit-cat-btn" data-id="' + cat.id + '"><svg width="15" height="15" style="vertical-align:middle; display:inline-block;" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"> <path d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H11C11.41 1.25 11.75 1.59 11.75 2C11.75 2.41 11.41 2.75 11 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V13C21.25 12.59 21.59 12.25 22 12.25C22.41 12.25 22.75 12.59 22.75 13V15C22.75 20.43 20.43 22.75 15 22.75Z"/> <path d="M8.50008 17.6905C7.89008 17.6905 7.33008 17.4705 6.92008 17.0705C6.43008 16.5805 6.22008 15.8705 6.33008 15.1205L6.76008 12.1105C6.84008 11.5305 7.22008 10.7805 7.63008 10.3705L15.5101 2.49055C17.5001 0.500547 19.5201 0.500547 21.5101 2.49055C22.6001 3.58055 23.0901 4.69055 22.9901 5.80055C22.9001 6.70055 22.4201 7.58055 21.5101 8.48055L13.6301 16.3605C13.2201 16.7705 12.4701 17.1505 11.8901 17.2305L8.88008 17.6605C8.75008 17.6905 8.62008 17.6905 8.50008 17.6905ZM16.5701 3.55055L8.69008 11.4305C8.50008 11.6205 8.28008 12.0605 8.24008 12.3205L7.81008 15.3305C7.77008 15.6205 7.83008 15.8605 7.98008 16.0105C8.13008 16.1605 8.37008 16.2205 8.66008 16.1805L11.6701 15.7505C11.9301 15.7105 12.3801 15.4905 12.5601 15.3005L20.4401 7.42055C21.0901 6.77055 21.4301 6.19055 21.4801 5.65055C21.5401 5.00055 21.2001 4.31055 20.4401 3.54055C18.8401 1.94055 17.7401 2.39055 16.5701 3.55055Z"/> <path d="M19.8501 9.83027C19.7801 9.83027 19.7101 9.82027 19.6501 9.80027C17.0201 9.06027 14.9301 6.97027 14.1901 4.34027C14.0801 3.94027 14.3101 3.53027 14.7101 3.41027C15.1101 3.30027 15.5201 3.53027 15.6301 3.93027C16.2301 6.06027 17.9201 7.75027 20.0501 8.35027C20.4501 8.46027 20.6801 8.88027 20.5701 9.28027C20.4801 9.62027 20.1801 9.83027 19.8501 9.83027Z"/> </svg> ویرایش</button>' +
-                '<button type="button" class="rmm-btn-cat-action delete rmm-delete-cat-btn" data-id="' + cat.id + '"><svg width="15" height="15" style="vertical-align:middle; display:inline-block;" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"> <path d="M13.3901 18.1091C13.2001 18.1091 13.0101 18.0391 12.8601 17.8891L10.1001 15.1291C9.81007 14.8391 9.81007 14.3591 10.1001 14.0691C10.3901 13.7791 10.8701 13.7791 11.1601 14.0691L13.9201 16.8291C14.2101 17.1191 14.2101 17.5991 13.9201 17.8891C13.7801 18.0391 13.5901 18.1091 13.3901 18.1091Z"/> <path d="M10.61 18.1403C10.42 18.1403 10.23 18.0703 10.08 17.9203C9.79005 17.6303 9.79005 17.1503 10.08 16.8603L12.84 14.1003C13.13 13.8103 13.61 13.8103 13.9 14.1003C14.19 14.3903 14.19 14.8703 13.9 15.1603L11.14 17.9203C10.99 18.0703 10.8 18.1403 10.61 18.1403Z"/> <path d="M5.18988 6.37945C4.99988 6.37945 4.79988 6.29945 4.65988 6.15945C4.36988 5.86945 4.36988 5.38945 4.65988 5.09945L8.28988 1.46945C8.57988 1.17945 9.05988 1.17945 9.34988 1.46945C9.63988 1.75945 9.63988 2.23945 9.34988 2.52945L5.71988 6.15945C5.56988 6.29945 5.37988 6.37945 5.18988 6.37945Z"/> <path d="M18.8101 6.37945C18.6201 6.37945 18.4301 6.30945 18.2801 6.15945L14.6501 2.52945C14.3601 2.23945 14.3601 1.75945 14.6501 1.46945C14.9401 1.17945 15.4201 1.17945 15.7101 1.46945L19.3401 5.09945C19.6301 5.38945 19.6301 5.86945 19.3401 6.15945C19.2001 6.29945 19.0001 6.37945 18.8101 6.37945Z"/> <path d="M20.21 10.5996C20.14 10.5996 20.07 10.5996 20 10.5996H19.77H4C3.3 10.6096 2.5 10.6096 1.92 10.0296C1.46 9.57961 1.25 8.87961 1.25 7.84961C1.25 5.09961 3.26 5.09961 4.22 5.09961H19.78C20.74 5.09961 22.75 5.09961 22.75 7.84961C22.75 8.88961 22.54 9.57961 22.08 10.0296C21.56 10.5496 20.86 10.5996 20.21 10.5996ZM4.22 9.09961H20.01C20.46 9.10961 20.88 9.10961 21.02 8.96961C21.09 8.89961 21.24 8.65961 21.24 7.84961C21.24 6.71961 20.96 6.59961 19.77 6.59961H4.22C3.03 6.59961 2.75 6.71961 2.75 7.84961C2.75 8.65961 2.91 8.89961 2.97 8.96961C3.11 9.09961 3.54 9.09961 3.98 9.09961H4.22Z"/> <path d="M14.89 22.7507H8.86C5.28 22.7507 4.48 20.6207 4.17 18.7707L2.76 10.1207C2.69 9.71073 2.97 9.33073 3.38 9.26073C3.79 9.19073 4.17 9.47073 4.24 9.88073L5.65 18.5207C5.94 20.2907 6.54 21.2507 8.86 21.2507H14.89C17.46 21.2507 17.75 20.3507 18.08 18.6107L19.76 9.86073C19.84 9.45073 20.23 9.18073 20.64 9.27073C21.05 9.35073 21.31 9.74073 21.23 10.1507L19.55 18.9007C19.16 20.9307 18.51 22.7507 14.89 22.7507Z"/> </svg> حذف</button>' +
+                '<span class="rmm-cat-item-count">' + escapeHtml(cat.count || 0) + ' غذا</span>' +
+                '<button type="button" class="rmm-btn-cat-action edit rmm-edit-cat-btn" data-id="' + escapeHtml(cat.id) + '"><svg width="15" height="15" style="vertical-align:middle; display:inline-block;" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"> <path d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H11C11.41 1.25 11.75 1.59 11.75 2C11.75 2.41 11.41 2.75 11 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V13C21.25 12.59 21.59 12.25 22 12.25C22.41 12.25 22.75 12.59 22.75 13V15C22.75 20.43 20.43 22.75 15 22.75Z"/> <path d="M8.50008 17.6905C7.89008 17.6905 7.33008 17.4705 6.92008 17.0705C6.43008 16.5805 6.22008 15.8705 6.33008 15.1205L6.76008 12.1105C6.84008 11.5305 7.22008 10.7805 7.63008 10.3705L15.5101 2.49055C17.5001 0.500547 19.5201 0.500547 21.5101 2.49055C22.6001 3.58055 23.0901 4.69055 22.9901 5.80055C22.9001 6.70055 22.4201 7.58055 21.5101 8.48055L13.6301 16.3605C13.2201 16.7705 12.4701 17.1505 11.8901 17.2305L8.88008 17.6605C8.75008 17.6905 8.62008 17.6905 8.50008 17.6905ZM16.5701 3.55055L8.69008 11.4305C8.50008 11.6205 8.28008 12.0605 8.24008 12.3205L7.81008 15.3305C7.77008 15.6205 7.83008 15.8605 7.98008 16.0105C8.13008 16.1605 8.37008 16.2205 8.66008 16.1805L11.6701 15.7505C11.9301 15.7105 12.3801 15.4905 12.5601 15.3005L20.4401 7.42055C21.0901 6.77055 21.4301 6.19055 21.4801 5.65055C21.5401 5.00055 21.2001 4.31055 20.4401 3.54055C18.8401 1.94055 17.7401 2.39055 16.5701 3.55055Z"/> <path d="M19.8501 9.83027C19.7801 9.83027 19.7101 9.82027 19.6501 9.80027C17.0201 9.06027 14.9301 6.97027 14.1901 4.34027C14.0801 3.94027 14.3101 3.53027 14.7101 3.41027C15.1101 3.30027 15.5201 3.53027 15.6301 3.93027C16.2301 6.06027 17.9201 7.75027 20.0501 8.35027C20.4501 8.46027 20.6801 8.88027 20.5701 9.28027C20.4801 9.62027 20.1801 9.83027 19.8501 9.83027Z"/> </svg> ویرایش</button>' +
+                '<button type="button" class="rmm-btn-cat-action delete rmm-delete-cat-btn" data-id="' + escapeHtml(cat.id) + '"><svg width="15" height="15" style="vertical-align:middle; display:inline-block;" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"> <path d="M13.3901 18.1091C13.2001 18.1091 13.0101 18.0391 12.8601 17.8891L10.1001 15.1291C9.81007 14.8391 9.81007 14.3591 10.1001 14.0691C10.3901 13.7791 10.8701 13.7791 11.1601 14.0691L13.9201 16.8291C14.2101 17.1191 14.2101 17.5991 13.9201 17.8891C13.7801 18.0391 13.5901 18.1091 13.3901 18.1091Z"/> <path d="M10.61 18.1403C10.42 18.1403 10.23 18.0703 10.08 17.9203C9.79005 17.6303 9.79005 17.1503 10.08 16.8603L12.84 14.1003C13.13 13.8103 13.61 13.8103 13.9 14.1003C14.19 14.3903 14.19 14.8703 13.9 15.1603L11.14 17.9203C10.99 18.0703 10.8 18.1403 10.61 18.1403Z"/> <path d="M5.18988 6.37945C4.99988 6.37945 4.79988 6.29945 4.65988 6.15945C4.36988 5.86945 4.36988 5.38945 4.65988 5.09945L8.28988 1.46945C8.57988 1.17945 9.05988 1.17945 9.34988 1.46945C9.63988 1.75945 9.63988 2.23945 9.34988 2.52945L5.71988 6.15945C5.56988 6.29945 5.37988 6.37945 5.18988 6.37945Z"/> <path d="M18.8101 6.37945C18.6201 6.37945 18.4301 6.30945 18.2801 6.15945L14.6501 2.52945C14.3601 2.23945 14.3601 1.75945 14.6501 1.46945C14.9401 1.17945 15.4201 1.17945 15.7101 1.46945L19.3401 5.09945C19.6301 5.38945 19.6301 5.86945 19.3401 6.15945C19.2001 6.29945 19.0001 6.37945 18.8101 6.37945Z"/> <path d="M20.21 10.5996C20.14 10.5996 20.07 10.5996 20 10.5996H19.77H4C3.3 10.6096 2.5 10.6096 1.92 10.0296C1.46 9.57961 1.25 8.87961 1.25 7.84961C1.25 5.09961 3.26 5.09961 4.22 5.09961H19.78C20.74 5.09961 22.75 5.09961 22.75 7.84961C22.75 8.88961 22.54 9.57961 22.08 10.0296C21.56 10.5496 20.86 10.5996 20.21 10.5996ZM4.22 9.09961H20.01C20.46 9.10961 20.88 9.10961 21.02 8.96961C21.09 8.89961 21.24 8.65961 21.24 7.84961C21.24 6.71961 20.96 6.59961 19.77 6.59961H4.22C3.03 6.59961 2.75 6.71961 2.75 7.84961C2.75 8.65961 2.91 8.89961 2.97 8.96961C3.11 9.09961 3.54 9.09961 3.98 9.09961H4.22Z"/> <path d="M14.89 22.7507H8.86C5.28 22.7507 4.48 20.6207 4.17 18.7707L2.76 10.1207C2.69 9.71073 2.97 9.33073 3.38 9.26073C3.79 9.19073 4.17 9.47073 4.24 9.88073L5.65 18.5207C5.94 20.2907 6.54 21.2507 8.86 21.2507H14.89C17.46 21.2507 17.75 20.3507 18.08 18.6107L19.76 9.86073C19.84 9.45073 20.23 9.18073 20.64 9.27073C21.05 9.35073 21.31 9.74073 21.23 10.1507L19.55 18.9007C19.16 20.9307 18.51 22.7507 14.89 22.7507Z"/> </svg> حذف</button>' +
                 '</div>' +
                 '</div>';
         });
