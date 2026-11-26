@@ -227,13 +227,13 @@ class RestApiController {
         $branch_id = absint($order->get_meta('_rmm_order_branch_id'));
         if (!$branch_id) {
             // Legacy orders without a branch are visible to global managers only.
-            if (!current_user_can('manage_options') && !current_user_can('manage_woocommerce')) {
+            if (!AuthController::is_global_manager()) {
                 return new \WP_Error('rmm_forbidden_order', __('شما به این سفارش دسترسی ندارید.', 'fondogh-online-menu'), ['status' => 403]);
             }
             return true;
         }
 
-        if (!current_user_can('manage_options') && !AuthController::user_can_access_branch($branch_id)) {
+        if (!AuthController::is_global_manager() && !AuthController::user_can_access_branch($branch_id)) {
             return new \WP_Error('rmm_forbidden_order', __('شما به این سفارش دسترسی ندارید.', 'fondogh-online-menu'), ['status' => 403]);
         }
 
@@ -247,7 +247,7 @@ class RestApiController {
      * @return true|\WP_Error
      */
     private function assert_product_branch_access($product_id) {
-        if (current_user_can('manage_options') || current_user_can('manage_woocommerce')) {
+        if (AuthController::is_global_manager()) {
             return true;
         }
 
@@ -964,7 +964,7 @@ class RestApiController {
 
         // Only update global WooCommerce price/stock when creating a new product or when user is a global manager.
         // Branch-scoped managers update branch inventory rows below without overwriting other branches.
-        $is_global_mgr = current_user_can('manage_options') || current_user_can('manage_woocommerce');
+        $is_global_mgr = AuthController::is_global_manager();
         if ($product_id === 0 || $is_global_mgr) {
             $product->set_regular_price($regular_price);
             $product->set_price($sale_price !== null ? $sale_price : $regular_price);

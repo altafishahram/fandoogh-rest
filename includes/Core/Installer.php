@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 
 class Installer {
 
-    const DB_VERSION = '1.0.1';
+    const DB_VERSION = '1.0.2';
 
     /**
      * Check if custom branch inventory table exists in DB
@@ -33,6 +33,9 @@ class Installer {
         }
 
         $installed_ver = get_option('rmm_db_version', '0.0.0');
+        if (version_compare($installed_ver, '1.0.2', '<')) {
+            self::migrate_role_capabilities();
+        }
         if (version_compare($installed_ver, self::DB_VERSION, '<') || !self::table_exists()) {
             $created = self::create_tables();
             if (!$created || !self::table_exists()) {

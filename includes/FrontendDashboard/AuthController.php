@@ -43,7 +43,15 @@ class AuthController {
      * @param int $user_id
      * @return bool
      */
-    private static function is_global_manager($user_id) {
+    public static function is_global_manager($user_id = null) {
+        if ($user_id === null) {
+            $user_id = get_current_user_id();
+        }
+        $user_id = absint($user_id);
+        if (!$user_id) {
+            return false;
+        }
+
         if (user_can($user_id, 'manage_options')) {
             return true;
         }
