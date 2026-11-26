@@ -65,8 +65,8 @@ class AiTranslator {
         $prompt .= "Return ONLY a valid JSON object matching the exact keys provided, with no extra text or markdown formatting.\n";
         $prompt .= "Input JSON:\n" . wp_json_encode($texts, JSON_UNESCAPED_UNICODE);
 
-        // Include key in query param and header for maximum compatibility across proxies and API gateways
-        $url = add_query_arg('key', rawurlencode($api_key), 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent');
+        // Send key via header only so it is never leaked in server/proxy URL logs
+        $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
 
         $body = [
             'contents' => [
