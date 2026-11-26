@@ -224,13 +224,102 @@
             }
         });
 
-        // 2. Category Nav Pills Filter (No Page Scroll, Pure Instant Filter)
-        $('.rmm-cat-pill').on('click', function (e) {
-            e.preventDefault();
-            $('.rmm-cat-pill').removeClass('active');
-            $(this).addClass('active');
+        // 2. Category Nav Pills: Smooth Scroll + ScrollSpy when category headers exist, otherwise instant filter
+        var isProgrammaticScroll = false;
+        var programmaticScrollTimer = null;
+        var lastSpyCatId = null;
 
-            var catId = $(this).data('cat-id') || $(this).data('category');
+        function getStickyNavOffset() {
+            var offset = 16;
+            var $stickyBar = $('.rmm-category-nav-wrapper.rmm-sticky-bar').first();
+            if ($stickyBar.length) {
+                offset += $stickyBar.outerHeight() || 0;
+            }
+            var $adminBar = $('#wpadminbar');
+            if ($adminBar.length && $adminBar.is(':visible')) {
+                offset += $adminBar.outerHeight() || 0;
+            }
+            return offset;
+        }
+
+        function scrollPillIntoView($pill) {
+            if (!$pill || !$pill.length) return;
+            var $scroller = $pill.closest('.rmm-cat-scroll-container');
+            if (!$scroller.length) {
+                $scroller = $pill.closest('.rmm-category-nav-wrapper');
+            }
+            if (!$scroller.length || !$scroller[0].scrollBy) return;
+
+            var sRect = $scroller[0].getBoundingClientRect();
+            var pRect = $pill[0].getBoundingClientRect();
+            var delta = (pRect.left + (pRect.width / 2)) - (sRect.left + (sRect.width / 2));
+            if (Math.abs(delta) > 4) {
+                $scroller[0].scrollBy({ left: delta, behavior: 'smooth' });
+            }
+        }
+
+        function setActiveCategoryPill(catId) {
+            var idStr = String(catId);
+            var $targetPill = $('.rmm-cat-pill').filter(function () {
+                return String($(this).data('cat-id') || $(this).data('category')) === idStr;
+            });
+            if ($targetPill.length) {
+                $('.rmm-cat-pill').removeClass('active');
+                $targetPill.addClass('active');
+                scrollPillIntoView($targetPill.first());
+            }
+            $('.rmm-catsheet-card').each(function () {
+                var $card = $(this);
+                var isAct = String($card.data('cat-id')) === idStr;
+                $card.toggleClass('is-active', isAct).attr('aria-pressed', isAct ? 'true' : 'false');
+            });
+        }
+
+        $(document).on('click', '.rmm-cat-pill', function (e) {
+            e.preventDefault();
+            var $clicked = $(this);
+            var catId = $clicked.data('cat-id') || $clicked.data('category');
+
+            $('.rmm-cat-pill').removeClass('active');
+            $clicked.addClass('active');
+            scrollPillIntoView($clicked);
+
+            var $catalogSections = $('.rmm-menu-catalog-wrap .rmm-category-section');
+            if ($catalogSections.length) {
+                // Sectioned menu mode: keep all sections visible & smooth scroll to target header
+                $catalogSections.show();
+                $('.rmm-food-card').show();
+
+                var targetTop = null;
+                if (String(catId) === 'all') {
+                    var $wrap = $('.rmm-menu-catalog-wrap').first();
+                    if ($wrap.length) {
+                        targetTop = $wrap.offset().top - getStickyNavOffset();
+                    }
+                } else {
+                    var $targetSec = $('#rmm-cat-sec-' + catId);
+                    if (!$targetSec.length) {
+                        $targetSec = $catalogSections.filter('[data-cat-id="' + catId + '"]').first();
+                    }
+                    if ($targetSec.length) {
+                        targetTop = $targetSec.offset().top - getStickyNavOffset();
+                    }
+                }
+
+                if (targetTop !== null) {
+                    isProgrammaticScroll = true;
+                    lastSpyCatId = String(catId);
+                    if (programmaticScrollTimer) clearTimeout(programmaticScrollTimer);
+                    window.scrollTo({
+                        top: Math.max(0, targetTop),
+                        behavior: 'smooth'
+                    });
+                    programmaticScrollTimer = setTimeout(function () {
+                        isProgrammaticScroll = false;
+                    }, 750);
+                }
+                return;
+            }
 
             if (catId === 'all') {
                 $('.rmm-category-section').show();
@@ -253,7 +342,6 @@
                     if (cats.indexOf(catId + '') !== -1) {
                         $(this).show();
                     } else {
-                        // If card is inside a hidden category section, it is already hidden
                         if (!$(this).closest('.rmm-category-section').length) {
                             $(this).hide();
                         }
@@ -261,6 +349,46 @@
                 });
             }
         });
+
+        // ScrollSpy: Automatically highlight & scroll active category pill as user scrolls through sections
+        if ($('.rmm-menu-catalog-wrap .rmm-category-section').length && $('.rmm-cat-pill').length) {
+            var spyRafPending = false;
+
+            function updateCategoryScrollSpy() {
+                spyRafPending = false;
+                if (isProgrammaticScroll) return;
+
+                var $sections = $('.rmm-menu-catalog-wrap .rmm-category-section:visible');
+                if (!$sections.length) return;
+
+                var scrollPos = $(window).scrollTop() + getStickyNavOffset() + 28;
+                var activeId = null;
+
+                $sections.each(function () {
+                    var $sec = $(this);
+                    if (scrollPos >= $sec.offset().top) {
+                        activeId = $sec.data('cat-id');
+                    }
+                });
+
+                if (activeId === null) {
+                    var $allPill = $('.rmm-cat-pill[data-cat-id="all"]');
+                    activeId = $allPill.length ? 'all' : $sections.first().data('cat-id');
+                }
+
+                if (activeId !== null && String(activeId) !== String(lastSpyCatId)) {
+                    lastSpyCatId = String(activeId);
+                    setActiveCategoryPill(activeId);
+                }
+            }
+
+            $(window).on('scroll.rmmCategorySpy', function () {
+                if (!spyRafPending) {
+                    spyRafPending = true;
+                    window.requestAnimationFrame(updateCategoryScrollSpy);
+                }
+            });
+        }
 
         // 3. Quick Add to Cart (No Options)
         $(document).on('click', '.rmm-quick-add-btn', function (e) {
@@ -771,7 +899,7 @@
                     'data-title="' + escHtml(data.name) + '" ' +
                     'data-image="' + escHtml(data.image || '') + '" ' +
                     'data-hide-price="' + (hideCatalogPrice ? '1' : '0') + '">' +
-                    '<span>+ افزودن به لیست انتخاب</span>' +
+                    '<span>+ ' + escHtml(t('add_to_selection_list', 'افزودن به لیست انتخاب')) + '</span>' +
                     modalBtnPriceHtml +
                     '</button>';
 
@@ -1288,7 +1416,6 @@
             var queryData = $btn.data('query') || {};
 
             var nextPage = page + 1;
-            var nonceVal = $btn.data('nonce') || (window.rmmConfig && window.rmmConfig.nonce ? window.rmmConfig.nonce : '');
             $btn.data('loading', true).addClass('is-loading');
             var originalText = $btn.html();
             $btn.html('<span>⏳ ' + (window.rmmConfig && window.rmmConfig.strings && window.rmmConfig.strings.loading ? window.rmmConfig.strings.loading : 'در حال بارگذاری...') + '</span>');
@@ -1300,19 +1427,15 @@
                 data: {
                     action: 'rmm_load_more_loop_products',
                     page: nextPage,
-                    security: nonceVal,
                     query: queryData
                 },
                 success: function (res) {
                     if (res && res.success && res.data && res.data.html) {
+                        var resolvedPage = parseInt(res.data.page || nextPage, 10);
                         $grid.append(res.data.html);
-                        $btn.data('page', nextPage);
+                        $btn.data('page', resolvedPage);
 
-                        if (res.data.nonce) {
-                            $btn.attr('data-nonce', res.data.nonce).data('nonce', res.data.nonce);
-                        }
-
-                        if (!res.data.has_more || nextPage >= maxPages) {
+                        if (!res.data.has_more || resolvedPage >= maxPages) {
                             $btn.fadeOut(300, function () { $(this).remove(); });
                         } else {
                             $btn.html(originalText);
@@ -1394,7 +1517,7 @@
                     '  <button type="button" class="rmm-floating-cart-btn rmm-catalog-floating-btn" id="rmm-catalog-open-drawer-btn" aria-haspopup="dialog">' +
                     '    <div class="rmm-cart-left">' +
                     '      <span class="rmm-cart-badge-count" id="rmm-catalog-count" data-count="0">0</span>' +
-                    '      <span class="rmm-cart-label">لیست انتخاب‌های من</span>' +
+                    '      <span class="rmm-cart-label">' + escHtml(t('my_selection_list', 'لیست انتخاب‌های من')) + '</span>' +
                     '    </div>' +
                     '    <div class="rmm-cart-right">' +
                     '      <span class="rmm-cart-total" id="rmm-catalog-total">0</span>' +
@@ -1413,7 +1536,7 @@
             if (!$drawer.length) {
                 var whatsappNum = (window.rmmConfig && window.rmmConfig.whatsapp_number) ? String(window.rmmConfig.whatsapp_number).trim() : '';
                 var waBtnHtml = whatsappNum
-                    ? '<a href="#" target="_blank" class="rmm-catalog-wa-btn" id="rmm-catalog-wa-send-btn">💬 ارسال لیست در واتساپ</a>'
+                    ? '<a href="#" target="_blank" class="rmm-catalog-wa-btn" id="rmm-catalog-wa-send-btn">💬 ' + escHtml(t('send_list_whatsapp', 'ارسال لیست در واتساپ')) + '</a>'
                     : '';
 
                 $('body').append(
@@ -1421,27 +1544,27 @@
                     '  <div class="rmm-catalog-drawer">' +
                     '    <div class="rmm-catalog-drawer-header">' +
                     '      <div class="rmm-catalog-drawer-title-wrap">' +
-                    '        <h3 id="rmm-catalog-drawer-title" class="rmm-catalog-drawer-title">📝 لیست انتخاب‌های من</h3>' +
-                    '        <span class="rmm-catalog-drawer-count" id="rmm-catalog-drawer-count">0 مورد</span>' +
+                    '        <h3 id="rmm-catalog-drawer-title" class="rmm-catalog-drawer-title">📝 ' + escHtml(t('my_selection_list', 'لیست انتخاب‌های من')) + '</h3>' +
+                    '        <span class="rmm-catalog-drawer-count" id="rmm-catalog-drawer-count">0 ' + escHtml(t('catalog_items_unit', 'مورد')) + '</span>' +
                     '      </div>' +
                     '      <div class="rmm-catalog-drawer-header-actions">' +
-                    '        <button type="button" class="rmm-catalog-clear-btn" id="rmm-catalog-clear-btn" title="پاک کردن لیست">🗑️ پاک کردن</button>' +
-                    '        <button type="button" class="rmm-catalog-close-btn" id="rmm-catalog-close-btn" aria-label="بستن">&times;</button>' +
+                    '        <button type="button" class="rmm-catalog-clear-btn" id="rmm-catalog-clear-btn" title="' + escHtml(t('clear_list_title', 'پاک کردن لیست')) + '">🗑️ ' + escHtml(t('clear_list', 'پاک کردن')) + '</button>' +
+                    '        <button type="button" class="rmm-catalog-close-btn" id="rmm-catalog-close-btn" aria-label="' + escHtml(t('close', 'بستن')) + '">&times;</button>' +
                     '      </div>' +
                     '    </div>' +
                     '    <div class="rmm-catalog-drawer-body" id="rmm-catalog-drawer-list"></div>' +
                     '    <div class="rmm-catalog-drawer-footer">' +
                     '      <div class="rmm-catalog-summary-row">' +
-                    '        <span class="rmm-catalog-summary-label">تعداد کل انتخاب‌ها:</span>' +
-                    '        <strong class="rmm-catalog-summary-qty" id="rmm-catalog-footer-qty">0 عدد</strong>' +
+                    '        <span class="rmm-catalog-summary-label">' + escHtml(t('total_selections_label', 'تعداد کل انتخاب‌ها:')) + '</span>' +
+                    '        <strong class="rmm-catalog-summary-qty" id="rmm-catalog-footer-qty">0 ' + escHtml(t('catalog_qty_unit', 'عدد')) + '</strong>' +
                     '      </div>' +
                     '      <div class="rmm-catalog-grand-total-row">' +
-                    '        <span class="rmm-catalog-grand-label">جمع کل:</span>' +
+                    '        <span class="rmm-catalog-grand-label">' + escHtml(t('grand_total_label', 'جمع کل:')) + '</span>' +
                     '        <strong class="rmm-catalog-grand-amount" id="rmm-catalog-footer-total">0</strong>' +
                     '      </div>' +
                     '      <div class="rmm-catalog-footer-actions">' +
                     waBtnHtml +
-                    '        <button type="button" class="rmm-catalog-done-btn" id="rmm-catalog-done-btn">ادامه مشاهده منو</button>' +
+                    '        <button type="button" class="rmm-catalog-done-btn" id="rmm-catalog-done-btn">' + escHtml(t('continue_viewing_menu', 'ادامه مشاهده منو')) + '</button>' +
                     '      </div>' +
                     '    </div>' +
                     '  </div>' +
@@ -1475,7 +1598,7 @@
 
             $countEl.attr('data-count', totals.qty).text(totals.qty);
             if (isCatalogPriceHidden()) {
-                $totalEl.text(totals.qty + ' مورد');
+                $totalEl.text(totals.qty + ' ' + t('catalog_items_unit', 'مورد'));
             } else {
                 $totalEl.text(formatCatalogPrice(totals.amount));
             }
@@ -1500,9 +1623,9 @@
                 var pid = String($btn.attr('data-id') || '');
                 var count = qtyById[pid] || 0;
                 if (count > 0) {
-                    $btn.addClass('in-list').html('✓ در لیست (' + count + ') +');
+                    $btn.addClass('in-list').text('✓ ' + t('in_list', 'در لیست') + ' (' + count + ') +');
                 } else {
-                    $btn.removeClass('in-list').html('+ افزودن به لیست');
+                    $btn.removeClass('in-list').text('+ ' + t('add_to_list', 'افزودن به لیست'));
                 }
             });
         }
@@ -1512,16 +1635,16 @@
             var $listEl = $drawer.find('#rmm-catalog-drawer-list');
             var totals = getCatalogTotals();
 
-            $drawer.find('#rmm-catalog-drawer-count').text(totals.qty + ' مورد');
-            $drawer.find('#rmm-catalog-footer-qty').text(totals.qty + ' عدد');
+            $drawer.find('#rmm-catalog-drawer-count').text(totals.qty + ' ' + t('catalog_items_unit', 'مورد'));
+            $drawer.find('#rmm-catalog-footer-qty').text(totals.qty + ' ' + t('catalog_qty_unit', 'عدد'));
             $drawer.find('#rmm-catalog-footer-total').text(formatCatalogPrice(totals.amount));
 
             if (!catalogList.length) {
                 $listEl.html(
                     '<div class="rmm-catalog-empty">' +
                     '  <span class="rmm-catalog-empty-icon">🍽️</span>' +
-                    '  <p>هنوز غذایی به لیست انتخاب شما اضافه نشده است.</p>' +
-                    '  <span>از منو روی دکمه «+ افزودن به لیست» کلیک کنید.</span>' +
+                    '  <p>' + escHtml(t('empty_list_title', 'هنوز غذایی به لیست انتخاب شما اضافه نشده است.')) + '</p>' +
+                    '  <span>' + escHtml(t('empty_list_hint', 'از منو روی دکمه «+ افزودن به لیست» کلیک کنید.')) + '</span>' +
                     '</div>'
                 );
                 $drawer.find('#rmm-catalog-clear-btn').hide();
@@ -1532,7 +1655,7 @@
             $drawer.find('#rmm-catalog-clear-btn').show();
 
             var html = '';
-            var waLines = ['سلام، لیست غذاهای انتخابی من:'];
+            var waLines = [t('wa_greeting', 'سلام، لیست غذاهای انتخابی من:')];
             catalogList.forEach(function (item, idx) {
                 var q = parseInt(item.qty, 10) || 1;
                 var p = parseFloat(item.price) || 0;
@@ -1545,19 +1668,19 @@
                     '<div class="rmm-catalog-item-body">' +
                     '  <div class="rmm-catalog-item-top">' +
                     '    <h4 class="rmm-catalog-item-title">' + escHtml(item.title) + '</h4>' +
-                    '    <button type="button" class="rmm-catalog-item-remove" data-index="' + idx + '" title="حذف">&times;</button>' +
+                    '    <button type="button" class="rmm-catalog-item-remove" data-index="' + idx + '" title="' + escHtml(t('remove', 'حذف')) + '">&times;</button>' +
                     '  </div>' +
                     metaHtml +
-                    '  <div class="rmm-catalog-item-unit-price">قیمت واحد: ' + formatCatalogPrice(p) + '</div>' +
+                    '  <div class="rmm-catalog-item-unit-price">' + escHtml(t('unit_price_label', 'قیمت واحد:')) + ' ' + escHtml(formatCatalogPrice(p)) + '</div>' +
                     '  <div class="rmm-catalog-item-bottom">' +
                     '    <div class="rmm-catalog-item-qty">' +
-                    '      <button type="button" class="rmm-cat-qty-btn rmm-cat-qty-minus" data-index="' + idx + '" aria-label="کاهش تعداد">−</button>' +
+                    '      <button type="button" class="rmm-cat-qty-btn rmm-cat-qty-minus" data-index="' + idx + '" aria-label="' + escHtml(t('decrease_qty', 'کاهش تعداد')) + '">−</button>' +
                     '      <span class="rmm-cat-qty-num">' + q + '</span>' +
-                    '      <button type="button" class="rmm-cat-qty-btn rmm-cat-qty-plus" data-index="' + idx + '" aria-label="افزایش تعداد">+</button>' +
+                    '      <button type="button" class="rmm-cat-qty-btn rmm-cat-qty-plus" data-index="' + idx + '" aria-label="' + escHtml(t('increase_qty', 'افزایش تعداد')) + '">+</button>' +
                     '    </div>' +
                     '    <div class="rmm-catalog-item-subtotal">' +
-                    '      <span class="rmm-catalog-sub-label">مبلغ:</span> ' +
-                    '      <strong class="rmm-catalog-sub-val">' + formatCatalogPrice(lineTotal) + '</strong>' +
+                    '      <span class="rmm-catalog-sub-label">' + escHtml(t('line_amount_label', 'مبلغ:')) + '</span> ' +
+                    '      <strong class="rmm-catalog-sub-val">' + escHtml(formatCatalogPrice(lineTotal)) + '</strong>' +
                     '    </div>' +
                     '  </div>' +
                     '</div>' +
@@ -1567,7 +1690,7 @@
             });
 
             if (!isCatalogPriceHidden()) {
-                waLines.push('جمع کل: ' + formatCatalogPrice(totals.amount));
+                waLines.push(t('grand_total_label', 'جمع کل:') + ' ' + formatCatalogPrice(totals.amount));
             }
 
             var whatsappNum = (window.rmmConfig && window.rmmConfig.whatsapp_number) ? String(window.rmmConfig.whatsapp_number).trim() : '';
@@ -1599,7 +1722,7 @@
                 catalogList.push({
                     key: key,
                     id: item.id,
-                    title: item.title || 'غذا',
+                    title: item.title || t('default_food_name', 'غذا'),
                     price: parseFloat(item.price) || 0,
                     image: item.image || '',
                     qty: qtyToAdd,
@@ -1623,7 +1746,7 @@
             if ($triggerBtn && $triggerBtn.length && !$triggerBtn.hasClass('rmm-catalog-add-btn')) {
                 var orig = $triggerBtn.data('rmm-orig-html') || $triggerBtn.html();
                 $triggerBtn.data('rmm-orig-html', orig);
-                $triggerBtn.text('✓ به لیست اضافه شد');
+                $triggerBtn.text('✓ ' + t('added_to_list', 'به لیست اضافه شد'));
                 setTimeout(function () {
                     $triggerBtn.html(orig);
                 }, 1100);

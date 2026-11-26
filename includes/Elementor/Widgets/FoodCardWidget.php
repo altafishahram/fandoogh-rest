@@ -557,11 +557,14 @@ class FoodCardWidget extends Widget_Base {
 
         $layout_class = 'rmm-layout-' . esc_attr($settings['card_layout'] ?? 'vertical');
         $card_classes = 'rmm-food-card rmm-food-card-standalone ' . $layout_class . ($is_in_stock ? '' : ' rmm-out-of-stock');
+        $cat_ids      = $prod_id ? wp_get_post_terms($prod_id, 'product_cat', ['fields' => 'ids']) : [];
+        $cat_attr     = is_wp_error($cat_ids) ? '' : implode(',', array_map('absint', (array) $cat_ids));
+        $lower_title  = function_exists('mb_strtolower') ? mb_strtolower($title, 'UTF-8') : strtolower($title);
 
         wp_enqueue_style('rmm-frontend-menu');
         wp_enqueue_script('rmm-frontend-menu');
         ?>
-        <div class="<?php echo esc_attr($card_classes); ?>" data-product-id="<?php echo esc_attr($prod_id); ?>">
+        <div class="<?php echo esc_attr($card_classes); ?>" data-product-id="<?php echo esc_attr($prod_id); ?>" data-cats="<?php echo esc_attr($cat_attr); ?>" data-title="<?php echo esc_attr($lower_title); ?>">
             <?php if ($settings['show_image'] === 'yes') : ?>
                 <div class="rmm-food-image-wrap rmm-open-modal" data-product-id="<?php echo esc_attr($prod_id); ?>" style="cursor:pointer;">
                     <?php if (!empty($image_url)) : ?>

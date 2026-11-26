@@ -541,8 +541,11 @@ class FoodLoopWidget extends Widget_Base {
         $image_id    = $product->get_image_id();
         $image_url   = $image_id ? wp_get_attachment_image_url($image_id, 'medium_large') : '';
         $card_class  = 'rmm-food-card ' . $layout_class . ($is_in_stock ? '' : ' rmm-out-of-stock');
+        $cat_ids     = wp_get_post_terms($prod_id, 'product_cat', ['fields' => 'ids']);
+        $cat_attr    = is_wp_error($cat_ids) ? '' : implode(',', array_map('absint', (array) $cat_ids));
+        $lower_title = function_exists('mb_strtolower') ? mb_strtolower($title, 'UTF-8') : strtolower($title);
         ?>
-        <div class="<?php echo esc_attr($card_class); ?>" data-product-id="<?php echo esc_attr($prod_id); ?>">
+        <div class="<?php echo esc_attr($card_class); ?>" data-product-id="<?php echo esc_attr($prod_id); ?>" data-cats="<?php echo esc_attr($cat_attr); ?>" data-title="<?php echo esc_attr($lower_title); ?>">
             <div class="rmm-food-image-wrap rmm-open-modal" data-product-id="<?php echo esc_attr($prod_id); ?>" style="cursor:pointer; position:relative;">
                 <?php if (!empty($image_url)) : ?>
                     <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($title); ?>" class="rmm-food-img" loading="lazy">
@@ -603,6 +606,7 @@ class FoodLoopWidget extends Widget_Base {
         $per_page = !empty($settings['posts_per_page']) ? intval($settings['posts_per_page']) : 12;
         $args = [
             'status'                 => 'publish',
+            'visibility'             => 'catalog',
             'limit'                  => $per_page,
             'page'                   => 1,
             'paginate'               => true,
@@ -656,18 +660,40 @@ class FoodLoopWidget extends Widget_Base {
             </div>
 
             <?php if (($settings['pagination_type'] ?? 'none') === 'load_more' && $max_pages > 1) : ?>
+                <?php
+                $serialize_icon = static function ($icon) {
+                    if (!is_array($icon) || empty($icon['value'])) {
+                        return [];
+                    }
+                    $lib = sanitize_key($icon['library'] ?? '');
+                    if (is_array($icon['value'])) {
+                        return [
+                            'library' => $lib,
+                            'value'   => [
+                                'id'  => absint($icon['value']['id'] ?? 0),
+                                'url' => esc_url_raw($icon['value']['url'] ?? ''),
+                            ],
+                        ];
+                    }
+                    return [
+                        'library' => $lib,
+                        'value'   => sanitize_text_field((string) $icon['value']),
+                    ];
+                };
+                ?>
                 <div class="rmm-food-loop-load-more-wrap" style="text-align:center; margin-top:24px;">
                     <button type="button" class="rmm-food-loop-load-more-btn"
                             data-page="1"
                             data-max-pages="<?php echo esc_attr($max_pages); ?>"
-                            data-nonce="<?php echo esc_attr(wp_create_nonce('rmm_frontend_nonce')); ?>"
                             data-query="<?php echo esc_attr(wp_json_encode([
-                                'posts_per_page'  => $per_page,
-                                'category'        => $cat_val,
-                                'orderby'         => $settings['orderby'] ?? 'menu_order',
-                                'order'           => $settings['order'] ?? 'ASC',
-                                'only_in_stock'   => $settings['only_in_stock'] ?? 'no',
-                                'card_style_type' => $settings['card_style_type'] ?? 'vertical',
+                                'posts_per_page'   => $per_page,
+                                'category'         => $cat_val,
+                                'orderby'          => $settings['orderby'] ?? 'menu_order',
+                                'order'            => $settings['order'] ?? 'ASC',
+                                'only_in_stock'    => $settings['only_in_stock'] ?? 'no',
+                                'card_style_type'  => $settings['card_style_type'] ?? 'vertical',
+                                'details_btn_icon' => $serialize_icon($settings['details_btn_icon'] ?? []),
+                                'order_btn_icon'   => $serialize_icon($settings['order_btn_icon'] ?? []),
                             ])); ?>">
                         <?php echo esc_html(!empty($settings['load_more_text']) ? $settings['load_more_text'] : __('مشاهده غذاهای بیشتر ▾', 'fondogh-online-menu')); ?>
                     </button>
@@ -681,14 +707,17 @@ class FoodLoopWidget extends Widget_Base {
      * AJAX endpoint for Food Loop Load More pagination
      */
     public static function ajax_load_more_products() {
-        if (!check_ajax_referer('rmm_frontend_nonce', 'security', false)) {
+        $ip = isset($_SERVER['REMOTE_ADDR']) ? sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'])) : 'unknown';
+        $rate_key = 'rmm_loop_rl_' . md5($ip);
+        $hits = (int) get_transient($rate_key);
+        if ($hits >= 60) {
             wp_send_json_error([
-                'message' => __('درخواست نامعتبر است. صفحه را دوباره بارگذاری کنید.', 'fondogh-online-menu'),
-                'code'    => 'rmm_invalid_nonce',
-            ], 403);
+                'message' => __('تعداد درخواست‌ها بیش از حد مجاز است. کمی صبر کنید.', 'fondogh-online-menu'),
+            ], 429);
         }
+        set_transient($rate_key, $hits + 1, MINUTE_IN_SECONDS);
 
-        $page = max(1, absint($_POST['page'] ?? 1));
+        $page = min(50, max(1, absint($_POST['page'] ?? 1)));
         $query_data = is_array($_POST['query'] ?? null) ? $_POST['query'] : [];
 
         $per_page      = min(48, max(1, absint($query_data['posts_per_page'] ?? 12)));
@@ -698,8 +727,31 @@ class FoodLoopWidget extends Widget_Base {
         $only_in_stock = ($query_data['only_in_stock'] ?? 'no') === 'yes';
         $card_layout   = sanitize_key($query_data['card_style_type'] ?? 'vertical');
 
+        $parse_icon = static function ($raw) {
+            if (!is_array($raw) || empty($raw['value'])) {
+                return [];
+            }
+            $lib = sanitize_key($raw['library'] ?? '');
+            if (is_array($raw['value'])) {
+                return [
+                    'library' => $lib,
+                    'value'   => [
+                        'id'  => absint($raw['value']['id'] ?? 0),
+                        'url' => esc_url_raw($raw['value']['url'] ?? ''),
+                    ],
+                ];
+            }
+            return [
+                'library' => $lib,
+                'value'   => sanitize_text_field((string) $raw['value']),
+            ];
+        };
+        $details_btn_icon = $parse_icon($query_data['details_btn_icon'] ?? []);
+        $order_btn_icon   = $parse_icon($query_data['order_btn_icon'] ?? []);
+
         $args = [
             'status'                 => 'publish',
+            'visibility'             => 'catalog',
             'limit'                  => $per_page,
             'page'                   => $page,
             'paginate'               => true,
@@ -724,41 +776,55 @@ class FoodLoopWidget extends Widget_Base {
             $args['stock_status'] = 'instock';
         }
 
-        $results = function_exists('wc_get_products') ? wc_get_products($args) : null;
-        if (!$results || empty($results->products)) {
-            wp_send_json_success([
-                'html'     => '',
-                'has_more' => false,
-                'page'     => $page,
-                'nonce'    => wp_create_nonce('rmm_frontend_nonce'),
-            ]);
-        }
-
-        $products  = $results->products;
-        $max_pages = $results->max_num_pages;
-
         $branch_id = class_exists('\RMM\Branches\BranchContext') ? \RMM\Branches\BranchContext::get_active_branch_id() : 0;
-        $branch_inventory = [];
-        if ($branch_id && class_exists('\RMM\Branches\InventoryRepository') && !empty($products)) {
-            $product_ids = array_map(function ($p) { return $p->get_id(); }, $products);
-            $branch_inventory = \RMM\Branches\InventoryRepository::get_bulk_branch_inventory($branch_id, $product_ids);
-        }
+        $render_settings = [
+            'card_style_type'  => $card_layout,
+            'only_in_stock'    => $only_in_stock ? 'yes' : 'no',
+            'details_btn_icon' => $details_btn_icon,
+            'order_btn_icon'   => $order_btn_icon,
+        ];
 
-        ob_start();
-        foreach ($products as $product) {
-            self::render_card_html($product, [
-                'card_style_type' => $card_layout,
-                'only_in_stock'   => $only_in_stock ? 'yes' : 'no',
-            ], $branch_id, $branch_inventory);
+        $html = '';
+        $current_page = $page;
+        $max_pages = 1;
+        $attempts = 0;
+        $max_attempts = 10;
+
+        while ($attempts < $max_attempts && $current_page <= 50) {
+            $attempts++;
+            $args['page'] = $current_page;
+            $results = function_exists('wc_get_products') ? wc_get_products($args) : null;
+            if (!$results || empty($results->products)) {
+                $max_pages = $current_page;
+                break;
+            }
+
+            $products  = $results->products;
+            $max_pages = min(50, (int) ($results->max_num_pages ?? 1));
+
+            $branch_inventory = [];
+            if ($branch_id && class_exists('\RMM\Branches\InventoryRepository')) {
+                $product_ids = array_map(function ($p) { return $p->get_id(); }, $products);
+                $branch_inventory = \RMM\Branches\InventoryRepository::get_bulk_branch_inventory($branch_id, $product_ids);
+            }
+
+            ob_start();
+            foreach ($products as $product) {
+                self::render_card_html($product, $render_settings, $branch_id, $branch_inventory);
+            }
+            $html .= ob_get_clean();
+
+            if (trim($html) !== '' || $current_page >= $max_pages) {
+                break;
+            }
+            $current_page++;
         }
-        $html = ob_get_clean();
 
         wp_send_json_success([
             'html'      => $html,
-            'has_more'  => ($page < $max_pages),
-            'page'      => $page,
+            'has_more'  => (trim($html) !== '' && $current_page < $max_pages),
+            'page'      => $current_page,
             'max_pages' => $max_pages,
-            'nonce'     => wp_create_nonce('rmm_frontend_nonce'),
         ]);
     }
 }
