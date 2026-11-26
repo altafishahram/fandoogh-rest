@@ -4,6 +4,15 @@
 
 ## [Unreleased]
 
+### اصلاح شد
+
+- اجرای خودکار مهاجرت دسترسی‌های نقش `restaurant_manager` در `Installer::maybe_upgrade()` (ارتقاء `DB_VERSION` به `1.0.2`) و جایگزینی چک‌های مستقیم `manage_woocommerce` در `RestApiController` با `AuthController::is_global_manager()` جهت جلوگیری از دور زدن گارد شعبه و قیمت سراسری در سایت‌های ارتقاءیافته.
+- بازنویسی پاک‌ساز SVG (`SvgSupport::sanitize`) بر پایهٔ allowlist سخت‌گیرانهٔ تگ‌ها و اتریبیوت‌ها، بررسی `localName` و `namespaceURI`، حذف `DOCTYPE` / Processing Instructions / CDATA ناامن، و اتصال فیلتر به `wp_handle_sideload_prefilter`.
+- حذف وابستگی به nonce منقضی‌شونده در دکمهٔ «نمایش بیشتر» ویجت `FoodLoopWidget` روی صفحات کش‌شده و افزودن محدودیت نرخ IP و سقف صفحه.
+- رفع ایرادهای `FoodLoopWidget` و `FoodCardWidget`: افزودن `'visibility' => 'catalog'`، ارسال آیکون‌های سفارشی دکمه‌ها در AJAX load-more، رد کردن صفحات خالیِ ناشی از ناموجودی شعبه در سمت سرور، و افزودن `data-cats` و `data-title` به کارت‌ها.
+- ابطال کش مودال (`clear_global_modal_cache`) هنگام ایجاد/ویرایش/حذف شعبه، ویرایش دسته‌بندی محصول و ذخیرهٔ تنظیمات افزونه.
+- حذف کلید API جمینای از query string در `AiTranslator` و ارسال صرف آن از طریق هدر `x-goog-api-key`.
+
 ## [1.3.0] — ۲۰۲۶-۱۱-۲۶
 
 ### افزوده شد
