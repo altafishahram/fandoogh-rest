@@ -30,6 +30,11 @@ class ModifiersEngine {
         add_action('woocommerce_update_product', [$this, 'clear_product_modal_cache']);
         add_action('woocommerce_product_set_stock_status', [$this, 'clear_product_modal_cache']);
         add_action('rmm_branch_inventory_updated', [$this, 'clear_product_modal_cache']);
+        add_action('created_rmm_branch', [$this, 'clear_global_modal_cache']);
+        add_action('edited_rmm_branch', [$this, 'clear_global_modal_cache']);
+        add_action('delete_rmm_branch', [$this, 'clear_global_modal_cache']);
+        add_action('edited_product_cat', [$this, 'clear_global_modal_cache']);
+        add_action('update_option_rmm_settings', [$this, 'clear_global_modal_cache']);
     }
 
     public function add_modifiers_metabox() {
@@ -629,6 +634,10 @@ class ModifiersEngine {
      *
      * @param int $post_id
      */
+    public function clear_global_modal_cache() {
+        $this->clear_product_modal_cache(0);
+    }
+
     public function clear_product_modal_cache($post_id = 0) {
         $post_id = absint($post_id);
         if ($post_id > 0) {
