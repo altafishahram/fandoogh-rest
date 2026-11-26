@@ -17,20 +17,48 @@ class SvgSupport {
 
     const MAX_BYTES = 524288; // 512 KB
 
-    /** @var string[] Elements that can execute code or load remote content. */
-    private static $blocked_tags = [
-        'script',
-        'foreignobject',
-        'iframe',
-        'embed',
-        'object',
-        'audio',
-        'video',
-        'handler',
-        'listener',
-        'animate',
-        'set',
-        'discard',
+    /** @var string[] Strict allowlist of safe SVG elements (lowercase localName). */
+    private static $allowed_tags = [
+        'svg', 'g', 'defs', 'symbol', 'use', 'title', 'desc', 'metadata', 'switch', 'a',
+        'path', 'circle', 'ellipse', 'rect', 'line', 'polyline', 'polygon',
+        'text', 'tspan', 'textpath',
+        'lineargradient', 'radialgradient', 'stop', 'pattern', 'clippath', 'mask', 'marker',
+        'filter', 'feblend', 'fecolormatrix', 'fecomponenttransfer', 'fecomposite',
+        'feconvolvematrix', 'fediffuselighting', 'fedisplacementmap', 'fedistantlight',
+        'fedropshadow', 'feflood', 'fefunca', 'fefuncb', 'fefuncg', 'fefuncr',
+        'fegaussianblur', 'feimage', 'femerge', 'femergenode', 'femorphology',
+        'feoffset', 'fepointlight', 'fespecularlighting', 'fespotlight', 'fetile', 'feturbulence',
+        'image', 'style',
+    ];
+
+    /** @var string[] Strict allowlist of safe SVG attributes (lowercase localName). */
+    private static $allowed_attributes = [
+        'id', 'class', 'style', 'tabindex', 'lang', 'xmlns', 'viewbox', 'preserveaspectratio',
+        'width', 'height', 'x', 'y', 'x1', 'y1', 'x2', 'y2', 'cx', 'cy', 'r', 'rx', 'ry',
+        'dx', 'dy', 'd', 'points', 'pathlength',
+        'fill', 'fill-opacity', 'fill-rule', 'stroke', 'stroke-width', 'stroke-linecap',
+        'stroke-linejoin', 'stroke-miterlimit', 'stroke-dasharray', 'stroke-dashoffset', 'stroke-opacity',
+        'opacity', 'color', 'stop-color', 'stop-opacity', 'offset',
+        'gradientunits', 'gradienttransform', 'spreadmethod',
+        'patternunits', 'patterncontentunits', 'patterntransform',
+        'clippathunits', 'clip-path', 'clip-rule', 'mask', 'maskunits', 'maskcontentunits',
+        'filter', 'filterunits', 'primitiveunits',
+        'transform', 'transform-origin', 'display', 'visibility', 'overflow',
+        'font-family', 'font-size', 'font-style', 'font-weight', 'text-anchor',
+        'dominant-baseline', 'alignment-baseline', 'letter-spacing', 'word-spacing',
+        'text-decoration', 'direction', 'unicode-bidi',
+        'marker-start', 'marker-mid', 'marker-end', 'markerwidth', 'markerheight', 'refx', 'refy', 'orient', 'markerunits',
+        'href', 'src', 'target', 'aria-hidden', 'aria-label', 'aria-labelledby', 'role', 'focusable',
+        'space', 'stddeviation', 'in', 'in2', 'result', 'mode', 'type', 'values',
+        'slope', 'intercept', 'amplitude', 'exponent', 'tablevalues', 'k1', 'k2', 'k3', 'k4',
+        'operator', 'radius', 'edgemode', 'flood-color', 'flood-opacity', 'lighting-color',
+        'surfacescale', 'specularconstant', 'specularexponent', 'diffuseconstant',
+        'azimuth', 'elevation', 'pointsatx', 'pointsaty', 'pointsatz', 'limitingconeangle',
+        'scale', 'xchannelselector', 'ychannelselector', 'basefrequency', 'numoctaves', 'seed', 'stitchtiles',
+        'order', 'kernelmatrix', 'divisor', 'bias', 'targetx', 'targety', 'kernelunitlength', 'preservealpha',
+        'fx', 'fy', 'fr', 'startoffset', 'method', 'spacing',
+        'vector-effect', 'paint-order', 'shape-rendering', 'image-rendering', 'text-rendering',
+        'color-interpolation', 'color-interpolation-filters', 'mix-blend-mode', 'isolation', 'pointer-events', 'cursor',
     ];
 
     /** @var string[] Dangerous CSS fragments. */
@@ -46,6 +74,7 @@ class SvgSupport {
         add_filter('upload_mimes', [$this, 'allow_svg_mime']);
         add_filter('wp_check_filetype_and_ext', [$this, 'fix_svg_filetype'], 10, 4);
         add_filter('wp_handle_upload_prefilter', [$this, 'sanitize_svg_upload']);
+        add_filter('wp_handle_sideload_prefilter', [$this, 'sanitize_svg_upload']);
     }
 
     /**
@@ -192,15 +221,34 @@ class SvgSupport {
         libxml_clear_errors();
         libxml_use_internal_errors($previous);
 
-        if (!$loaded || !$dom->documentElement) {
+        if (!$loaded || !$dom->documentElement || $dom->doctype !== null) {
             return null;
         }
 
-        if (strtolower($dom->documentElement->nodeName) !== 'svg') {
+        // Strip document-level processing instructions (e.g. xml-stylesheet) and comments.
+        $doc_children = [];
+        foreach ($dom->childNodes as $doc_child) {
+            $doc_children[] = $doc_child;
+        }
+        foreach ($doc_children as $doc_child) {
+            if ($doc_child instanceof \DOMProcessingInstruction || $doc_child instanceof \DOMComment) {
+                $dom->removeChild($doc_child);
+            }
+        }
+
+        $root = $dom->documentElement;
+        if (strtolower((string) ($root->localName ?: $root->nodeName)) !== 'svg') {
+            return null;
+        }
+        if ($root->namespaceURI !== null && $root->namespaceURI !== '' && $root->namespaceURI !== 'http://www.w3.org/2000/svg') {
             return null;
         }
 
-        self::clean_node($dom->documentElement);
+        self::clean_node($root);
+
+        if (!$dom->documentElement) {
+            return null;
+        }
 
         $output = $dom->saveXML();
 
@@ -208,19 +256,46 @@ class SvgSupport {
     }
 
     /**
-     * Recursively strip dangerous elements, attributes and CSS.
+     * Recursively enforce SVG element/attribute allowlist and strip dangerous CSS.
      *
      * @param \DOMNode $node
      * @return void
      */
     private static function clean_node($node) {
+        if ($node instanceof \DOMProcessingInstruction || $node instanceof \DOMComment) {
+            if ($node->parentNode) {
+                $node->parentNode->removeChild($node);
+            }
+            return;
+        }
+
+        if ($node instanceof \DOMCdataSection) {
+            $parent_tag = ($node->parentNode instanceof \DOMElement)
+                ? strtolower((string) ($node->parentNode->localName ?: $node->parentNode->nodeName))
+                : '';
+            if ($parent_tag !== 'style' || self::is_dangerous_css($node->data)) {
+                if ($node->parentNode) {
+                    $node->parentNode->removeChild($node);
+                }
+            }
+            return;
+        }
+
         if (!($node instanceof \DOMElement)) {
             return;
         }
 
-        $tag = strtolower($node->nodeName);
+        $ns = (string) $node->namespaceURI;
+        if ($ns !== '' && $ns !== 'http://www.w3.org/2000/svg') {
+            if ($node->parentNode) {
+                $node->parentNode->removeChild($node);
+            }
+            return;
+        }
 
-        if (in_array($tag, self::$blocked_tags, true)) {
+        $tag = strtolower((string) ($node->localName ?: $node->nodeName));
+
+        if (!in_array($tag, self::$allowed_tags, true)) {
             if ($node->parentNode) {
                 $node->parentNode->removeChild($node);
             }
@@ -236,27 +311,57 @@ class SvgSupport {
 
         if ($node->hasAttributes()) {
             $remove = [];
+            $url_ref_attrs = ['fill', 'stroke', 'clip-path', 'mask', 'filter', 'marker-start', 'marker-mid', 'marker-end'];
 
             foreach ($node->attributes as $attribute) {
-                $name  = strtolower($attribute->nodeName);
-                $value = (string) $attribute->nodeValue;
+                $local   = strtolower((string) ($attribute->localName ?: $attribute->nodeName));
+                $attr_ns = (string) $attribute->namespaceURI;
+                $value   = (string) $attribute->nodeValue;
 
-                if (strpos($name, 'on') === 0) {
+                if (strpos($local, 'on') === 0) {
                     $remove[] = $attribute;
                     continue;
                 }
 
-                if ($name === 'href' || $name === 'xlink:href' || $name === 'src') {
-                    $target = strtolower(trim($value));
-
-                    if (strpos($target, '#') !== 0 && strpos($target, 'data:image/') !== 0) {
+                if ($local === 'href') {
+                    $target = trim($value);
+                    $is_internal = strpos($target, '#') === 0;
+                    $is_safe_img = ($tag === 'image') && preg_match('/^data:image\/(png|jpe?g|gif|webp);base64,/i', $target);
+                    if (!$is_internal && !$is_safe_img) {
                         $remove[] = $attribute;
                     }
                     continue;
                 }
 
-                if ($name === 'style' && self::is_dangerous_css($value)) {
+                if ($local === 'src') {
+                    $is_safe_img = ($tag === 'image') && preg_match('/^data:image\/(png|jpe?g|gif|webp);base64,/i', trim($value));
+                    if (!$is_safe_img) {
+                        $remove[] = $attribute;
+                    }
+                    continue;
+                }
+
+                if ($local === 'style') {
+                    if (self::is_dangerous_css($value)) {
+                        $remove[] = $attribute;
+                    }
+                    continue;
+                }
+
+                if ($attr_ns !== '' && $attr_ns !== 'http://www.w3.org/2000/svg' && $attr_ns !== 'http://www.w3.org/XML/1998/namespace') {
                     $remove[] = $attribute;
+                    continue;
+                }
+
+                if (!in_array($local, self::$allowed_attributes, true) && strpos($local, 'data-') !== 0) {
+                    $remove[] = $attribute;
+                    continue;
+                }
+
+                if (in_array($local, $url_ref_attrs, true) && stripos($value, 'url(') !== false) {
+                    if (!preg_match('/^url\(\s*[\'"]?#[a-zA-Z0-9_-]+[\'"]?\s*\)$/i', trim($value))) {
+                        $remove[] = $attribute;
+                    }
                 }
             }
 
