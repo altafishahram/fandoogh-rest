@@ -116,6 +116,21 @@ class TokenSchema {
                 'cart_badge_bg'    => '#38bdf8',
                 'cart_badge_text'  => '#0f172a',
                 'cart_dock'        => 'bottom',
+                /* ── Catalog Selection List Popup (لیست انتخاب‌های من) ── */
+                'catalog_backdrop'    => 'rgba(0, 0, 0, 0.72)',
+                'catalog_blur'        => '8px',
+                'catalog_bg'          => '#131b2e',
+                'catalog_border'      => '#1e293b',
+                'catalog_text'        => '#f8fafc',
+                'catalog_muted'       => '#cbd5e1',
+                'catalog_card_bg'     => '#1a233a',
+                'catalog_card_border' => '#1e293b',
+                'catalog_accent'      => '#38bdf8',
+                'catalog_btn_bg'      => '#38bdf8',
+                'catalog_btn_text'    => '#0f172a',
+                'catalog_wa_bg'       => '#25d366',
+                'catalog_radius'      => '22px',
+                'catalog_card_radius' => '16px',
             ];
         }
 
@@ -227,6 +242,21 @@ class TokenSchema {
             'cart_badge_bg'    => '#0284c7',
             'cart_badge_text'  => '#ffffff',
             'cart_dock'        => 'bottom',
+            /* ── Catalog Selection List Popup (لیست انتخاب‌های من) ── */
+            'catalog_backdrop'    => 'rgba(15, 23, 42, 0.62)',
+            'catalog_blur'        => '8px',
+            'catalog_bg'          => '#ffffff',
+            'catalog_border'      => '#e2e8f0',
+            'catalog_text'        => '#0f172a',
+            'catalog_muted'       => '#64748b',
+            'catalog_card_bg'     => '#f8fafc',
+            'catalog_card_border' => '#e2e8f0',
+            'catalog_accent'      => '#0284c7',
+            'catalog_btn_bg'      => '#0f172a',
+            'catalog_btn_text'    => '#ffffff',
+            'catalog_wa_bg'       => '#25d366',
+            'catalog_radius'      => '22px',
+            'catalog_card_radius' => '16px',
         ];
     }
 
@@ -389,6 +419,10 @@ class TokenSchema {
             'lang_modal_card_active_bg', 'lang_modal_card_active_text',
             /* Floating cart */
             'cart_bg', 'cart_text', 'cart_badge_bg', 'cart_badge_text',
+            /* Catalog Selection List Popup */
+            'catalog_backdrop', 'catalog_bg', 'catalog_border', 'catalog_text', 'catalog_muted',
+            'catalog_card_bg', 'catalog_card_border', 'catalog_accent',
+            'catalog_btn_bg', 'catalog_btn_text', 'catalog_wa_bg',
             /* Modal */
             'modal_backdrop', 'qty_bg',
         ];
@@ -423,6 +457,8 @@ class TokenSchema {
             'modal_radius',
             /* Cart */
             'cart_radius',
+            /* Catalog Selection List Popup */
+            'catalog_radius', 'catalog_card_radius',
         ];
         foreach ($size_keys as $k) {
             $clean[$k] = isset($raw[$k])
@@ -438,6 +474,10 @@ class TokenSchema {
         $clean['lang_modal_blur'] = isset($raw['lang_modal_blur'])
             ? self::sanitize_px_number($raw['lang_modal_blur'], $defaults['lang_modal_blur'])
             : $defaults['lang_modal_blur'];
+
+        $clean['catalog_blur'] = isset($raw['catalog_blur'])
+            ? self::sanitize_px_number($raw['catalog_blur'], $defaults['catalog_blur'])
+            : $defaults['catalog_blur'];
 
         /* ── Font weight ── */
         $allowed_weights = ['300', '400', '500', '600', '700', '800', '900', 'normal', 'bold'];

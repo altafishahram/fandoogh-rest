@@ -596,6 +596,7 @@
         <button type="button" data-rmm-sidebar-tab="search" class="rmm-s-sidebar-tab">🔍 جستجو</button>
         <button type="button" data-rmm-sidebar-tab="lang" class="rmm-s-sidebar-tab">🌐 زبان و تم</button>
         <button type="button" data-rmm-sidebar-tab="cart" class="rmm-s-sidebar-tab">🛒 سبد شناور</button>
+        <button type="button" data-rmm-sidebar-tab="catalog" class="rmm-s-sidebar-tab">📝 لیست انتخاب‌ها</button>
       </div>
 
       <!-- Panel: Base / Theme -->
@@ -1217,6 +1218,96 @@
           </div>
         </div>
       </div>
+
+      <!-- Panel: Catalog Selection List Popup -->
+      <div class="rmm-s-panel" data-rmm-panel="catalog">
+        <div class="rmm-s-section-title"><span class="rmm-s-dot bg-emerald-500"></span> پاپ‌آپ لیست انتخاب‌های من</div>
+        <div class="rmm-s-field">
+          <label>پس‌زمینه کادر پاپ‌آپ</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="catalog_bg">
+            <input type="text" class="rmm-s-input" data-rmm-companion="catalog_bg" data-rmm-token="catalog_bg" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>رنگ حاشیه پاپ‌آپ</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="catalog_border">
+            <input type="text" class="rmm-s-input" data-rmm-companion="catalog_border" data-rmm-token="catalog_border" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>رنگ تیتر و متن اصلی</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="catalog_text">
+            <input type="text" class="rmm-s-input" data-rmm-companion="catalog_text" data-rmm-token="catalog_text" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>رنگ متن فرعی</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="catalog_muted">
+            <input type="text" class="rmm-s-input" data-rmm-companion="catalog_muted" data-rmm-token="catalog_muted" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>پس‌زمینه کارت هر آیتم</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="catalog_card_bg">
+            <input type="text" class="rmm-s-input" data-rmm-companion="catalog_card_bg" data-rmm-token="catalog_card_bg" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>حاشیه کارت آیتم</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="catalog_card_border">
+            <input type="text" class="rmm-s-input" data-rmm-companion="catalog_card_border" data-rmm-token="catalog_card_border" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>رنگ تاکیدی (قیمت، جمع کل و +/-)</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="catalog_accent">
+            <input type="text" class="rmm-s-input" data-rmm-companion="catalog_accent" data-rmm-token="catalog_accent" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>پس‌زمینه دکمه ادامه</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="catalog_btn_bg">
+            <input type="text" class="rmm-s-input" data-rmm-companion="catalog_btn_bg" data-rmm-token="catalog_btn_bg" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>رنگ متن دکمه ادامه</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="catalog_btn_text">
+            <input type="text" class="rmm-s-input" data-rmm-companion="catalog_btn_text" data-rmm-token="catalog_btn_text" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>رنگ دکمه واتساپ</label>
+          <div class="rmm-s-color">
+            <input type="color" data-rmm-token="catalog_wa_bg">
+            <input type="text" class="rmm-s-input" data-rmm-companion="catalog_wa_bg" data-rmm-token="catalog_wa_bg" dir="ltr">
+          </div>
+        </div>
+        <div class="rmm-s-field">
+          <label>گردی گوشه پاپ‌آپ</label>
+          <input type="text" class="rmm-s-input" data-rmm-token="catalog_radius" dir="ltr">
+        </div>
+        <div class="rmm-s-field">
+          <label>گردی کارت آیتم</label>
+          <input type="text" class="rmm-s-input" data-rmm-token="catalog_card_radius" dir="ltr">
+        </div>
+        <div class="rmm-s-field">
+          <label>تاری پس‌زمینه (Blur)</label>
+          <input type="text" class="rmm-s-input" data-rmm-token="catalog_blur" dir="ltr">
+        </div>
+        <button type="button" id="rmm-preview-catalog-open" class="w-full mt-2 py-2 px-3 rounded-lg border border-emerald-200 text-emerald-700 bg-emerald-50 hover:bg-emerald-100 text-xs font-bold transition-all flex items-center justify-center gap-1.5">
+          📝 پیش‌نمایش زنده لیست انتخاب‌های من
+        </button>
+      </div>
     </aside>
 
     <!-- Live Preview Canvas -->
@@ -1394,6 +1485,42 @@
                 <input type="checkbox" id="rmm-preview-entrance-remember">
                 <span>به خاطر سپردن انتخاب من (Remember choice)</span>
               </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Catalog Selection List Modal overlay (contained inside the canvas) -->
+        <div class="rmm-catalog-drawer-backdrop" id="rmm-preview-catalog-overlay" style="display:none; position:absolute; inset:0; z-index:40; align-items:center; justify-content:center; padding:16px; background:var(--rmm-ds-catalog-backdrop); backdrop-filter:blur(var(--rmm-ds-catalog-blur));">
+          <div class="rmm-catalog-drawer" style="width:100%; max-width:440px; padding:0; overflow:hidden;">
+            <div class="rmm-catalog-drawer-header" style="display:flex; align-items:center; justify-content:space-between; padding:14px 18px; border-bottom:1px solid var(--rmm-ds-catalog-border);">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <h3 class="rmm-catalog-drawer-title" style="margin:0; font-size:15px; font-weight:800;">📝 لیست انتخاب‌های من</h3>
+                <span class="rmm-catalog-drawer-count" style="font-size:11px; padding:2px 8px; border-radius:999px; border:1px solid var(--rmm-ds-catalog-accent);">۲ مورد</span>
+              </div>
+              <button type="button" id="rmm-preview-catalog-close" style="width:28px; height:28px; border-radius:50%; border:1px solid var(--rmm-ds-catalog-border); background:transparent; color:var(--rmm-ds-catalog-text); cursor:pointer;">&times;</button>
+            </div>
+            <div style="padding:14px 18px; display:flex; flex-direction:column; gap:10px;">
+              <div class="rmm-catalog-item-card" style="display:flex; justify-content:space-between; align-items:center; padding:10px 12px; border:1px solid var(--rmm-ds-catalog-card-border);">
+                <div>
+                  <div class="rmm-catalog-item-title" style="font-size:13px; font-weight:700;">چلو کباب کوبیده مخصوص</div>
+                  <div class="rmm-catalog-sub-val" style="font-size:12px; font-weight:700;">۲۹۵٬۰۰۰ تومان</div>
+                </div>
+                <div style="display:flex; align-items:center; gap:6px;">
+                  <button type="button" class="rmm-cat-qty-btn" style="width:24px; height:24px; border-radius:6px; border:1px solid var(--rmm-ds-catalog-card-border); background:transparent; font-weight:800;">−</button>
+                  <span style="font-size:13px; font-weight:700;">۱</span>
+                  <button type="button" class="rmm-cat-qty-btn" style="width:24px; height:24px; border-radius:6px; border:1px solid var(--rmm-ds-catalog-card-border); background:transparent; font-weight:800;">+</button>
+                </div>
+              </div>
+            </div>
+            <div class="rmm-catalog-drawer-footer" style="padding:14px 18px; border-top:1px solid var(--rmm-ds-catalog-border); display:flex; flex-direction:column; gap:8px;">
+              <div class="rmm-catalog-grand-total-row" style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; border-radius:10px; border:1px solid var(--rmm-ds-catalog-accent);">
+                <span class="rmm-catalog-grand-label" style="font-size:13px; font-weight:700;">جمع کل:</span>
+                <strong class="rmm-catalog-grand-amount" style="font-size:15px; font-weight:800;">۲۹۵٬۰۰۰ تومان</strong>
+              </div>
+              <div style="display:flex; gap:8px;">
+                <span class="rmm-catalog-wa-btn" style="flex:1; padding:9px; border-radius:10px; color:#fff; text-align:center; font-size:12px; font-weight:700;">💬 ارسال واتساپ</span>
+                <span class="rmm-catalog-done-btn" style="flex:1; padding:9px; border-radius:10px; text-align:center; font-size:12px; font-weight:700;">ادامه مشاهده منو</span>
+              </div>
             </div>
           </div>
         </div>

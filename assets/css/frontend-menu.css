@@ -91,10 +91,25 @@
     padding: 8px 0;
 }
 
+body.admin-bar .rmm-category-nav-wrapper.rmm-sticky-bar {
+    top: 32px;
+}
+
+@media (max-width: 782px) {
+    body.admin-bar .rmm-category-nav-wrapper.rmm-sticky-bar {
+        top: 46px;
+    }
+}
+
 .rmm-cat-scroll-container {
     display: flex;
+    flex-wrap: nowrap;
+    width: 100%;
     gap: 8px;
     overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
     padding: 4px 6px;
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -105,6 +120,7 @@
 }
 
 .rmm-cat-pill {
+    flex: 0 0 auto;
     background: #f1f5f9;
     border: 1px solid #e2e8f0;
     padding: 8px 18px;
@@ -3272,13 +3288,14 @@ body.light-theme .rmm-catalog-done-btn {
 
 @media (max-width: 540px) {
     .rmm-catalog-drawer-backdrop {
-        align-items: flex-end;
-        padding: 0;
+        align-items: center;
+        justify-content: center;
+        padding: 14px;
     }
     .rmm-catalog-drawer {
         max-width: 100%;
         max-height: 86vh;
-        border-radius: 22px 22px 0 0;
+        border-radius: 22px;
     }
     .rmm-catalog-footer-actions {
         flex-direction: column;

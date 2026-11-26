@@ -894,6 +894,17 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         );
 
         $this->add_control(
+            'modal_backdrop_bg',
+            [
+                'label'     => __('رنگ پرده پس‌زمینه (Backdrop)', 'fondogh-online-menu'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .rmm-modal-backdrop' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
             'modal_box_bg',
             [
                 'label'     => __('رنگ پس‌زمینه پنجره پاپ‌آپ', 'fondogh-online-menu'),
@@ -901,6 +912,15 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
                 'selectors' => [
                     '{{WRAPPER}} .rmm-modal-box' => 'background-color: {{VALUE}};',
                 ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Border::get_type(),
+            [
+                'name'     => 'modal_box_border',
+                'label'    => __('حاشیه کادر پاپ‌آپ', 'fondogh-online-menu'),
+                'selector' => '{{WRAPPER}} .rmm-modal-box',
             ]
         );
 
@@ -916,11 +936,99 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
             ]
         );
 
+        $this->add_control(
+            'modal_box_padding',
+            [
+                'label'      => __('فاصله داخلی کادر پاپ‌آپ (Padding)', 'fondogh-online-menu'),
+                'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', 'em'],
+                'selectors'  => [
+                    '{{WRAPPER}} .rmm-modal-box' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
         $this->add_group_control(
             \Elementor\Group_Control_Box_Shadow::get_type(),
             [
                 'name'     => 'modal_box_shadow',
                 'selector' => '{{WRAPPER}} .rmm-modal-box',
+            ]
+        );
+
+        // Modal Icons & Close Button
+        $this->add_control(
+            'modal_icons_heading',
+            [
+                'label'     => __('آیکون‌ها و دکمه بستن پاپ‌آپ', 'fondogh-online-menu'),
+                'type'      => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
+            ]
+        );
+
+        $this->add_control(
+            'modal_close_bg',
+            [
+                'label'     => __('پس‌زمینه دکمه بستن', 'fondogh-online-menu'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .rmm-modal-close-btn' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'modal_close_color',
+            [
+                'label'     => __('رنگ آیکون بستن', 'fondogh-online-menu'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .rmm-modal-close-btn' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'modal_close_size',
+            [
+                'label'      => __('اندازه آیکون بستن', 'fondogh-online-menu'),
+                'type'       => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'range'      => ['px' => ['min' => 14, 'max' => 42]],
+                'selectors'  => [
+                    '{{WRAPPER}} .rmm-modal-close-btn' => 'font-size: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'modal_chip_bg',
+            [
+                'label'     => __('پس‌زمینه برچسب‌ها و چیپ‌ها (کالری/زمان)', 'fondogh-online-menu'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .rmm-modal-chip' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'modal_chip_color',
+            [
+                'label'     => __('رنگ متن و آیکون چیپ‌ها', 'fondogh-online-menu'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .rmm-modal-chip' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name'     => 'modal_chip_typography',
+                'label'    => __('تایپوگرافی چیپ‌ها', 'fondogh-online-menu'),
+                'selector' => '{{WRAPPER}} .rmm-modal-chip',
             ]
         );
 
@@ -967,7 +1075,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
                 'label'     => __('رنگ قیمت', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
-                    '{{WRAPPER}} .rmm-modal-food-price' => 'color: {{VALUE}};',
+                    '{{WRAPPER}} .rmm-modal-food-price, {{WRAPPER}} .rmm-modal-sale-price, {{WRAPPER}} .rmm-modal-regular-price' => 'color: {{VALUE}};',
                 ],
             ]
         );
@@ -992,10 +1100,10 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'modal_desc_color',
             [
-                'label'     => __('رنگ متن ترکیبات', 'fondogh-online-menu'),
+                'label'     => __('رنگ متن توضیحات و ترکیبات', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
-                    '{{WRAPPER}} .rmm-modal-ingredients-text' => 'color: {{VALUE}};',
+                    '{{WRAPPER}} .rmm-modal-desc-text, {{WRAPPER}} .rmm-modal-ingredients-text' => 'color: {{VALUE}};',
                 ],
             ]
         );
@@ -1004,7 +1112,687 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
             \Elementor\Group_Control_Typography::get_type(),
             [
                 'name'     => 'modal_desc_typography',
-                'selector' => '{{WRAPPER}} .rmm-modal-ingredients-text',
+                'selector' => '{{WRAPPER}} .rmm-modal-desc-text, {{WRAPPER}} .rmm-modal-ingredients-text',
+            ]
+        );
+
+        // Section Boxes (Portions, Addons, Note)
+        $this->add_control(
+            'modal_sections_heading',
+            [
+                'label'     => __('کادرهای بخش سایز، مخلفات و یادداشت', 'fondogh-online-menu'),
+                'type'      => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
+            ]
+        );
+
+        $this->add_control(
+            'modal_section_bg',
+            [
+                'label'     => __('پس‌زمینه کادر بخش‌ها', 'fondogh-online-menu'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .rmm-modal-section-box' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Border::get_type(),
+            [
+                'name'     => 'modal_section_border',
+                'label'    => __('حاشیه کادر بخش‌ها', 'fondogh-online-menu'),
+                'selector' => '{{WRAPPER}} .rmm-modal-section-box',
+            ]
+        );
+
+        $this->add_control(
+            'modal_section_radius',
+            [
+                'label'      => __('گردی کادر بخش‌ها', 'fondogh-online-menu'),
+                'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', '%'],
+                'selectors'  => [
+                    '{{WRAPPER}} .rmm-modal-section-box' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'modal_section_title_color',
+            [
+                'label'     => __('رنگ عنوان بخش‌ها', 'fondogh-online-menu'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .rmm-modal-section-title' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name'     => 'modal_section_title_typography',
+                'label'    => __('تایپوگرافی عنوان و گزینه‌های بخش', 'fondogh-online-menu'),
+                'selector' => '{{WRAPPER}} .rmm-modal-section-title, {{WRAPPER}} .rmm-modal-portion-item, {{WRAPPER}} .rmm-modal-addon-item',
+            ]
+        );
+
+        $this->add_control(
+            'modal_note_bg',
+            [
+                'label'     => __('پس‌زمینه فیلد یادداشت آشپزخانه', 'fondogh-online-menu'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .rmm-modal-kitchen-note input' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'modal_note_color',
+            [
+                'label'     => __('رنگ متن یادداشت آشپزخانه', 'fondogh-online-menu'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .rmm-modal-kitchen-note input' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        // Quantity +/- Controls
+        $this->add_control(
+            'modal_qty_heading',
+            [
+                'label'     => __('دکمه‌های کم و زیاد تعداد (+ / −)', 'fondogh-online-menu'),
+                'type'      => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
+            ]
+        );
+
+        $this->add_control(
+            'modal_qty_wrap_bg',
+            [
+                'label'     => __('پس‌زمینه کادر تعداد', 'fondogh-online-menu'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .rmm-qty-controls' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'modal_qty_btn_bg',
+            [
+                'label'     => __('رنگ پس‌زمینه دکمه‌های + و −', 'fondogh-online-menu'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .rmm-qty-btn' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'modal_qty_btn_color',
+            [
+                'label'     => __('رنگ آیکون/متن دکمه‌های + و −', 'fondogh-online-menu'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .rmm-qty-btn' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'modal_qty_btn_size',
+            [
+                'label'      => __('اندازه کادر دکمه‌های + و −', 'fondogh-online-menu'),
+                'type'       => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'range'      => ['px' => ['min' => 22, 'max' => 54]],
+                'selectors'  => [
+                    '{{WRAPPER}} .rmm-qty-btn' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'modal_qty_btn_font_size',
+            [
+                'label'      => __('اندازه فونت آیکون + و −', 'fondogh-online-menu'),
+                'type'       => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'range'      => ['px' => ['min' => 12, 'max' => 30]],
+                'selectors'  => [
+                    '{{WRAPPER}} .rmm-qty-btn' => 'font-size: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'modal_qty_btn_radius',
+            [
+                'label'      => __('گردی دکمه‌های + و −', 'fondogh-online-menu'),
+                'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', '%'],
+                'selectors'  => [
+                    '{{WRAPPER}} .rmm-qty-btn' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'modal_qty_val_color',
+            [
+                'label'     => __('رنگ عدد تعداد', 'fondogh-online-menu'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .rmm-qty-val' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name'     => 'modal_qty_val_typography',
+                'label'    => __('فونت و اندازه عدد تعداد', 'fondogh-online-menu'),
+                'selector' => '{{WRAPPER}} .rmm-qty-val',
+            ]
+        );
+
+        // Submit Button inside Modal
+        $this->add_control(
+            'modal_submit_heading',
+            [
+                'label'     => __('دکمه ثبت / افزودن به سبد داخل پاپ‌آپ', 'fondogh-online-menu'),
+                'type'      => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name'     => 'modal_submit_typography',
+                'label'    => __('فونت و اندازه فونت دکمه', 'fondogh-online-menu'),
+                'selector' => '{{WRAPPER}} .rmm-modal-btn-submit',
+            ]
+        );
+
+        $this->add_control(
+            'modal_submit_bg',
+            [
+                'label'     => __('رنگ پس‌زمینه دکمه', 'fondogh-online-menu'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .rmm-modal-btn-submit' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'modal_submit_color',
+            [
+                'label'     => __('رنگ متن دکمه', 'fondogh-online-menu'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .rmm-modal-btn-submit' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'modal_submit_bg_hover',
+            [
+                'label'     => __('پس‌زمینه دکمه در هاور', 'fondogh-online-menu'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .rmm-modal-btn-submit:hover' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'modal_submit_radius',
+            [
+                'label'      => __('گردی لبه دکمه', 'fondogh-online-menu'),
+                'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', '%'],
+                'selectors'  => [
+                    '{{WRAPPER}} .rmm-modal-btn-submit' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'modal_submit_padding',
+            [
+                'label'      => __('فاصله داخلی دکمه (Padding)', 'fondogh-online-menu'),
+                'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', 'em'],
+                'selectors'  => [
+                    '{{WRAPPER}} .rmm-modal-btn-submit' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->end_controls_section();
+
+        // 6b. Catalog Selection List Popup Style (لیست انتخاب‌های من)
+        $this->start_controls_section(
+            'section_style_catalog_modal',
+            [
+                'label' => __('استایل پاپ‌آپ لیست انتخاب‌های من (Catalog Popup)', 'fondogh-online-menu'),
+                'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+            ]
+        );
+
+        $this->add_control(
+            'catalog_backdrop_bg',
+            [
+                'label'     => __('رنگ پرده پس‌زمینه (Backdrop)', 'fondogh-online-menu'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '.rmm-catalog-drawer-backdrop' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'catalog_box_bg',
+            [
+                'label'     => __('پس‌زمینه کادر پاپ‌آپ', 'fondogh-online-menu'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '.rmm-catalog-drawer-backdrop .rmm-catalog-drawer' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Border::get_type(),
+            [
+                'name'     => 'catalog_box_border',
+                'label'    => __('حاشیه کادر پاپ‌آپ', 'fondogh-online-menu'),
+                'selector' => '.rmm-catalog-drawer-backdrop .rmm-catalog-drawer',
+            ]
+        );
+
+        $this->add_control(
+            'catalog_box_radius',
+            [
+                'label'      => __('گردی لبه پاپ‌آپ', 'fondogh-online-menu'),
+                'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', '%'],
+                'selectors'  => [
+                    '.rmm-catalog-drawer-backdrop .rmm-catalog-drawer' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Box_Shadow::get_type(),
+            [
+                'name'     => 'catalog_box_shadow',
+                'selector' => '.rmm-catalog-drawer-backdrop .rmm-catalog-drawer',
+            ]
+        );
+
+        // Header & Icons
+        $this->add_control(
+            'catalog_header_heading',
+            [
+                'label'     => __('هدر، عنوان و آیکون بستن', 'fondogh-online-menu'),
+                'type'      => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
+            ]
+        );
+
+        $this->add_control(
+            'catalog_title_color',
+            [
+                'label'     => __('رنگ عنوان لیست', 'fondogh-online-menu'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '.rmm-catalog-drawer-backdrop .rmm-catalog-drawer-title' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name'     => 'catalog_title_typography',
+                'label'    => __('فونت و اندازه عنوان', 'fondogh-online-menu'),
+                'selector' => '.rmm-catalog-drawer-backdrop .rmm-catalog-drawer-title',
+            ]
+        );
+
+        $this->add_control(
+            'catalog_close_bg',
+            [
+                'label'     => __('پس‌زمینه آیکون بستن', 'fondogh-online-menu'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '.rmm-catalog-drawer-backdrop .rmm-catalog-close-btn' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'catalog_close_color',
+            [
+                'label'     => __('رنگ آیکون بستن', 'fondogh-online-menu'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '.rmm-catalog-drawer-backdrop .rmm-catalog-close-btn' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'catalog_close_size',
+            [
+                'label'      => __('اندازه آیکون بستن', 'fondogh-online-menu'),
+                'type'       => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'range'      => ['px' => ['min' => 14, 'max' => 40]],
+                'selectors'  => [
+                    '.rmm-catalog-drawer-backdrop .rmm-catalog-close-btn' => 'font-size: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        // Item Cards
+        $this->add_control(
+            'catalog_items_heading',
+            [
+                'label'     => __('کارت‌های غذا داخل لیست', 'fondogh-online-menu'),
+                'type'      => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
+            ]
+        );
+
+        $this->add_control(
+            'catalog_item_bg',
+            [
+                'label'     => __('پس‌زمینه کارت آیتم', 'fondogh-online-menu'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '.rmm-catalog-drawer-backdrop .rmm-catalog-item-card' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Border::get_type(),
+            [
+                'name'     => 'catalog_item_border',
+                'label'    => __('حاشیه کارت آیتم', 'fondogh-online-menu'),
+                'selector' => '.rmm-catalog-drawer-backdrop .rmm-catalog-item-card',
+            ]
+        );
+
+        $this->add_control(
+            'catalog_item_radius',
+            [
+                'label'      => __('گردی کارت آیتم', 'fondogh-online-menu'),
+                'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', '%'],
+                'selectors'  => [
+                    '.rmm-catalog-drawer-backdrop .rmm-catalog-item-card' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'catalog_item_title_color',
+            [
+                'label'     => __('رنگ عنوان آیتم', 'fondogh-online-menu'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '.rmm-catalog-drawer-backdrop .rmm-catalog-item-title' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name'     => 'catalog_item_title_typography',
+                'label'    => __('فونت و اندازه عنوان آیتم', 'fondogh-online-menu'),
+                'selector' => '.rmm-catalog-drawer-backdrop .rmm-catalog-item-title',
+            ]
+        );
+
+        $this->add_control(
+            'catalog_item_price_color',
+            [
+                'label'     => __('رنگ مبلغ آیتم', 'fondogh-online-menu'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '.rmm-catalog-drawer-backdrop .rmm-catalog-sub-val' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        // Quantity +/- Buttons in Catalog
+        $this->add_control(
+            'catalog_qty_heading',
+            [
+                'label'     => __('دکمه‌های کم و زیاد تعداد (+ / −)', 'fondogh-online-menu'),
+                'type'      => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
+            ]
+        );
+
+        $this->add_control(
+            'catalog_qty_wrap_bg',
+            [
+                'label'     => __('پس‌زمینه کادر تعداد', 'fondogh-online-menu'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '.rmm-catalog-drawer-backdrop .rmm-catalog-item-qty' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'catalog_qty_btn_bg',
+            [
+                'label'     => __('پس‌زمینه دکمه‌های + و −', 'fondogh-online-menu'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '.rmm-catalog-drawer-backdrop .rmm-cat-qty-btn' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'catalog_qty_btn_color',
+            [
+                'label'     => __('رنگ آیکون/متن دکمه‌های + و −', 'fondogh-online-menu'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '.rmm-catalog-drawer-backdrop .rmm-cat-qty-btn' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'catalog_qty_btn_size',
+            [
+                'label'      => __('اندازه کادر دکمه‌های + و −', 'fondogh-online-menu'),
+                'type'       => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'range'      => ['px' => ['min' => 20, 'max' => 48]],
+                'selectors'  => [
+                    '.rmm-catalog-drawer-backdrop .rmm-cat-qty-btn' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'catalog_qty_btn_font_size',
+            [
+                'label'      => __('اندازه فونت آیکون + و −', 'fondogh-online-menu'),
+                'type'       => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'range'      => ['px' => ['min' => 12, 'max' => 28]],
+                'selectors'  => [
+                    '.rmm-catalog-drawer-backdrop .rmm-cat-qty-btn' => 'font-size: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'catalog_qty_btn_radius',
+            [
+                'label'      => __('گردی دکمه‌های + و −', 'fondogh-online-menu'),
+                'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', '%'],
+                'selectors'  => [
+                    '.rmm-catalog-drawer-backdrop .rmm-cat-qty-btn' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'catalog_qty_num_color',
+            [
+                'label'     => __('رنگ عدد تعداد', 'fondogh-online-menu'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '.rmm-catalog-drawer-backdrop .rmm-cat-qty-num' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name'     => 'catalog_qty_num_typography',
+                'label'    => __('فونت و اندازه عدد تعداد', 'fondogh-online-menu'),
+                'selector' => '.rmm-catalog-drawer-backdrop .rmm-cat-qty-num',
+            ]
+        );
+
+        // Footer & Action Buttons
+        $this->add_control(
+            'catalog_footer_heading',
+            [
+                'label'     => __('فوتر، جمع کل و دکمه‌ها', 'fondogh-online-menu'),
+                'type'      => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
+            ]
+        );
+
+        $this->add_control(
+            'catalog_total_box_bg',
+            [
+                'label'     => __('پس‌زمینه کادر جمع کل', 'fondogh-online-menu'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '.rmm-catalog-drawer-backdrop .rmm-catalog-grand-total-row' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'catalog_total_color',
+            [
+                'label'     => __('رنگ مبلغ جمع کل', 'fondogh-online-menu'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '.rmm-catalog-drawer-backdrop .rmm-catalog-grand-amount' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name'     => 'catalog_total_typography',
+                'label'    => __('فونت و اندازه جمع کل', 'fondogh-online-menu'),
+                'selector' => '.rmm-catalog-drawer-backdrop .rmm-catalog-grand-label, .rmm-catalog-drawer-backdrop .rmm-catalog-grand-amount',
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name'     => 'catalog_btn_typography',
+                'label'    => __('فونت و اندازه فونت دکمه‌ها', 'fondogh-online-menu'),
+                'selector' => '.rmm-catalog-drawer-backdrop .rmm-catalog-wa-btn, .rmm-catalog-drawer-backdrop .rmm-catalog-done-btn, .rmm-catalog-drawer-backdrop .rmm-catalog-clear-btn',
+            ]
+        );
+
+        $this->add_control(
+            'catalog_wa_btn_bg',
+            [
+                'label'     => __('رنگ دکمه واتساپ', 'fondogh-online-menu'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '.rmm-catalog-drawer-backdrop .rmm-catalog-wa-btn' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'catalog_wa_btn_color',
+            [
+                'label'     => __('رنگ متن دکمه واتساپ', 'fondogh-online-menu'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '.rmm-catalog-drawer-backdrop .rmm-catalog-wa-btn' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'catalog_done_btn_bg',
+            [
+                'label'     => __('رنگ دکمه ادامه مشاهده منو', 'fondogh-online-menu'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '.rmm-catalog-drawer-backdrop .rmm-catalog-done-btn' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'catalog_done_btn_color',
+            [
+                'label'     => __('رنگ متن دکمه ادامه', 'fondogh-online-menu'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '.rmm-catalog-drawer-backdrop .rmm-catalog-done-btn' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'catalog_btn_radius',
+            [
+                'label'      => __('گردی لبه دکمه‌ها', 'fondogh-online-menu'),
+                'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', '%'],
+                'selectors'  => [
+                    '.rmm-catalog-drawer-backdrop .rmm-catalog-wa-btn, .rmm-catalog-drawer-backdrop .rmm-catalog-done-btn' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'catalog_btn_padding',
+            [
+                'label'      => __('فاصله داخلی دکمه‌ها (Padding)', 'fondogh-online-menu'),
+                'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', 'em'],
+                'selectors'  => [
+                    '.rmm-catalog-drawer-backdrop .rmm-catalog-wa-btn, .rmm-catalog-drawer-backdrop .rmm-catalog-done-btn' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
             ]
         );
 
@@ -1512,7 +2300,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
                                 data-title="<?php echo esc_attr($food_title); ?>"
                                 data-price="<?php echo esc_attr($cat_raw_price); ?>"
                                 data-image="<?php echo esc_url($cat_thumb_url); ?>">
-                            + <?php echo esc_html__('افزودن به لیست', 'fondogh-online-menu'); ?>
+                            + <?php echo esc_html(class_exists('\RMM\I18n\MultiLangManager') ? \RMM\I18n\MultiLangManager::get_ui_string('add_to_list', $context_data['active_lang']) : __('افزودن به لیست', 'fondogh-online-menu')); ?>
                         </button>
                         <?php if ($action_btn === 'whatsapp' && $whatsapp) : ?>
                             <a href="<?php echo esc_url('https://wa.me/' . $whatsapp . '?text=' . rawurlencode(sprintf(__('سلام، مایل به استعلام و سفارش غذای %s هستم.', 'fondogh-online-menu'), $food_title))); ?>" target="_blank" class="rmm-btn-order whatsapp">

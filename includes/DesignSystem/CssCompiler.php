@@ -49,7 +49,9 @@ class CssCompiler {
 .rmm-theme-toggle-widget-wrap,
 .rmm-lang-switcher,
 .rmm-entrance-modal-backdrop,
-.rmm-entrance-card {
+.rmm-entrance-card,
+.rmm-catalog-drawer-backdrop,
+.rmm-catalog-drawer {
   font-family: var(--rmm-ds-font-family);
   box-sizing: border-box;
 }
@@ -452,6 +454,60 @@ class CssCompiler {
 .rmm-cart-total,
 .rmm-cart-arrow {
   color: var(--rmm-ds-cart-text) !important;
+}
+
+/* ── Catalog Selection List Popup (لیست انتخاب‌های من) ──────────────────── */
+.rmm-catalog-drawer-backdrop {
+  background: var(--rmm-ds-catalog-backdrop);
+  backdrop-filter: blur(var(--rmm-ds-catalog-blur));
+  -webkit-backdrop-filter: blur(var(--rmm-ds-catalog-blur));
+}
+.rmm-catalog-drawer-backdrop .rmm-catalog-drawer {
+  background: var(--rmm-ds-catalog-bg);
+  color: var(--rmm-ds-catalog-text);
+  border: 1px solid var(--rmm-ds-catalog-border);
+  border-radius: var(--rmm-ds-catalog-radius);
+}
+.rmm-catalog-drawer-backdrop .rmm-catalog-drawer-header,
+.rmm-catalog-drawer-backdrop .rmm-catalog-drawer-footer {
+  border-color: var(--rmm-ds-catalog-border);
+}
+.rmm-catalog-drawer-backdrop .rmm-catalog-drawer-title {
+  color: var(--rmm-ds-catalog-text);
+}
+.rmm-catalog-drawer-backdrop .rmm-catalog-drawer-count,
+.rmm-catalog-drawer-backdrop .rmm-catalog-grand-total-row {
+  border-color: var(--rmm-ds-catalog-accent);
+}
+.rmm-catalog-drawer-backdrop .rmm-catalog-drawer-count,
+.rmm-catalog-drawer-backdrop .rmm-catalog-sub-val,
+.rmm-catalog-drawer-backdrop .rmm-catalog-grand-amount {
+  color: var(--rmm-ds-catalog-accent);
+}
+.rmm-catalog-drawer-backdrop .rmm-catalog-item-card {
+  background: var(--rmm-ds-catalog-card-bg);
+  border-color: var(--rmm-ds-catalog-card-border);
+  border-radius: var(--rmm-ds-catalog-card-radius);
+}
+.rmm-catalog-drawer-backdrop .rmm-catalog-item-title,
+.rmm-catalog-drawer-backdrop .rmm-catalog-grand-label {
+  color: var(--rmm-ds-catalog-text);
+}
+.rmm-catalog-drawer-backdrop .rmm-catalog-item-meta,
+.rmm-catalog-drawer-backdrop .rmm-catalog-item-unit-price,
+.rmm-catalog-drawer-backdrop .rmm-catalog-sub-label,
+.rmm-catalog-drawer-backdrop .rmm-catalog-summary-row {
+  color: var(--rmm-ds-catalog-muted);
+}
+.rmm-catalog-drawer-backdrop .rmm-cat-qty-btn {
+  color: var(--rmm-ds-catalog-accent);
+}
+.rmm-catalog-drawer-backdrop .rmm-catalog-wa-btn {
+  background: var(--rmm-ds-catalog-wa-bg);
+}
+.rmm-catalog-drawer-backdrop .rmm-catalog-done-btn {
+  background: var(--rmm-ds-catalog-btn-bg);
+  color: var(--rmm-ds-catalog-btn-text);
 }
 CSS;
     }

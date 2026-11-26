@@ -168,12 +168,16 @@ class FloatingCartWidget extends \Elementor\Widget_Base {
         $settings = $this->get_settings_for_display();
 
         if ($branch_mode === 'view_only') {
+            $active_lang = class_exists('\RMM\I18n\MultiLangManager') ? \RMM\I18n\MultiLangManager::get_current_language() : 'fa';
+            $list_label  = class_exists('\RMM\I18n\MultiLangManager')
+                ? \RMM\I18n\MultiLangManager::get_ui_string('my_selection_list', $active_lang)
+                : __('لیست انتخاب‌های من', 'fondogh-online-menu');
             ?>
             <div id="rmm-catalog-floating-bar" class="rmm-floating-cart-wrapper rmm-catalog-floating-wrapper rmm-hidden-cart">
                 <button type="button" class="rmm-floating-cart-btn rmm-catalog-floating-btn" id="rmm-catalog-open-drawer-btn" aria-haspopup="dialog">
                     <div class="rmm-cart-left">
                         <span class="rmm-cart-badge-count" id="rmm-catalog-count" data-count="0">0</span>
-                        <span class="rmm-cart-label"><?php echo esc_html__('لیست انتخاب‌های من', 'fondogh-online-menu'); ?></span>
+                        <span class="rmm-cart-label"><?php echo esc_html($list_label); ?></span>
                     </div>
                     <div class="rmm-cart-right">
                         <span class="rmm-cart-total" id="rmm-catalog-total">0</span>

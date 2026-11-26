@@ -405,6 +405,26 @@
         if (e.target === langModalOverlay) langModalOverlay.style.display = 'none';
       });
     }
+
+    // Catalog selection list modal open/close in preview canvas
+    const catalogModalOpenBtn  = document.getElementById('rmm-preview-catalog-open');
+    const catalogModalOverlay  = document.getElementById('rmm-preview-catalog-overlay');
+    const catalogModalCloseBtn = document.getElementById('rmm-preview-catalog-close');
+    if (catalogModalOpenBtn && catalogModalOverlay) {
+      catalogModalOpenBtn.addEventListener('click', () => {
+        catalogModalOverlay.style.display = 'flex';
+      });
+    }
+    if (catalogModalCloseBtn && catalogModalOverlay) {
+      catalogModalCloseBtn.addEventListener('click', () => {
+        catalogModalOverlay.style.display = 'none';
+      });
+    }
+    if (catalogModalOverlay) {
+      catalogModalOverlay.addEventListener('click', (e) => {
+        if (e.target === catalogModalOverlay) catalogModalOverlay.style.display = 'none';
+      });
+    }
   }
 
   /* ── Init ────────────────────────────────────────────── */
