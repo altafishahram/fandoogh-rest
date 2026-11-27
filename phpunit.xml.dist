@@ -6,7 +6,9 @@
          failOnWarning="true">
     <testsuites>
         <testsuite name="Fondogh Online Menu">
-            <directory>tests</directory>
+            <directory>tests/Branches</directory>
+            <directory>tests/FrontendDashboard</directory>
+            <directory>tests/Elementor</directory>
         </testsuite>
     </testsuites>
 </phpunit>
