@@ -20,12 +20,12 @@ if (!did_action('elementor/loaded')) {
     WP_CLI::error('Elementor did not finish loading.');
 }
 
-$plugin = \\RMM\\Plugin::instance();
+$plugin = \RMM\Plugin::instance();
 if (!$plugin) {
     WP_CLI::error('Fondogh plugin instance could not be initialized.');
 }
 
-$widgets_manager = \\Elementor\\Plugin::instance()->widgets_manager;
+$widgets_manager = \Elementor\Plugin::instance()->widgets_manager;
 $widgets = $widgets_manager->get_widget_types();
 if (!isset($widgets['rmm_food_menu_grid'])) {
     WP_CLI::error('The Food Menu Elementor widget was not registered.');
