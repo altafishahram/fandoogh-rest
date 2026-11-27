@@ -89,7 +89,7 @@ class RMM_Test_Wpdb {
     }
 
     public function get_row($query) {
-        if (preg_match('/product_id\s*=\s*[\'"]?(\d+)[\'"]?.*branch_id\s*=\s*[\'"]?(\d+)/i', $query, $matches)) {
+        if (preg_match('/product_id\\s*=\\s*[\\'"]?(\\d+)[\\'"]?.*branch_id\\s*=\\s*[\\'"]?(\\d+)/i', $query, $matches)) {
             $key = $matches[1] . ':' . $matches[2];
             return isset($this->rows[$key]) ? clone $this->rows[$key] : null;
         }
@@ -120,12 +120,12 @@ class RMM_Test_Wpdb {
 
     public function get_results($query, $output = null) {
         $branch_id = 0;
-        if (preg_match('/branch_id\s*=\s*[\'"]?(\d+)/i', $query, $matches)) {
+        if (preg_match('/branch_id\\s*=\\s*[\\'"]?(\\d+)/i', $query, $matches)) {
             $branch_id = (int) $matches[1];
         }
 
         $ids = [];
-        if (preg_match('/product_id\s+IN\s*\(([^)]+)\)/i', $query, $matches)) {
+        if (preg_match('/product_id\\s+IN\\s*\\(([^)]+)\\)/i', $query, $matches)) {
             $ids = array_map('intval', explode(',', $matches[1]));
         }
 
@@ -166,3 +166,4 @@ $GLOBALS['wpdb'] = new RMM_Test_Wpdb();
 require_once __DIR__ . '/stubs/BranchTaxonomy.php';
 require_once dirname(__DIR__) . '/includes/Branches/InventoryRepository.php';
 require_once dirname(__DIR__) . '/includes/FrontendDashboard/AuthController.php';
+require_once dirname(__DIR__) . '/includes/Core/GitHubUpdater.php';
