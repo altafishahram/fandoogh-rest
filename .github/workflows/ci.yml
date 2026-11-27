@@ -62,7 +62,6 @@ jobs:
           mkdir -p "$WP_PATH"
           php wp-cli.phar core download --path="$WP_PATH" --version=latest
           php wp-cli.phar config create --path="$WP_PATH" --dbname=wordpress --dbuser=wp --dbpass=wp --dbhost=127.0.0.1:3306 --skip-check
-          php wp-cli.phar db create --path="$WP_PATH"
           php wp-cli.phar core install --path="$WP_PATH" --url=http://localhost --title="Fondogh CI" --admin_user=ci-admin --admin_password=ci-password --admin_email=ci@example.com --skip-email
           php wp-cli.phar plugin install woocommerce --activate --path="$WP_PATH"
           php wp-cli.phar plugin install elementor --activate --path="$WP_PATH"
