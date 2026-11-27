@@ -9,6 +9,7 @@
             <directory>tests/Branches</directory>
             <directory>tests/FrontendDashboard</directory>
             <directory>tests/Elementor</directory>
+            <directory>tests/Updates</directory>
         </testsuite>
     </testsuites>
 </phpunit>
