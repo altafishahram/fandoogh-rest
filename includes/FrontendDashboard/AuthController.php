@@ -159,7 +159,22 @@ class AuthController {
      * Check if user can update order status (Kitchen or Manager)
      */
     public static function can_update_order_status($user = null) {
-        return self::can_view_orders($user);
+        if (!$user) {
+            $user = wp_get_current_user();
+        }
+        if (!$user || !$user->exists()) {
+            return false;
+        }
+
+        // Managers may use the full order workflow. Kitchen staff may only
+        // advance orders through the KDS-specific processing -> completed step.
+        if (user_can($user, 'manage_options') ||
+            user_can($user, 'manage_woocommerce') ||
+            user_can($user, 'manage_restaurant_menu')) {
+            return true;
+        }
+
+        return in_array('kitchen_staff', (array) $user->roles, true);
     }
 
     /**
