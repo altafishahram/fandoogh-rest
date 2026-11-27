@@ -1,7 +1,8 @@
 === منو آنلاین فندق (Fondogh Online Menu) ===
 Contributors: Fondogh Team
 Requires at least: 5.8
-Tested up to: 6.7
+Tested up to: 7.1
+WC tested up to: 11.3.1
 Requires PHP: 7.4
 Stable tag: 1.3.1
 License: GPLv2 or later
