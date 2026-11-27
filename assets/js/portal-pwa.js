@@ -90,6 +90,7 @@
         stats: 0,
         details: 0
     };
+    var ordersRequestsInFlight = {};
 
     // DOM Elements
     var clockEl = document.getElementById('rmm-live-clock');
@@ -259,6 +260,18 @@
         });
     }
 
+    // Track connection changes once, instead of showing an error toast for every failed poll.
+    function setConnectionState(isOnline) {
+        if (state.connectionOnline === isOnline) return;
+        state.connectionOnline = isOnline;
+        showToast(
+            isOnline ? 'ارتباط با سرور برقرار شد.' : 'ارتباط با سرور قطع شده است؛ تلاش مجدد پس از اتصال.',
+            isOnline ? 'success' : 'error'
+        );
+    }
+
+    state.connectionOnline = true;
+
     // 6. Generic REST API Client
     function apiRequest(endpoint, method, data) {
         method = method || 'GET';
@@ -282,11 +295,12 @@
 
         return fetch(url, options)
             .then(function (res) {
+                setConnectionState(true);
                 return res.json();
             })
             .catch(function (err) {
                 console.error('API Error:', endpoint, err);
-                showToast('خطا در ارتباط با سرور', 'error');
+                setConnectionState(false);
                 return null;
             });
     }
@@ -294,6 +308,12 @@
     // 7. Kitchen Orders Display System (KDS)
     function fetchOrders() {
         var requestedBranchId = state.branchId;
+        if (!requestedBranchId || document.hidden || navigator.onLine === false) return;
+
+        var requestKey = String(requestedBranchId);
+        if (ordersRequestsInFlight[requestKey]) return;
+        ordersRequestsInFlight[requestKey] = true;
+
         var requestVersion = ++branchRequestVersions.orders;
 
         apiRequest('live-orders', 'GET', { branch_id: requestedBranchId })
@@ -304,6 +324,9 @@
                     processNewOrdersNotification(res.orders);
                     renderOrders(res.orders);
                 }
+            })
+            .finally(function () {
+                delete ordersRequestsInFlight[requestKey];
             });
     }
 
@@ -2043,12 +2066,48 @@
         });
     }
 
+    // Refresh only the data relevant to the current dashboard view.
+    function refreshDashboardData() {
+        if (document.hidden || navigator.onLine === false) return;
+        fetchOrders();
+        fetchStats();
+        fetchCurrentBranchDetails();
+        if (state.activeTab === 'menu') {
+            fetchProducts();
+        }
+    }
+
+    window.addEventListener('offline', function () {
+        setConnectionState(false);
+    });
+
+    window.addEventListener('online', function () {
+        setConnectionState(true);
+        refreshDashboardData();
+    });
+
+    document.addEventListener('visibilitychange', function () {
+        if (!document.hidden) {
+            refreshDashboardData();
+        }
+    });
+
     // Initial Load
     fetchCategories();
     fetchOrders();
     fetchStats();
     fetchCurrentBranchDetails();
-    setInterval(fetchOrders, 10000);
+
+    // Poll orders only while the dashboard is visible and the browser reports a connection.
+    setInterval(function () {
+        if (!document.hidden && navigator.onLine !== false) {
+            fetchOrders();
+        }
+    }, 10000);
+
+    if (navigator.onLine === false) {
+        setConnectionState(false);
+    }
 
 
     // Live formatting with thousands separators for price inputs
