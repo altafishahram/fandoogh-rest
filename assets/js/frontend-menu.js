@@ -171,7 +171,7 @@
 
         function openAccessibleModal($modal, duration, opener) {
             if (!$modal || !$modal.length) return;
-            if (opener && opener.length) {
+            if (opener && opener.length && opener.get(0) !== document.body && opener.get(0) !== document.documentElement) {
                 modalReturnFocus = opener.get(0);
             } else if (!modalReturnFocus) {
                 modalReturnFocus = document.activeElement;
@@ -596,6 +596,11 @@
             if (!pid) return;
 
             var $card = $(this).closest('.rmm-food-card');
+            var $opener = $(this).closest('button, a, [tabindex]').first();
+            if (!$opener.length && $card.length) {
+                $opener = $card.find('button.rmm-btn-details, button.rmm-btn-order, a').filter(':visible').first();
+            }
+            if ($opener.length) modalReturnFocus = $opener.get(0);
             loadDefaultModal(pid, $card);
         });
 
@@ -608,6 +613,11 @@
             e.preventDefault();
 
             var $card = $(this).closest('.rmm-food-card');
+            var $opener = $(this).closest('button, a, [tabindex]').first();
+            if (!$opener.length && $card.length) {
+                $opener = $card.find('button.rmm-btn-details, button.rmm-btn-order, a').filter(':visible').first();
+            }
+            if ($opener.length) modalReturnFocus = $opener.get(0);
             var productId = $card.data('id') || $(this).data('id');
             var action = $card.data('action') || 'default_modal';
             var templateId = $card.data('template-id');
