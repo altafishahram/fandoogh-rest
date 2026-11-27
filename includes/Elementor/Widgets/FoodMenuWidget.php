@@ -2094,11 +2094,11 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
 
                 <?php if ($enable_switcher) : ?>
                     <div class="rmm-view-switcher" role="group" aria-label="<?php esc_attr_e('حالت نمایش منو', 'fondogh-online-menu'); ?>">
-                        <button type="button" class="rmm-view-btn rmm-btn-grid <?php echo ($default_view === 'grid') ? 'is-active' : ''; ?>" data-view="grid" title="<?php echo esc_attr($str_grid_view); ?>">
+                        <button type="button" class="rmm-view-btn rmm-btn-grid <?php echo ($default_view === 'grid') ? 'is-active' : ''; ?>" data-view="grid" aria-pressed="<?php echo ($default_view === 'grid') ? 'true' : 'false'; ?>" title="<?php echo esc_attr($str_grid_view); ?>">
                             <span class="rmm-view-icon">⊞</span>
                             <span class="rmm-view-text"><?php echo esc_html($str_grid_view); ?></span>
                         </button>
-                        <button type="button" class="rmm-view-btn rmm-btn-list <?php echo ($default_view === 'list') ? 'is-active' : ''; ?>" data-view="list" title="<?php echo esc_attr($str_list_view); ?>">
+                        <button type="button" class="rmm-view-btn rmm-btn-list <?php echo ($default_view === 'list') ? 'is-active' : ''; ?>" data-view="list" aria-pressed="<?php echo ($default_view === 'list') ? 'true' : 'false'; ?>" title="<?php echo esc_attr($str_list_view); ?>">
                             <span class="rmm-view-icon">☰</span>
                             <span class="rmm-view-text"><?php echo esc_html($str_list_view); ?></span>
                         </button>

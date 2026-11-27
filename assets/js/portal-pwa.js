@@ -83,6 +83,15 @@
         activeTab: 'orders'
     };
 
+    // Ignore stale responses when the operator switches branches quickly.
+    var branchRequestVersions = {
+        orders: 0,
+        products: 0,
+        stats: 0,
+        details: 0
+    };
+    var ordersRequestsInFlight = {};
+
     // DOM Elements
     var clockEl = document.getElementById('rmm-live-clock');
     var branchSelect = document.getElementById('rmm-portal-branch-select');
@@ -239,7 +248,10 @@
     // 5. Branch Selection
     if (branchSelect) {
         branchSelect.addEventListener('change', function () {
-            state.branchId = parseInt(this.value, 10);
+            state.branchId = parseInt(this.value, 10) || 0;
+            // Do not compare the new branch's orders with the previous branch's IDs.
+            state.lastKnownOrderIds = [];
+            state.orders = [];
             showToast('در حال جابجایی به شعبه جدید...', 'info');
             fetchProducts();
             fetchOrders();
@@ -247,6 +259,18 @@
             fetchCurrentBranchDetails();
         });
     }
+
+    // Track connection changes once, instead of showing an error toast for every failed poll.
+    function setConnectionState(isOnline) {
+        if (state.connectionOnline === isOnline) return;
+        state.connectionOnline = isOnline;
+        showToast(
+            isOnline ? 'ارتباط با سرور برقرار شد.' : 'ارتباط با سرور قطع شده است؛ تلاش مجدد پس از اتصال.',
+            isOnline ? 'success' : 'error'
+        );
+    }
+
+    state.connectionOnline = true;
 
     // 6. Generic REST API Client
     function apiRequest(endpoint, method, data) {
@@ -271,24 +295,42 @@
 
         return fetch(url, options)
             .then(function (res) {
-                return res.json();
+                setConnectionState(true);
+                return res.json().catch(function (err) {
+                    console.error('Invalid API response:', endpoint, err);
+                    showToast('پاسخ نامعتبر از سرور دریافت شد.', 'error');
+                    return null;
+                });
             })
             .catch(function (err) {
                 console.error('API Error:', endpoint, err);
-                showToast('خطا در ارتباط با سرور', 'error');
+                setConnectionState(false);
                 return null;
             });
     }
 
     // 7. Kitchen Orders Display System (KDS)
     function fetchOrders() {
-        apiRequest('live-orders', 'GET', { branch_id: state.branchId })
+        var requestedBranchId = state.branchId;
+        if (!requestedBranchId || document.hidden || navigator.onLine === false) return;
+
+        var requestKey = String(requestedBranchId);
+        if (ordersRequestsInFlight[requestKey]) return;
+        ordersRequestsInFlight[requestKey] = true;
+
+        var requestVersion = ++branchRequestVersions.orders;
+
+        apiRequest('live-orders', 'GET', { branch_id: requestedBranchId })
             .then(function (res) {
+                if (requestVersion !== branchRequestVersions.orders || requestedBranchId !== state.branchId) return;
                 if (res && res.success && res.orders) {
                     state.orders = res.orders;
                     processNewOrdersNotification(res.orders);
                     renderOrders(res.orders);
                 }
+            })
+            .finally(function () {
+                delete ordersRequestsInFlight[requestKey];
             });
     }
 
@@ -460,8 +502,12 @@
 
     // 9. Products & Inventory Management
     function fetchProducts() {
-        apiRequest('products', 'GET', { branch_id: state.branchId })
+        var requestedBranchId = state.branchId;
+        var requestVersion = ++branchRequestVersions.products;
+
+        apiRequest('products', 'GET', { branch_id: requestedBranchId })
             .then(function (res) {
+                if (requestVersion !== branchRequestVersions.products || requestedBranchId !== state.branchId) return;
                 if (res && res.success && res.products) {
                     state.products = res.products;
                     updateMenuStats();
@@ -746,8 +792,12 @@
 
     // 11. Fetch Stats & Branch Shift
     function fetchStats() {
-        apiRequest('stats', 'GET', { branch_id: state.branchId })
+        var requestedBranchId = state.branchId;
+        var requestVersion = ++branchRequestVersions.stats;
+
+        apiRequest('stats', 'GET', { branch_id: requestedBranchId })
             .then(function (res) {
+                if (requestVersion !== branchRequestVersions.stats || requestedBranchId !== state.branchId) return;
                 if (res && res.success && toggleBranchBtn) {
                     if (res.branch_is_open) {
                         toggleBranchBtn.className = 'rmm-btn-status open';
@@ -1852,14 +1902,14 @@
         if (!state.branchId && branchSelect && branchSelect.value) {
             state.branchId = parseInt(branchSelect.value, 10);
         }
+        var requestedBranchId = state.branchId;
+        var requestVersion = ++branchRequestVersions.details;
+
         apiRequest('branches', 'GET').then(function (res) {
+            if (requestVersion !== branchRequestVersions.details || requestedBranchId !== state.branchId) return;
             if (res && res.success && res.branches && res.branches.length) {
                 state.branches = res.branches;
                 var found = res.branches.find(function (b) { return b.id == state.branchId; });
-                if (!found && res.branches.length > 0) {
-                    found = res.branches[0];
-                    state.branchId = found.id;
-                }
                 if (found) {
                     currentBranchData = found;
                     updateBranchViewUI(found);
@@ -2020,12 +2070,48 @@
         });
     }
 
+    // Refresh only the data relevant to the current dashboard view.
+    function refreshDashboardData() {
+        if (document.hidden || navigator.onLine === false) return;
+        fetchOrders();
+        fetchStats();
+        fetchCurrentBranchDetails();
+        if (state.activeTab === 'menu') {
+            fetchProducts();
+        }
+    }
+
+    window.addEventListener('offline', function () {
+        setConnectionState(false);
+    });
+
+    window.addEventListener('online', function () {
+        setConnectionState(true);
+        refreshDashboardData();
+    });
+
+    document.addEventListener('visibilitychange', function () {
+        if (!document.hidden) {
+            refreshDashboardData();
+        }
+    });
+
     // Initial Load
     fetchCategories();
     fetchOrders();
     fetchStats();
     fetchCurrentBranchDetails();
-    setInterval(fetchOrders, 10000);
+
+    // Poll orders only while the dashboard is visible and the browser reports a connection.
+    setInterval(function () {
+        if (!document.hidden && navigator.onLine !== false) {
+            fetchOrders();
+        }
+    }, 10000);
+
+    if (navigator.onLine === false) {
+        setConnectionState(false);
+    }
 
 
     // Live formatting with thousands separators for price inputs

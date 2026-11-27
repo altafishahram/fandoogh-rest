@@ -214,6 +214,44 @@ class RestApiController {
     }
 
     /**
+     * Add the branch metadata filter supported by the active WooCommerce order store.
+     *
+     * Legacy post-based storage uses meta_key/meta_value. HPOS supports meta_query
+     * from WooCommerce 8.2. Older experimental HPOS installations fall back to
+     * item-by-item filtering in the result loop.
+     *
+     * @param array $args
+     * @param int $branch_id
+     * @return array
+     */
+    private function add_branch_order_query_filter(array $args, $branch_id) {
+        $order_util = '\\Automattic\\WooCommerce\\Utilities\\OrderUtil';
+        $hpos_enabled = class_exists($order_util)
+            && method_exists($order_util, 'custom_orders_table_usage_is_enabled')
+            && call_user_func([$order_util, 'custom_orders_table_usage_is_enabled']);
+
+        if ($hpos_enabled && defined('WC_VERSION') && version_compare(WC_VERSION, '8.2', '>=')) {
+            $args['meta_query'] = [
+                [
+                    'key'     => '_rmm_order_branch_id',
+                    'value'   => (string) absint($branch_id),
+                    'compare' => '=',
+                    'type'    => 'NUMERIC',
+                ],
+            ];
+        } elseif ($hpos_enabled) {
+            // Metadata queries are not available in pre-8.2 HPOS; callers must
+            // verify each result and may receive a wider database result set.
+            $args['limit'] = -1;
+        } else {
+            $args['meta_key']   = '_rmm_order_branch_id';
+            $args['meta_value'] = absint($branch_id);
+        }
+
+        return $args;
+    }
+
+    /**
      * Verify ownership of an order based on its stored branch, not on a param.
      *
      * @param \WC_Order|false $order
@@ -266,6 +304,35 @@ class RestApiController {
     }
 
     /**
+     * Verify a product can receive a branch-specific inventory update.
+     * Global managers may manage any product; branch-scoped users may only
+     * update products assigned to the requested branch.
+     *
+     * @param int $product_id
+     * @param int $branch_id
+     * @return true|\WP_Error
+     */
+    private function assert_product_branch_inventory_access($product_id, $branch_id) {
+        $product = wc_get_product($product_id);
+        if (!$product) {
+            return new \WP_Error('rmm_product_not_found', __('محصول مورد نظر یافت نشد.', 'fondogh-online-menu'), ['status' => 404]);
+        }
+
+        if (AuthController::is_global_manager()) {
+            return true;
+        }
+
+        $prod_branches = array_values(array_filter(array_map('absint', (array) get_post_meta($product_id, '_rmm_branches', true))));
+        $has_inventory_row = (bool) \RMM\Branches\InventoryRepository::get_item($product_id, $branch_id);
+
+        if (!in_array(absint($branch_id), $prod_branches, true) && !$has_inventory_row) {
+            return new \WP_Error('rmm_forbidden_product_branch', __('این محصول به شعبه انتخاب‌شده اختصاص ندارد یا دسترسی آن برای شما مجاز نیست.', 'fondogh-online-menu'), ['status' => 403]);
+        }
+
+        return true;
+    }
+
+    /**
      * Dashboard Stats
      */
     public function get_stats(\WP_REST_Request $request) {
@@ -274,33 +341,31 @@ class RestApiController {
             return $branch_id;
         }
 
-        // Count today's orders
         $today_start = date('Y-m-d 00:00:00');
         $args = [
             'date_created' => '>=' . strtotime($today_start),
             'limit'        => -1,
             'return'       => 'ids',
         ];
-
-        if ($branch_id) {
-            $args['meta_key']   = '_rmm_order_branch_id';
-            $args['meta_value'] = $branch_id;
-        }
+        $args = $this->add_branch_order_query_filter($args, $branch_id);
 
         $order_ids = wc_get_orders($args);
-        $total_orders = count($order_ids);
+        $total_orders = 0;
         $pending_orders = 0;
         $total_sales = 0;
 
         foreach ($order_ids as $id) {
             $order = wc_get_order($id);
-            if ($order) {
-                if (in_array($order->get_status(), ['processing', 'pending', 'on-hold'])) {
-                    $pending_orders++;
-                }
-                if ($order->get_status() !== 'cancelled') {
-                    $total_sales += floatval($order->get_total());
-                }
+            if (!$order || absint($order->get_meta('_rmm_order_branch_id')) !== $branch_id) {
+                continue;
+            }
+
+            $total_orders++;
+            if (in_array($order->get_status(), ['processing', 'pending', 'on-hold'], true)) {
+                $pending_orders++;
+            }
+            if ($order->get_status() !== 'cancelled') {
+                $total_sales += (float) $order->get_total();
             }
         }
 
@@ -327,6 +392,7 @@ class RestApiController {
         }
 
         $branch_inventory = \RMM\Branches\InventoryRepository::get_branch_inventory($branch_id);
+        $is_global_manager = AuthController::is_global_manager();
 
         $posts = get_posts([
             'post_type'              => 'product',
@@ -342,6 +408,13 @@ class RestApiController {
         foreach ($posts as $post) {
             $product = wc_get_product($post->ID);
             if (!$product) continue;
+
+            $assigned_branches = array_values(array_filter(array_map('absint', (array) get_post_meta($post->ID, '_rmm_branches', true))));
+            // Shared products remain visible; products assigned exclusively to
+            // another branch must not appear in a branch manager's portal.
+            if (!$is_global_manager && !empty($assigned_branches) && !in_array($branch_id, $assigned_branches, true)) {
+                continue;
+            }
 
             $inv = isset($branch_inventory[$post->ID]) ? $branch_inventory[$post->ID] : null;
 
@@ -398,7 +471,7 @@ class RestApiController {
                 'badge_text'        => get_post_meta($post->ID, '_rmm_badge_text', true) ?: '',
                 'badge_custom_icon' => get_post_meta($post->ID, '_rmm_badge_custom_icon', true) ?: '',
                 'badge_image'       => get_post_meta($post->ID, '_rmm_badge_image', true) ?: '',
-                'branches'          => (array) get_post_meta($post->ID, '_rmm_branches', true),
+                'branches'          => $assigned_branches,
                 'translations'  => get_post_meta($post->ID, '_rmm_translations', true) ?: (object)[],
             ];
         }
@@ -414,10 +487,14 @@ class RestApiController {
      */
     public function toggle_stock(\WP_REST_Request $request) {
         $product_id = absint($request->get_param('product_id'));
-        $status     = sanitize_text_field($request->get_param('status')); // 'instock' or 'outofstock'
+        $status     = sanitize_key($request->get_param('status'));
 
         if (!$product_id) {
             return new \WP_Error('rmm_missing_params', __('شناسه محصول الزامی است.', 'fondogh-online-menu'), ['status' => 400]);
+        }
+
+        if (!in_array($status, ['instock', 'outofstock'], true)) {
+            return new \WP_Error('rmm_invalid_stock_status', __('وضعیت موجودی نامعتبر است.', 'fondogh-online-menu'), ['status' => 400]);
         }
 
         $branch_id = $this->resolve_request_branch($request);
@@ -425,16 +502,23 @@ class RestApiController {
             return $branch_id;
         }
 
-        // Branch-scoped change only. Never touch the global WooCommerce product:
-        // wc_update_product_stock_status()/set_stock_status() would change stock for
-        // every branch and overwrite the store-wide product record.
-        \RMM\Branches\InventoryRepository::toggle_stock($product_id, $branch_id, $status);
+        $product_guard = $this->assert_product_branch_inventory_access($product_id, $branch_id);
+        if (is_wp_error($product_guard)) {
+            return $product_guard;
+        }
+
+        // Branch-scoped change only. Never touch the global WooCommerce product.
+        $updated = \RMM\Branches\InventoryRepository::toggle_stock($product_id, $branch_id, $status);
+        if (!$updated) {
+            error_log(sprintf('RMM inventory toggle failed for product %d, branch %d.', $product_id, $branch_id));
+            return new \WP_Error('rmm_inventory_update_failed', __('ذخیره وضعیت موجودی با خطا مواجه شد. لطفاً دوباره تلاش کنید.', 'fondogh-online-menu'), ['status' => 500]);
+        }
 
         return rest_ensure_response([
             'success'      => true,
             'product_id'   => $product_id,
             'branch_id'    => $branch_id,
-            'stock_status' => ($status === 'outofstock') ? 'outofstock' : 'instock',
+            'stock_status' => $status,
             'is_available' => ($status === 'instock'),
         ]);
     }
@@ -443,12 +527,34 @@ class RestApiController {
      * Update Price
      */
     public function update_price(\WP_REST_Request $request) {
-        $product_id    = absint($request->get_param('product_id'));
-        $regular_price = floatval($request->get_param('regular_price'));
-        $sale_price    = $request->get_param('sale_price') !== null ? floatval($request->get_param('sale_price')) : null;
+        $product_id = absint($request->get_param('product_id'));
+        $raw_regular_price = $request->get_param('regular_price');
+        $raw_sale_price = $request->get_param('sale_price');
 
         if (!$product_id) {
-            return new \WP_Error('rmm_missing_params', __('پارامترها ناقص است.', 'fondogh-online-menu'), ['status' => 400]);
+            return new \WP_Error('rmm_missing_params', __('شناسه محصول الزامی است.', 'fondogh-online-menu'), ['status' => 400]);
+        }
+
+        if (!is_numeric($raw_regular_price)) {
+            return new \WP_Error('rmm_invalid_regular_price', __('قیمت عادی باید یک عدد معتبر باشد.', 'fondogh-online-menu'), ['status' => 400]);
+        }
+
+        $regular_price = (float) $raw_regular_price;
+        $max_price = 99999999.99; // DECIMAL(10,2) capacity of the branch inventory table.
+        if ($regular_price < 0 || $regular_price > $max_price) {
+            return new \WP_Error('rmm_invalid_regular_price', __('قیمت عادی نمی‌تواند منفی باشد و نباید از ۹۹٬۹۹۹٬۹۹۹٫۹۹ بیشتر شود.', 'fondogh-online-menu'), ['status' => 400]);
+        }
+
+        $sale_price = null;
+        if ($raw_sale_price !== null && $raw_sale_price !== '') {
+            if (!is_numeric($raw_sale_price)) {
+                return new \WP_Error('rmm_invalid_sale_price', __('قیمت فروش ویژه باید یک عدد معتبر باشد.', 'fondogh-online-menu'), ['status' => 400]);
+            }
+
+            $sale_price = (float) $raw_sale_price;
+            if ($sale_price <= 0 || $sale_price >= $regular_price || $sale_price > $max_price) {
+                return new \WP_Error('rmm_invalid_sale_price', __('قیمت فروش ویژه باید بیشتر از صفر و کمتر از قیمت عادی باشد.', 'fondogh-online-menu'), ['status' => 400]);
+            }
         }
 
         $branch_id = $this->resolve_request_branch($request);
@@ -456,12 +562,22 @@ class RestApiController {
             return $branch_id;
         }
 
+        $product_guard = $this->assert_product_branch_inventory_access($product_id, $branch_id);
+        if (is_wp_error($product_guard)) {
+            return $product_guard;
+        }
+
         // Branch-scoped price only. Never call set_regular_price()/set_price() on
         // the global WooCommerce product; that would reprice every other branch.
-        \RMM\Branches\InventoryRepository::update_price($product_id, $branch_id, $regular_price, $sale_price);
+        $updated = \RMM\Branches\InventoryRepository::update_price($product_id, $branch_id, $regular_price, $sale_price);
+        if (!$updated) {
+            error_log(sprintf('RMM inventory price update failed for product %d, branch %d.', $product_id, $branch_id));
+            return new \WP_Error('rmm_price_update_failed', __('ذخیره قیمت شعبه با خطا مواجه شد. لطفاً دوباره تلاش کنید.', 'fondogh-online-menu'), ['status' => 500]);
+        }
 
         return rest_ensure_response([
             'success'       => true,
+            'product_id'    => $product_id,
             'branch_id'     => $branch_id,
             'regular_price' => $regular_price,
             'sale_price'    => $sale_price,
@@ -476,7 +592,6 @@ class RestApiController {
         if (is_wp_error($branch_id)) {
             return $branch_id;
         }
-        $last_id = absint($request->get_param('last_order_id'));
 
         $query_args = [
             'status'  => ['processing', 'pending', 'on-hold', 'completed'],
@@ -484,16 +599,20 @@ class RestApiController {
             'orderby' => 'date',
             'order'   => 'DESC',
         ];
-
-        if ($branch_id) {
-            $query_args['meta_key']   = '_rmm_order_branch_id';
-            $query_args['meta_value'] = $branch_id;
-        }
+        $query_args = $this->add_branch_order_query_filter($query_args, $branch_id);
 
         $orders = wc_get_orders($query_args);
         $data = [];
 
         foreach ($orders as $order) {
+            // Never disclose order data until the exact selected branch is verified.
+            if (!$order || absint($order->get_meta('_rmm_order_branch_id')) !== $branch_id) {
+                continue;
+            }
+            if (count($data) >= 30) {
+                break;
+            }
+
             $table_no = $order->get_meta('_rmm_table_number');
             $order_type = $order->get_meta('_rmm_order_type') ?: ($table_no ? 'dine_in' : 'delivery');
 
@@ -549,14 +668,28 @@ class RestApiController {
             $allowed_statuses = array_unique(array_merge($allowed_statuses, $wc_statuses));
         }
 
-        if (!$new_status || !in_array($new_status, $allowed_statuses, true)) {
-            return new \WP_Error('rmm_invalid_status', __('وضعیت سفارش نامعتبر است.', 'fondogh-online-menu'), ['status' => 400]);
+        if (!$order_id || !$new_status || !in_array($new_status, $allowed_statuses, true)) {
+            return new \WP_Error('rmm_invalid_status', __('شناسه یا وضعیت سفارش نامعتبر است.', 'fondogh-online-menu'), ['status' => 400]);
         }
 
         $order = wc_get_order($order_id);
         $guard = $this->assert_order_branch($order);
         if (is_wp_error($guard)) {
             return $guard;
+        }
+
+        $current_user = wp_get_current_user();
+        $is_kitchen_only = in_array('kitchen_staff', (array) $current_user->roles, true)
+            && !user_can($current_user, 'manage_options')
+            && !user_can($current_user, 'manage_woocommerce')
+            && !user_can($current_user, 'manage_restaurant_menu');
+
+        if ($is_kitchen_only && ($order->get_status() !== 'processing' || $new_status !== 'completed')) {
+            return new \WP_Error(
+                'rmm_forbidden_order_transition',
+                __('پرسنل آشپزخانه فقط مجاز به تغییر وضعیت سفارش از «در حال انجام» به «تحویل‌شده» هستند.', 'fondogh-online-menu'),
+                ['status' => 403]
+            );
         }
 
         $order->update_status($new_status, sprintf(__('تغییر وضعیت از طریق پنل آشپزخانه رستوران به %s', 'fondogh-online-menu'), $new_status));
@@ -926,10 +1059,20 @@ class RestApiController {
         $clean_branches = is_array($branches_param)
             ? array_values(array_filter(array_map('absint', $branches_param)))
             : [];
+        $is_global_mgr = AuthController::is_global_manager();
+
         foreach ($clean_branches as $b_id) {
             if (!AuthController::user_can_access_branch($b_id)) {
                 return new \WP_Error('rmm_forbidden_branch', __('شما به یکی از شعبات اختصاصدادهشده دسترسی ندارید.', 'fondogh-online-menu'), ['status' => 403]);
             }
+        }
+
+        if (!$is_global_mgr && (!is_array($branches_param) || empty($clean_branches))) {
+            return new \WP_Error(
+                'rmm_branch_assignment_required',
+                __('برای ساخت یا ویرایش غذا، باید حداقل یک شعبهٔ مجاز انتخاب شده باشد.', 'fondogh-online-menu'),
+                ['status' => 400]
+            );
         }
 
         if ($product_id > 0) {
@@ -953,19 +1096,39 @@ class RestApiController {
             $product->set_short_description($desc);
         }
 
-        $regular_price = max(0, floatval($request->get_param('regular_price')));
-        $raw_sale      = $request->get_param('sale_price');
-        $sale_price    = ($raw_sale !== null && $raw_sale !== '' && floatval($raw_sale) > 0 && floatval($raw_sale) < $regular_price)
-            ? floatval($raw_sale)
-            : null;
+        $raw_regular_price = $request->get_param('regular_price');
+        $raw_sale = $request->get_param('sale_price');
 
-        $stock_status = sanitize_text_field($request->get_param('stock_status') ?: 'instock');
-        $stock_status = ($stock_status === 'outofstock') ? 'outofstock' : 'instock';
+        if (!is_numeric($raw_regular_price)) {
+            return new \WP_Error('rmm_invalid_regular_price', __('قیمت عادی باید یک عدد معتبر باشد.', 'fondogh-online-menu'), ['status' => 400]);
+        }
 
-        // Only update global WooCommerce price/stock when creating a new product or when user is a global manager.
-        // Branch-scoped managers update branch inventory rows below without overwriting other branches.
-        $is_global_mgr = AuthController::is_global_manager();
-        if ($product_id === 0 || $is_global_mgr) {
+        $regular_price = (float) $raw_regular_price;
+        $max_price = 99999999.99;
+        if ($regular_price < 0 || $regular_price > $max_price) {
+            return new \WP_Error('rmm_invalid_regular_price', __('قیمت عادی نمی‌تواند منفی یا بیشتر از ۹۹٬۹۹۹٬۹۹۹٫۹۹ باشد.', 'fondogh-online-menu'), ['status' => 400]);
+        }
+
+        $sale_price = null;
+        if ($raw_sale !== null && $raw_sale !== '') {
+            if (!is_numeric($raw_sale)) {
+                return new \WP_Error('rmm_invalid_sale_price', __('قیمت فروش ویژه باید یک عدد معتبر باشد.', 'fondogh-online-menu'), ['status' => 400]);
+            }
+
+            $sale_price = (float) $raw_sale;
+            if ($sale_price <= 0 || $sale_price >= $regular_price || $sale_price > $max_price) {
+                return new \WP_Error('rmm_invalid_sale_price', __('قیمت فروش ویژه باید بیشتر از صفر و کمتر از قیمت عادی باشد.', 'fondogh-online-menu'), ['status' => 400]);
+            }
+        }
+
+        $stock_status = sanitize_key($request->get_param('stock_status') ?: 'instock');
+        if (!in_array($stock_status, ['instock', 'outofstock'], true)) {
+            return new \WP_Error('rmm_invalid_stock_status', __('وضعیت موجودی نامعتبر است.', 'fondogh-online-menu'), ['status' => 400]);
+        }
+
+        // Only global managers may write the shared WooCommerce price/stock.
+        // Branch-scoped managers persist their values exclusively in branch inventory rows.
+        if ($is_global_mgr) {
             $product->set_regular_price($regular_price);
             $product->set_price($sale_price !== null ? $sale_price : $regular_price);
             $product->set_sale_price($sale_price !== null ? $sale_price : '');
@@ -1047,10 +1210,11 @@ class RestApiController {
         if (is_array($branches_param)) {
             update_post_meta($saved_id, '_rmm_branches', $clean_branches);
 
-            // Also update inventory table for each assigned branch
+            // Also update inventory table for each assigned branch.
+            $failed_inventory_branches = [];
             foreach ($clean_branches as $b_id) {
                 if ($b_id > 0) {
-                    \RMM\Branches\InventoryRepository::upsert([
+                    $inventory_saved = \RMM\Branches\InventoryRepository::upsert([
                         'product_id'    => $saved_id,
                         'branch_id'     => $b_id,
                         'regular_price' => $regular_price,
@@ -1058,11 +1222,29 @@ class RestApiController {
                         'stock_status'  => $stock_status,
                         'is_available'  => ($stock_status === 'instock') ? 1 : 0,
                     ]);
+
+                    if (!$inventory_saved) {
+                        $failed_inventory_branches[] = $b_id;
+                    }
                 }
             }
         }
 
         do_action('rmm_branch_inventory_updated', $saved_id, 0);
+
+        if (!empty($failed_inventory_branches)) {
+            error_log(sprintf(
+                'RMM product %d was saved but branch inventory failed for branch IDs: %s.',
+                $saved_id,
+                implode(',', $failed_inventory_branches)
+            ));
+
+            return new \WP_Error(
+                'rmm_partial_inventory_save',
+                __('محصول ذخیره شد، اما ثبت قیمت و موجودی در بعضی شعب با خطا مواجه شد. شناسه شعب ناموفق: ', 'fondogh-online-menu') . implode(', ', $failed_inventory_branches),
+                ['status' => 500, 'product_id' => $saved_id, 'failed_branch_ids' => $failed_inventory_branches]
+            );
+        }
 
         return rest_ensure_response([
             'success'    => true,

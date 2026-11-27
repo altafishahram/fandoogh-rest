@@ -226,7 +226,7 @@ class BranchContext {
         }
 
         $item = InventoryRepository::get_item($product->get_id(), $branch_id);
-        if ($item && $item->regular_price !== null && $item->regular_price > 0) {
+        if ($item && $item->regular_price !== null && $item->regular_price !== '') {
             return (string) $item->regular_price;
         }
 
@@ -251,7 +251,7 @@ class BranchContext {
             if ($item->sale_price !== null && $item->sale_price > 0) {
                 return (string) $item->sale_price;
             }
-            if ($item->regular_price !== null && $item->regular_price > 0) {
+            if ($item->regular_price !== null && $item->regular_price !== '') {
                 return '';
             }
         }
@@ -276,7 +276,7 @@ class BranchContext {
         if ($item) {
             if ($item->sale_price !== null && $item->sale_price > 0) {
                 return (string) $item->sale_price;
-            } elseif ($item->regular_price !== null && $item->regular_price > 0) {
+            } elseif ($item->regular_price !== null && $item->regular_price !== '') {
                 return (string) $item->regular_price;
             }
         }
@@ -378,7 +378,7 @@ class BranchContext {
                 $custom_price = null;
                 if ($item->sale_price !== null && $item->sale_price > 0) {
                     $custom_price = $item->sale_price;
-                } elseif ($item->regular_price !== null && $item->regular_price > 0) {
+                } elseif ($item->regular_price !== null && $item->regular_price !== '') {
                     $custom_price = $item->regular_price;
                 }
 
