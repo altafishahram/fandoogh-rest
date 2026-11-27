@@ -8,12 +8,17 @@ $required_classes = [
     '\\Elementor\\Widget_Base',
     '\\RMM\\Plugin',
     '\\RMM\\Elementor\\ElementorIntegration',
+    '\\RMM\\Core\\GitHubUpdater',
 ];
 
 foreach ($required_classes as $class_name) {
     if (!class_exists($class_name)) {
         WP_CLI::error('Required class is not loaded: ' . $class_name);
     }
+}
+
+if (false === has_filter('update_plugins_github.com') || false === has_filter('plugins_api')) {
+    WP_CLI::error('GitHub updater hooks were not registered.');
 }
 
 if (!did_action('elementor/loaded')) {
