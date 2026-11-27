@@ -3,12 +3,12 @@
  * Plugin Name: منو آنلاین فندق (Fondogh Online Menu)
  * Plugin URI:  https://fondogh-menu.ir
  * Description: افزونه جامع و هوشمند مدیریت منوی آنلاین و سفارش‌گیری رستوران و کافه بر پایه ووکامرس و المنتور (چندشعبه‌ای، چندزبانه، پنل اختصاصی فرانت‌اند PWA، حالت کاتالوگ و سفارش سر میز).
- * Version:     1.3.1
+ * Version:     1.3.2
  * Author:      تیم منو آنلاین فندق
  * Author URI:  https://fondogh-menu.ir
  * Text Domain: fondogh-online-menu
  * Domain Path: /languages
- * Update URI:  false
+ * Update URI:  https://github.com/altafishahram/fandoogh-rest
  * Requires at least: 5.8
  * Requires PHP: 7.4
  * WC requires at least: 5.0
@@ -22,7 +22,7 @@ if (!defined('ABSPATH')) {
 
 // Define Plugin Constants safely
 if (!defined('RMM_VERSION')) {
-    define('RMM_VERSION', '1.3.1');
+    define('RMM_VERSION', '1.3.2');
 }
 if (!defined('RMM_PLUGIN_FILE')) {
     define('RMM_PLUGIN_FILE', __FILE__);
@@ -41,8 +41,8 @@ if (!defined('RMM_PLUGIN_BASENAME')) {
 $autoloader_file = RMM_PLUGIN_PATH . 'includes/Autoloader.php';
 if (file_exists($autoloader_file)) {
     require_once $autoloader_file;
-    if (class_exists('RMM\\Autoloader')) {
-        \RMM\Autoloader::run();
+    if (class_exists('RMM\\\\Autoloader')) {
+        \\RMM\\Autoloader::run();
     }
 } else {
     add_action('admin_notices', function () {
@@ -54,24 +54,34 @@ if (file_exists($autoloader_file)) {
 }
 
 /**
+ * Register the GitHub updater before checking runtime dependencies.
+ * Updates must remain available even when WooCommerce is temporarily disabled.
+ */
+add_action('plugins_loaded', function () {
+    if (class_exists('RMM\\\\Core\\\\GitHubUpdater')) {
+        new \\RMM\\Core\\GitHubUpdater();
+    }
+}, 1);
+
+/**
  * Activation & Deactivation Hooks (Safe Wrapper)
  */
 register_activation_hook(__FILE__, function () {
     try {
-        if (class_exists('RMM\\Core\\Installer')) {
-            \RMM\Core\Installer::activate();
+        if (class_exists('RMM\\\\Core\\\\Installer')) {
+            \\RMM\\Core\\Installer::activate();
         }
-    } catch (\Throwable $e) {
+    } catch (\\Throwable $e) {
         error_log('Fondogh Menu Activation Error: ' . $e->getMessage());
     }
 });
 
 register_deactivation_hook(__FILE__, function () {
     try {
-        if (class_exists('RMM\\Core\\Installer')) {
-            \RMM\Core\Installer::deactivate();
+        if (class_exists('RMM\\\\Core\\\\Installer')) {
+            \\RMM\\Core\\Installer::deactivate();
         }
-    } catch (\Throwable $e) {
+    } catch (\\Throwable $e) {
         error_log('Fondogh Menu Deactivation Error: ' . $e->getMessage());
     }
 });
@@ -91,10 +101,10 @@ add_action('plugins_loaded', function () {
     }
 
     try {
-        if (class_exists('RMM\\Plugin')) {
-            \RMM\Plugin::instance();
+        if (class_exists('RMM\\\\Plugin')) {
+            \\RMM\\Plugin::instance();
         }
-    } catch (\Throwable $e) {
+    } catch (\\Throwable $e) {
         error_log('Fondogh Menu Launch Error: ' . $e->getMessage());
         add_action('admin_notices', function () use ($e) {
             echo '<div class="notice notice-error"><p>' .
