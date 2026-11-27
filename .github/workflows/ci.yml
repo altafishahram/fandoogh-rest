@@ -14,6 +14,65 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  integration-smoke:
+    name: WordPress + WooCommerce + Elementor smoke test
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: wordpress
+          MYSQL_USER: wp
+          MYSQL_PASSWORD: wp
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -proot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: curl, gd, intl, mbstring, mysqli, zip, xml
+          coverage: none
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Build plugin package
+        run: python tools/build-release.py
+
+      - name: Install WP-CLI
+        run: |
+          curl -sSLo wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+          php wp-cli.phar --info
+
+      - name: Install latest WordPress, WooCommerce, and Elementor
+        env:
+          WP_PATH: ${{ runner.temp }}/wordpress
+        run: |
+          set -euo pipefail
+          mkdir -p "$WP_PATH"
+          php wp-cli.phar core download --path="$WP_PATH" --version=latest
+          php wp-cli.phar config create --path="$WP_PATH" --dbname=wordpress --dbuser=wp --dbpass=wp --dbhost=127.0.0.1:3306 --skip-check
+          php wp-cli.phar db create --path="$WP_PATH"
+          php wp-cli.phar core install --path="$WP_PATH" --url=http://localhost --title="Fondogh CI" --admin_user=ci-admin --admin_password=ci-password --admin_email=ci@example.com --skip-email
+          php wp-cli.phar plugin install woocommerce --activate --path="$WP_PATH"
+          php wp-cli.phar plugin install elementor --activate --path="$WP_PATH"
+          php wp-cli.phar plugin install "$GITHUB_WORKSPACE/fondogh-online-menu.zip" --activate --force --path="$WP_PATH"
+
+      - name: Verify real plugin integrations
+        env:
+          WP_PATH: ${{ runner.temp }}/wordpress
+        run: php wp-cli.phar eval-file tests/integration/smoke.php --path="$WP_PATH"
+
   unit-tests:
     name: PHPUnit (PHP ${{ matrix.php }})
     runs-on: ubuntu-latest
