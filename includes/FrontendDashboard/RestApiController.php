@@ -497,8 +497,8 @@ class RestApiController {
 
         $regular_price = (float) $raw_regular_price;
         $max_price = 99999999.99; // DECIMAL(10,2) capacity of the branch inventory table.
-        if ($regular_price <= 0 || $regular_price > $max_price) {
-            return new \WP_Error('rmm_invalid_regular_price', __('قیمت عادی باید بیشتر از صفر و حداکثر ۹۹٬۹۹۹٬۹۹۹٫۹۹ باشد.', 'fondogh-online-menu'), ['status' => 400]);
+        if ($regular_price < 0 || $regular_price > $max_price) {
+            return new \WP_Error('rmm_invalid_regular_price', __('قیمت عادی نمی‌تواند منفی باشد و نباید از ۹۹٬۹۹۹٬۹۹۹٫۹۹ بیشتر شود.', 'fondogh-online-menu'), ['status' => 400]);
         }
 
         $sale_price = null;
