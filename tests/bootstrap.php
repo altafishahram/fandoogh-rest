@@ -163,5 +163,6 @@ class RMM_Test_Wpdb {
 
 $GLOBALS['wpdb'] = new RMM_Test_Wpdb();
 
+require_once __DIR__ . '/stubs/BranchTaxonomy.php';
 require_once dirname(__DIR__) . '/includes/Branches/InventoryRepository.php';
 require_once dirname(__DIR__) . '/includes/FrontendDashboard/AuthController.php';
