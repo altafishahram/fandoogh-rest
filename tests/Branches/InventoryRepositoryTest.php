@@ -12,7 +12,7 @@ class InventoryRepositoryTest extends TestCase {
 
         $cache = new ReflectionProperty(InventoryRepository::class, 'cache');
         $cache->setAccessible(true);
-        $cache->setValue([]);
+        $cache->setValue(null, []);
     }
 
     public function test_upsert_rejects_missing_product_or_branch_ids() {
