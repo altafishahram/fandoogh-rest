@@ -163,13 +163,53 @@
         var activeModalImages = [];
         var activeLightboxIndex = 0;
 
+        var modalReturnFocus = null;
+
+        function getModalFocusable($modal) {
+            return $modal.find('a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, [contenteditable="true"], [tabindex]:not([tabindex="-1"])').filter(':visible');
+        }
+
+        function openAccessibleModal($modal, duration, opener) {
+            if (!$modal || !$modal.length) return;
+            if (opener && opener.length) {
+                modalReturnFocus = opener.get(0);
+            } else if (!modalReturnFocus) {
+                modalReturnFocus = document.activeElement;
+            }
+            $modal.attr({
+                role: 'dialog',
+                'aria-modal': 'true',
+                'aria-hidden': 'false'
+            });
+            $('body, html').addClass('rmm-modal-open');
+            $modal.stop(true, true).fadeIn(duration || 150, function () {
+                var $focusable = getModalFocusable($modal);
+                var $target = $modal.find('.rmm-modal-close-btn, .rmm-modal-close, [data-modal-autofocus]').filter(':visible').first();
+                if (!$target.length) $target = $focusable.first();
+                if ($target.length) $target.trigger('focus');
+                else $modal.attr('tabindex', '-1').trigger('focus');
+            });
+        }
+
+        function closeAccessibleModal($modal, duration) {
+            if (!$modal || !$modal.length) return;
+            $modal.attr('aria-hidden', 'true').stop(true, true).fadeOut(duration || 200, function () {
+                var target = modalReturnFocus;
+                modalReturnFocus = null;
+                if (target && document.documentElement.contains(target) && $(target).is(':visible') && !$(target).is(':disabled')) {
+                    target.focus();
+                }
+            });
+            $('body, html').removeClass('rmm-modal-open');
+        }
+
         function ensureModalContainer() {
             var $m = $('#rmm-modifiers-modal');
             if (!$m.length) {
                 $('body').append(
-                    '<div id="rmm-modifiers-modal" class="rmm-modal-backdrop" style="display:none;">' +
+                    '<div id="rmm-modifiers-modal" class="rmm-modal-backdrop" style="display:none;" role="dialog" aria-modal="true" aria-hidden="true" aria-label="جزئیات غذا">' +
                     '    <div class="rmm-modal-box">' +
-                    '        <button class="rmm-modal-close-btn" type="button" aria-label="Close">&times;</button>' +
+                    '        <button class="rmm-modal-close-btn" type="button" aria-label="بستن پنجره">&times;</button>' +
                     '        <div id="rmm-modal-content"></div>' +
                     '    </div>' +
                     '</div>'
@@ -590,8 +630,8 @@
             if (action === 'elementor_template' && templateId && templateId != '0') {
                 var tplContainer = ensureModalContainer();
                 tplContainer.modalContent.html('<div class="rmm-modal-loading-box"><span class="rmm-modal-spinner">⏳</span><p>در حال بارگذاری قالب المنتور...</p></div>');
-                tplContainer.modal.fadeIn(200);
-                $('body, html').addClass('rmm-modal-open');
+                openAccessibleModal(tplContainer.modal, 200, $(e.target).closest('button, a, [tabindex]').first());
+
 
                 var nonceVal = (window.rmmConfig && window.rmmConfig.nonce) ? window.rmmConfig.nonce : '';
                 var langVal = (window.rmmConfig && window.rmmConfig.active_lang) ? window.rmmConfig.active_lang : 'fa';
@@ -651,8 +691,8 @@
             // 1. Instant hit in client-side memory cache (0ms latency!)
             if (modalDataCache[cacheKey]) {
                 renderFoodDetailsModal(modalDataCache[cacheKey]);
-                $curModal.fadeIn(150);
-                $('body, html').addClass('rmm-modal-open');
+                openAccessibleModal($curModal, 150, $(document.activeElement));
+
                 return;
             }
 
@@ -680,8 +720,8 @@
                 $curContent.html('<div class="rmm-modal-loading-box"><span class="rmm-modal-spinner">🍲</span><p style="margin:0; font-weight:600; color:#475569;">' + escHtml(t('loading', 'در حال بارگذاری جزئیات غذا...')) + '</p></div>');
             }
 
-            $curModal.fadeIn(150);
-            $('body, html').addClass('rmm-modal-open');
+            openAccessibleModal($curModal, 150, $(document.activeElement));
+
 
             // 3. Perform background fetch
             $.ajax({
@@ -1107,8 +1147,7 @@
 
                     $btn.text('✓ ' + t('added_to_cart', 'به سبد اضافه شد'));
                     setTimeout(function () {
-                        $('#rmm-modifiers-modal').fadeOut(200);
-                        $('body, html').removeClass('rmm-modal-open');
+                        closeAccessibleModal($('#rmm-modifiers-modal'), 200);
                         $btn.prop('disabled', false).html(originalBtnHtml);
                     }, 700);
 
@@ -1128,24 +1167,44 @@
         $(document).on('click', '.rmm-modal-close-btn, #rmm-modal-close-btn', function (e) {
             e.preventDefault();
             e.stopPropagation();
-            $('#rmm-modifiers-modal, .rmm-modal-backdrop').fadeOut(200);
-            $('body, html').removeClass('rmm-modal-open');
+            $('.rmm-modal-backdrop:visible').each(function () {
+                closeAccessibleModal($(this), 200);
+            });
         });
 
         $(document).on('click', '#rmm-modifiers-modal, .rmm-modal-backdrop', function (e) {
             if (e.target === this) {
-                $(this).fadeOut(200);
-                $('body, html').removeClass('rmm-modal-open');
+                closeAccessibleModal($(this), 200);
             }
         });
 
-        // Close all modals on ESC key
+        // Keyboard support: keep focus inside the active dialog and close it with Escape.
         $(document).on('keydown', function (e) {
+            var $activeDialog = $('.rmm-modal-backdrop:visible[aria-modal="true"]').last();
+            if (e.key === 'Tab' && $activeDialog.length) {
+                var $focusable = getModalFocusable($activeDialog);
+                if (!$focusable.length) {
+                    e.preventDefault();
+                    $activeDialog.attr('tabindex', '-1').trigger('focus');
+                    return;
+                }
+                var first = $focusable.get(0);
+                var last = $focusable.get($focusable.length - 1);
+                if (e.shiftKey && (document.activeElement === first || !$activeDialog.get(0).contains(document.activeElement))) {
+                    e.preventDefault();
+                    last.focus();
+                } else if (!e.shiftKey && (document.activeElement === last || !$activeDialog.get(0).contains(document.activeElement))) {
+                    e.preventDefault();
+                    first.focus();
+                }
+                return;
+            }
             if (e.key === 'Escape' || e.keyCode === 27) {
-                $('#rmm-modifiers-modal, .rmm-modal-backdrop').fadeOut(200);
+                $('.rmm-modal-backdrop:visible').each(function () {
+                    closeAccessibleModal($(this), 200);
+                });
                 $('#rmm-lightbox-modal').fadeOut(200);
                 if (entranceModal && entranceModal.length) entranceModal.fadeOut(200);
-                $('body, html').removeClass('rmm-modal-open');
             }
         });
 
