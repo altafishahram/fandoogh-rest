@@ -296,7 +296,11 @@
         return fetch(url, options)
             .then(function (res) {
                 setConnectionState(true);
-                return res.json();
+                return res.json().catch(function (err) {
+                    console.error('Invalid API response:', endpoint, err);
+                    showToast('پاسخ نامعتبر از سرور دریافت شد.', 'error');
+                    return null;
+                });
             })
             .catch(function (err) {
                 console.error('API Error:', endpoint, err);
