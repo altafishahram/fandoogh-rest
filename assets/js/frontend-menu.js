@@ -1891,8 +1891,7 @@
             }, $btn);
 
             setTimeout(function () {
-                $('#rmm-modifiers-modal').fadeOut(200);
-                $('body, html').removeClass('rmm-modal-open');
+                closeAccessibleModal($('#rmm-modifiers-modal'), 200);
             }, 450);
         });
 
