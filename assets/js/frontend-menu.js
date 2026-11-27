@@ -608,7 +608,7 @@
                     },
                     success: function (res) {
                         if (res && res.success && res.data && res.data.html) {
-                            tplContainer.modalContent.html('<button class="rmm-modal-close-btn" type="button" aria-label="Close">&times;</button><div class="rmm-custom-template-wrap">' + res.data.html + '</div>');
+                            tplContainer.modalContent.html('<div class="rmm-custom-template-wrap">' + res.data.html + '</div>');
                         } else {
                             loadDefaultModal(productId, $card);
                         }
@@ -665,7 +665,6 @@
                 var cardIngredients = $card.find('.rmm-food-ingredients').text().trim() || '';
 
                 var optHtml = '<div class="rmm-modal-hero-wrap">' +
-                    '<button class="rmm-modal-close-btn" type="button" aria-label="' + escHtml(t('close', 'بستن')) + '">&times;</button>' +
                     (cardImg ? '<img src="' + escHtml(cardImg) + '" class="rmm-modal-hero-img" alt="' + escHtml(cardTitle) + '">' : '') +
                     '</div>' +
                     '<div class="rmm-modal-body">' +
@@ -701,16 +700,16 @@
                             renderFoodDetailsModal(res.data);
                         } else {
                             var errMsg = (res && res.data && res.data.message) ? res.data.message : t('error_loading', 'خطا در دریافت اطلاعات غذا.');
-                            $curContent.html('<button class="rmm-modal-close-btn" type="button" aria-label="Close">&times;</button><p style="color:#ef4444; text-align:center; padding:40px 20px;">' + escHtml(errMsg) + '</p>');
+                            $curContent.html('<p style="color:#ef4444; text-align:center; padding:40px 20px;">' + escHtml(errMsg) + '</p>');
                         }
                     } catch (renderErr) {
                         console.error('Error rendering food modal:', renderErr);
-                        $curContent.html('<button class="rmm-modal-close-btn" type="button" aria-label="Close">&times;</button><p style="color:#ef4444; text-align:center; padding:40px 20px;">' + escHtml(t('error_loading', 'خطا در نمایش اطلاعات غذا.')) + '</p>');
+                        $curContent.html('<p style="color:#ef4444; text-align:center; padding:40px 20px;">' + escHtml(t('error_loading', 'خطا در نمایش اطلاعات غذا.')) + '</p>');
                     }
                 },
                 error: function (xhr, status, error) {
                     console.error('AJAX error loading food modal:', status, error);
-                    $curContent.html('<button class="rmm-modal-close-btn" type="button" aria-label="Close">&times;</button><p style="color:#ef4444; text-align:center; padding:40px 20px;">' + escHtml(t('error_server', 'خطای ارتباط با سرور.')) + '</p>');
+                    $curContent.html('<p style="color:#ef4444; text-align:center; padding:40px 20px;">' + escHtml(t('error_server', 'خطای ارتباط با سرور.')) + '</p>');
                 }
             });
         }
@@ -735,7 +734,6 @@
                 });
 
                 html += '<div class="rmm-modal-hero-wrap rmm-modal-slider-wrap" data-current-slide="0" data-total-slides="' + data.images.length + '">' +
-                    '<button class="rmm-modal-close-btn" type="button" aria-label="' + escHtml(t('close', 'بستن')) + '">&times;</button>' +
                     '<div class="rmm-modal-slider-viewport">' +
                     '<div class="rmm-modal-slider-track">' + slidesHtml + '</div>' +
                     '</div>' +
@@ -748,15 +746,12 @@
                     '</div>';
             } else if (data.image) {
                 html += '<div class="rmm-modal-hero-wrap">' +
-                    '<button class="rmm-modal-close-btn" type="button" aria-label="' + escHtml(t('close', 'بستن')) + '">&times;</button>' +
                     '<img src="' + escHtml(data.image) + '" class="rmm-modal-hero-img" alt="' + escHtml(data.name) + '">' +
                     '<div class="rmm-modal-zoom-hint">🔍 ' + escHtml(t('view_image', 'مشاهده بزرگ‌تر')) + '</div>' +
                     (data.badge ? '<span class="rmm-modal-badge-overlay ' + escHtml(data.badge.class || '') + '">' + (data.badge.image ? '<img src="' + escHtml(data.badge.image) + '" class="rmm-badge-icon-img" alt=""> ' : (data.badge.icon ? escHtml(data.badge.icon) + ' ' : '')) + escHtml(data.badge.label || '') + '</span>' : '') +
                     '</div>';
             } else {
-                html += '<div style="position:relative; padding-top:20px; padding-left:20px;">' +
-                    '<button class="rmm-modal-close-btn" type="button" aria-label="' + escHtml(t('close', 'بستن')) + '" style="top:14px; left:14px;">&times;</button>' +
-                    '</div>';
+                html += '<div style="position:relative; padding-top:20px; padding-left:20px;"></div>';
             }
 
             // 2. Modal Body
@@ -861,9 +856,9 @@
                 html += '<div class="rmm-modal-qty-container">' +
                     '<span class="rmm-modal-qty-label">' + escHtml(t('quantity', 'تعداد سفارش:')) + '</span>' +
                     '<div class="rmm-qty-controls">' +
-                    '<button type="button" class="rmm-qty-btn rmm-qty-minus">−</button>' +
-                    '<input type="number" class="rmm-qty-val" name="quantity" value="1" min="1" max="99" readonly>' +
                     '<button type="button" class="rmm-qty-btn rmm-qty-plus">+</button>' +
+                    '<input type="number" class="rmm-qty-val" name="quantity" value="1" min="1" max="99" readonly>' +
+                    '<button type="button" class="rmm-qty-btn rmm-qty-minus">−</button>' +
                     '</div>' +
                     '</div>';
 
@@ -884,9 +879,9 @@
                 html += '<div class="rmm-modal-qty-container">' +
                     '<span class="rmm-modal-qty-label">' + escHtml(t('quantity', 'تعداد انتخاب:')) + '</span>' +
                     '<div class="rmm-qty-controls">' +
-                    '<button type="button" class="rmm-qty-btn rmm-qty-minus">−</button>' +
-                    '<input type="number" class="rmm-qty-val" name="quantity" value="1" min="1" max="99" readonly>' +
                     '<button type="button" class="rmm-qty-btn rmm-qty-plus">+</button>' +
+                    '<input type="number" class="rmm-qty-val" name="quantity" value="1" min="1" max="99" readonly>' +
+                    '<button type="button" class="rmm-qty-btn rmm-qty-minus">−</button>' +
                     '</div>' +
                     '</div>';
 
@@ -899,7 +894,7 @@
                     'data-title="' + escHtml(data.name) + '" ' +
                     'data-image="' + escHtml(data.image || '') + '" ' +
                     'data-hide-price="' + (hideCatalogPrice ? '1' : '0') + '">' +
-                    '<span>+ ' + escHtml(t('add_to_selection_list', 'افزودن به لیست انتخاب')) + '</span>' +
+                    '<span>+ ' + escHtml(t('add_to_list', 'افزودن به لیست')) + '</span>' +
                     modalBtnPriceHtml +
                     '</button>';
 
@@ -1674,9 +1669,9 @@
                     '  <div class="rmm-catalog-item-unit-price">' + escHtml(t('unit_price_label', 'قیمت واحد:')) + ' ' + escHtml(formatCatalogPrice(p)) + '</div>' +
                     '  <div class="rmm-catalog-item-bottom">' +
                     '    <div class="rmm-catalog-item-qty">' +
-                    '      <button type="button" class="rmm-cat-qty-btn rmm-cat-qty-minus" data-index="' + idx + '" aria-label="' + escHtml(t('decrease_qty', 'کاهش تعداد')) + '">−</button>' +
-                    '      <span class="rmm-cat-qty-num">' + q + '</span>' +
                     '      <button type="button" class="rmm-cat-qty-btn rmm-cat-qty-plus" data-index="' + idx + '" aria-label="' + escHtml(t('increase_qty', 'افزایش تعداد')) + '">+</button>' +
+                    '      <span class="rmm-cat-qty-num">' + q + '</span>' +
+                    '      <button type="button" class="rmm-cat-qty-btn rmm-cat-qty-minus" data-index="' + idx + '" aria-label="' + escHtml(t('decrease_qty', 'کاهش تعداد')) + '">−</button>' +
                     '    </div>' +
                     '    <div class="rmm-catalog-item-subtotal">' +
                     '      <span class="rmm-catalog-sub-label">' + escHtml(t('line_amount_label', 'مبلغ:')) + '</span> ' +

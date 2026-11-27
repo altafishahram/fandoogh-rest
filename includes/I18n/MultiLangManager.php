@@ -414,7 +414,7 @@ class MultiLangManager {
                 'added_to_cart'     => 'به سبد سفارش اضافه شد',
                 'my_selection_list' => 'لیست انتخاب‌های من',
                 'add_to_list'       => 'افزودن به لیست',
-                'add_to_selection_list' => 'افزودن به لیست انتخاب',
+                'add_to_selection_list' => 'افزودن به لیست',
                 'in_list'           => 'در لیست',
                 'added_to_list'     => 'به لیست اضافه شد',
                 'catalog_items_unit'=> 'مورد',

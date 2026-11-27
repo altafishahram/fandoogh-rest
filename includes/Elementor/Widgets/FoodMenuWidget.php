@@ -189,6 +189,30 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         );
 
         $this->add_control(
+            'show_ingredients',
+            [
+                'label'        => __('نمایش ترکیبات و مواد اولیه در کارت', 'fondogh-online-menu'),
+                'type'         => \Elementor\Controls_Manager::SWITCHER,
+                'default'      => 'yes',
+                'return_value' => 'yes',
+            ]
+        );
+
+        $this->add_control(
+            'desc_line_clamp',
+            [
+                'label'   => __('تعداد خطوط توضیحات غذا', 'fondogh-online-menu'),
+                'type'    => \Elementor\Controls_Manager::SELECT,
+                'default' => '1',
+                'options' => [
+                    '1'    => __('۱ خط (خلاصه)', 'fondogh-online-menu'),
+                    '2'    => __('۲ خط', 'fondogh-online-menu'),
+                    'full' => __('نمایش کامل', 'fondogh-online-menu'),
+                ],
+            ]
+        );
+
+        $this->add_control(
             'hide_out_of_stock',
             [
                 'label'        => __('مخفی‌سازی غذاهای ناموجود', 'fondogh-online-menu'),
@@ -439,7 +463,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
             ]
         );
 
-        $this->add_control(
+        $this->add_responsive_control(
             'card_border_radius',
             [
                 'label'      => __('انحنای لبه کارت (Border Radius)', 'fondogh-online-menu'),
@@ -459,19 +483,31 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
             ]
         );
 
-        $this->add_control(
+        $this->add_responsive_control(
             'card_padding',
             [
                 'label'      => __('فاصله داخلی کارت (Padding)', 'fondogh-online-menu'),
                 'type'       => \Elementor\Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', 'em'],
                 'selectors'  => [
-                    '{{WRAPPER}} .rmm-card-details' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                    '{{WRAPPER}} .rmm-food-card .rmm-card-details' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
                 ],
             ]
         );
 
-        $this->add_control(
+        $this->add_responsive_control(
+            'list_card_padding',
+            [
+                'label'      => __('فاصله داخلی کارت در حالت لیست (Padding)', 'fondogh-online-menu'),
+                'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', 'em'],
+                'selectors'  => [
+                    '{{WRAPPER}} .rmm-view-list .rmm-food-card' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_responsive_control(
             'cards_gap',
             [
                 'label'      => __('فاصله بین کارت‌ها (Grid Gap)', 'fondogh-online-menu'),
@@ -499,10 +535,10 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
             ]
         );
 
-        $this->add_control(
+        $this->add_responsive_control(
             'card_image_height',
             [
-                'label'      => __('ارتفاع تصویر', 'fondogh-online-menu'),
+                'label'      => __('ارتفاع تصویر (حالت شبکه)', 'fondogh-online-menu'),
                 'type'       => \Elementor\Controls_Manager::SLIDER,
                 'size_units' => ['px', 'vh'],
                 'range'      => [
@@ -512,12 +548,48 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
                     ],
                 ],
                 'selectors'  => [
-                    '{{WRAPPER}} .rmm-card-image-wrap' => 'height: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}} .rmm-view-grid .rmm-card-image-wrap, {{WRAPPER}} .rmm-menu-container:not(.rmm-view-list) .rmm-card-image-wrap' => 'height: {{SIZE}}{{UNIT}};',
                 ],
             ]
         );
 
-        $this->add_control(
+        $this->add_responsive_control(
+            'list_image_width',
+            [
+                'label'      => __('عرض تصویر (حالت لیست)', 'fondogh-online-menu'),
+                'type'       => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'range'      => [
+                    'px' => [
+                        'min' => 50,
+                        'max' => 280,
+                    ],
+                ],
+                'selectors'  => [
+                    '{{WRAPPER}} .rmm-view-list .rmm-card-image-wrap' => 'width: {{SIZE}}{{UNIT}}; min-width: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_responsive_control(
+            'list_image_height',
+            [
+                'label'      => __('ارتفاع تصویر (حالت لیست)', 'fondogh-online-menu'),
+                'type'       => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'range'      => [
+                    'px' => [
+                        'min' => 50,
+                        'max' => 280,
+                    ],
+                ],
+                'selectors'  => [
+                    '{{WRAPPER}} .rmm-view-list .rmm-card-image-wrap' => 'height: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_responsive_control(
             'card_image_border_radius',
             [
                 'label'      => __('گردی کادر تصویر', 'fondogh-online-menu'),
@@ -556,7 +628,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
                 'label'     => __('رنگ عنوان غذا', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
-                    '{{WRAPPER}} .rmm-food-title' => 'color: {{VALUE}};',
+                    '{{WRAPPER}} .rmm-food-card .rmm-food-title' => 'color: {{VALUE}};',
                 ],
             ]
         );
@@ -566,7 +638,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
             [
                 'name'     => 'title_typography',
                 'label'    => __('تایپوگرافی عنوان', 'fondogh-online-menu'),
-                'selector' => '{{WRAPPER}} .rmm-food-title',
+                'selector' => '{{WRAPPER}} .rmm-food-card .rmm-food-title',
             ]
         );
 
@@ -586,7 +658,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
                 'label'     => __('رنگ قیمت', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
-                    '{{WRAPPER}} .rmm-food-price, {{WRAPPER}} .rmm-food-price .woocommerce-Price-amount' => 'color: {{VALUE}};',
+                    '{{WRAPPER}} .rmm-food-card .rmm-food-price, {{WRAPPER}} .rmm-food-card .rmm-food-price .woocommerce-Price-amount' => 'color: {{VALUE}};',
                 ],
             ]
         );
@@ -596,7 +668,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
             [
                 'name'     => 'price_typography',
                 'label'    => __('تایپوگرافی قیمت', 'fondogh-online-menu'),
-                'selector' => '{{WRAPPER}} .rmm-food-price',
+                'selector' => '{{WRAPPER}} .rmm-food-card .rmm-food-price',
             ]
         );
 
@@ -613,10 +685,10 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'ingredients_color',
             [
-                'label'     => __('رنگ متن ترکیبات', 'fondogh-online-menu'),
+                'label'     => __('رنگ متن ترکیبات و توضیحات', 'fondogh-online-menu'),
                 'type'      => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
-                    '{{WRAPPER}} .rmm-food-ingredients' => 'color: {{VALUE}};',
+                    '{{WRAPPER}} .rmm-food-card .rmm-food-ingredients, {{WRAPPER}} .rmm-food-card .rmm-food-desc' => 'color: {{VALUE}};',
                 ],
             ]
         );
@@ -625,8 +697,8 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
             \Elementor\Group_Control_Typography::get_type(),
             [
                 'name'     => 'ingredients_typography',
-                'label'    => __('تایپوگرافی ترکیبات', 'fondogh-online-menu'),
-                'selector' => '{{WRAPPER}} .rmm-food-ingredients',
+                'label'    => __('تایپوگرافی ترکیبات و توضیحات', 'fondogh-online-menu'),
+                'selector' => '{{WRAPPER}} .rmm-food-card .rmm-food-ingredients, {{WRAPPER}} .rmm-food-card .rmm-food-desc',
             ]
         );
 
@@ -1935,7 +2007,9 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         }
 
         $view_class = ($default_view === 'list') ? 'rmm-view-list' : 'rmm-view-grid';
-        $grid_class = 'rmm-menu-container rmm-style-' . esc_attr($style) . ' ' . $view_class . ' rmm-cols-' . esc_attr($columns);
+        $desc_lines = $settings['desc_line_clamp'] ?? '1';
+        $desc_class = ($desc_lines === 'full') ? 'rmm-desc-lines-full' : (($desc_lines === '2') ? 'rmm-desc-lines-2' : 'rmm-desc-lines-1');
+        $grid_class = 'rmm-menu-container rmm-style-' . esc_attr($style) . ' ' . $view_class . ' rmm-cols-' . esc_attr($columns) . ' ' . $desc_class;
         $wrapper_class = 'rmm-menu-widget-wrapper' . ($style === 'oriental' ? ' rmm-theme-oriental' : '');
 
         $context_data = [
@@ -1944,6 +2018,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
             'template_id'       => $template_id,
             'popup_id'          => $popup_id,
             'active_lang'       => $active_lang,
+            'show_ingredients'  => ($settings['show_ingredients'] ?? 'yes') === 'yes',
             'str_digital'       => $str_digital,
             'str_out_of_stock'  => $str_out_of_stock,
             'str_order_wa'      => $str_order_wa,
@@ -2265,7 +2340,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
                 <?php if (!empty($food_desc)) : ?>
                     <p class="rmm-food-desc"><?php echo esc_html($food_desc); ?></p>
                 <?php endif; ?>
-                <?php if ($ingredients && $ingredients !== $food_desc) : ?>
+                <?php if (!empty($context_data['show_ingredients']) && $ingredients && $ingredients !== $food_desc) : ?>
                     <p class="rmm-food-ingredients"><?php echo esc_html($ingredients); ?></p>
                 <?php endif; ?>
 

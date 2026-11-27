@@ -65,9 +65,9 @@ class CssCompiler {
   background:    var(--rmm-ds-card)        !important;
   border:        1px solid var(--rmm-ds-border) !important;
   border-radius: var(--rmm-ds-radius-card) !important;
-  padding:       var(--rmm-ds-pad-card)    !important;
+  padding:       var(--rmm-ds-pad-card);
   box-shadow:    var(--rmm-ds-shadow-card) !important;
-  color:         var(--rmm-ds-text)        !important;
+  color:         var(--rmm-ds-text);
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 .rmm-food-card:hover {
@@ -99,31 +99,31 @@ class CssCompiler {
 /* List view image dimensions */
 .rmm-food-card.rmm-card-layout--list .rmm-card-image-wrap,
 [data-card-layout="list"] .rmm-food-card .rmm-card-image-wrap {
-  width: var(--rmm-ds-card-image-list-size) !important;
-  min-width: var(--rmm-ds-card-image-list-size) !important;
-  height: var(--rmm-ds-card-image-list-size) !important;
-  aspect-ratio: 1 / 1 !important;
+  width: var(--rmm-ds-card-image-list-size);
+  min-width: var(--rmm-ds-card-image-list-size);
+  height: var(--rmm-ds-card-image-list-size);
+  aspect-ratio: 1 / 1;
 }
 
 /* Card titles & text */
 .rmm-food-card .rmm-food-title,
 .rmm-food-card h3.rmm-title {
-  color:       var(--rmm-ds-text)        !important;
-  font-size:   var(--rmm-ds-title-size)  !important;
-  font-weight: var(--rmm-ds-font-weight) !important;
+  color:       var(--rmm-ds-text);
+  font-size:   var(--rmm-ds-title-size);
+  font-weight: var(--rmm-ds-font-weight);
   margin-bottom: 6px;
 }
 .rmm-food-card .rmm-food-desc,
 .rmm-food-card .rmm-desc {
-  color:     var(--rmm-ds-text-secondary) !important;
-  font-size: var(--rmm-ds-desc-size)      !important;
+  color:     var(--rmm-ds-text-secondary);
+  font-size: var(--rmm-ds-desc-size);
   line-height: 1.5;
 }
 .rmm-food-card .rmm-food-price,
 .rmm-food-card .rmm-price {
-  color:       var(--rmm-ds-primary)    !important;
-  font-size:   var(--rmm-ds-price-size) !important;
-  font-weight: 700                      !important;
+  color:       var(--rmm-ds-primary);
+  font-size:   var(--rmm-ds-price-size);
+  font-weight: 700;
 }
 
 /* Badge (discount / chef special) */
