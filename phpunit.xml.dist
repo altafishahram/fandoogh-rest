@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="tests/bootstrap.php"
+         colors="true"
+         convertDeprecationsToExceptions="true"
+         failOnRisky="true"
+         failOnWarning="true">
+    <testsuites>
+        <testsuite name="Fondogh Online Menu">
+            <directory>tests/Branches</directory>
+            <directory>tests/FrontendDashboard</directory>
+            <directory>tests/Elementor</directory>
+            <directory>tests/Updates</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

@@ -3,16 +3,17 @@
  * Plugin Name: منو آنلاین فندق (Fondogh Online Menu)
  * Plugin URI:  https://fondogh-menu.ir
  * Description: افزونه جامع و هوشمند مدیریت منوی آنلاین و سفارش‌گیری رستوران و کافه بر پایه ووکامرس و المنتور (چندشعبه‌ای، چندزبانه، پنل اختصاصی فرانت‌اند PWA، حالت کاتالوگ و سفارش سر میز).
- * Version:     1.3.1
+ * Version:     1.3.2
  * Author:      تیم منو آنلاین فندق
  * Author URI:  https://fondogh-menu.ir
  * Text Domain: fondogh-online-menu
  * Domain Path: /languages
- * Update URI:  false
+ * Update URI:  https://github.com/altafishahram/fandoogh-rest
  * Requires at least: 5.8
  * Requires PHP: 7.4
  * WC requires at least: 5.0
- * Elementor tested up to: 3.25
+ * WC tested up to: 11.3.1
+ * Elementor tested up to: 4.4.2
  */
 
 if (!defined('ABSPATH')) {
@@ -21,7 +22,7 @@ if (!defined('ABSPATH')) {
 
 // Define Plugin Constants safely
 if (!defined('RMM_VERSION')) {
-    define('RMM_VERSION', '1.3.1');
+    define('RMM_VERSION', '1.3.2');
 }
 if (!defined('RMM_PLUGIN_FILE')) {
     define('RMM_PLUGIN_FILE', __FILE__);
@@ -51,6 +52,16 @@ if (file_exists($autoloader_file)) {
     });
     return;
 }
+
+/**
+ * Register the GitHub updater before checking runtime dependencies.
+ * Updates must remain available even when WooCommerce is temporarily disabled.
+ */
+add_action('plugins_loaded', function () {
+    if (class_exists('RMM\\Core\\GitHubUpdater')) {
+        new \RMM\Core\GitHubUpdater();
+    }
+}, 1);
 
 /**
  * Activation & Deactivation Hooks (Safe Wrapper)

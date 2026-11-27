@@ -2200,19 +2200,9 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
 
             <?php endif; ?>
 
-            <!-- MODIFIERS POPUP MODAL (Single Reusable Modal) -->
-            <div id="rmm-modifiers-modal" class="rmm-modal-backdrop" style="display:none;">
-                <div class="rmm-modal-box">
-                    <button class="rmm-modal-close-btn">&times;</button>
-                    <div id="rmm-modal-content">
-                        <!-- Loaded via AJAX -->
-                    </div>
-                </div>
-            </div>
-
             <?php if (($settings['show_theme_toggle'] ?? 'yes') === 'yes') : ?>
                 <!-- Day / Night Theme Toggle Button (تم شرقی و کل افزونه) -->
-                <button id="theme-toggle-btn" class="rmm-theme-toggle-btn" type="button" aria-label="<?php esc_attr_e('تغییر تم (روز / شب)', 'fondogh-online-menu'); ?>" title="<?php esc_attr_e('تغییر تم (روز / شب)', 'fondogh-online-menu'); ?>">
+                <button class="rmm-theme-toggle-btn" type="button" aria-label="<?php esc_attr_e('تغییر تم (روز / شب)', 'fondogh-online-menu'); ?>" title="<?php esc_attr_e('تغییر تم (روز / شب)', 'fondogh-online-menu'); ?>">
                     <span class="rmm-theme-icon">🌓</span>
                     <span class="rmm-theme-text"><?php echo esc_html__('تغییر تم (روز / شب)', 'fondogh-online-menu'); ?></span>
                 </button>
