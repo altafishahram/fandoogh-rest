@@ -12,7 +12,8 @@
  * Requires at least: 5.8
  * Requires PHP: 7.4
  * WC requires at least: 5.0
- * Elementor tested up to: 3.25
+ * WC tested up to: 11.3.1
+ * Elementor tested up to: 4.4.2
  */
 
 if (!defined('ABSPATH')) {
