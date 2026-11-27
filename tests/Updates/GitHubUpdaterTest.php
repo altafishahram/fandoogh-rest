@@ -70,6 +70,16 @@ class GitHubUpdaterTest extends TestCase {
         );
     }
 
+    public function test_rejects_malformed_release_version() {
+        $this->assertFalse(
+            GitHubUpdater::create_update_object(
+                $this->release('latest'),
+                '1.3.1',
+                'fondogh-online-menu/fondogh-online-menu.php'
+            )
+        );
+    }
+
     public function test_rejects_release_without_expected_package_asset() {
         $release = $this->release();
         $release['assets'][0]['name'] = 'source-code.zip';
