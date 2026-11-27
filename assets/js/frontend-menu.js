@@ -864,7 +864,7 @@
 
             // Portions / Sizes
             if (data.portions && data.portions.length > 0) {
-                html += '<div class="rmm-modal-section-box">' +
+                html += '<div class="rmm-modal-section-box" role="group" aria-label="' + escHtml(t('portions', 'انتخاب سایز یا پرس:')) + '">' +
                     '<span class="rmm-modal-section-title">📏 ' + escHtml(t('portions', 'انتخاب سایز یا پرس:')) + '</span>';
                 data.portions.forEach(function (port, idx) {
                     var isChecked = (idx === 0) ? 'checked' : '';
@@ -880,7 +880,7 @@
             // Modifier Groups / Addons
             if (data.modifier_groups && data.modifier_groups.length > 0) {
                 data.modifier_groups.forEach(function (group, gIdx) {
-                    html += '<div class="rmm-modal-section-box">' +
+                    html += '<div class="rmm-modal-section-box" role="group" aria-label="' + escHtml(group.title) + '">' +
                         '<span class="rmm-modal-section-title">🥗 ' + escHtml(group.title) + ':</span>';
 
                     if (group.options && group.options.length > 0) {
@@ -906,9 +906,9 @@
                 html += '<div class="rmm-modal-qty-container">' +
                     '<span class="rmm-modal-qty-label">' + escHtml(t('quantity', 'تعداد سفارش:')) + '</span>' +
                     '<div class="rmm-qty-controls">' +
-                    '<button type="button" class="rmm-qty-btn rmm-qty-plus">+</button>' +
-                    '<input type="number" class="rmm-qty-val" name="quantity" value="1" min="1" max="99" readonly>' +
-                    '<button type="button" class="rmm-qty-btn rmm-qty-minus">−</button>' +
+                    '<button type="button" class="rmm-qty-btn rmm-qty-plus" aria-label="' + escHtml(t('increase_quantity', 'افزایش تعداد')) + '">+</button>' +
+                    '<input type="number" class="rmm-qty-val" name="quantity" value="1" min="1" max="99" readonly aria-label="' + escHtml(t('quantity', 'تعداد')) + '">' +
+                    '<button type="button" class="rmm-qty-btn rmm-qty-minus" aria-label="' + escHtml(t('decrease_quantity', 'کاهش تعداد')) + '">−</button>' +
                     '</div>' +
                     '</div>';
 
