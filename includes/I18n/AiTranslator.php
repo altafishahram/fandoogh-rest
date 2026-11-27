@@ -66,7 +66,7 @@ class AiTranslator {
         $prompt .= "Input JSON:\n" . wp_json_encode($texts, JSON_UNESCAPED_UNICODE);
 
         // Send key via header only so it is never leaked in server/proxy URL logs
-        $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+        $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent';
 
         $body = [
             'contents' => [
