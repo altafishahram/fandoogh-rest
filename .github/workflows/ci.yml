@@ -14,6 +14,27 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  unit-tests:
+    name: PHPUnit (PHP ${{ matrix.php }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['7.4', '8.1', '8.3']
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP and PHPUnit
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mbstring, xml
+          tools: phpunit:9.6.27
+          coverage: none
+
+      - name: Run unit and regression tests
+        run: phpunit --configuration phpunit.xml.dist
+
   lint:
     name: PHP syntax (PHP ${{ matrix.php }})
     runs-on: ubuntu-latest
