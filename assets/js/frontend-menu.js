@@ -1292,11 +1292,17 @@
         $(document).on('click', '.rmm-view-toggle-btn, .rmm-view-btn', function (e) {
             e.preventDefault();
             var $btn = $(this);
-            var view = $btn.data('view');
-            var $container = $btn.closest('.rmm-menu-widget-wrapper').find('.rmm-menu-container');
+            var view = $btn.attr('data-view');
+            if (view !== 'grid' && view !== 'list') return;
 
-            $btn.siblings().removeClass('is-active');
-            $btn.addClass('is-active');
+            var $wrapper = $btn.closest('.rmm-menu-widget-wrapper');
+            var $container = $wrapper.find('.rmm-menu-container').first();
+            if (!$container.length) return;
+
+            $wrapper.find('.rmm-view-toggle-btn, .rmm-view-btn')
+                .removeClass('is-active')
+                .attr('aria-pressed', 'false');
+            $btn.addClass('is-active').attr('aria-pressed', 'true');
 
             if (view === 'list') {
                 $container.removeClass('rmm-view-grid').addClass('rmm-view-list');
@@ -1309,11 +1315,13 @@
             } catch (err) {}
         });
 
-        // Restore customer preference on load
+        // Restore only known customer preferences; never build a selector from stored data.
         try {
             var savedView = localStorage.getItem('rmm_user_view_pref');
-            if (savedView) {
-                $('.rmm-view-btn[data-view="' + savedView + '"]').trigger('click');
+            if (savedView === 'grid' || savedView === 'list') {
+                $('.rmm-menu-widget-wrapper').each(function () {
+                    $(this).find('.rmm-view-btn[data-view="' + savedView + '"]').first().trigger('click');
+                });
             }
         } catch (err) {}
 
