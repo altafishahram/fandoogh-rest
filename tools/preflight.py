@@ -30,6 +30,7 @@ REQUIRED_ENTRIES = (
     f"{SLUG}/readme.txt",
     f"{SLUG}/includes/Plugin.php",
     f"{SLUG}/includes/Autoloader.php",
+    f"{SLUG}/includes/Core/GitHubUpdater.php",
 )
 
 FORBIDDEN_SUFFIXES = (".py", ".pyc", ".pyo", ".md", ".zip", ".psd", ".ai", ".log")
