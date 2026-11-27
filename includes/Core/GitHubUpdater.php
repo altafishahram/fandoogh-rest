@@ -161,7 +161,8 @@ class GitHubUpdater {
 
         foreach ($release['assets'] as $asset) {
             if (
-                empty($asset['name'])
+                !is_array($asset)
+                || empty($asset['name'])
                 || $asset['name'] !== self::PACKAGE_NAME
                 || empty($asset['browser_download_url'])
                 || !is_string($asset['browser_download_url'])
