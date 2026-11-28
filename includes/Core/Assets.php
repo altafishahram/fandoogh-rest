@@ -29,18 +29,11 @@ class Assets {
             RMM_VERSION
         );
 
-        wp_register_style(
-            'rmm-frontend-menu-themes',
-            RMM_PLUGIN_URL . 'assets/css/frontend-menu-themes.css',
-            ['rmm-frontend-menu-widgets'],
-            RMM_VERSION
-        );
-
-        // Keep the public handle stable for widgets and third-party integrations.
+        // Preserve the public handle and make it the final layer in the chain.
         wp_register_style(
             'rmm-frontend-menu',
-            false,
-            ['rmm-frontend-menu-themes'],
+            RMM_PLUGIN_URL . 'assets/css/frontend-menu-themes.css',
+            ['rmm-frontend-menu-widgets'],
             RMM_VERSION
         );
 
