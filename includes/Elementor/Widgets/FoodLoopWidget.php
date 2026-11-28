@@ -550,31 +550,31 @@ class FoodLoopWidget extends Widget_Base {
                 <?php if (!empty($image_url)) : ?>
                     <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($title); ?>" class="rmm-food-img" loading="lazy">
                 <?php else : ?>
-                    <div class="rmm-food-placeholder-img" style="width:100%; height:180px; display:flex; align-items:center; justify-content:center; background:#f1f5f9; color:#94a3b8;">
+                    <div class="rmm-food-placeholder-img rmm-loop-style-01">
                         <i class="fas fa-utensils fa-2x" aria-hidden="true"></i>
                     </div>
                 <?php endif; ?>
             </div>
 
-            <div class="rmm-food-info-wrap" style="flex:1; display:flex; flex-direction:column; justify-content:space-between; margin-top:10px;">
+            <div class="rmm-food-info-wrap rmm-loop-style-02">
                 <div>
                     <h3 class="rmm-food-title rmm-open-modal" data-product-id="<?php echo esc_attr($prod_id); ?>" style="cursor:pointer; margin:0 0 6px 0;">
                         <?php echo esc_html($title); ?>
                     </h3>
 
                     <?php if (!empty($desc)) : ?>
-                        <div class="rmm-food-ingredients" style="font-size:13px; line-height:1.6; margin-bottom:8px;">
+                        <div class="rmm-food-ingredients rmm-loop-style-03">
                             <?php echo wp_kses_post(wp_trim_words($desc, 14)); ?>
                         </div>
                     <?php endif; ?>
                 </div>
 
-                <div class="rmm-food-bottom-bar" style="display:flex; align-items:center; justify-content:space-between; margin-top:8px;">
+                <div class="rmm-food-bottom-bar rmm-loop-style-04">
                     <div class="rmm-food-price">
                         <?php echo wp_kses_post($price_html); ?>
                     </div>
 
-                    <div class="rmm-food-actions" style="display:flex; gap:6px;">
+                    <div class="rmm-food-actions rmm-loop-style-05">
                         <button type="button" class="rmm-btn-details rmm-open-modal" data-product-id="<?php echo esc_attr($prod_id); ?>" aria-label="<?php esc_attr_e('مشاهده جزئیات', 'fondogh-online-menu'); ?>" style="border:none; background:transparent; padding:6px; cursor:pointer;">
                             <?php
                             if (!empty($settings['details_btn_icon']['value'])) {
@@ -647,13 +647,13 @@ class FoodLoopWidget extends Widget_Base {
         wp_enqueue_script('rmm-frontend-menu');
         ?>
         <div class="rmm-food-loop-wrapper">
-            <div class="rmm-food-grid rmm-food-loop-grid" style="display:grid;">
+            <div class="rmm-food-grid rmm-food-loop-grid rmm-loop-style-06">
                 <?php if (!empty($products)) : ?>
                     <?php foreach ($products as $product) : ?>
                         <?php self::render_card_html($product, $settings, $branch_id, $branch_inventory); ?>
                     <?php endforeach; ?>
                 <?php else : ?>
-                    <p class="rmm-no-foods-found" style="text-align:center; padding:30px; opacity:0.7;">
+                    <p class="rmm-no-foods-found rmm-loop-style-07">
                         <?php esc_html_e('غذایی در این دسته‌بندی یافت نشد.', 'fondogh-online-menu'); ?>
                     </p>
                 <?php endif; ?>
@@ -681,7 +681,7 @@ class FoodLoopWidget extends Widget_Base {
                     ];
                 };
                 ?>
-                <div class="rmm-food-loop-load-more-wrap" style="text-align:center; margin-top:24px;">
+                <div class="rmm-food-loop-load-more-wrap rmm-loop-style-08">
                     <button type="button" class="rmm-food-loop-load-more-btn"
                             data-page="1"
                             data-max-pages="<?php echo esc_attr($max_pages); ?>"
