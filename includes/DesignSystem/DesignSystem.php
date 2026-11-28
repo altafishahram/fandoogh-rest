@@ -52,7 +52,7 @@ class DesignSystem {
             $settings = SettingsPage::get_settings();
             $css = CssCompiler::compile($settings);
             $min_css = CssCompiler::minify($css);
-            wp_add_inline_style('rmm-frontend-menu', $min_css);
+            wp_add_inline_style('rmm-frontend-menu-themes', $min_css);
         }
     }
 }
