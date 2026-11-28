@@ -90,4 +90,31 @@ class DesignSystemTokensTest extends TestCase {
         $this->assertStringContainsString('[data-theme="light"]', $css);
         $this->assertStringContainsString('[data-theme="dark"]', $css);
     }
+
+    public function test_category_navigation_base_styles_use_design_tokens_with_fallbacks() {
+        $css = file_get_contents(dirname(__DIR__, 2) . '/assets/css/frontend-menu.css');
+
+        $this->assertNotFalse($css);
+
+        $expected = [
+            'background: var(--rmm-ds-card, #ffffff);',
+            'gap: var(--rmm-ds-cat-gap, 8px);',
+            'background: var(--rmm-ds-cat-idle-bg, #f1f5f9);',
+            'border: 1px solid var(--rmm-ds-border, #e2e8f0);',
+            'color: var(--rmm-ds-cat-idle-text, #475569);',
+            'background: var(--rmm-ds-cat-active-bg, #0284c7);',
+            'color: var(--rmm-ds-cat-active-text, #ffffff);',
+            'border-color: var(--rmm-ds-cat-active-bg, #0284c7);',
+        ];
+
+        foreach ($expected as $declaration) {
+            $this->assertStringContainsString(
+                $declaration,
+                $css,
+                sprintf('Category navigation base CSS is missing token fallback: %s', $declaration)
+            );
+        }
+    }
+
+
 }
