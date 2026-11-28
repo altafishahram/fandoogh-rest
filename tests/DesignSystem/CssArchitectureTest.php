@@ -81,6 +81,7 @@ class CssArchitectureTest extends TestCase {
         foreach ([
             'includes/Elementor/Widgets/ThemeToggleWidget.php',
             'includes/Core/Settings.php',
+            'includes/DesignSystem/SettingsPage.php',
             'includes/FrontendDashboard/Views/thermal-receipt.php',
         ] as $path) {
             $source = file_get_contents($root . '/' . $path);
@@ -95,6 +96,30 @@ class CssArchitectureTest extends TestCase {
         $this->assertStringContainsString('thermal-receipt.css', $receipt);
         $this->assertStringContainsString("wp_enqueue_style('rmm-frontend-menu-widgets')", $router);
         $this->assertStringContainsString("wp_enqueue_style('rmm-frontend-menu-widgets')", $languages);
+    }
+
+    public function test_extracted_admin_and_shared_widget_styles_have_rules() {
+        $root = dirname(__DIR__, 2);
+        $widgets = file_get_contents($root . '/assets/css/frontend-menu-widgets.css');
+        $admin = file_get_contents($root . '/assets/css/admin-ui.css');
+
+        foreach ([
+            '.rmm-empty-cat-notice',
+            '.rmm-search-widget-container .rmm-standalone-search-wrap',
+            '.rmm-lang-switcher',
+            '.rmm-theme-toggle-widget-wrap .rmm-icon-day',
+            '.rmm-portal-shortcode-launch',
+        ] as $selector) {
+            $this->assertStringContainsString($selector, $widgets);
+        }
+
+        foreach ([
+            '.rmm-branch-status--open',
+            '.rmm-admin-number-100',
+            '.rmm-template-preview-image',
+        ] as $selector) {
+            $this->assertStringContainsString($selector, $admin);
+        }
     }
 
     public function test_extracted_widget_classes_have_stylesheet_rules() {
