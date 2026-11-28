@@ -182,15 +182,15 @@ html.rmm-modal-open{
     color: var(--rmm-ds-text, #0f172a);
 }.rmm-modal-portion-item,
 .rmm-modal-addon-item{
-    background: var(--rmm-ds-subtle) !important;
-    border: 1px solid var(--rmm-ds-border) !important;
-    color: var(--rmm-ds-text, #0f172a) !important;
-    border-radius: 12px !important;
+    background: var(--rmm-ds-subtle);
+    border: 1px solid var(--rmm-ds-border);
+    color: var(--rmm-ds-text, #0f172a);
+    border-radius: 12px;
 }.rmm-modal-portion-item.is-selected,
 .rmm-modal-addon-item.is-selected{
-    border-color: var(--rmm-ds-primary) !important;
-    background: var(--rmm-ds-primary-soft) !important;
-    box-shadow: 0 0 12px var(--rmm-ds-primary-soft) !important;
+    border-color: var(--rmm-ds-primary);
+    background: var(--rmm-ds-primary-soft);
+    box-shadow: 0 0 12px var(--rmm-ds-primary-soft);
 }.rmm-modal-submit-btn{
     background: var(--rmm-ds-primary);
     color: #ffffff;
@@ -306,22 +306,22 @@ body.light-theme .woocommerce-Price-amount *{
     background: rgba(0, 0, 0, 0.04);
     border-color: rgba(184, 134, 11, 0.25);
     color: #1E1214;
-}.rmm-toggle-style-minimal_icon{
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
+}.rmm-theme-toggle-widget-btn.rmm-toggle-style-minimal_icon{
+    background: transparent;
+    border: none;
+    box-shadow: none;
     color: #F5E08B;
-}body.light-theme .rmm-toggle-style-minimal_icon{
+}body.light-theme .rmm-theme-toggle-widget-btn.rmm-toggle-style-minimal_icon{
     color: #A36B00;
-}.rmm-toggle-style-floating_corner{
-    position: fixed !important;
-    z-index: 99999 !important;
+}.rmm-theme-toggle-widget-btn.rmm-toggle-style-floating_corner{
+    position: fixed;
+    z-index: 99999;
     border-radius: 50%;
     background: #D4AF37;
     color: #1a0508;
     box-shadow: 0 6px 22px rgba(0, 0, 0, 0.4);
     border: 1px solid #FFE494;
-}body.light-theme .rmm-toggle-style-floating_corner{
+}body.light-theme .rmm-theme-toggle-widget-btn.rmm-toggle-style-floating_corner{
     background: #1c0508;
     color: #F5E08B;
     border-color: rgba(212, 175, 55, 0.35);
@@ -475,10 +475,10 @@ body.light-theme .rmm-theme-toggle-btn:not(.rmm-theme-toggle-widget-btn){
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }body.light-theme .rmm-badge-custom,
 .light-theme .rmm-badge-custom{
-    background: rgba(184, 134, 11, 0.12) !important;
-    color: #A36B00 !important;
-    border-color: rgba(184, 134, 11, 0.35) !important;
-    box-shadow: none !important;
+    background: rgba(184, 134, 11, 0.12);
+    color: #A36B00;
+    border-color: rgba(184, 134, 11, 0.35);
+    box-shadow: none;
 }.rmm-food-loop-load-more-wrap{
     width: 100%;
     display: flex;
