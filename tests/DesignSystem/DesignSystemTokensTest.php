@@ -357,7 +357,7 @@ class DesignSystemTokensTest extends TestCase {
 
 
     public function test_core_food_cards_and_product_modal_use_design_tokens() {
-        $css = RMM\\DesignSystem\\CssCompiler::get_component_mapping_css();
+        $css = RMM\DesignSystem\CssCompiler::get_component_mapping_css();
 
         $expected = [
             '.rmm-style-modern_grid .rmm-food-card',
