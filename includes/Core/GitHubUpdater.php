@@ -16,7 +16,8 @@ class GitHubUpdater {
     const RELEASE_API = 'https://api.github.com/repos/altafishahram/fandoogh-rest/releases/latest';
     const PACKAGE_NAME = 'fondogh-online-menu.zip';
     const PLUGIN_SLUG = 'fondogh-online-menu';
-    const CACHE_KEY = 'rmm_github_latest_release_v1';
+    const CACHE_KEY = 'rmm_github_latest_release_v2';
+    const CACHE_TTL = 10 * MINUTE_IN_SECONDS;
 
     public function __construct() {
         add_filter('update_plugins_github.com', [$this, 'filter_update'], 10, 4);
@@ -125,7 +126,7 @@ class GitHubUpdater {
             return false;
         }
 
-        set_transient(self::CACHE_KEY, $release, 6 * HOUR_IN_SECONDS);
+        set_transient(self::CACHE_KEY, $release, self::CACHE_TTL);
         return $release;
     }
 
