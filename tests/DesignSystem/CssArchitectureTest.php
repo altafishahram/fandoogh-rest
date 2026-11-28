@@ -1,6 +1,6 @@
 <?php
 
-use PHPUnit\\Framework\\TestCase;
+use PHPUnit\Framework\TestCase;
 
 class CssArchitectureTest extends TestCase {
 
@@ -47,11 +47,11 @@ class CssArchitectureTest extends TestCase {
 
         foreach ($paths as $path) {
             $source = file_get_contents($root . '/' . $path);
-            preg_match_all('/\\bstyle\\s*=\\s*([\\\x22\\\x27])([^\\\x22\\\x27]*)\\1/i', $source, $matches);
+            preg_match_all('/\bstyle\s*=\s*"([^"]*)"/i', $source, $matches);
 
-            foreach ($matches[2] as $inline_style) {
+            foreach ($matches[1] as $inline_style) {
                 $this->assertMatchesRegularExpression(
-                    '/^\\s*display\\s*:\\s*none\\s*;?\\s*$/i',
+                    '/^\s*display\s*:\s*none\s*;?\s*$/i',
                     trim($inline_style),
                     sprintf('Only state-driven visibility may remain inline in %s: %s', $path, $inline_style)
                 );
@@ -70,7 +70,7 @@ class CssArchitectureTest extends TestCase {
         $css = $this->frontend_css() . "\n" . file_get_contents($root . '/assets/css/portal-pwa.css');
         $source = implode("\n", $sources);
 
-        preg_match_all('/\\b(rmm-(?:loop|card|modal|portal)-style-\\d+|rmm-(?:loop-image-trigger|loop-title-trigger|food-details-trigger|loop-order-trigger|card-image-trigger|card-title-trigger|card-order-trigger|modal-close-trigger))\\b/', $source, $matches);
+        preg_match_all('/\b(rmm-(?:loop|card|modal|portal)-style-\d+|rmm-(?:loop-image-trigger|loop-title-trigger|food-details-trigger|loop-order-trigger|card-image-trigger|card-title-trigger|card-order-trigger|modal-close-trigger))\b/', $source, $matches);
         $this->assertNotEmpty($matches[1]);
 
         foreach (array_unique($matches[1]) as $class) {
@@ -90,8 +90,8 @@ class CssArchitectureTest extends TestCase {
 
         foreach ($paths as $path) {
             $css = file_get_contents($root . '/' . $path);
-            $css = preg_replace('~/\\*.*?\\*/~s', '', $css);
-            $css = preg_replace('/"(?:\\\\.|[^"\\\\])*"|\\x27(?:\\\\.|[^\\x27\\\\])*\\x27/s', '', $css);
+            $css = preg_replace('~/\*.*?\*/~s', '', $css);
+            $css = preg_replace('/"(?:\\\\.|[^"\\\\])*"|\'(?:\\\\.|[^\'\\\\])*\'/s', '', $css);
             $depth = 0;
 
             foreach (str_split($css) as $character) {
