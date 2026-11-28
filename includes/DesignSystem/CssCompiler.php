@@ -677,6 +677,96 @@ class CssCompiler {
   background: var(--rmm-ds-catalog-btn-bg);
   color: var(--rmm-ds-catalog-btn-text);
 }
+
+/* ── Core Food Cards ───────────────────────────────────────────────────── */
+.rmm-style-modern_grid .rmm-food-card,
+.rmm-style-app_list .rmm-food-card,
+.rmm-menu-container.rmm-view-list .rmm-food-card {
+  background: var(--rmm-ds-card) !important;
+  border-color: var(--rmm-ds-border) !important;
+  border-radius: var(--rmm-ds-radius-card) !important;
+  box-shadow: var(--rmm-ds-shadow-card) !important;
+}
+.rmm-card-image-wrap {
+  background: var(--rmm-ds-subtle) !important;
+}
+.rmm-card-badge,
+.rmm-modal-zoom-hint,
+.rmm-slider-counter,
+.rmm-modal-badge-overlay {
+  background: var(--rmm-ds-modal-backdrop) !important;
+  color: var(--rmm-ds-text) !important;
+  border-radius: var(--rmm-ds-badge-radius) !important;
+}
+.rmm-food-title {
+  color: var(--rmm-ds-text) !important;
+}
+.rmm-food-price,
+.rmm-modal-food-price,
+.rmm-modal-addon-price {
+  color: var(--rmm-ds-primary) !important;
+}
+.rmm-food-ingredients {
+  color: var(--rmm-ds-text-secondary) !important;
+}
+.rmm-food-meta-row {
+  color: var(--rmm-ds-muted) !important;
+}
+.rmm-btn-order {
+  background: var(--rmm-ds-primary) !important;
+  color: var(--rmm-ds-on-primary) !important;
+  border-radius: var(--rmm-ds-radius-btn) !important;
+}
+.rmm-btn-order:hover {
+  background: var(--rmm-ds-primary-hover) !important;
+}
+.rmm-out-badge {
+  background: var(--rmm-ds-subtle) !important;
+  color: var(--rmm-ds-muted) !important;
+  border-radius: var(--rmm-ds-badge-radius) !important;
+}
+.rmm-style-fine_dining .rmm-food-card {
+  border-bottom-color: var(--rmm-ds-border) !important;
+}
+
+/* ── Product Modal Shell and Sections ──────────────────────────────────── */
+.rmm-modal-box {
+  background: var(--rmm-ds-card) !important;
+  border-color: var(--rmm-ds-border) !important;
+  border-radius: var(--rmm-ds-modal-radius) !important;
+  box-shadow: var(--rmm-ds-shadow-card) !important;
+  color: var(--rmm-ds-text) !important;
+}
+.rmm-modal-close-btn {
+  background: var(--rmm-ds-subtle) !important;
+  color: var(--rmm-ds-text) !important;
+}
+.rmm-modal-close-btn:hover {
+  background: var(--rmm-ds-card) !important;
+  color: var(--rmm-ds-danger) !important;
+}
+.rmm-modal-hero-wrap {
+  background: var(--rmm-ds-bg) !important;
+}
+.rmm-modal-food-title,
+.rmm-modal-section-title {
+  color: var(--rmm-ds-text) !important;
+}
+.rmm-modal-section-box {
+  background: var(--rmm-ds-subtle) !important;
+  border-color: var(--rmm-ds-border) !important;
+  border-radius: var(--rmm-ds-radius-card) !important;
+}
+.rmm-modal-btn-submit {
+  background: var(--rmm-ds-primary) !important;
+  color: var(--rmm-ds-on-primary) !important;
+  border-radius: var(--rmm-ds-radius-btn) !important;
+  box-shadow: var(--rmm-ds-shadow-btn) !important;
+}
+.rmm-modal-btn-submit:hover {
+  background: var(--rmm-ds-primary-hover) !important;
+}
+
 CSS;
     }
 

@@ -355,4 +355,34 @@ class DesignSystemTokensTest extends TestCase {
     }
 
 
+
+    public function test_core_food_cards_and_product_modal_use_design_tokens() {
+        $css = RMM\DesignSystem\CssCompiler::get_component_mapping_css();
+
+        $expected = [
+            '.rmm-style-modern_grid .rmm-food-card',
+            'var(--rmm-ds-card)',
+            'var(--rmm-ds-radius-card)',
+            '.rmm-card-image-wrap',
+            '.rmm-food-title',
+            'var(--rmm-ds-text-secondary)',
+            '.rmm-btn-order:hover',
+            'var(--rmm-ds-primary-hover)',
+            '.rmm-modal-box',
+            'var(--rmm-ds-modal-radius)',
+            '.rmm-modal-section-box',
+            '.rmm-modal-btn-submit',
+            'var(--rmm-ds-on-primary)',
+        ];
+
+        foreach ($expected as $value) {
+            $this->assertStringContainsString(
+                $value,
+                $css,
+                sprintf('Core food card/modal mapping is missing: %s', $value)
+            );
+        }
+    }
+
+
 }
