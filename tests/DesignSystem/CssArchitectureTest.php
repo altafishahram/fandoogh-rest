@@ -114,7 +114,7 @@ class CssArchitectureTest extends TestCase {
         $root = dirname(__DIR__, 2);
         $budgets = [
             'frontend' => [193, $this->frontend_css()],
-            'portal' => [240, file_get_contents($root . '/assets/css/portal-pwa.css')],
+            'portal' => [0, file_get_contents($root . '/assets/css/portal-pwa.css')],
             'category sheet' => [1, file_get_contents($root . '/assets/css/category-sheet.css')],
         ];
 
