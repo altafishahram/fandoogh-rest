@@ -14,7 +14,7 @@ class DesignSystemTokensTest extends TestCase {
         return implode("\n", [
             file_get_contents($base . 'frontend-menu-base.css'),
             file_get_contents($base . 'frontend-menu-widgets.css'),
-            file_get_contents($base . 'frontend-menu-themes.css'),
+            file_get_contents($base . 'frontend-menu-modern.css'),
         ]);
     }
 
