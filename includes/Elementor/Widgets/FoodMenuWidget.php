@@ -1034,7 +1034,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
             'section_style_modal_content',
             [
                 'label' => __('تنظیمات ظاهر و محتوای پاپ‌آپ', 'fondogh-online-menu'),
-                'tab'   => \\Elementor\\Controls_Manager::TAB_STYLE,
+                'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
             ]
         );
 
@@ -1204,7 +1204,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
             'section_style_modal_options',
             [
                 'label' => __('کادرهای انتخاب سایز، مخلفات و یادداشت', 'fondogh-online-menu'),
-                'tab'   => \\Elementor\\Controls_Manager::TAB_STYLE,
+                'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
             ]
         );
 
@@ -1298,7 +1298,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
             'section_style_modal_quantity',
             [
                 'label' => __('کنترل تعداد سفارش', 'fondogh-online-menu'),
-                'tab'   => \\Elementor\\Controls_Manager::TAB_STYLE,
+                'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
             ]
         );
 
@@ -1409,7 +1409,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
             'section_style_modal_submit',
             [
                 'label' => __('دکمه ثبت سفارش پاپ‌آپ', 'fondogh-online-menu'),
-                'tab'   => \\Elementor\\Controls_Manager::TAB_STYLE,
+                'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
             ]
         );
 
