@@ -32,7 +32,7 @@ class CssArchitectureTest extends TestCase {
         $this->assertStringContainsString('frontend-menu-themes.css', $assets);
         $this->assertStringContainsString("['rmm-frontend-menu-base']", $assets);
         $this->assertStringContainsString("['rmm-frontend-menu-widgets']", $assets);
-        $this->assertStringContainsString("['rmm-frontend-menu-themes']", $assets);
+        $this->assertStringContainsString("'rmm-frontend-menu',\n            RMM_PLUGIN_URL . 'assets/css/frontend-menu-themes.css',\n            ['rmm-frontend-menu-widgets']", $assets);
         $this->assertFileDoesNotExist($root . '/assets/css/frontend-menu.css');
     }
 
