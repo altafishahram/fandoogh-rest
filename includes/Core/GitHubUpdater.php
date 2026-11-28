@@ -16,7 +16,9 @@ class GitHubUpdater {
     const RELEASE_API = 'https://api.github.com/repos/altafishahram/fandoogh-rest/releases/latest';
     const PACKAGE_NAME = 'fondogh-online-menu.zip';
     const PLUGIN_SLUG = 'fondogh-online-menu';
-    const CACHE_KEY = 'rmm_github_latest_release_v3';
+    const CACHE_KEY = 'rmm_github_latest_release_v4';
+    const MANIFEST_NAME = 'fondogh-online-menu.manifest.json';
+    const SIGNATURE_NAME = 'fondogh-online-menu.manifest.sig';
     const CACHE_TTL = 10 * MINUTE_IN_SECONDS;
 
     public function __construct() {
@@ -125,7 +127,30 @@ class GitHubUpdater {
         }
 
         $release = json_decode(wp_remote_retrieve_body($response), true);
-        if (!is_array($release) || !self::get_release_version($release) || !self::get_package_url($release) || !self::get_package_sha256($release)) {
+        if (!is_array($release) || !self::get_release_version($release) || !self::get_package_url($release)) {
+            return false;
+        }
+
+        $manifest_asset = self::get_release_asset($release, self::MANIFEST_NAME);
+        $signature_asset = self::get_release_asset($release, self::SIGNATURE_NAME);
+        if (!$manifest_asset || !$signature_asset) {
+            return false;
+        }
+
+        $manifest_json = self::fetch_release_asset($manifest_asset['browser_download_url']);
+        $signature = self::fetch_release_asset($signature_asset['browser_download_url']);
+        if (!is_string($manifest_json) || !is_string($signature)) {
+            return false;
+        }
+
+        $manifest = self::verify_signed_manifest($manifest_json, trim($signature), $release['tag_name']);
+        if (!$manifest) {
+            return false;
+        }
+
+        $release['signed_manifest'] = $manifest;
+        $release['signature_verified'] = true;
+        if (!self::get_package_sha256($release)) {
             return false;
         }
 
@@ -190,22 +215,134 @@ class GitHubUpdater {
     }
 
     /**
-     * Return the SHA-256 digest published by GitHub for the exact ZIP asset.
+     * Find a named asset only when its URL belongs to this repository release.
+     *
+     * @param array $release
+     * @param string $name
+     * @return array|false
+     */
+    private static function get_release_asset($release, $name) {
+        if (empty($release['assets']) || !is_array($release['assets'])) {
+            return false;
+        }
+
+        foreach ($release['assets'] as $asset) {
+            if (
+                !is_array($asset)
+                || empty($asset['name'])
+                || $asset['name'] !== $name
+                || empty($asset['browser_download_url'])
+                || !is_string($asset['browser_download_url'])
+            ) {
+                continue;
+            }
+
+            $parts = parse_url($asset['browser_download_url']);
+            if (
+                is_array($parts)
+                && isset($parts['scheme'], $parts['host'], $parts['path'])
+                && strtolower($parts['scheme']) === 'https'
+                && strtolower($parts['host']) === 'github.com'
+                && strpos($parts['path'], '/altafishahram/fandoogh-rest/releases/download/') === 0
+            ) {
+                return $asset;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Download a small release metadata asset.
+     *
+     * @param string $url
+     * @return string|false
+     */
+    private static function fetch_release_asset($url) {
+        $response = wp_remote_get($url, [
+            'timeout' => 15,
+            'redirection' => 2,
+            'limit_response_size' => 16384,
+            'headers' => ['User-Agent' => 'Fondogh-Online-Menu-Release-Verifier'],
+        ]);
+
+        if (is_wp_error($response) || (int) wp_remote_retrieve_response_code($response) !== 200) {
+            return false;
+        }
+
+        $body = wp_remote_retrieve_body($response);
+        return is_string($body) && $body !== '' && strlen($body) <= 16384 ? $body : false;
+    }
+
+    /**
+     * Verify the detached RSA/SHA-256 signature over the exact manifest bytes.
+     *
+     * @param string $manifest_json
+     * @param string $signature_base64
+     * @param string $expected_tag
+     * @return array|false
+     */
+    public static function verify_signed_manifest($manifest_json, $signature_base64, $expected_tag) {
+        if (
+            !is_string($manifest_json)
+            || $manifest_json === ''
+            || strlen($manifest_json) > 8192
+            || !is_string($signature_base64)
+            || strlen($signature_base64) > 8192
+            || !function_exists('openssl_verify')
+        ) {
+            return false;
+        }
+
+        $manifest = json_decode($manifest_json, true);
+        $signature = base64_decode($signature_base64, true);
+        $public_key_path = __DIR__ . '/release-public-key.pem';
+        $public_key = is_readable($public_key_path) ? openssl_pkey_get_public(file_get_contents($public_key_path)) : false;
+
+        if (
+            !is_array($manifest)
+            || !$signature
+            || !$public_key
+            || empty($manifest['tag'])
+            || !is_string($manifest['tag'])
+            || !hash_equals((string) $expected_tag, $manifest['tag'])
+            || empty($manifest['version'])
+            || !is_string($manifest['version'])
+            || !preg_match('/^\\d+\\.\\d+\\.\\d+(?:[-+][0-9A-Za-z.-]+)?$/', $manifest['version'])
+            || empty($manifest['package'])
+            || $manifest['package'] !== self::PACKAGE_NAME
+            || empty($manifest['sha256'])
+            || !is_string($manifest['sha256'])
+            || !preg_match('/^[a-f0-9]{64}$/i', $manifest['sha256'])
+        ) {
+            return false;
+        }
+
+        $verified = openssl_verify($manifest_json, $signature, $public_key, OPENSSL_ALGO_SHA256);
+        if (is_resource($public_key) || $public_key instanceof \\OpenSSLAsymmetricKey) {
+            openssl_free_key($public_key);
+        }
+
+        return $verified === 1 ? $manifest : false;
+    }
+
+    /**
+     * Return the SHA-256 digest from the verified, publisher-signed manifest.
      *
      * @param array $release
      * @return string|false
      */
     private static function get_package_sha256($release) {
-        $asset = self::get_package_asset($release);
-        if (!$asset || empty($asset['digest']) || !is_string($asset['digest'])) {
+        if (
+            empty($release['signature_verified'])
+            || empty($release['signed_manifest']['sha256'])
+            || !is_string($release['signed_manifest']['sha256'])
+            || !preg_match('/^[a-f0-9]{64}$/i', $release['signed_manifest']['sha256'])
+        ) {
             return false;
         }
 
-        if (!preg_match('/^sha256:([a-f0-9]{64})$/i', $asset['digest'], $matches)) {
-            return false;
-        }
-
-        return strtolower($matches[1]);
+        return strtolower($release['signed_manifest']['sha256']);
     }
 
     /**
