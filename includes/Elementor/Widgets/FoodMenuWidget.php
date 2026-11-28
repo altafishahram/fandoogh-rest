@@ -1028,6 +1028,16 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
             ]
         );
 
+        $this->end_controls_section();
+
+        $this->start_controls_section(
+            'section_style_modal_content',
+            [
+                'label' => __('تنظیمات ظاهر و محتوای پاپ‌آپ', 'fondogh-online-menu'),
+                'tab'   => \\Elementor\\Controls_Manager::TAB_STYLE,
+            ]
+        );
+
         // Modal Icons & Close Button
         $this->add_control(
             'modal_icons_heading',
@@ -1188,6 +1198,16 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
             ]
         );
 
+        $this->end_controls_section();
+
+        $this->start_controls_section(
+            'section_style_modal_options',
+            [
+                'label' => __('کادرهای انتخاب سایز، مخلفات و یادداشت', 'fondogh-online-menu'),
+                'tab'   => \\Elementor\\Controls_Manager::TAB_STYLE,
+            ]
+        );
+
         // Section Boxes (Portions, Addons, Note)
         $this->add_control(
             'modal_sections_heading',
@@ -1269,6 +1289,16 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
                 'selectors' => [
                     '{{WRAPPER}} .rmm-modal-kitchen-note input' => 'color: {{VALUE}};',
                 ],
+            ]
+        );
+
+        $this->end_controls_section();
+
+        $this->start_controls_section(
+            'section_style_modal_quantity',
+            [
+                'label' => __('کنترل تعداد سفارش', 'fondogh-online-menu'),
+                'tab'   => \\Elementor\\Controls_Manager::TAB_STYLE,
             ]
         );
 
@@ -1370,6 +1400,16 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
                 'name'     => 'modal_qty_val_typography',
                 'label'    => __('فونت و اندازه عدد تعداد', 'fondogh-online-menu'),
                 'selector' => '{{WRAPPER}} .rmm-qty-val',
+            ]
+        );
+
+        $this->end_controls_section();
+
+        $this->start_controls_section(
+            'section_style_modal_submit',
+            [
+                'label' => __('دکمه ثبت سفارش پاپ‌آپ', 'fondogh-online-menu'),
+                'tab'   => \\Elementor\\Controls_Manager::TAB_STYLE,
             ]
         );
 
