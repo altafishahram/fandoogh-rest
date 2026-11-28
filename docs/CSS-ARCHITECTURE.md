@@ -4,7 +4,7 @@
 
 - `frontend-menu-base.css`: shared storefront foundations, menu layout, cards and modal primitives.
 - `frontend-menu-widgets.css`: secondary storefront widgets and standalone controls.
-- `frontend-menu-themes.css`: theme variants, catalog presentation and the remaining storefront-specific layers.
+- `frontend-menu-modern.css`: theme variants, catalog presentation and the remaining storefront-specific layers.
 - `category-sheet.css`: isolated category-sheet component; loaded after the storefront base handle.
 - `portal-pwa.css`: standalone management PWA. It intentionally keeps its own `--rmm-*` token namespace rather than inheriting storefront theme colors.
 - `TokenSchema.php` and `CssCompiler.php`: source of truth for editable Design System tokens and generated component mappings.
