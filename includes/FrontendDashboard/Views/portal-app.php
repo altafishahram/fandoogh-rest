@@ -39,7 +39,7 @@ $trans_langs = array_filter($all_enabled_langs, function($k) { return $k !== 'fa
 $login_error = isset($_GET['login_error']) ? wp_strip_all_tags(urldecode($_GET['login_error'])) : '';
 ?>
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="fa" dir="rtl" class="rmm-portal-html">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">

@@ -173,6 +173,57 @@ class CssArchitectureTest extends TestCase {
         }
     }
 
+
+    public function test_storefront_and_portal_css_are_component_scoped() {
+        $root = dirname(__DIR__, 2);
+        $paths = [
+            'assets/css/frontend-menu-base.css',
+            'assets/css/frontend-menu-widgets.css',
+            'assets/css/frontend-menu-modern.css',
+            'assets/css/category-sheet.css',
+            'assets/css/portal-pwa.css',
+        ];
+
+        foreach ($paths as $path) {
+            $css = file_get_contents($root . '/' . $path);
+            $this->assertDoesNotMatchRegularExpression(
+                '/^\s*(?:\*|html|button|a|img|input)\s*\{/m',
+                $css,
+                sprintf('Found a global selector in %s', $path)
+            );
+        }
+
+        $portal_css = file_get_contents($root . '/assets/css/portal-pwa.css');
+        $portal_view = file_get_contents($root . '/includes/FrontendDashboard/Views/portal-app.php');
+        $this->assertStringContainsString('class="rmm-portal-html"', $portal_view);
+        $this->assertStringContainsString('html.rmm-portal-html *', $portal_css);
+        $this->assertStringContainsString('html.rmm-portal-html[data-theme="dark"]', $portal_css);
+        $this->assertStringContainsString('.rmm-tab-btn .tab-icon-wrap', $portal_css);
+        $this->assertStringContainsString('.rmm-modal-backdrop .modal-header-icon', $portal_css);
+    }
+
+    public function test_responsive_breakpoints_cover_storefront_and_portal_layouts() {
+        $root = dirname(__DIR__, 2);
+        $expected = [
+            'assets/css/frontend-menu-base.css' => ['max-width: 991px', 'max-width: 640px'],
+            'assets/css/frontend-menu-widgets.css' => ['max-width: 768px', 'max-width: 580px', 'max-width: 420px'],
+            'assets/css/frontend-menu-modern.css' => ['max-width: 767px', 'max-width: 640px', 'max-width: 540px'],
+            'assets/css/category-sheet.css' => ['min-width: 768px', 'prefers-reduced-motion: reduce'],
+            'assets/css/portal-pwa.css' => ['max-width: 900px', 'max-width: 600px', 'max-width: 480px'],
+        ];
+
+        foreach ($expected as $path => $queries) {
+            $css = file_get_contents($root . '/' . $path);
+            foreach ($queries as $query) {
+                $this->assertStringContainsString(
+                    '@media (' . $query . ')',
+                    $css,
+                    sprintf('Missing responsive rule %s in %s', $query, $path)
+                );
+            }
+        }
+    }
+
     public function test_existing_important_usage_does_not_increase() {
         $root = dirname(__DIR__, 2);
         $budgets = [
