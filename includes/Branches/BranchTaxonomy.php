@@ -220,9 +220,9 @@ class BranchTaxonomy {
         if ($column_name === 'rmm_status_col') {
             $open = get_term_meta($term_id, '_rmm_is_open', true);
             if ($open === '0') {
-                return '<span style="color:#ef4444; font-weight:bold;">' . __('🔴 تعطیل', 'fondogh-online-menu') . '</span>';
+                return '<span class="rmm-branch-status rmm-branch-status--closed">' . __('🔴 تعطیل', 'fondogh-online-menu') . '</span>';
             }
-            return '<span style="color:#10b981; font-weight:bold;">' . __('🟢 باز', 'fondogh-online-menu') . '</span>';
+            return '<span class="rmm-branch-status rmm-branch-status--open">' . __('🟢 باز', 'fondogh-online-menu') . '</span>';
         }
 
         return $content;

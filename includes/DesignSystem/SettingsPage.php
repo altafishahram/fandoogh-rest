@@ -42,65 +42,7 @@ class SettingsPage {
 
         $frame_url = wp_nonce_url(admin_url('admin-post.php?action=rmm_studio_frame'), 'rmm_studio_frame');
         ?>
-        <style>
-            #wpwrap, #wpcontent, #wpbody, #wpbody-content {
-                min-height: 0 !important;
-                margin-bottom: 0 !important;
-                padding-bottom: 0 !important;
-            }
-            #wpcontent { padding-left: 0 !important; padding-right: 0 !important; }
-            #wpfooter { display: none !important; }
-            .rmm-admin-frame-wrap {
-                position: fixed;
-                top: 32px;
-                bottom: 0;
-                left: 160px;
-                right: 0;
-                z-index: 10;
-                overflow: hidden;
-                background: #f8fafc;
-            }
-            body.rtl .rmm-admin-frame-wrap {
-                left: 0;
-                right: 160px;
-            }
-            body.folded .rmm-admin-frame-wrap {
-                left: 36px;
-                right: 0;
-            }
-            body.rtl.folded .rmm-admin-frame-wrap {
-                left: 0;
-                right: 36px;
-            }
-            @media only screen and (max-width: 960px) {
-                body.auto-fold .rmm-admin-frame-wrap {
-                    left: 36px;
-                    right: 0;
-                }
-                body.rtl.auto-fold .rmm-admin-frame-wrap {
-                    left: 0;
-                    right: 36px;
-                }
-            }
-            @media screen and (max-width: 782px) {
-                .rmm-admin-frame-wrap,
-                body.rtl .rmm-admin-frame-wrap,
-                body.folded .rmm-admin-frame-wrap,
-                body.rtl.folded .rmm-admin-frame-wrap,
-                body.auto-fold .rmm-admin-frame-wrap,
-                body.rtl.auto-fold .rmm-admin-frame-wrap {
-                    top: 46px;
-                    left: 0;
-                    right: 0;
-                }
-            }
-            #rmm-studio-iframe {
-                width: 100%;
-                height: 100%;
-                border: 0;
-                display: block;
-            }
-        </style>
+        <link rel="stylesheet" href="<?php echo esc_url(RMM_PLUGIN_URL . 'assets/css/design-studio-admin.css?ver=' . RMM_VERSION); ?>">
         <div class="rmm-admin-frame-wrap">
             <iframe id="rmm-studio-iframe" src="<?php echo esc_url($frame_url); ?>" title="استودیو دیزاین سیستم فندق"></iframe>
         </div>

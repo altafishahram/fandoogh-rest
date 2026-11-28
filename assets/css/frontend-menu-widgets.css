@@ -694,3 +694,23 @@
     color: #ffffff;
 }
 
+
+
+/* Static presentation extracted from widget markup. */
+
+.rmm-empty-cat-notice { padding: 15px; text-align: center; color: #888; border: 1px dashed #cbd5e1; border-radius: 8px; }
+.rmm-search-widget-container .rmm-standalone-search-wrap { display: inline-block; width: 100%; position: relative; }
+.rmm-lang-switcher { display: inline-flex; align-items: center; gap: 4px; background: var(--rmm-ds-subtle, rgba(241,245,249,0.9)); padding: 3px 6px; border-radius: 20px; backdrop-filter: blur(4px); }
+.rmm-lang-switcher .rmm-lang-btn { padding: 3px 8px; border-radius: 12px; font-size: 12px; text-decoration: none; font-weight: bold; display: inline-flex; align-items: center; gap: 4px; transition: all 0.2s ease; color: var(--rmm-ds-muted, #64748b); }
+.rmm-lang-switcher .rmm-lang-btn.active { background: var(--rmm-ds-primary, #0284c7); color: var(--rmm-ds-on-primary, #fff); }
+.rmm-theme-toggle-widget-wrap .rmm-icon-day { display: inline-flex; }
+.rmm-theme-toggle-widget-wrap .rmm-icon-night { display: none; }
+.rmm-theme-toggle-widget-wrap .rmm-label-day { display: inline-block; }
+.rmm-theme-toggle-widget-wrap .rmm-label-night { display: none; }
+body.light-theme .rmm-theme-toggle-widget-wrap .rmm-icon-day,
+body.light-theme .rmm-theme-toggle-widget-wrap .rmm-label-day { display: none; }
+body.light-theme .rmm-theme-toggle-widget-wrap .rmm-icon-night { display: inline-flex; }
+body.light-theme .rmm-theme-toggle-widget-wrap .rmm-label-night { display: inline-block; }
+.rmm-portal-shortcode-launch { text-align: center; padding: 30px 20px; border: 1px solid #e2e8f0; border-radius: 12px; background: #f8fafc; }
+.rmm-portal-shortcode-launch p { margin: 0 0 14px; font-weight: 600; color: #0f172a; }
+.rmm-portal-shortcode-launch .rmm-portal-shortcode-button { display: inline-block; padding: 10px 22px; background: #0284c7; color: #fff; border-radius: 8px; text-decoration: none; font-weight: 700; }

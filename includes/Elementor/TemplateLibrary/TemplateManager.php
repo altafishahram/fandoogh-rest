@@ -38,33 +38,33 @@ class TemplateManager {
     public function render_templates_page() {
         $catalog = self::get_templates_catalog();
         ?>
-        <div class="wrap" style="max-width: 1000px; margin-top: 20px;">
-            <div style="background: #fff; padding: 25px 30px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.04);">
-                <div style="margin-bottom: 25px; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px;">
-                    <h1 style="font-size: 22px; color: #0f172a; margin: 0 0 6px;">
+        <div class="wrap rmm-admin-inline-dd1107d1">
+            <div class="rmm-admin-inline-ac0cae36">
+                <div class="rmm-admin-inline-d1a4eb69">
+                    <h1 class="rmm-admin-inline-62b2da7e">
                         🎨 <?php _e('کتابخانه قالب‌های آماده و لندینگ پیج منو', 'fondogh-online-menu'); ?>
                     </h1>
-                    <p style="margin: 0; color: #64748b; font-size: 14px;">
+                    <p class="rmm-admin-inline-d6b5b805">
                         <?php _e('با یک کلیک، قالب دلخواه را به صورت یک برگه آماده المنتور بسازید و به راحتی با المنتور و المنتور پرو ویرایش کنید.', 'fondogh-online-menu'); ?>
                     </p>
                 </div>
 
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                <div class="rmm-admin-inline-5aaad52a">
                     <?php foreach ($catalog as $tpl) : ?>
-                        <div style="border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; background: #fafafa;">
-                            <div style="background: #0f172a; height: 160px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 38px; overflow: hidden;">
+                        <div class="rmm-admin-inline-345f0ba8 rmm-admin-flex-row">
+                            <div class="rmm-admin-inline-b2639e22 rmm-admin-flex-row">
                                 <?php if (!empty($tpl['preview_img'])) : ?>
-                                    <img src="<?php echo esc_url($tpl['preview_img']); ?>" alt="<?php echo esc_attr($tpl['title']); ?>" style="width: 100%; height: 100%; object-fit: cover;">
+                                    <img src="<?php echo esc_url($tpl['preview_img']); ?>" alt="<?php echo esc_attr($tpl['title']); ?>" class="rmm-template-preview-image">
                                 <?php else : ?>
                                     🍽️
                                 <?php endif; ?>
                             </div>
-                            <div style="padding: 16px; flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                            <div class="rmm-admin-inline-1cd77c11 rmm-admin-flex-row">
                                 <div>
-                                    <h3 style="margin: 0 0 6px; font-size: 16px; color: #0f172a;"><?php echo esc_html($tpl['title']); ?></h3>
-                                    <p style="font-size: 13px; color: #64748b; margin-bottom: 14px;"><?php echo esc_html($tpl['description']); ?></p>
+                                    <h3 class="rmm-admin-inline-051bce49"><?php echo esc_html($tpl['title']); ?></h3>
+                                    <p class="rmm-admin-inline-d26adac3"><?php echo esc_html($tpl['description']); ?></p>
                                 </div>
-                                <button class="button button-primary rmm-import-tpl-btn" data-template-id="<?php echo esc_attr($tpl['id']); ?>" style="width: 100%; border-radius: 6px; font-weight: bold; padding: 6px 0; height: auto;">
+                                <button class="button button-primary rmm-import-tpl-btn rmm-template-import-button" data-template-id="<?php echo esc_attr($tpl['id']); ?>">
                                     🚀 <?php _e('ساخت برگه المنتور از این قالب', 'fondogh-online-menu'); ?>
                                 </button>
                             </div>

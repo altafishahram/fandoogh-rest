@@ -414,7 +414,7 @@ class SearchBarWidget extends Widget_Base {
         wp_enqueue_script('rmm-frontend-menu');
         ?>
         <div class="rmm-search-widget-container">
-            <div class="rmm-standalone-search-wrap rmm-live-search-bar" style="display:inline-block; width:100%; position:relative;">
+            <div class="rmm-standalone-search-wrap rmm-live-search-bar">
                 <?php if ($show_icon) : ?>
                     <span class="rmm-search-icon" aria-hidden="true">
                         <?php

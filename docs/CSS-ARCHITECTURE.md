@@ -7,6 +7,9 @@
 - `frontend-menu-modern.css`: the single supported Modern menu presentation, catalog presentation and shared storefront-specific overrides.
 - `category-sheet.css`: isolated category-sheet component; loaded after the storefront base handle.
 - `portal-pwa.css`: standalone management PWA. It intentionally keeps its own `--rmm-*` token namespace rather than inheriting storefront theme colors.
+- `admin-ui.css`: extracted WordPress admin settings and template-library presentation.
+- `design-studio-admin.css`: styles for the Design System studio shell only.
+- `thermal-receipt.css`: standalone thermal receipt and print presentation.
 - `TokenSchema.php` and `CssCompiler.php`: source of truth for editable Design System tokens and generated component mappings.
 
 The three storefront layers are enqueued in dependency order. The public `rmm-frontend-menu` style handle remains the final Modern presentation layer, so existing widgets, third-party integrations, and `wp_add_inline_style()` calls retain their original handle and output behavior. The Elementor menu widget exposes only the Modern Grid preset; legacy saved preset values render through Modern Grid. The generated Design System stylesheet is loaded after that handle; when the generated file is unavailable, its fallback CSS is attached to the same final layer.
