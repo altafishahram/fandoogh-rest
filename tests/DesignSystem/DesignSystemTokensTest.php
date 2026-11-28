@@ -241,6 +241,35 @@ class DesignSystemTokensTest extends TestCase {
         }
     }
 
+
+    public function test_view_switcher_controls_use_design_tokens_with_fallbacks() {
+        $css = file_get_contents(dirname(__DIR__, 2) . '/assets/css/frontend-menu.css');
+
+        $this->assertNotFalse($css);
+
+        $expected = [
+            'background: var(--rmm-ds-subtle, #f1f5f9);',
+            'border-radius: var(--rmm-ds-radius-btn, 12px);',
+            'border: 1px solid var(--rmm-ds-border, #e2e8f0);',
+            'border-radius: var(--rmm-ds-radius-input, 8px);',
+            'color: var(--rmm-ds-muted, #64748b);',
+            'color: var(--rmm-ds-text, #0f172a);',
+            'outline: 2px solid var(--rmm-ds-primary, #0284c7);',
+            'background: var(--rmm-ds-card, #ffffff);',
+            'color: var(--rmm-ds-primary, #0284c7);',
+            'box-shadow: var(--rmm-ds-shadow-btn, 0 2px 8px rgba(0, 0, 0, 0.08));',
+        ];
+
+        foreach ($expected as $declaration) {
+            $this->assertStringContainsString(
+                $declaration,
+                $css,
+                sprintf('View switcher CSS is missing token fallback: %s', $declaration)
+            );
+        }
+    }
+
+
     public function test_lightbox_gallery_controls_use_design_tokens_with_fallbacks() {
         $css = file_get_contents(dirname(__DIR__, 2) . '/assets/css/frontend-menu.css');
 
