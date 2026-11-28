@@ -16,12 +16,13 @@ class GitHubUpdater {
     const RELEASE_API = 'https://api.github.com/repos/altafishahram/fandoogh-rest/releases/latest';
     const PACKAGE_NAME = 'fondogh-online-menu.zip';
     const PLUGIN_SLUG = 'fondogh-online-menu';
-    const CACHE_KEY = 'rmm_github_latest_release_v2';
+    const CACHE_KEY = 'rmm_github_latest_release_v3';
     const CACHE_TTL = 10 * MINUTE_IN_SECONDS;
 
     public function __construct() {
         add_filter('update_plugins_github.com', [$this, 'filter_update'], 10, 4);
         add_filter('plugins_api', [$this, 'filter_plugin_info'], 20, 3);
+        add_filter('upgrader_pre_download', [$this, 'verify_package_integrity'], 10, 3);
     }
 
     /**
@@ -72,11 +73,13 @@ class GitHubUpdater {
 
         $version = self::get_release_version($release);
         $package = self::get_package_url($release);
-        if (!$version || !$package) {
+        $package_hash = self::get_package_sha256($release);
+        if (!$version || !$package || !$package_hash) {
             return $result;
         }
 
         $changelog = !empty($release['body']) ? wp_kses_post($release['body']) : '';
+        $compatibility = self::get_compatibility_metadata();
 
         return (object) [
             'name'          => 'منو آنلاین فندق (Fondogh Online Menu)',
@@ -85,9 +88,9 @@ class GitHubUpdater {
             'author'        => 'Fondogh Team',
             'author_profile'=> self::REPOSITORY,
             'homepage'      => self::REPOSITORY,
-            'requires'      => '5.8',
-            'tested'        => '7.1',
-            'requires_php'  => '7.4',
+            'requires'      => $compatibility['requires'],
+            'tested'        => $compatibility['tested'],
+            'requires_php'  => $compatibility['requires_php'],
             'download_link' => $package,
             'last_updated'  => isset($release['published_at']) ? $release['published_at'] : '',
             'sections'      => [
@@ -122,7 +125,7 @@ class GitHubUpdater {
         }
 
         $release = json_decode(wp_remote_retrieve_body($response), true);
-        if (!is_array($release) || !self::get_release_version($release) || !self::get_package_url($release)) {
+        if (!is_array($release) || !self::get_release_version($release) || !self::get_package_url($release) || !self::get_package_sha256($release)) {
             return false;
         }
 
@@ -150,12 +153,12 @@ class GitHubUpdater {
     }
 
     /**
-     * Only accept the ZIP asset produced by this repository's release workflow.
+     * Return the exact release ZIP asset after validating its download URL.
      *
      * @param array $release
-     * @return string|false
+     * @return array|false
      */
-    private static function get_package_url($release) {
+    private static function get_package_asset($release) {
         if (empty($release['assets']) || !is_array($release['assets'])) {
             return false;
         }
@@ -179,11 +182,155 @@ class GitHubUpdater {
                 && strtolower($parts['host']) === 'github.com'
                 && strpos($parts['path'], '/altafishahram/fandoogh-rest/releases/download/') === 0
             ) {
-                return $asset['browser_download_url'];
+                return $asset;
             }
         }
 
         return false;
+    }
+
+    /**
+     * Return the SHA-256 digest published by GitHub for the exact ZIP asset.
+     *
+     * @param array $release
+     * @return string|false
+     */
+    private static function get_package_sha256($release) {
+        $asset = self::get_package_asset($release);
+        if (!$asset || empty($asset['digest']) || !is_string($asset['digest'])) {
+            return false;
+        }
+
+        if (!preg_match('/^sha256:([a-f0-9]{64})$/i', $asset['digest'], $matches)) {
+            return false;
+        }
+
+        return strtolower($matches[1]);
+    }
+
+    /**
+     * Only accept the ZIP asset produced by this repository's release workflow.
+     *
+     * @param array $release
+     * @return string|false
+     */
+    private static function get_package_url($release) {
+        $asset = self::get_package_asset($release);
+        return $asset ? $asset['browser_download_url'] : false;
+    }
+
+    /**
+     * Read WordPress/PHP compatibility from the plugin header and readme.
+     *
+     * Conservative fallbacks keep update metadata safe if a file cannot be read.
+     *
+     * @return array
+     */
+    public static function get_compatibility_metadata() {
+        $plugin_file = defined('RMM_PLUGIN_FILE')
+            ? RMM_PLUGIN_FILE
+            : dirname(__DIR__, 2) . '/fondogh-online-menu.php';
+        $readme_file = dirname($plugin_file) . '/readme.txt';
+
+        $plugin_header = is_readable($plugin_file) ? file_get_contents($plugin_file) : '';
+        $readme = is_readable($readme_file) ? file_get_contents($readme_file) : '';
+
+        $requires = self::read_metadata_value($plugin_header, 'Requires at least', '5.8');
+        $requires_php = self::read_metadata_value($plugin_header, 'Requires PHP', '8.2');
+        $tested = self::read_metadata_value($readme, 'Tested up to', '7.1');
+
+        return [
+            'requires' => $requires,
+            'tested' => $tested,
+            'requires_php' => $requires_php,
+        ];
+    }
+
+    /**
+     * Extract a metadata value from a plugin header or readme header.
+     *
+     * @param string $contents
+     * @param string $label
+     * @param string $fallback
+     * @return string
+     */
+    private static function read_metadata_value($contents, $label, $fallback) {
+        if (preg_match('/^\\s*(?:\\*\\s*)?' . preg_quote($label, '/') . ':\\s*([^\\r\\n]+)/mi', $contents, $matches)) {
+            $value = trim($matches[1]);
+            if ($value !== '') {
+                return $value;
+            }
+        }
+
+        return $fallback;
+    }
+
+    /**
+     * Verify the downloaded plugin ZIP against GitHub's SHA-256 asset digest.
+     *
+     * This detects corrupted or substituted package bytes between release
+     * metadata retrieval and installation. The digest is supplied by GitHub's
+     * Releases API; it is not a publisher signature and does not protect against
+     * compromise of the repository/release account itself.
+     *
+     * @param string|WP_Error|false $reply
+     * @param string $package
+     * @param object $upgrader
+     * @return string|WP_Error|false
+     */
+    public function verify_package_integrity($reply, $package, $upgrader) {
+        if ($reply !== false || !is_string($package)) {
+            return $reply;
+        }
+
+        // This is a global upgrader filter; never interfere with other plugins.
+        $parts = parse_url($package);
+        if (
+            !is_array($parts)
+            || empty($parts['scheme'])
+            || empty($parts['host'])
+            || empty($parts['path'])
+            || strtolower($parts['scheme']) !== 'https'
+            || strtolower($parts['host']) !== 'github.com'
+            || basename($parts['path']) !== self::PACKAGE_NAME
+            || strpos($parts['path'], '/altafishahram/fandoogh-rest/releases/download/') !== 0
+        ) {
+            return $reply;
+        }
+
+        $release = $this->get_latest_release();
+        if (!is_array($release)) {
+            return new \WP_Error('rmm_release_integrity_unavailable', 'Fondogh update verification failed: trusted release metadata is unavailable.');
+        }
+
+        $expected_url = self::get_package_url($release);
+        if (!$expected_url || !is_string($package) || $package !== $expected_url) {
+            return $reply;
+        }
+
+        $expected_hash = self::get_package_sha256($release);
+        if (!$expected_hash || !function_exists('download_url')) {
+            return new \WP_Error('rmm_package_integrity_unavailable', 'Fondogh update verification failed: a valid SHA-256 digest is unavailable.');
+        }
+
+        $downloaded_file = download_url($package, 300);
+        if (is_wp_error($downloaded_file)) {
+            return $downloaded_file;
+        }
+
+        $actual_hash = is_string($downloaded_file) && is_file($downloaded_file)
+            ? hash_file('sha256', $downloaded_file)
+            : false;
+
+        if (!is_string($actual_hash) || !hash_equals($expected_hash, strtolower($actual_hash))) {
+            if (is_string($downloaded_file) && is_file($downloaded_file)) {
+                @unlink($downloaded_file);
+            }
+
+            return new \WP_Error('rmm_package_integrity_failed', 'Fondogh update blocked: the downloaded ZIP SHA-256 digest does not match the published release digest.');
+        }
+
+        return $downloaded_file;
     }
 
     /**
@@ -202,9 +349,12 @@ class GitHubUpdater {
 
         $version = self::get_release_version($release);
         $package = self::get_package_url($release);
-        if (!$version || !$package || !version_compare($version, $current_version, '>')) {
+        $package_hash = self::get_package_sha256($release);
+        if (!$version || !$package || !$package_hash || !version_compare($version, $current_version, '>')) {
             return false;
         }
+
+        $compatibility = self::get_compatibility_metadata();
 
         return (object) [
             'id'          => self::REPOSITORY,
@@ -215,9 +365,10 @@ class GitHubUpdater {
             'new_version' => $version,
             'url'         => self::REPOSITORY,
             'package'     => $package,
-            'tested'      => '7.1',
-            'requires'    => '5.8',
-            'requires_php'=> '7.4',
+            'package_hash'=> $package_hash,
+            'tested'      => $compatibility['tested'],
+            'requires'    => $compatibility['requires'],
+            'requires_php'=> $compatibility['requires_php'],
         ];
     }
 }
