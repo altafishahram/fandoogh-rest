@@ -385,4 +385,30 @@ class DesignSystemTokensTest extends TestCase {
     }
 
 
+
+    public function test_shared_frontend_controls_use_design_tokens() {
+        $css = RMM\\DesignSystem\\CssCompiler::get_component_mapping_css();
+
+        $expected = [
+            '.rmm-category-nav-wrapper.rmm-sticky-bar',
+            '.rmm-food-loop-load-more-btn',
+            'var(--rmm-ds-primary-soft)',
+            '[data-theme="dark"] .rmm-food-loop-load-more-btn',
+            '.rmm-catalog-add-btn',
+            'var(--rmm-ds-success)',
+            '.rmm-cat-header-thumb-wrap',
+            '.rmm-card-price-badge-row .rmm-card-badge',
+            'var(--rmm-ds-shadow-btn)',
+        ];
+
+        foreach ($expected as $value) {
+            $this->assertStringContainsString(
+                $value,
+                $css,
+                sprintf('Shared frontend control mapping is missing: %s', $value)
+            );
+        }
+    }
+
+
 }
