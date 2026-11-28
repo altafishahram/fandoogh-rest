@@ -37,6 +37,43 @@ class CssCompiler {
    Strictly scoped to .rmm-* selectors. Never overrides WooCommerce globals.
    ========================================================================== */
 
+/* ── Branch Selector / Store Status ─────────────────────────────────────── */
+.rmm-branch-header-bar {
+  background: var(--rmm-ds-card);
+  color: var(--rmm-ds-text);
+  border: 1px solid var(--rmm-ds-border);
+  border-radius: var(--rmm-ds-radius-card);
+  padding: var(--rmm-ds-pad-card);
+  box-shadow: var(--rmm-ds-shadow-card);
+}
+.rmm-branch-picker {
+  background: var(--rmm-ds-subtle);
+  border-color: var(--rmm-ds-border);
+  border-radius: var(--rmm-ds-radius-input);
+}
+.rmm-branch-dropdown,
+.rmm-single-branch-name {
+  color: var(--rmm-ds-text);
+  font-family: var(--rmm-ds-font-family);
+}
+.rmm-table-indicator {
+  background: var(--rmm-ds-primary-soft);
+  color: var(--rmm-ds-primary);
+  border-color: var(--rmm-ds-primary);
+  border-radius: var(--rmm-ds-badge-radius);
+}
+.rmm-status-pill.open {
+  background: var(--rmm-ds-primary-soft);
+  color: var(--rmm-ds-success);
+}
+.rmm-status-pill.closed {
+  background: var(--rmm-ds-subtle);
+  color: var(--rmm-ds-danger);
+}
+.rmm-status-pill .rmm-dot {
+  background: currentColor;
+}
+
 /* ── Font family on all RMM wrappers ───────────────────────────────────── */
 .rmm-menu-widget-wrapper,
 .rmm-food-card,
