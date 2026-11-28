@@ -133,7 +133,7 @@ class CssArchitectureTest extends TestCase {
         $css = file_get_contents($root . '/assets/css/frontend-menu-modern.css');
 
         $this->assertStringContainsString("'modern_grid' =>", $widget);
-        $this->assertStringContainsString("$style = 'modern_grid';", $widget);
+        $this->assertStringContainsString('$style = \'modern_grid\';', $widget);
 
         foreach (['oriental', 'app_list', 'fine_dining', 'compact_grid', 'rmm-theme-oriental'] as $legacy_theme) {
             $this->assertStringNotContainsString($legacy_theme, $widget);
