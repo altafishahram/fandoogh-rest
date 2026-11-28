@@ -1849,3 +1849,21 @@ body.light-theme .rmm-catalog-done-btn {
     cursor: pointer;
 }
 
+
+
+/* Extracted modal controls remain usable on narrow screens. */
+@media (max-width: 640px) {
+    .rmm-modal-style-02 {
+        height: 200px;
+    }
+
+    .rmm-modal-style-12 {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .rmm-modal-style-16 {
+        width: 100%;
+        justify-content: center;
+    }
+}
