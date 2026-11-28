@@ -191,4 +191,28 @@ class DesignSystemTokensTest extends TestCase {
         }
     }
 
+
+    public function test_modal_slider_controls_use_design_tokens_with_fallbacks() {
+        $css = file_get_contents(dirname(__DIR__, 2) . '/assets/css/frontend-menu.css');
+
+        $this->assertNotFalse($css);
+
+        $expected = [
+            'background: var(--rmm-ds-card, rgba(255, 255, 255, 0.9));',
+            'color: var(--rmm-ds-text, #0f172a);',
+            'background: var(--rmm-ds-card, #ffffff);',
+            'background: var(--rmm-ds-modal-backdrop, rgba(15, 23, 42, 0.55));',
+            'background: var(--rmm-ds-muted, rgba(255, 255, 255, 0.5));',
+            'background: var(--rmm-ds-primary, #ffffff);',
+        ];
+
+        foreach ($expected as $declaration) {
+            $this->assertStringContainsString(
+                $declaration,
+                $css,
+                sprintf('Modal slider CSS is missing token fallback: %s', $declaration)
+            );
+        }
+    }
+
 }
