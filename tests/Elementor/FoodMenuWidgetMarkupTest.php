@@ -25,7 +25,7 @@ class FoodMenuWidgetMarkupTest extends TestCase {
 
         $this->assertNotFalse($source);
         $this->assertStringContainsString('$containers.each(function ()', $source);
-        $this->assertStringNotContainsString("$wrapper->find('.rmm-menu-container')->first()", $source);
+        $this->assertStringNotContainsString(".find('.rmm-menu-container').first()", $source);
     }
 
     public function test_modal_quantity_controls_reuse_catalog_list_stepper_classes() {
