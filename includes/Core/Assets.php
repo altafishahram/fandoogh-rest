@@ -14,7 +14,7 @@ class Assets {
     }
 
     public function register_frontend_assets() {
-        // Frontend styles are split into ordered, cacheable layers.
+        // Frontend styles are split into ordered, cacheable layers; the final layer contains the Modern menu presentation.
         wp_register_style(
             'rmm-frontend-menu-base',
             RMM_PLUGIN_URL . 'assets/css/frontend-menu-base.css',
@@ -32,7 +32,7 @@ class Assets {
         // Preserve the public handle and make it the final layer in the chain.
         wp_register_style(
             'rmm-frontend-menu',
-            RMM_PLUGIN_URL . 'assets/css/frontend-menu-themes.css',
+            RMM_PLUGIN_URL . 'assets/css/frontend-menu-modern.css',
             ['rmm-frontend-menu-widgets'],
             RMM_VERSION
         );
