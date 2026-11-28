@@ -28,7 +28,7 @@
 ```bash
 git switch main
 git pull --ff-only
-git switch -c work/short-topic
+git switch -c fix/short-topic
 
 # ... تغییر کد ...
 
