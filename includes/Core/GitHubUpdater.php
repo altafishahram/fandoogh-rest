@@ -279,7 +279,22 @@ class GitHubUpdater {
      * @return string|WP_Error|false
      */
     public function verify_package_integrity($reply, $package, $upgrader) {
-        if ($reply !== false) {
+        if ($reply !== false || !is_string($package)) {
+            return $reply;
+        }
+
+        // This is a global upgrader filter; never interfere with other plugins.
+        $parts = parse_url($package);
+        if (
+            !is_array($parts)
+            || empty($parts['scheme'])
+            || empty($parts['host'])
+            || empty($parts['path'])
+            || strtolower($parts['scheme']) !== 'https'
+            || strtolower($parts['host']) !== 'github.com'
+            || basename($parts['path']) !== self::PACKAGE_NAME
+            || strpos($parts['path'], '/altafishahram/fandoogh-rest/releases/download/') !== 0
+        ) {
             return $reply;
         }
 
