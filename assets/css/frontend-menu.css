@@ -3347,8 +3347,8 @@ body.light-theme .rmm-catalog-done-btn {
     display:flex;
     align-items:center;
     justify-content:center;
-    background:#f1f5f9;
-    color:#94a3b8;
+    background:var(--rmm-ds-subtle, #f1f5f9);
+    color:var(--rmm-ds-muted, #94a3b8);
 }
 
 .rmm-loop-style-02 {
@@ -3398,8 +3398,8 @@ body.light-theme .rmm-catalog-done-btn {
     display:flex;
     align-items:center;
     justify-content:center;
-    background:#f1f5f9;
-    color:#94a3b8;
+    background:var(--rmm-ds-subtle, #f1f5f9);
+    color:var(--rmm-ds-muted, #94a3b8);
 }
 
 .rmm-card-style-02 {
@@ -3458,7 +3458,7 @@ body.light-theme .rmm-catalog-done-btn {
 .rmm-modal-style-02 {
     position:relative;
     height:240px;
-    background:#f1f5f9;
+    background:var(--rmm-ds-subtle, #f1f5f9);
     overflow:hidden;
 }
 
@@ -3474,7 +3474,7 @@ body.light-theme .rmm-catalog-done-btn {
     display:flex;
     align-items:center;
     justify-content:center;
-    color:#94a3b8;
+    color:var(--rmm-ds-muted, #94a3b8);
 }
 
 .rmm-modal-style-05 {
@@ -3522,7 +3522,6 @@ body.light-theme .rmm-catalog-done-btn {
     align-items:center;
     justify-content:space-between;
     margin-top:16px;
-    pt-4;
 }
 
 .rmm-modal-style-13 {
@@ -3554,4 +3553,30 @@ body.light-theme .rmm-catalog-done-btn {
     border:none;
     font-weight:600;
     cursor:pointer;
+}
+
+
+/* Semantic hooks for widget markup formerly styled inline. */
+.rmm-loop-image-trigger { cursor: pointer; position: relative; }
+.rmm-loop-title-trigger,
+.rmm-card-title-trigger { cursor: pointer; margin: 0 0 6px; }
+.rmm-food-details-trigger { border: none; background: transparent; padding: 6px; cursor: pointer; }
+.rmm-loop-order-trigger { display: inline-flex; align-items: center; gap: 4px; border: none; cursor: pointer; padding: 6px 12px; border-radius: 8px; }
+.rmm-card-image-trigger { cursor: pointer; }
+.rmm-card-order-trigger { display: inline-flex; align-items: center; gap: 6px; border: none; cursor: pointer; }
+.rmm-modal-close-trigger {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.3);
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    cursor: pointer;
 }
