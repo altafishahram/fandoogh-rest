@@ -215,4 +215,30 @@ class DesignSystemTokensTest extends TestCase {
         }
     }
 
+    public function test_entrance_language_modal_uses_design_tokens_with_fallbacks() {
+        $css = file_get_contents(dirname(__DIR__, 2) . '/assets/css/frontend-menu.css');
+
+        $this->assertNotFalse($css);
+
+        $expected = [
+            'background: var(--rmm-ds-modal-backdrop, rgba(15, 23, 42, 0.75));',
+            'background: var(--rmm-ds-card, #ffffff);',
+            'border-radius: var(--rmm-ds-modal-radius, 24px);',
+            'box-shadow: var(--rmm-ds-shadow-card, 0 25px 50px -12px rgba(0, 0, 0, 0.35));',
+            'background: var(--rmm-ds-subtle, #f1f5f9);',
+            'color: var(--rmm-ds-text-secondary, #64748b);',
+            'background: var(--rmm-ds-primary-soft, #eff6ff);',
+            'border-color: var(--rmm-ds-primary, #0284c7);',
+            'accent-color: var(--rmm-ds-primary, #0284c7);',
+        ];
+
+        foreach ($expected as $declaration) {
+            $this->assertStringContainsString(
+                $declaration,
+                $css,
+                sprintf('Entrance language modal CSS is missing token fallback: %s', $declaration)
+            );
+        }
+    }
+
 }
