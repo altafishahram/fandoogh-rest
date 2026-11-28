@@ -52,7 +52,7 @@ class GitHubUpdaterTest extends TestCase {
 
     public function test_accepts_valid_detached_signature_and_manifest() {
         $manifest = '{"package":"fondogh-online-menu.zip","schema":1,"sha256":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","tag":"v1.3.7","version":"1.3.7"}' . "\n";
-        $signature = 'nwWEKGcImZfw7NWJkA/UWqmdCSi668lAqacQSX0jpoS3zmIfbapxghKXGKtnIcxeXoTsyk22NR/Um/3KXYM7cWhzZICuwNh1717e29RwfMhQZYbKWBIqeU/ZTeKkjIEGDFbhObBFMwHohvOz0MtbTQQfY4D9Cc0PSFEKh5k8S5Gbs6k0XccOItatTameBY6L6oAPUJUUrJh5bF3QJoGs81xL5TtKcHUdaSOZkXo5/aFcqaHrCrqADG1GSYglJdji6qZPSKn2bYiwPVjGJaEjR9bHhsKst8/bnpBwjhT3AY6WolaFf3002TUomDcF/+IRyzK7PEDe3SJ/RSZXniM6w8eX3+YI0Q9mCFu9TOVyE8t6L0KqGHB+fS2goX4+pdIno5JULnpxjqvPxponGmepPZ3RdgbZ7L1pIB3+NQENF1zt3q9YDYYUgxfJPfZUAgoH+6CBx6QkxKdZv9BlY6xcjHgMDyYam+isD3NT8mSEbqjLtHbL8qLhkSPhPkWUQDUHbfbc856ba59b7753580505a133d5a0e9b9024719065915ed2ab09a50395b3504';
+        $signature = 'nwWEKGcImZfw7NWJkA/UWqmdCSi668lAqacQSX0jpoS3zmIfbapxghKXGKtnIcxeXoTsyk22NR/Um/3KXYM7cWhzZICuwNh1717e29RwfMhQZYbKWBIqeU/ZTeKkjIEGDFbhObBFMwHohvOz0MtbTQQfY4D9Cc0PSFEKh5k8S5Gbs6k0XccOItatTameBY6L6oAPUJUUrJh5bF3QJoGs81xL5TtKcHUdaSOZkXo5/aFcqaHrCrqADG1GSYglJdji6qZPSKn2bYiwPVjGJaEjR9bHhsKst8/bnpBwjhT3AY6WolaFf3002TUomDcF/+IRyzK7PEDe3SJ/RSZXniM6w8eX3+YI0Q9mCFu9TOVyE8t6L0KqGHB+fS2goX4+pdIno5JULnpxjqvPxponGmepPZ3RdgbZ7L1pIB3+NQENF1zt3q9YDYYUgxfJPfZUAgoH+6CBx6QkxKdZv9BlY6xcjHgMDyYam+isD3NT8mSEbqjLtHbL8qLhkSPhPkWUQDUH';
         $verified = GitHubUpdater::verify_signed_manifest($manifest, $signature, 'v1.3.7');
         $this->assertIsArray($verified);
         $this->assertSame('1.3.7', $verified['version']);
