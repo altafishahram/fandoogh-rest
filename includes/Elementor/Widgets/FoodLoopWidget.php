@@ -585,7 +585,7 @@ class FoodLoopWidget extends Widget_Base {
                             ?>
                         </button>
 
-                        <button type="button" class="rmm-btn-order" data-product-id="<?php echo esc_attr($prod_id); ?>" data-title="<?php echo esc_attr($title); ?>" data-price="<?php echo esc_attr(floatval($product->get_price())); ?>" data-image="<?php echo esc_url($image_url); ?>" class="rmm-btn-order rmm-loop-order-trigger">
+                        <button type="button" class="rmm-btn-order rmm-loop-order-trigger" data-product-id="<?php echo esc_attr($prod_id); ?>" data-title="<?php echo esc_attr($title); ?>" data-price="<?php echo esc_attr(floatval($product->get_price())); ?>" data-image="<?php echo esc_url($image_url); ?>">
                             <?php if (!empty($settings['order_btn_icon']['value'])) : ?>
                                 <span class="rmm-btn-icon" aria-hidden="true">
                                     <?php Icons_Manager::render_icon($settings['order_btn_icon'], ['aria-hidden' => 'true']); ?>
