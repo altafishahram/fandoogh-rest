@@ -902,7 +902,7 @@ class CategorySheetWidget extends Widget_Base {
 
         if (empty($categories) || is_wp_error($categories)) {
             if (class_exists('\Elementor\Plugin') && \Elementor\Plugin::$instance->editor->is_edit_mode()) {
-                echo '<div class="rmm-empty-cat-notice" style="padding: 15px; text-align: center; color: #888; border: 1px dashed #cbd5e1; border-radius: 8px;">' . esc_html__('دسته‌بندی تصویری: هیچ دسته‌بندی غذای فعالی در سیستم یافت نشد.', 'fondogh-online-menu') . '</div>';
+                echo '<div class="rmm-empty-cat-notice" >' . esc_html__('دسته‌بندی تصویری: هیچ دسته‌بندی غذای فعالی در سیستم یافت نشد.', 'fondogh-online-menu') . '</div>';
             }
             return;
         }
