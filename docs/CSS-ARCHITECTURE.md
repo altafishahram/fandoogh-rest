@@ -17,7 +17,7 @@ The three storefront layers are enqueued in dependency order. The public `rmm-fr
 2. Use `--rmm-ds-*` tokens for storefront components and the existing `--rmm-*` PWA tokens for the management portal. Add editable tokens through `TokenSchema.php` and their component mappings through `CssCompiler.php`.
 3. Put static presentation in CSS classes, not HTML `style` attributes. Inline styles are reserved for state-driven visibility or genuinely computed runtime values.
 4. Keep component styles in their owning stylesheet and preserve dependency order when adding a new layer.
-5. Avoid adding `!important`. Retain existing declarations only where a documented third-party cascade conflict requires them; reduce legacy usage in small, tested changes rather than deleting overrides wholesale.
+5. Avoid adding `!important`. The remaining storefront exceptions are limited to modal scroll locking/inline visibility and WooCommerce price formatting; the category sheet retains `!important` only to enforce reduced-motion behavior. The standalone PWA stylesheet must contain no `!important` declarations.
 6. Add responsive rules at the component boundary and verify narrow screens, tablet widths, and desktop layouts before changing layout behavior.
 
 ## Regression protection
