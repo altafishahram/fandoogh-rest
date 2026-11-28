@@ -113,8 +113,8 @@ class CssArchitectureTest extends TestCase {
     public function test_existing_important_usage_does_not_increase() {
         $root = dirname(__DIR__, 2);
         $budgets = [
-            'frontend' => [315, $this->frontend_css()],
-            'portal' => [240, file_get_contents($root . '/assets/css/portal-pwa.css')],
+            'frontend' => [14, $this->frontend_css()],
+            'portal' => [0, file_get_contents($root . '/assets/css/portal-pwa.css')],
             'category sheet' => [1, file_get_contents($root . '/assets/css/category-sheet.css')],
         ];
 
