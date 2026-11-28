@@ -15,7 +15,7 @@
 | مورد | حداقل |
 |---|---|
 | WordPress | ۵.۸ |
-| PHP | ۷.۴ |
+| PHP | ۸.۲ |
 | WooCommerce | ۵.۰ |
 | Elementor | ۳.x (Pro برای Dynamic Tagها) |
 
@@ -45,7 +45,7 @@ python tools/preflight.py     # بررسی نحوی PHP + ساخت و اعتبا
 fondogh-online-menu.php      فایل اصلی و ثابت‌ها
 includes/                    هسته، شعب، منو، I18n، داشبورد و المنتور
 assets/css|js                دارایی‌های فرانت و پنل
-assets/templates-json        کیت‌های قالب المنتور
+assets/templates-json        کیت قالب آمادهٔ Modern Fast Food
 uninstall.php                چرخهٔ حذف داده
 tools/                       ساخت بسته و بررسی پیش از انتشار
 ```

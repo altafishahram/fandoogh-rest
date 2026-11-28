@@ -28,7 +28,7 @@
 ```bash
 git switch main
 git pull --ff-only
-git switch -c fix/inventory-partial-update
+git switch -c fix/short-topic
 
 # ... تغییر کد ...
 
@@ -101,7 +101,7 @@ git push origin --tags
 
 ## قواعد کیفیت
 
-- هر Pull Request باید بررسی خودکار (lint روی PHP 7.4، 8.1 و 8.3) را پاس کند.
+- هر Pull Request باید هر ۶ بررسی CI را پاس کند: آزمون یکپارچگی WordPress/WooCommerce/Elementor، ساخت و اعتبارسنجی بسته، lint روی PHP 8.2 و 8.3 و PHPUnit روی PHP 8.2 و 8.3.
 - فایل `PROJECT_HANDOVER.md` مرجع معماری است؛ هر تغییر در قرارداد API هم‌زمان در آن به‌روز شود.
 - بستهٔ نصب فقط با `tools/build-release.py` ساخته می‌شود؛ ساخت دستی ZIP ممنوع است.
 - اطلاعات محرمانه، گزارش‌های داخلی و تنظیمات ابزارها هرگز وارد این مخزن نمی‌شوند.
