@@ -241,4 +241,31 @@ class DesignSystemTokensTest extends TestCase {
         }
     }
 
+    public function test_lightbox_gallery_controls_use_design_tokens_with_fallbacks() {
+        $css = file_get_contents(dirname(__DIR__, 2) . '/assets/css/frontend-menu.css');
+
+        $this->assertNotFalse($css);
+
+        $expected = [
+            'background: var(--rmm-ds-modal-backdrop, rgba(10, 15, 29, 0.95));',
+            'backdrop-filter: blur(var(--rmm-ds-modal-blur, 12px));',
+            'border-radius: var(--rmm-ds-radius-card, 16px);',
+            'box-shadow: var(--rmm-ds-shadow-card, 0 25px 60px rgba(0, 0, 0, 0.6));',
+            'background: var(--rmm-ds-bg, #020617);',
+            'background: var(--rmm-ds-danger, #ef4444);',
+            'background: var(--rmm-ds-subtle, rgba(255, 255, 255, 0.2));',
+            'border: 1px solid var(--rmm-ds-border, rgba(255, 255, 255, 0.3));',
+            'background: var(--rmm-ds-card, #ffffff);',
+            'border-radius: var(--rmm-ds-radius-btn, 20px);',
+        ];
+
+        foreach ($expected as $declaration) {
+            $this->assertStringContainsString(
+                $declaration,
+                $css,
+                sprintf('Lightbox CSS is missing token fallback: %s', $declaration)
+            );
+        }
+    }
+
 }
