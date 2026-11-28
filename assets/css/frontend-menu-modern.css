@@ -1121,3 +1121,29 @@ body.dark-theme .rmm-food-loop-load-more-btn:hover{
         justify-content: center;
     }
 }
+
+
+/* Match the food-details modal stepper to the selected-items quantity control. */
+.rmm-modal-qty-container .rmm-cat-qty-num {
+    width: 22px;
+    min-width: 22px;
+    height: 26px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    color: inherit;
+    font-size: 13.5px;
+    font-weight: 800;
+    line-height: 1;
+    text-align: center;
+    appearance: textfield;
+    -moz-appearance: textfield;
+}
+
+.rmm-modal-qty-container .rmm-cat-qty-num::-webkit-inner-spin-button,
+.rmm-modal-qty-container .rmm-cat-qty-num::-webkit-outer-spin-button {
+    margin: 0;
+    -webkit-appearance: none;
+}
