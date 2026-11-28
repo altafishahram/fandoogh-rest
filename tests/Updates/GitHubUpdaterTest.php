@@ -35,6 +35,23 @@ class GitHubUpdaterTest extends TestCase {
         );
     }
 
+    public function test_offers_v135_when_site_is_on_v134() {
+        $release = $this->release(
+            'v1.3.5',
+            'https://github.com/altafishahram/fandoogh-rest/releases/download/v1.3.5/fondogh-online-menu.zip'
+        );
+
+        $update = GitHubUpdater::create_update_object(
+            $release,
+            '1.3.4',
+            'fondogh-online-menu/fondogh-online-menu.php'
+        );
+
+        $this->assertIsObject($update);
+        $this->assertSame('1.3.5', $update->version);
+        $this->assertSame('1.3.5', $update->new_version);
+    }
+
     public function test_does_not_offer_same_or_older_version() {
         $this->assertFalse(
             GitHubUpdater::create_update_object(
