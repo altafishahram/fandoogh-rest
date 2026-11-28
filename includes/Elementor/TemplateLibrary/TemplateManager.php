@@ -17,30 +17,9 @@ class TemplateManager {
             'fast_food' => [
                 'id'          => 'fast_food',
                 'title'       => __('فست‌فود و پیتزا مدرن (Modern Fast Food)', 'fondogh-online-menu'),
-                'description' => __('طراحی پرانرژی و جذاب با کارت‌های تصویری بزرگ، برچسب‌های تند و پرفروش، و نوار دسته‌بندی چسبان.', 'fondogh-online-menu'),
+                'description' => __('قالب پیش‌فرض منوی آنلاین با طراحی مدرن، کارت‌های تصویری بزرگ و نوار دسته‌بندی چسبان.', 'fondogh-online-menu'),
                 'layout'      => 'modern_grid',
                 'preview_img' => RMM_PLUGIN_URL . 'assets/images/preview-fastfood.jpg',
-            ],
-            'fine_dining' => [
-                'id'          => 'fine_dining',
-                'title'       => __('کافه و رستوران لوکس (Fine Dining / Luxury)', 'fondogh-online-menu'),
-                'description' => __('طراحی مینیمال، تایپوگرافی شیک و خطوط ظریف قیمت‌گذاری، ایده‌آل برای کافه‌ها و رستوران‌های مجلل.', 'fondogh-online-menu'),
-                'layout'      => 'fine_dining',
-                'preview_img' => RMM_PLUGIN_URL . 'assets/images/preview-finedining.jpg',
-            ],
-            'app_style' => [
-                'id'          => 'app_style',
-                'title'       => __('طرح اپلیکیشنی (مشابه اسنپ‌فود / UberEats)', 'fondogh-online-menu'),
-                'description' => __('چیدمان لیستی بهینه برای موبایل با دکمه‌های سریع انتخاب مخلفات و سبد خرید شناور چسبان.', 'fondogh-online-menu'),
-                'layout'      => 'app_list',
-                'preview_img' => RMM_PLUGIN_URL . 'assets/images/preview-appstyle.jpg',
-            ],
-            'traditional' => [
-                'id'          => 'traditional',
-                'title'       => __('رستوران سنتی و کلاسیک (Oriental Classic)', 'fondogh-online-menu'),
-                'description' => __('مناسب سفره‌خانه‌ها و رستوران‌های سنتی ایرانی با کادرهای گرم و المان‌های اصیل.', 'fondogh-online-menu'),
-                'layout'      => 'compact_grid',
-                'preview_img' => RMM_PLUGIN_URL . 'assets/images/preview-traditional.jpg',
             ],
         ];
     }
@@ -48,8 +27,8 @@ class TemplateManager {
     public function add_template_menu() {
         add_submenu_page(
             'rmm-settings',
-            __('قالب‌های آماده منو', 'fondogh-online-menu'),
-            __('🎨 قالب‌های آماده منو', 'fondogh-online-menu'),
+            __('قالب آماده منو', 'fondogh-online-menu'),
+            __('🎨 قالب آماده منو', 'fondogh-online-menu'),
             'manage_options',
             'rmm-templates',
             [$this, 'render_templates_page']
@@ -153,11 +132,7 @@ class TemplateManager {
 
         // Map template IDs to JSON kit files
         $json_map = [
-            'fast_food'   => 'fast-food-kit.json',
-            'fine_dining' => 'fine-dining-kit.json',
-            'app_style'   => 'app-style-kit.json',
-            'traditional' => 'oriental-kit.json',
-            'oriental'    => 'oriental-kit.json',
+            'fast_food' => 'fast-food-kit.json',
         ];
 
         $elementor_data = null;
