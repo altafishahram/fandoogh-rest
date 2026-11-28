@@ -54,7 +54,7 @@ class TemplateManager {
                         <div class="rmm-admin-inline-345f0ba8 rmm-admin-flex-row">
                             <div class="rmm-admin-inline-b2639e22 rmm-admin-flex-row">
                                 <?php if (!empty($tpl['preview_img'])) : ?>
-                                    <img src="<?php echo esc_url($tpl['preview_img']); ?>" alt="<?php echo esc_attr($tpl['title']); ?>" style="width: 100%; height: 100%; object-fit: cover;">
+                                    <img src="<?php echo esc_url($tpl['preview_img']); ?>" alt="<?php echo esc_attr($tpl['title']); ?>" class="rmm-template-preview-image">
                                 <?php else : ?>
                                     🍽️
                                 <?php endif; ?>
@@ -64,7 +64,7 @@ class TemplateManager {
                                     <h3 class="rmm-admin-inline-051bce49"><?php echo esc_html($tpl['title']); ?></h3>
                                     <p class="rmm-admin-inline-d26adac3"><?php echo esc_html($tpl['description']); ?></p>
                                 </div>
-                                <button class="button button-primary rmm-import-tpl-btn" data-template-id="<?php echo esc_attr($tpl['id']); ?>" style="width: 100%; border-radius: 6px; font-weight: bold; padding: 6px 0; height: auto;">
+                                <button class="button button-primary rmm-import-tpl-btn rmm-template-import-button" data-template-id="<?php echo esc_attr($tpl['id']); ?>">
                                     🚀 <?php _e('ساخت برگه المنتور از این قالب', 'fondogh-online-menu'); ?>
                                 </button>
                             </div>
