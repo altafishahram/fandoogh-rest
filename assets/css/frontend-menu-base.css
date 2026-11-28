@@ -514,13 +514,13 @@ body.admin-bar .rmm-category-nav-wrapper.rmm-sticky-bar {
     width: 38px;
     height: 38px;
     border-radius: 50%;
-    cursor: pointer !important;
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #0f172a;
-    z-index: 1000 !important;
-    pointer-events: auto !important;
+    z-index: 1000;
+    pointer-events: auto;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -544,7 +544,7 @@ body.admin-bar .rmm-category-nav-wrapper.rmm-sticky-bar {
 .rmm-modal-hero-img {
     width: 100%;
     height: 100%;
-    object-fit: contain !important;
+    object-fit: contain;
     display: block;
     margin: 0 auto;
 }
@@ -606,7 +606,7 @@ body.admin-bar .rmm-category-nav-wrapper.rmm-sticky-bar {
 .rmm-modal-slide img {
     width: 100%;
     height: 100%;
-    object-fit: contain !important;
+    object-fit: contain;
     display: block;
     margin: 0 auto;
 }
@@ -763,22 +763,22 @@ body.admin-bar .rmm-category-nav-wrapper.rmm-sticky-bar {
     gap: 8px;
 }
 
-.rmm-modal-food-price del,
-.rmm-modal-old-price,
-.rmm-card-old-price {
-    font-size: 13px !important;
-    color: #94a3b8 !important;
-    text-decoration: line-through !important;
-    font-weight: 500 !important;
+.rmm-modal-box .rmm-modal-food-price del,
+.rmm-modal-box .rmm-modal-old-price,
+.rmm-food-card .rmm-card-old-price {
+    font-size: 13px;
+    color: #94a3b8;
+    text-decoration: line-through;
+    font-weight: 500;
     opacity: 0.8;
 }
 
-.rmm-modal-food-price ins,
-.rmm-modal-sale-price,
-.rmm-card-sale-price {
-    color: #ef4444 !important;
-    font-weight: 800 !important;
-    text-decoration: none !important;
+.rmm-modal-box .rmm-modal-food-price ins,
+.rmm-modal-box .rmm-modal-sale-price,
+.rmm-food-card .rmm-card-sale-price {
+    color: #ef4444;
+    font-weight: 800;
+    text-decoration: none;
 }
 
 .rmm-card-regular-price {
