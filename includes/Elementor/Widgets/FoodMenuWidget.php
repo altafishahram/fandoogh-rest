@@ -525,6 +525,16 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
             ]
         );
 
+        $this->end_controls_section();
+
+        $this->start_controls_section(
+            'section_style_card_image',
+            [
+                'label' => __('استایل تصویر کارت غذا', 'fondogh-online-menu'),
+                'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+            ]
+        );
+
         // Card Image Controls
         $this->add_control(
             'card_image_heading',
@@ -642,6 +652,16 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
             ]
         );
 
+        $this->end_controls_section();
+
+        $this->start_controls_section(
+            'section_style_price',
+            [
+                'label' => __('تایپوگرافی و رنگ قیمت', 'fondogh-online-menu'),
+                'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+            ]
+        );
+
         // Price
         $this->add_control(
             'price_heading',
@@ -672,6 +692,16 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
             ]
         );
 
+        $this->end_controls_section();
+
+        $this->start_controls_section(
+            'section_style_description',
+            [
+                'label' => __('تایپوگرافی و رنگ توضیحات و ترکیبات', 'fondogh-online-menu'),
+                'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+            ]
+        );
+
         // Ingredients
         $this->add_control(
             'ingredients_heading',
@@ -699,6 +729,16 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
                 'name'     => 'ingredients_typography',
                 'label'    => __('تایپوگرافی ترکیبات و توضیحات', 'fondogh-online-menu'),
                 'selector' => '{{WRAPPER}} .rmm-food-card .rmm-food-ingredients, {{WRAPPER}} .rmm-food-card .rmm-food-desc',
+            ]
+        );
+
+        $this->end_controls_section();
+
+        $this->start_controls_section(
+            'section_style_meta',
+            [
+                'label' => __('تایپوگرافی و رنگ اطلاعات تکمیلی', 'fondogh-online-menu'),
+                'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
             ]
         );
 
@@ -788,6 +828,16 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
                 'selectors' => [
                     '{{WRAPPER}} .rmm-card-badge' => 'box-shadow: 0 2px 8px rgba(0,0,0,0.18);',
                 ],
+            ]
+        );
+
+        $this->end_controls_section();
+
+        $this->start_controls_section(
+            'section_style_stock_badge',
+            [
+                'label' => __('استایل نشان ناموجود', 'fondogh-online-menu'),
+                'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
             ]
         );
 
@@ -1028,6 +1078,16 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
             ]
         );
 
+        $this->end_controls_section();
+
+        $this->start_controls_section(
+            'section_style_modal_content',
+            [
+                'label' => __('تنظیمات ظاهر و محتوای پاپ‌آپ', 'fondogh-online-menu'),
+                'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+            ]
+        );
+
         // Modal Icons & Close Button
         $this->add_control(
             'modal_icons_heading',
@@ -1188,6 +1248,16 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
             ]
         );
 
+        $this->end_controls_section();
+
+        $this->start_controls_section(
+            'section_style_modal_options',
+            [
+                'label' => __('کادرهای انتخاب سایز، مخلفات و یادداشت', 'fondogh-online-menu'),
+                'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+            ]
+        );
+
         // Section Boxes (Portions, Addons, Note)
         $this->add_control(
             'modal_sections_heading',
@@ -1269,6 +1339,16 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
                 'selectors' => [
                     '{{WRAPPER}} .rmm-modal-kitchen-note input' => 'color: {{VALUE}};',
                 ],
+            ]
+        );
+
+        $this->end_controls_section();
+
+        $this->start_controls_section(
+            'section_style_modal_quantity',
+            [
+                'label' => __('کنترل تعداد سفارش', 'fondogh-online-menu'),
+                'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
             ]
         );
 
@@ -1370,6 +1450,16 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
                 'name'     => 'modal_qty_val_typography',
                 'label'    => __('فونت و اندازه عدد تعداد', 'fondogh-online-menu'),
                 'selector' => '{{WRAPPER}} .rmm-qty-val',
+            ]
+        );
+
+        $this->end_controls_section();
+
+        $this->start_controls_section(
+            'section_style_modal_submit',
+            [
+                'label' => __('دکمه ثبت سفارش پاپ‌آپ', 'fondogh-online-menu'),
+                'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
             ]
         );
 
