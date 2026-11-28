@@ -42,7 +42,7 @@ $autoloader_file = RMM_PLUGIN_PATH . 'includes/Autoloader.php';
 if (file_exists($autoloader_file)) {
     require_once $autoloader_file;
     if (class_exists('RMM\\Autoloader')) {
-        \\RMM\\Autoloader::run();
+        \RMM\Autoloader::run();
     }
 } else {
     add_action('admin_notices', function () {
@@ -59,7 +59,7 @@ if (file_exists($autoloader_file)) {
  */
 add_action('plugins_loaded', function () {
     if (class_exists('RMM\\Core\\GitHubUpdater')) {
-        new \\RMM\\Core\\GitHubUpdater();
+        new \RMM\Core\GitHubUpdater();
     }
 }, 1);
 
@@ -81,9 +81,9 @@ add_action('before_woocommerce_init', function () {
 register_activation_hook(__FILE__, function () {
     try {
         if (class_exists('RMM\\Core\\Installer')) {
-            \\RMM\\Core\\Installer::activate();
+            \RMM\Core\Installer::activate();
         }
-    } catch (\\Throwable $e) {
+    } catch (\Throwable $e) {
         error_log('Fondogh Menu Activation Error: ' . $e->getMessage());
     }
 });
@@ -91,9 +91,9 @@ register_activation_hook(__FILE__, function () {
 register_deactivation_hook(__FILE__, function () {
     try {
         if (class_exists('RMM\\Core\\Installer')) {
-            \\RMM\\Core\\Installer::deactivate();
+            \RMM\Core\Installer::deactivate();
         }
-    } catch (\\Throwable $e) {
+    } catch (\Throwable $e) {
         error_log('Fondogh Menu Deactivation Error: ' . $e->getMessage());
     }
 });
@@ -114,9 +114,9 @@ add_action('plugins_loaded', function () {
 
     try {
         if (class_exists('RMM\\Plugin')) {
-            \\RMM\\Plugin::instance();
+            \RMM\Plugin::instance();
         }
-    } catch (\\Throwable $e) {
+    } catch (\Throwable $e) {
         error_log('Fondogh Menu Launch Error: ' . $e->getMessage());
         add_action('admin_notices', function () use ($e) {
             echo '<div class="notice notice-error"><p>' .
