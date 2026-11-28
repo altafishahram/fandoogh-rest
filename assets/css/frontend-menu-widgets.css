@@ -315,7 +315,7 @@
 .rmm-top-controls-bar .rmm-live-search-bar {
     flex: 1;
     min-width: 240px;
-    margin-bottom: 0 !important;
+    margin-bottom: 0;
 }
 
 .rmm-view-switcher {
@@ -369,7 +369,7 @@
    RESPONSIVE VIEW MODES: LIST VS GRID
    ========================================================================== */
 .rmm-menu-container.rmm-view-list {
-    display: grid !important;
+    display: grid;
     gap: 16px;
 }
 
@@ -584,7 +584,7 @@
     transform: rotate(180deg);
 }
 
-.rmm-lang-dropdown-panel {
+.rmm-lang-dropdown-component .rmm-lang-dropdown-panel {
     display: none;
     position: absolute;
     top: calc(100% + 8px);
@@ -595,13 +595,13 @@
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.16);
     border: 1px solid rgba(0, 0, 0, 0.06);
     overflow: hidden;
-    z-index: 999999 !important;
+    z-index: 999999;
     padding: 6px;
     box-sizing: border-box;
 }
 
 .rmm-lang-dropdown-component.is-open .rmm-lang-dropdown-panel {
-    display: block !important;
+    display: block;
     animation: rmmFadeDown 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -616,13 +616,13 @@
     }
 }
 
-.rmm-lang-dropdown-item {
+.rmm-lang-dropdown-panel .rmm-lang-dropdown-item {
     display: flex;
     align-items: center;
     gap: 10px;
     padding: 10px 14px;
     border-radius: 10px;
-    text-decoration: none !important;
+    text-decoration: none;
     color: #1e293b;
     font-size: 14px;
     font-weight: 600;
@@ -670,7 +670,7 @@
     flex-wrap: wrap;
 }
 
-.rmm-lang-pill-item {
+.rmm-lang-pills-component .rmm-lang-pill-item {
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -680,7 +680,7 @@
     color: #475569;
     font-size: 13px;
     font-weight: 600;
-    text-decoration: none !important;
+    text-decoration: none;
     transition: all 0.2s ease;
 }
 
