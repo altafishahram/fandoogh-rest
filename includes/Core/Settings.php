@@ -177,6 +177,132 @@ class Settings {
         $enabled_languages = $settings['enabled_languages'] ?? ['fa', 'en'];
         $ai_provider = $settings['ai_translate_provider'] ?? 'google_free';
         ?>
+        <style>
+            /* Fondogh settings screen */
+            .rmm-admin-wrap {
+                box-sizing: border-box;
+                width: min(1180px, calc(100% - 32px));
+                max-width: 1180px !important;
+                margin: 24px auto 40px !important;
+                color: #172033;
+            }
+            .rmm-admin-wrap *,
+            .rmm-admin-wrap *::before,
+            .rmm-admin-wrap *::after { box-sizing: border-box; }
+            .rmm-admin-wrap > div {
+                padding: clamp(16px, 3vw, 32px) !important;
+                border: 1px solid #e5eaf1 !important;
+                border-radius: 18px !important;
+                background: #fff;
+                box-shadow: 0 8px 28px rgba(15, 23, 42, .045) !important;
+            }
+            .rmm-admin-wrap > div > div:first-child {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 18px;
+                justify-content: space-between;
+                padding-bottom: 22px !important;
+                margin-bottom: 26px !important;
+                border-bottom: 1px solid #e8edf3 !important;
+            }
+            .rmm-admin-wrap h1 {
+                font-size: clamp(19px, 2.2vw, 25px) !important;
+                line-height: 1.5 !important;
+                flex-wrap: wrap;
+            }
+            .rmm-admin-wrap h2 {
+                display: flex;
+                align-items: center;
+                min-height: 42px;
+                padding: 8px 12px !important;
+                border-radius: 8px;
+                background: #f8fafc;
+                line-height: 1.7;
+            }
+            .rmm-admin-wrap .form-table {
+                margin-top: 8px;
+                border-collapse: separate;
+                border-spacing: 0;
+            }
+            .rmm-admin-wrap .form-table th,
+            .rmm-admin-wrap .form-table td {
+                padding: 16px 14px;
+                border-bottom: 1px solid #eef2f6;
+                vertical-align: top;
+                line-height: 1.8;
+            }
+            .rmm-admin-wrap .form-table th {
+                width: 250px;
+                color: #334155;
+                font-weight: 600;
+            }
+            .rmm-admin-wrap .form-table tr:last-child th,
+            .rmm-admin-wrap .form-table tr:last-child td { border-bottom: 0; }
+            .rmm-admin-wrap input[type="text"],
+            .rmm-admin-wrap input[type="password"],
+            .rmm-admin-wrap input[type="number"],
+            .rmm-admin-wrap select {
+                min-height: 38px;
+                max-width: 100%;
+                border-color: #cbd5e1;
+                border-radius: 7px;
+            }
+            .rmm-admin-wrap input.regular-text { width: min(100%, 380px); }
+            .rmm-admin-wrap .description { line-height: 1.8; }
+            .rmm-admin-wrap .button-primary {
+                min-height: 40px;
+                padding: 7px 16px !important;
+                border-radius: 8px !important;
+                font-weight: 600;
+            }
+            .rmm-admin-wrap .submit { margin: 24px 0 0; padding-top: 18px; border-top: 1px solid #eef2f6; }
+            .rmm-admin-wrap .submit .button { min-height: 44px; }
+            @media (max-width: 782px) {
+                .rmm-admin-wrap {
+                    width: calc(100% - 24px);
+                    margin: 14px 12px 28px !important;
+                }
+                .rmm-admin-wrap > div { border-radius: 12px !important; }
+                .rmm-admin-wrap > div > div:first-child { align-items: stretch; }
+                .rmm-admin-wrap > div > div:first-child > div { width: 100%; }
+                .rmm-admin-wrap > div > div:first-child .button { display: block; width: 100%; text-align: center; }
+                .rmm-admin-wrap .form-table,
+                .rmm-admin-wrap .form-table tbody,
+                .rmm-admin-wrap .form-table tr,
+                .rmm-admin-wrap .form-table th,
+                .rmm-admin-wrap .form-table td { display: block; width: 100% !important; }
+                .rmm-admin-wrap .form-table tr {
+                    padding: 10px 0;
+                    border-bottom: 1px solid #e8edf3;
+                }
+                .rmm-admin-wrap .form-table th {
+                    padding: 8px 4px 4px;
+                    border: 0;
+                }
+                .rmm-admin-wrap .form-table td {
+                    padding: 6px 4px 12px;
+                    border: 0;
+                }
+                .rmm-admin-wrap .form-table td > div[style*="display: flex"] {
+                    flex-wrap: wrap;
+                    align-items: flex-start !important;
+                }
+                .rmm-admin-wrap .form-table td > div[style*="display: flex"] .description {
+                    flex-basis: 100%;
+                }
+                .rmm-admin-wrap .form-table select { width: 100%; min-width: 0 !important; }
+                .rmm-admin-wrap .form-table fieldset label { line-height: 1.8; }
+                .rmm-admin-wrap .form-table input[type="number"] { max-width: 100%; }
+                .rmm-admin-wrap .submit .button { width: 100%; min-height: 46px; }
+            }
+            @media (max-width: 420px) {
+                .rmm-admin-wrap { width: calc(100% - 16px); margin-right: 8px !important; margin-left: 8px !important; }
+                .rmm-admin-wrap > div { padding: 14px !important; }
+                .rmm-admin-wrap h1 { font-size: 18px !important; }
+                .rmm-admin-wrap h2 { font-size: 14px !important; }
+            }
+        </style>
         <div class="wrap rmm-admin-wrap" style="max-width: 960px; margin-top: 20px;">
             <div style="background: #ffffff; padding: 25px 30px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.04);">
                 
