@@ -9,8 +9,18 @@ class Assets {
 
     public function __construct() {
         add_action('wp_enqueue_scripts', [$this, 'register_frontend_assets']);
+        add_action('admin_enqueue_scripts', [$this, 'register_admin_assets']);
         add_action('wp_enqueue_scripts', [$this, 'optimize_view_only_mode'], 99);
         add_filter('woocommerce_add_to_cart_fragments', [$this, 'add_floating_cart_fragments']);
+    }
+
+    public function register_admin_assets() {
+        wp_enqueue_style(
+            'rmm-admin-ui',
+            RMM_PLUGIN_URL . 'assets/css/admin-ui.css',
+            [],
+            RMM_VERSION
+        );
     }
 
     public function register_frontend_assets() {
