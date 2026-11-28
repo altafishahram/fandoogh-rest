@@ -531,7 +531,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
             'section_style_card_image',
             [
                 'label' => __('استایل تصویر کارت غذا', 'fondogh-online-menu'),
-                'tab'   => \\Elementor\\Controls_Manager::TAB_STYLE,
+                'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
             ]
         );
 
@@ -658,7 +658,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
             'section_style_price',
             [
                 'label' => __('تایپوگرافی و رنگ قیمت', 'fondogh-online-menu'),
-                'tab'   => \\Elementor\\Controls_Manager::TAB_STYLE,
+                'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
             ]
         );
 
@@ -698,7 +698,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
             'section_style_description',
             [
                 'label' => __('تایپوگرافی و رنگ توضیحات و ترکیبات', 'fondogh-online-menu'),
-                'tab'   => \\Elementor\\Controls_Manager::TAB_STYLE,
+                'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
             ]
         );
 
@@ -738,7 +738,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
             'section_style_meta',
             [
                 'label' => __('تایپوگرافی و رنگ اطلاعات تکمیلی', 'fondogh-online-menu'),
-                'tab'   => \\Elementor\\Controls_Manager::TAB_STYLE,
+                'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
             ]
         );
 
@@ -837,7 +837,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
             'section_style_stock_badge',
             [
                 'label' => __('استایل نشان ناموجود', 'fondogh-online-menu'),
-                'tab'   => \\Elementor\\Controls_Manager::TAB_STYLE,
+                'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
             ]
         );
 
