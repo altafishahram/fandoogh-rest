@@ -401,7 +401,7 @@ class Settings {
                                     <div class="rmm-admin-inline-4518c18d rmm-admin-flex-row">
                                         <input type="number" name="rmm_settings[image_max_width]" value="<?php echo esc_attr($settings['image_max_width'] ?? 1200); ?>" class="rmm-admin-number-100">
                                         <span>&times;</span>
-                                        <input type="number" name="rmm_settings[image_max_height]" value="<?php echo esc_attr($settings['image_max_height'] ?? 1200); ?>" style="width: 100px;">
+                                        <input type="number" name="rmm_settings[image_max_height]" value="<?php echo esc_attr($settings['image_max_height'] ?? 1200); ?>" class="rmm-admin-number-100">
                                         <span class="description"><?php _e('پیکسل (تصاویر بزرگ‌تر به صورت خودکار به این ابعاد با حفظ نسبت تغییر اندازه می‌یابند)', 'fondogh-online-menu'); ?></span>
                                     </div>
                                 </td>
@@ -422,7 +422,7 @@ class Settings {
                                 <th scope="row"><?php _e('حداکثر حجم مجاز فایل آپلود:', 'fondogh-online-menu'); ?></th>
                                 <td>
                                     <div class="rmm-admin-inline-4518c18d rmm-admin-flex-row">
-                                        <input type="number" name="rmm_settings[image_max_size_kb]" value="<?php echo esc_attr($settings['image_max_size_kb'] ?? 3072); ?>" style="width: 100px;">
+                                        <input type="number" name="rmm_settings[image_max_size_kb]" value="<?php echo esc_attr($settings['image_max_size_kb'] ?? 3072); ?>" class="rmm-admin-number-100">
                                         <span><?php _e('کیلوبایت (KB)', 'fondogh-online-menu'); ?></span>
                                         <span class="description"><?php _e('مثلاً: 3072 برای 3 مگابایت. فایل‌های سنگین‌تر از این مقدار قبل از پردازش رد می‌شوند.', 'fondogh-online-menu'); ?></span>
                                     </div>
