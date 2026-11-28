@@ -692,7 +692,7 @@ class CssCompiler {
 }
 .rmm-card-badge,
 .rmm-modal-zoom-hint,
-.rmm-modal-slider-counter,
+.rmm-slider-counter,
 .rmm-modal-badge-overlay {
   background: var(--rmm-ds-modal-backdrop) !important;
   color: var(--rmm-ds-text) !important;
