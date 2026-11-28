@@ -322,7 +322,7 @@ class GitHubUpdater {
         }
 
         $verified = openssl_verify($manifest_json, $signature, $public_key, OPENSSL_ALGO_SHA256);
-        if (is_resource($public_key) || $public_key instanceof \\OpenSSLAsymmetricKey) {
+        if (is_resource($public_key) || $public_key instanceof \OpenSSLAsymmetricKey) {
             openssl_free_key($public_key);
         }
 
@@ -406,12 +406,11 @@ class GitHubUpdater {
     }
 
     /**
-     * Verify the downloaded plugin ZIP against GitHub's SHA-256 asset digest.
+     * Verify the downloaded ZIP against the publisher-signed SHA-256 manifest.
      *
-     * This detects corrupted or substituted package bytes between release
-     * metadata retrieval and installation. The digest is supplied by GitHub's
-     * Releases API; it is not a publisher signature and does not protect against
-     * compromise of the repository/release account itself.
+     * The expected digest is authenticated with the public key pinned in this
+     * plugin, so changing both the ZIP and GitHub's release metadata is not
+     * sufficient to forge a valid update.
      *
      * @param string|WP_Error|false $reply
      * @param string $package
