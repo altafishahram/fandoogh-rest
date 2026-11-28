@@ -625,7 +625,7 @@ class FoodCardWidget extends Widget_Base {
                         <?php if ($settings['show_order_btn'] === 'yes') :
                             $card_raw_price = (isset($product) && $product) ? floatval($product->get_price()) : 0;
                         ?>
-                            <button type="button" class="rmm-btn-order" data-product-id="<?php echo esc_attr($prod_id); ?>" data-title="<?php echo esc_attr($title); ?>" data-price="<?php echo esc_attr($card_raw_price); ?>" data-image="<?php echo esc_url($image_url); ?>" class="rmm-btn-order rmm-card-order-trigger">
+                            <button type="button" class="rmm-btn-order rmm-card-order-trigger" data-product-id="<?php echo esc_attr($prod_id); ?>" data-title="<?php echo esc_attr($title); ?>" data-price="<?php echo esc_attr($card_raw_price); ?>" data-image="<?php echo esc_url($image_url); ?>">
                                 <?php if (!empty($settings['order_btn_icon']['value'])) : ?>
                                     <span class="rmm-btn-icon" aria-hidden="true">
                                         <?php Icons_Manager::render_icon($settings['order_btn_icon'], ['aria-hidden' => 'true']); ?>
