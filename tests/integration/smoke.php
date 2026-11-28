@@ -21,6 +21,10 @@ if (false === has_filter('update_plugins_github.com') || false === has_filter('p
     WP_CLI::error('GitHub updater hooks were not registered.');
 }
 
+if (false === has_action('before_woocommerce_init')) {
+    WP_CLI::error('WooCommerce HPOS compatibility was not declared.');
+}
+
 if (!did_action('elementor/loaded')) {
     WP_CLI::error('Elementor did not finish loading.');
 }

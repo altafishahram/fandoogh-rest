@@ -3,7 +3,7 @@
  * Plugin Name: منو آنلاین فندق (Fondogh Online Menu)
  * Plugin URI:  https://fondogh-menu.ir
  * Description: افزونه جامع و هوشمند مدیریت منوی آنلاین و سفارش‌گیری رستوران و کافه بر پایه ووکامرس و المنتور (چندشعبه‌ای، چندزبانه، پنل اختصاصی فرانت‌اند PWA، حالت کاتالوگ و سفارش سر میز).
- * Version:     1.3.2
+ * Version:     1.3.3
  * Author:      تیم منو آنلاین فندق
  * Author URI:  https://fondogh-menu.ir
  * Text Domain: fondogh-online-menu
@@ -22,7 +22,7 @@ if (!defined('ABSPATH')) {
 
 // Define Plugin Constants safely
 if (!defined('RMM_VERSION')) {
-    define('RMM_VERSION', '1.3.2');
+    define('RMM_VERSION', '1.3.3');
 }
 if (!defined('RMM_PLUGIN_FILE')) {
     define('RMM_PLUGIN_FILE', __FILE__);
@@ -62,6 +62,18 @@ add_action('plugins_loaded', function () {
         new \RMM\Core\GitHubUpdater();
     }
 }, 1);
+
+/**
+ * Declare compatibility with WooCommerce High-Performance Order Storage (HPOS).
+ * Order access in this plugin uses WooCommerce CRUD APIs (wc_get_orders(),
+ * wc_get_order(), and WC_Order methods), not direct order post/meta access.
+ */
+add_action('before_woocommerce_init', function () {
+    $features_util = '\\Automattic\\WooCommerce\\Utilities\\FeaturesUtil';
+    if (class_exists($features_util) && method_exists($features_util, 'declare_compatibility')) {
+        $features_util::declare_compatibility('custom_order_tables', RMM_PLUGIN_FILE, true);
+    }
+});
 
 /**
  * Activation & Deactivation Hooks (Safe Wrapper)
