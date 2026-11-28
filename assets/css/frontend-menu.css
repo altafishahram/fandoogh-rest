@@ -3335,3 +3335,223 @@ body.light-theme .rmm-catalog-done-btn {
         flex-direction: column;
     }
 }
+
+
+/* ==========================================================================
+   Extracted component styles (moved from widget markup; visual values preserved)
+   ========================================================================== */
+
+.rmm-loop-style-01 {
+    width:100%;
+    height:180px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#f1f5f9;
+    color:#94a3b8;
+}
+
+.rmm-loop-style-02 {
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    margin-top:10px;
+}
+
+.rmm-loop-style-03 {
+    font-size:13px;
+    line-height:1.6;
+    margin-bottom:8px;
+}
+
+.rmm-loop-style-04 {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-top:8px;
+}
+
+.rmm-loop-style-05 {
+    display:flex;
+    gap:6px;
+}
+
+.rmm-loop-style-06 {
+    display:grid;
+}
+
+.rmm-loop-style-07 {
+    text-align:center;
+    padding:30px;
+    opacity:0.7;
+}
+
+.rmm-loop-style-08 {
+    text-align:center;
+    margin-top:24px;
+}
+
+.rmm-card-style-01 {
+    width:100%;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#f1f5f9;
+    color:#94a3b8;
+}
+
+.rmm-card-style-02 {
+    position:absolute;
+    top:10px;
+    right:10px;
+    display:flex;
+    gap:6px;
+}
+
+.rmm-card-style-03 {
+    background:rgba(212,175,55,0.9);
+    color:#fff;
+    font-size:11px;
+    padding:3px 8px;
+    border-radius:12px;
+}
+
+.rmm-card-style-04 {
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+}
+
+.rmm-card-style-05 {
+    font-size:13px;
+    line-height:1.6;
+    margin-bottom:10px;
+}
+
+.rmm-card-style-06 {
+    font-size:12px;
+    margin-bottom:8px;
+    opacity:0.85;
+}
+
+.rmm-card-style-07 {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-top:10px;
+}
+
+.rmm-card-style-08 {
+    display:flex;
+    gap:8px;
+}
+
+.rmm-modal-style-01 {
+    position:relative;
+    margin:auto;
+    overflow:hidden;
+}
+
+.rmm-modal-style-02 {
+    position:relative;
+    height:240px;
+    background:#f1f5f9;
+    overflow:hidden;
+}
+
+.rmm-modal-style-03 {
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.rmm-modal-style-04 {
+    width:100%;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#94a3b8;
+}
+
+.rmm-modal-style-05 {
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    margin-bottom:12px;
+}
+
+.rmm-modal-style-06 {
+    margin:0;
+    font-size:20px;
+    font-weight:700;
+}
+
+.rmm-modal-style-07 {
+    font-size:18px;
+    font-weight:700;
+}
+
+.rmm-modal-style-08 {
+    margin-bottom:12px;
+    display:flex;
+    gap:8px;
+}
+
+.rmm-modal-style-09 {
+    font-size:12px;
+    padding:4px 8px;
+    border-radius:8px;
+}
+
+.rmm-modal-style-10 {
+    font-size:14px;
+    line-height:1.7;
+    margin-bottom:16px;
+}
+
+.rmm-modal-style-11 {
+    margin-bottom:16px;
+}
+
+.rmm-modal-style-12 {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-top:16px;
+    pt-4;
+}
+
+.rmm-modal-style-13 {
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+}
+
+.rmm-modal-style-14 {
+    width:32px;
+    height:32px;
+    border-radius:8px;
+    border:none;
+    cursor:pointer;
+}
+
+.rmm-modal-style-15 {
+    font-weight:700;
+    min-width:20px;
+    text-align:center;
+}
+
+.rmm-modal-style-16 {
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:10px 20px;
+    border-radius:12px;
+    border:none;
+    font-weight:600;
+    cursor:pointer;
+}
