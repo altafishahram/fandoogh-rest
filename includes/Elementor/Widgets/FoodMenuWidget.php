@@ -81,10 +81,6 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
                 'default' => 'modern_grid',
                 'options' => [
                     'modern_grid' => __('شبکه مدرن (Modern Grid)', 'fondogh-online-menu'),
-                    'oriental'    => __('تم شرقی (Oriental / Asian Luxury)', 'fondogh-online-menu'),
-                    'app_list'    => __('لیستی اپلیکیشنی (اسنپ‌فودی / UberEats)', 'fondogh-online-menu'),
-                    'fine_dining' => __('لوکس و کافه‌ای (Fine Dining / Minimal)', 'fondogh-online-menu'),
-                    'compact_grid'=> __('کارت فشرده (Compact)', 'fondogh-online-menu'),
                 ],
             ]
         );
@@ -2049,7 +2045,8 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
 
     protected function render() {
         $settings = $this->get_settings_for_display();
-        $style = $settings['layout_style'] ?? 'modern_grid';
+        // Only the Modern Grid preset is supported. Legacy saved preset values are ignored.
+        $style = 'modern_grid';
         $columns = $settings['columns'] ?? '3';
 
         $active_branch_id = \RMM\Branches\BranchContext::get_active_branch_id();
@@ -2074,7 +2071,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $str_list_view = class_exists('\RMM\I18n\MultiLangManager') ? \RMM\I18n\MultiLangManager::get_ui_string('list_view', $active_lang) : __('نمایش لیستی', 'fondogh-online-menu');
 
         $enable_switcher = ($settings['enable_view_switcher'] ?? 'yes') === 'yes';
-        $default_view = $settings['default_view'] ?? ($style === 'app_list' ? 'list' : 'grid');
+        $default_view = $settings['default_view'] ?? 'grid';
 
 
 
@@ -2100,7 +2097,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
         $desc_lines = $settings['desc_line_clamp'] ?? '1';
         $desc_class = ($desc_lines === 'full') ? 'rmm-desc-lines-full' : (($desc_lines === '2') ? 'rmm-desc-lines-2' : 'rmm-desc-lines-1');
         $grid_class = 'rmm-menu-container rmm-style-' . esc_attr($style) . ' ' . $view_class . ' rmm-cols-' . esc_attr($columns) . ' ' . $desc_class;
-        $wrapper_class = 'rmm-menu-widget-wrapper' . ($style === 'oriental' ? ' rmm-theme-oriental' : '');
+        $wrapper_class = 'rmm-menu-widget-wrapper';
 
         $context_data = [
             'is_view_only'      => $is_view_only,
@@ -2237,7 +2234,7 @@ class FoodMenuWidget extends \Elementor\Widget_Base {
                                 </div>
                                 <div class="rmm-cat-header-divider">
                                     <span class="rmm-cat-divider-line"></span>
-                                    <span class="rmm-cat-divider-ornament"><?php echo ($style === 'oriental') ? '🏮' : '◆'; ?></span>
+                                    <span class="rmm-cat-divider-ornament"><?php echo '◆'; ?></span>
                                     <span class="rmm-cat-divider-line"></span>
                                 </div>
                             </header>
