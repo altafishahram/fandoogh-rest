@@ -6,7 +6,7 @@
 - `frontend-menu-widgets.css`: secondary storefront widgets and standalone controls.
 - `frontend-menu-modern.css`: the single supported Modern menu presentation, catalog presentation and shared storefront-specific overrides.
 - `category-sheet.css`: isolated category-sheet component; loaded after the storefront base handle.
-- `portal-pwa.css`: standalone management PWA. It intentionally keeps its own `--rmm-*` token namespace rather than inheriting storefront theme colors.
+- `portal-pwa.css`: standalone management PWA. It intentionally keeps its own `--rmm-*` token namespace and is scoped to the `html.rmm-portal-html` document root rather than inheriting storefront theme colors.
 - `admin-ui.css`: extracted WordPress admin settings and template-library presentation.
 - `design-studio-admin.css`: styles for the Design System studio shell only.
 - `thermal-receipt.css`: standalone thermal receipt and print presentation.
@@ -21,7 +21,7 @@ The three storefront layers are enqueued in dependency order. The public `rmm-fr
 3. Put static presentation in CSS classes, not HTML `style` attributes. Inline styles are reserved for state-driven visibility or genuinely computed runtime values.
 4. Keep component styles in their owning stylesheet and preserve dependency order when adding a new layer.
 5. Avoid adding `!important`. The remaining storefront exceptions are limited to modal scroll locking/inline visibility and WooCommerce price formatting; the category sheet retains `!important` only to enforce reduced-motion behavior. The standalone PWA stylesheet must contain no `!important` declarations.
-6. Add responsive rules at the component boundary and verify narrow screens, tablet widths, and desktop layouts before changing layout behavior.
+6. Add responsive rules at the component boundary and verify narrow screens, tablet widths, and desktop layouts before changing layout behavior. Keep the PWA reset and theme selectors scoped to its dedicated document root.
 
 ## Regression protection
 
