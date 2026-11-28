@@ -141,4 +141,28 @@ class DesignSystemTokensTest extends TestCase {
     }
 
 
+    public function test_floating_cart_base_styles_use_design_tokens_with_fallbacks() {
+        $css = file_get_contents(dirname(__DIR__, 2) . '/assets/css/frontend-menu.css');
+
+        $this->assertNotFalse($css);
+
+        $expected = [
+            'background: var(--rmm-ds-cart-bg, #0f172a);',
+            'color: var(--rmm-ds-cart-text, #ffffff);',
+            'border-radius: var(--rmm-ds-cart-radius, 16px);',
+            'box-shadow: var(--rmm-ds-shadow-card, 0 10px 25px -5px rgba(15, 23, 42, 0.4));',
+            'background: var(--rmm-ds-cart-badge-bg, #0284c7);',
+            'color: var(--rmm-ds-cart-badge-text, #fff);',
+        ];
+
+        foreach ($expected as $declaration) {
+            $this->assertStringContainsString(
+                $declaration,
+                $css,
+                sprintf('Floating cart base CSS is missing token fallback: %s', $declaration)
+            );
+        }
+    }
+
+
 }
