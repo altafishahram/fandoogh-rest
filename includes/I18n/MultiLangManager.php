@@ -888,15 +888,15 @@ class MultiLangManager {
         }
 
         $current = self::get_current_language();
+        wp_enqueue_style('rmm-frontend-menu-widgets');
         $base_url = remove_query_arg('lang');
 
         ob_start();
         ?>
-        <div class="rmm-lang-switcher rmm-lang-switcher-<?php echo esc_attr($style); ?>" style="display: inline-flex; align-items: center; gap: 4px; background: rgba(241,245,249,0.9); padding: 3px 6px; border-radius: 20px; backdrop-filter: blur(4px);">
+        <div class="rmm-lang-switcher rmm-lang-switcher-<?php echo esc_attr($style); ?>">
             <?php foreach ($enabled as $code => $data) : ?>
                 <a href="<?php echo esc_url(add_query_arg('lang', $code, $base_url)); ?>" 
-                   class="rmm-lang-btn <?php echo ($current === $code) ? 'active' : ''; ?>" 
-                   style="padding: 3px 8px; border-radius: 12px; font-size: 12px; text-decoration: none; font-weight: bold; display: inline-flex; align-items: center; gap: 4px; transition: all 0.2s ease; <?php echo ($current === $code) ? 'background: #0284c7; color: #fff;' : 'color: #64748b;'; ?>"
+                   class="rmm-lang-btn <?php echo ($current === $code) ? 'active' : ''; ?>"
                    data-lang="<?php echo esc_attr($code); ?>"
                    title="<?php echo esc_attr($data['name']); ?>">
                     <span><?php echo esc_html($data['flag']); ?></span>
