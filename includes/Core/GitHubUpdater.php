@@ -285,7 +285,7 @@ class GitHubUpdater {
 
         $release = $this->get_latest_release();
         if (!is_array($release)) {
-            return new \\WP_Error('rmm_release_integrity_unavailable', 'Fondogh update verification failed: trusted release metadata is unavailable.');
+            return new \WP_Error('rmm_release_integrity_unavailable', 'Fondogh update verification failed: trusted release metadata is unavailable.');
         }
 
         $expected_url = self::get_package_url($release);
@@ -295,7 +295,7 @@ class GitHubUpdater {
 
         $expected_hash = self::get_package_sha256($release);
         if (!$expected_hash || !function_exists('download_url')) {
-            return new \\WP_Error('rmm_package_integrity_unavailable', 'Fondogh update verification failed: a valid SHA-256 digest is unavailable.');
+            return new \WP_Error('rmm_package_integrity_unavailable', 'Fondogh update verification failed: a valid SHA-256 digest is unavailable.');
         }
 
         $downloaded_file = download_url($package, 300);
@@ -312,7 +312,7 @@ class GitHubUpdater {
                 @unlink($downloaded_file);
             }
 
-            return new \\WP_Error('rmm_package_integrity_failed', 'Fondogh update blocked: the downloaded ZIP SHA-256 digest does not match the published release digest.');
+            return new \WP_Error('rmm_package_integrity_failed', 'Fondogh update blocked: the downloaded ZIP SHA-256 digest does not match the published release digest.');
         }
 
         return $downloaded_file;
