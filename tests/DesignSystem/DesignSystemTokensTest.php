@@ -39,7 +39,7 @@ class DesignSystemTokensTest extends TestCase {
     }
 
     public function test_category_navigation_mapping_covers_default_active_and_visual_variants() {
-        $css = RMM\\DesignSystem\\CssCompiler::get_component_mapping_css();
+        $css = RMM\DesignSystem\CssCompiler::get_component_mapping_css();
 
         $expected = [
             '.rmm-category-nav-wrapper',
@@ -66,8 +66,8 @@ class DesignSystemTokensTest extends TestCase {
     }
 
     public function test_category_navigation_tokens_are_compiled_for_light_and_dark_themes() {
-        $settings = RMM\\DesignSystem\\TokenSchema::get_default_settings();
-        $css      = RMM\\DesignSystem\\CssCompiler::compile($settings);
+        $settings = RMM\DesignSystem\TokenSchema::get_default_settings();
+        $css      = RMM\DesignSystem\CssCompiler::compile($settings);
 
         foreach (['cat_gap', 'cat_idle_bg', 'cat_idle_text', 'cat_active_bg', 'cat_active_text', 'cat_icon'] as $token) {
             $css_variable = '--rmm-ds-' . str_replace('_', '-', $token) . ':';
