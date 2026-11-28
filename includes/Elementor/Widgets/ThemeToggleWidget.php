@@ -456,18 +456,6 @@ class ThemeToggleWidget extends Widget_Base {
                 <?php endif; ?>
             </button>
         </div>
-        <style>
-            /* Pure CSS Switch between light and dark icon displays */
-            body.light-theme {{WRAPPER}} .rmm-icon-day { display: none !important; }
-            body.light-theme {{WRAPPER}} .rmm-icon-night { display: inline-flex !important; }
-            body.light-theme {{WRAPPER}} .rmm-label-day { display: none !important; }
-            body.light-theme {{WRAPPER}} .rmm-label-night { display: inline-block !important; }
-
-            body:not(.light-theme) {{WRAPPER}} .rmm-icon-day { display: inline-flex !important; }
-            body:not(.light-theme) {{WRAPPER}} .rmm-icon-night { display: none !important; }
-            body:not(.light-theme) {{WRAPPER}} .rmm-label-day { display: inline-block !important; }
-            body:not(.light-theme) {{WRAPPER}} .rmm-label-night { display: none !important; }
-        </style>
         <?php
     }
 }
