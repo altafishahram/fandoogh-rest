@@ -387,7 +387,7 @@ class DesignSystemTokensTest extends TestCase {
 
 
     public function test_shared_frontend_controls_use_design_tokens() {
-        $css = RMM\\DesignSystem\\CssCompiler::get_component_mapping_css();
+        $css = RMM\DesignSystem\CssCompiler::get_component_mapping_css();
 
         $expected = [
             '.rmm-category-nav-wrapper.rmm-sticky-bar',
