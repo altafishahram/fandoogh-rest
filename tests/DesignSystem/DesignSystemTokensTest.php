@@ -7,6 +7,18 @@ require_once dirname(__DIR__, 2) . '/includes/DesignSystem/CssCompiler.php';
 
 class DesignSystemTokensTest extends TestCase {
 
+
+    private function get_frontend_css() {
+        $base = dirname(__DIR__, 2) . '/assets/css/';
+
+        return implode("\n", [
+            file_get_contents($base . 'frontend-menu-base.css'),
+            file_get_contents($base . 'frontend-menu-widgets.css'),
+            file_get_contents($base . 'frontend-menu-themes.css'),
+        ]);
+    }
+
+
     public function test_light_and_dark_modes_share_the_same_token_schema() {
         $light = RMM\DesignSystem\TokenSchema::get_default_tokens('light');
         $dark  = RMM\DesignSystem\TokenSchema::get_default_tokens('dark');
@@ -92,7 +104,7 @@ class DesignSystemTokensTest extends TestCase {
     }
 
     public function test_category_navigation_base_styles_use_design_tokens_with_fallbacks() {
-        $css = file_get_contents(dirname(__DIR__, 2) . '/assets/css/frontend-menu.css');
+        $css = $this->get_frontend_css();
 
         $this->assertNotFalse($css);
 
@@ -119,7 +131,7 @@ class DesignSystemTokensTest extends TestCase {
 
 
     public function test_live_search_base_styles_use_design_tokens_with_fallbacks() {
-        $css = file_get_contents(dirname(__DIR__, 2) . '/assets/css/frontend-menu.css');
+        $css = $this->get_frontend_css();
 
         $this->assertNotFalse($css);
 
@@ -142,7 +154,7 @@ class DesignSystemTokensTest extends TestCase {
 
 
     public function test_floating_cart_base_styles_use_design_tokens_with_fallbacks() {
-        $css = file_get_contents(dirname(__DIR__, 2) . '/assets/css/frontend-menu.css');
+        $css = $this->get_frontend_css();
 
         $this->assertNotFalse($css);
 
@@ -167,7 +179,7 @@ class DesignSystemTokensTest extends TestCase {
 
 
     public function test_modal_option_base_styles_use_design_tokens_with_fallbacks() {
-        $css = file_get_contents(dirname(__DIR__, 2) . '/assets/css/frontend-menu.css');
+        $css = $this->get_frontend_css();
 
         $this->assertNotFalse($css);
 
@@ -193,7 +205,7 @@ class DesignSystemTokensTest extends TestCase {
 
 
     public function test_modal_slider_controls_use_design_tokens_with_fallbacks() {
-        $css = file_get_contents(dirname(__DIR__, 2) . '/assets/css/frontend-menu.css');
+        $css = $this->get_frontend_css();
 
         $this->assertNotFalse($css);
 
@@ -216,7 +228,7 @@ class DesignSystemTokensTest extends TestCase {
     }
 
     public function test_entrance_language_modal_uses_design_tokens_with_fallbacks() {
-        $css = file_get_contents(dirname(__DIR__, 2) . '/assets/css/frontend-menu.css');
+        $css = $this->get_frontend_css();
 
         $this->assertNotFalse($css);
 
@@ -244,7 +256,7 @@ class DesignSystemTokensTest extends TestCase {
 
 
     public function test_standalone_search_widget_uses_design_tokens_with_fallbacks() {
-        $css = file_get_contents(dirname(__DIR__, 2) . '/assets/css/frontend-menu.css');
+        $css = $this->get_frontend_css();
 
         $this->assertNotFalse($css);
 
@@ -271,7 +283,7 @@ class DesignSystemTokensTest extends TestCase {
 
 
     public function test_view_switcher_controls_use_design_tokens_with_fallbacks() {
-        $css = file_get_contents(dirname(__DIR__, 2) . '/assets/css/frontend-menu.css');
+        $css = $this->get_frontend_css();
 
         $this->assertNotFalse($css);
 
@@ -299,7 +311,7 @@ class DesignSystemTokensTest extends TestCase {
 
 
     public function test_lightbox_gallery_controls_use_design_tokens_with_fallbacks() {
-        $css = file_get_contents(dirname(__DIR__, 2) . '/assets/css/frontend-menu.css');
+        $css = $this->get_frontend_css();
 
         $this->assertNotFalse($css);
 
