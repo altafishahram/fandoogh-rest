@@ -346,6 +346,75 @@ class CssCompiler {
   color: var(--rmm-ds-text) !important;
 }
 
+/* ── Modal Metadata & Quantity Controls ─────────────────────────────────── */
+.rmm-modal-price-row {
+  border-color: var(--rmm-ds-border);
+}
+.rmm-modal-food-price del,
+.rmm-modal-old-price {
+  color: var(--rmm-ds-muted) !important;
+}
+.rmm-modal-food-price ins,
+.rmm-modal-sale-price {
+  color: var(--rmm-ds-danger) !important;
+}
+.rmm-modal-card-regular-price,
+.rmm-card-regular-price {
+  color: var(--rmm-ds-primary);
+}
+.rmm-modal-chip {
+  background: var(--rmm-ds-subtle);
+  color: var(--rmm-ds-text-secondary);
+  border-radius: var(--rmm-ds-badge-radius);
+}
+.rmm-modal-chip.category {
+  background: var(--rmm-ds-primary-soft);
+  color: var(--rmm-ds-primary);
+}
+.rmm-modal-ingredients-box {
+  background: var(--rmm-ds-subtle);
+  border-color: var(--rmm-ds-border);
+  border-radius: var(--rmm-ds-radius-input);
+}
+.rmm-modal-ingredients-box h4 {
+  color: var(--rmm-ds-muted);
+}
+.rmm-modal-ingredients-text {
+  color: var(--rmm-ds-text-secondary);
+}
+.rmm-modal-qty-container {
+  background: var(--rmm-ds-qty-bg);
+  border-color: var(--rmm-ds-border);
+  border-radius: var(--rmm-ds-radius-input);
+}
+.rmm-modal-qty-label {
+  color: var(--rmm-ds-text);
+}
+.rmm-qty-controls {
+  border-color: var(--rmm-ds-border);
+}
+.rmm-qty-btn {
+  background: var(--rmm-ds-subtle);
+  color: var(--rmm-ds-primary);
+}
+.rmm-qty-btn:hover {
+  background: var(--rmm-ds-primary);
+  color: var(--rmm-ds-on-primary);
+}
+.rmm-qty-val {
+  color: var(--rmm-ds-text);
+}
+.rmm-modal-kitchen-note input {
+  background: var(--rmm-ds-card);
+  color: var(--rmm-ds-text);
+  border-color: var(--rmm-ds-border);
+  border-radius: var(--rmm-ds-radius-input);
+}
+.rmm-modal-kitchen-note input:focus {
+  border-color: var(--rmm-ds-primary);
+  box-shadow: 0 0 0 3px var(--rmm-ds-primary-soft);
+}
+
 /* ── Category Navigation Bar ────────────────────────────────────────────── */
 .rmm-category-nav-wrapper {
   background:    var(--rmm-ds-card)   !important;
