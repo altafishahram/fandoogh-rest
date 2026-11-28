@@ -14,11 +14,33 @@ class Assets {
     }
 
     public function register_frontend_assets() {
-        // Register core frontend styles
+        // Frontend styles are split into ordered, cacheable layers.
+        wp_register_style(
+            'rmm-frontend-menu-base',
+            RMM_PLUGIN_URL . 'assets/css/frontend-menu-base.css',
+            [],
+            RMM_VERSION
+        );
+
+        wp_register_style(
+            'rmm-frontend-menu-widgets',
+            RMM_PLUGIN_URL . 'assets/css/frontend-menu-widgets.css',
+            ['rmm-frontend-menu-base'],
+            RMM_VERSION
+        );
+
+        wp_register_style(
+            'rmm-frontend-menu-themes',
+            RMM_PLUGIN_URL . 'assets/css/frontend-menu-themes.css',
+            ['rmm-frontend-menu-widgets'],
+            RMM_VERSION
+        );
+
+        // Keep the public handle stable for widgets and third-party integrations.
         wp_register_style(
             'rmm-frontend-menu',
-            RMM_PLUGIN_URL . 'assets/css/frontend-menu.css',
-            [],
+            false,
+            ['rmm-frontend-menu-themes'],
             RMM_VERSION
         );
 
