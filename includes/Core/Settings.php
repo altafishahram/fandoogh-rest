@@ -99,7 +99,7 @@ class Settings {
                 <div class="rmm-admin-inline-a285a465">🍽️</div>
                 <h2 class="rmm-admin-inline-d8197cf3"><?php _e('پیشخوان هوشمند رستوران فندق', 'fondogh-online-menu'); ?></h2>
                 <p class="rmm-admin-inline-5cbe4a2e"><?php _e('در حال انتقال به پیشخوان مستقل فرانت‌اند...', 'fondogh-online-menu'); ?></p>
-                <a href="<?php echo esc_url($portal_url); ?>" target="_blank" class="button button-primary button-hero" style="font-weight: bold; border-radius: 8px;">
+                <a href="<?php echo esc_url($portal_url); ?>" target="_blank" class="button button-primary button-hero rmm-admin-redirect-link">
                     🚀 <?php _e('ورود به پیشخوان در تب جدید', 'fondogh-online-menu'); ?> &rarr;
                 </a>
             </div>
@@ -191,7 +191,7 @@ class Settings {
                         </p>
                     </div>
                     <div>
-                        <a href="<?php echo esc_url(home_url('/' . $portal_slug . '/')); ?>" target="_blank" class="button button-primary" style="background: #0284c7; border-color: #0284c7; padding: 8px 18px; border-radius: 8px; font-weight: 600;">
+                        <a href="<?php echo esc_url(home_url('/' . $portal_slug . '/')); ?>" target="_blank" class="button button-primary rmm-admin-portal-link">
                             <?php _e('مشاهده پیشخوان فرانت‌اند PWA', 'fondogh-online-menu'); ?> &rarr;
                         </a>
                     </div>
@@ -399,7 +399,7 @@ class Settings {
                                 <th scope="row"><?php _e('حداکثر ابعاد تصویر (عرض و ارتفاع):', 'fondogh-online-menu'); ?></th>
                                 <td>
                                     <div class="rmm-admin-inline-4518c18d rmm-admin-flex-row">
-                                        <input type="number" name="rmm_settings[image_max_width]" value="<?php echo esc_attr($settings['image_max_width'] ?? 1200); ?>" style="width: 100px;">
+                                        <input type="number" name="rmm_settings[image_max_width]" value="<?php echo esc_attr($settings['image_max_width'] ?? 1200); ?>" class="rmm-admin-number-100">
                                         <span>&times;</span>
                                         <input type="number" name="rmm_settings[image_max_height]" value="<?php echo esc_attr($settings['image_max_height'] ?? 1200); ?>" style="width: 100px;">
                                         <span class="description"><?php _e('پیکسل (تصاویر بزرگ‌تر به صورت خودکار به این ابعاد با حفظ نسبت تغییر اندازه می‌یابند)', 'fondogh-online-menu'); ?></span>
@@ -411,7 +411,7 @@ class Settings {
                                 <th scope="row"><?php _e('کیفیت فشرده‌سازی WebP (کیفیت 1 تا 100):', 'fondogh-online-menu'); ?></th>
                                 <td>
                                     <div class="rmm-admin-inline-4518c18d rmm-admin-flex-row">
-                                        <input type="number" name="rmm_settings[webp_quality]" min="10" max="100" value="<?php echo esc_attr($settings['webp_quality'] ?? 82); ?>" style="width: 80px;">
+                                        <input type="number" name="rmm_settings[webp_quality]" min="10" max="100" value="<?php echo esc_attr($settings['webp_quality'] ?? 82); ?>" class="rmm-admin-number-80">
                                         <span>%</span>
                                         <span class="description"><?php _e('پیشنهادی: 82٪ (تعادل ایده‌آل بین حجم کم و کیفیت فوق‌العاده)', 'fondogh-online-menu'); ?></span>
                                     </div>
