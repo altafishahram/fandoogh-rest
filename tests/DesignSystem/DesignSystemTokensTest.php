@@ -325,4 +325,34 @@ class DesignSystemTokensTest extends TestCase {
         }
     }
 
+
+    public function test_modal_metadata_and_quantity_controls_use_design_tokens() {
+        $css = RMM\\DesignSystem\\CssCompiler::get_component_mapping_css();
+
+        $expected = [
+            '.rmm-modal-chip',
+            'var(--rmm-ds-subtle)',
+            'var(--rmm-ds-text-secondary)',
+            '.rmm-modal-chip.category',
+            'var(--rmm-ds-primary-soft)',
+            '.rmm-modal-ingredients-box',
+            'var(--rmm-ds-radius-input)',
+            '.rmm-modal-qty-container',
+            'var(--rmm-ds-qty-bg)',
+            '.rmm-qty-btn:hover',
+            'var(--rmm-ds-on-primary)',
+            '.rmm-modal-kitchen-note input:focus',
+            'var(--rmm-ds-primary)',
+        ];
+
+        foreach ($expected as $value) {
+            $this->assertStringContainsString(
+                $value,
+                $css,
+                sprintf('Modal metadata/quantity mapping is missing: %s', $value)
+            );
+        }
+    }
+
+
 }
