@@ -10,7 +10,7 @@ class CssArchitectureTest extends TestCase {
         return implode("\n", [
             file_get_contents($base . 'frontend-menu-base.css'),
             file_get_contents($base . 'frontend-menu-widgets.css'),
-            file_get_contents($base . 'frontend-menu-themes.css'),
+            file_get_contents($base . 'frontend-menu-modern.css'),
         ]);
     }
 
@@ -19,7 +19,7 @@ class CssArchitectureTest extends TestCase {
         foreach ([
             'assets/css/frontend-menu-base.css',
             'assets/css/frontend-menu-widgets.css',
-            'assets/css/frontend-menu-themes.css',
+            'assets/css/frontend-menu-modern.css',
             'assets/css/category-sheet.css',
             'assets/css/portal-pwa.css',
         ] as $path) {
@@ -29,13 +29,14 @@ class CssArchitectureTest extends TestCase {
         $assets = file_get_contents($root . '/includes/Core/Assets.php');
         $this->assertStringContainsString('frontend-menu-base.css', $assets);
         $this->assertStringContainsString('frontend-menu-widgets.css', $assets);
-        $this->assertStringContainsString('frontend-menu-themes.css', $assets);
+        $this->assertStringContainsString('frontend-menu-modern.css', $assets);
         $this->assertStringContainsString("['rmm-frontend-menu-base']", $assets);
         $this->assertStringContainsString("['rmm-frontend-menu-widgets']", $assets);
-        $this->assertStringContainsString("RMM_PLUGIN_URL . 'assets/css/frontend-menu-themes.css'", $assets);
+        $this->assertStringContainsString("RMM_PLUGIN_URL . 'assets/css/frontend-menu-modern.css'", $assets);
         $this->assertStringContainsString("['rmm-frontend-menu-widgets']", $assets);
         $this->assertStringContainsString("'rmm-frontend-menu',", $assets);
         $this->assertFileDoesNotExist($root . '/assets/css/frontend-menu.css');
+        $this->assertFileDoesNotExist($root . '/assets/css/frontend-menu-themes.css');
     }
 
     public function test_static_widget_styles_are_not_left_inline() {
@@ -85,7 +86,7 @@ class CssArchitectureTest extends TestCase {
         $paths = [
             'assets/css/frontend-menu-base.css',
             'assets/css/frontend-menu-widgets.css',
-            'assets/css/frontend-menu-themes.css',
+            'assets/css/frontend-menu-modern.css',
             'assets/css/category-sheet.css',
             'assets/css/portal-pwa.css',
         ];
@@ -123,6 +124,20 @@ class CssArchitectureTest extends TestCase {
                 substr_count($css, '!important'),
                 sprintf('Avoid increasing !important usage in %s styles', $name)
             );
+        }
+    }
+
+    public function test_only_modern_menu_preset_remains_available() {
+        $root = dirname(__DIR__, 2);
+        $widget = file_get_contents($root . '/includes/Elementor/Widgets/FoodMenuWidget.php');
+        $css = file_get_contents($root . '/assets/css/frontend-menu-modern.css');
+
+        $this->assertStringContainsString("'modern_grid' =>", $widget);
+        $this->assertStringContainsString("$style = 'modern_grid';", $widget);
+
+        foreach (['oriental', 'app_list', 'fine_dining', 'compact_grid', 'rmm-theme-oriental'] as $legacy_theme) {
+            $this->assertStringNotContainsString($legacy_theme, $widget);
+            $this->assertStringNotContainsString($legacy_theme, $css);
         }
     }
 
