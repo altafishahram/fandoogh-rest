@@ -327,7 +327,7 @@ class DesignSystemTokensTest extends TestCase {
 
 
     public function test_modal_metadata_and_quantity_controls_use_design_tokens() {
-        $css = RMM\\DesignSystem\\CssCompiler::get_component_mapping_css();
+        $css = RMM\DesignSystem\CssCompiler::get_component_mapping_css();
 
         $expected = [
             '.rmm-modal-chip',
