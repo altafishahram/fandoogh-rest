@@ -905,10 +905,10 @@
                 // Quantity Counter
                 html += '<div class="rmm-modal-qty-container">' +
                     '<span class="rmm-modal-qty-label">' + escHtml(t('quantity', 'تعداد سفارش:')) + '</span>' +
-                    '<div class="rmm-qty-controls">' +
-                    '<button type="button" class="rmm-qty-btn rmm-qty-plus" aria-label="' + escHtml(t('increase_quantity', 'افزایش تعداد')) + '">+</button>' +
-                    '<input type="number" class="rmm-qty-val" name="quantity" value="1" min="1" max="99" readonly aria-label="' + escHtml(t('quantity', 'تعداد')) + '">' +
-                    '<button type="button" class="rmm-qty-btn rmm-qty-minus" aria-label="' + escHtml(t('decrease_quantity', 'کاهش تعداد')) + '">−</button>' +
+                    '<div class="rmm-qty-controls rmm-catalog-item-qty">' +
+                    '<button type="button" class="rmm-qty-btn rmm-qty-plus rmm-cat-qty-btn rmm-cat-qty-plus" aria-label="' + escHtml(t('increase_quantity', 'افزایش تعداد')) + '">+</button>' +
+                    '<input type="number" class="rmm-qty-val rmm-cat-qty-num" name="quantity" value="1" min="1" max="99" readonly aria-label="' + escHtml(t('quantity', 'تعداد')) + '">' +
+                    '<button type="button" class="rmm-qty-btn rmm-qty-minus rmm-cat-qty-btn rmm-cat-qty-minus" aria-label="' + escHtml(t('decrease_quantity', 'کاهش تعداد')) + '">−</button>' +
                     '</div>' +
                     '</div>';
 
@@ -928,10 +928,10 @@
                 // View-Only Catalog Mode: allow adding to floating selection list with qty & options
                 html += '<div class="rmm-modal-qty-container">' +
                     '<span class="rmm-modal-qty-label">' + escHtml(t('quantity', 'تعداد انتخاب:')) + '</span>' +
-                    '<div class="rmm-qty-controls">' +
-                    '<button type="button" class="rmm-qty-btn rmm-qty-plus">+</button>' +
-                    '<input type="number" class="rmm-qty-val" name="quantity" value="1" min="1" max="99" readonly>' +
-                    '<button type="button" class="rmm-qty-btn rmm-qty-minus">−</button>' +
+                    '<div class="rmm-qty-controls rmm-catalog-item-qty">' +
+                    '<button type="button" class="rmm-qty-btn rmm-qty-plus rmm-cat-qty-btn rmm-cat-qty-plus">+</button>' +
+                    '<input type="number" class="rmm-qty-val rmm-cat-qty-num" name="quantity" value="1" min="1" max="99" readonly>' +
+                    '<button type="button" class="rmm-qty-btn rmm-qty-minus rmm-cat-qty-btn rmm-cat-qty-minus">−</button>' +
                     '</div>' +
                     '</div>';
 
@@ -1296,19 +1296,24 @@
             if (view !== 'grid' && view !== 'list') return;
 
             var $wrapper = $btn.closest('.rmm-menu-widget-wrapper');
-            var $container = $wrapper.find('.rmm-menu-container').first();
-            if (!$container.length) return;
+            var $containers = $wrapper.find('.rmm-menu-container');
+            if (!$containers.length) return;
 
             $wrapper.find('.rmm-view-toggle-btn, .rmm-view-btn')
                 .removeClass('is-active')
                 .attr('aria-pressed', 'false');
             $btn.addClass('is-active').attr('aria-pressed', 'true');
 
-            if (view === 'list') {
-                $container.removeClass('rmm-view-grid').addClass('rmm-view-list');
-            } else {
-                $container.removeClass('rmm-view-list').addClass('rmm-view-grid');
-            }
+            // Category mode renders one menu container per category. Apply the
+            // selected view to every section instead of only the first category.
+            $containers.each(function () {
+                var $container = $(this);
+                if (view === 'list') {
+                    $container.removeClass('rmm-view-grid').addClass('rmm-view-list');
+                } else {
+                    $container.removeClass('rmm-view-list').addClass('rmm-view-grid');
+                }
+            });
 
             try {
                 localStorage.setItem('rmm_user_view_pref', view);
