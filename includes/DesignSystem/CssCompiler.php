@@ -723,7 +723,7 @@ class CssCompiler {
 .rmm-out-badge {
   background: var(--rmm-ds-subtle) !important;
   color: var(--rmm-ds-muted) !important;
-  border-radius: var(--rmm-ds-radius-badge) !important;
+  border-radius: var(--rmm-ds-badge-radius) !important;
 }
 .rmm-style-fine_dining .rmm-food-card {
   border-bottom-color: var(--rmm-ds-border) !important;
