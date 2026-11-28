@@ -546,7 +546,7 @@ class FoodLoopWidget extends Widget_Base {
         $lower_title = function_exists('mb_strtolower') ? mb_strtolower($title, 'UTF-8') : strtolower($title);
         ?>
         <div class="<?php echo esc_attr($card_class); ?>" data-product-id="<?php echo esc_attr($prod_id); ?>" data-cats="<?php echo esc_attr($cat_attr); ?>" data-title="<?php echo esc_attr($lower_title); ?>">
-            <div class="rmm-food-image-wrap rmm-open-modal" data-product-id="<?php echo esc_attr($prod_id); ?>" style="cursor:pointer; position:relative;">
+            <div class="rmm-food-image-wrap rmm-open-modal rmm-loop-image-trigger" data-product-id="<?php echo esc_attr($prod_id); ?>">
                 <?php if (!empty($image_url)) : ?>
                     <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($title); ?>" class="rmm-food-img" loading="lazy">
                 <?php else : ?>
@@ -558,7 +558,7 @@ class FoodLoopWidget extends Widget_Base {
 
             <div class="rmm-food-info-wrap rmm-loop-style-02">
                 <div>
-                    <h3 class="rmm-food-title rmm-open-modal" data-product-id="<?php echo esc_attr($prod_id); ?>" style="cursor:pointer; margin:0 0 6px 0;">
+                    <h3 class="rmm-food-title rmm-open-modal rmm-loop-title-trigger" data-product-id="<?php echo esc_attr($prod_id); ?>">
                         <?php echo esc_html($title); ?>
                     </h3>
 
@@ -575,7 +575,7 @@ class FoodLoopWidget extends Widget_Base {
                     </div>
 
                     <div class="rmm-food-actions rmm-loop-style-05">
-                        <button type="button" class="rmm-btn-details rmm-open-modal" data-product-id="<?php echo esc_attr($prod_id); ?>" aria-label="<?php esc_attr_e('مشاهده جزئیات', 'fondogh-online-menu'); ?>" style="border:none; background:transparent; padding:6px; cursor:pointer;">
+                        <button type="button" class="rmm-btn-details rmm-open-modal rmm-food-details-trigger" data-product-id="<?php echo esc_attr($prod_id); ?>" aria-label="<?php esc_attr_e('مشاهده جزئیات', 'fondogh-online-menu'); ?>">
                             <?php
                             if (!empty($settings['details_btn_icon']['value'])) {
                                 Icons_Manager::render_icon($settings['details_btn_icon'], ['aria-hidden' => 'true']);
@@ -585,7 +585,7 @@ class FoodLoopWidget extends Widget_Base {
                             ?>
                         </button>
 
-                        <button type="button" class="rmm-btn-order" data-product-id="<?php echo esc_attr($prod_id); ?>" data-title="<?php echo esc_attr($title); ?>" data-price="<?php echo esc_attr(floatval($product->get_price())); ?>" data-image="<?php echo esc_url($image_url); ?>" style="display:inline-flex; align-items:center; gap:4px; border:none; cursor:pointer; padding:6px 12px; border-radius:8px;">
+                        <button type="button" class="rmm-btn-order" data-product-id="<?php echo esc_attr($prod_id); ?>" data-title="<?php echo esc_attr($title); ?>" data-price="<?php echo esc_attr(floatval($product->get_price())); ?>" data-image="<?php echo esc_url($image_url); ?>" class="rmm-btn-order rmm-loop-order-trigger">
                             <?php if (!empty($settings['order_btn_icon']['value'])) : ?>
                                 <span class="rmm-btn-icon" aria-hidden="true">
                                     <?php Icons_Manager::render_icon($settings['order_btn_icon'], ['aria-hidden' => 'true']); ?>
