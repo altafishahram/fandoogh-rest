@@ -864,9 +864,9 @@ body.admin-bar .rmm-category-nav-wrapper.rmm-sticky-bar {
     align-items: center;
     justify-content: space-between;
     padding: 8px 12px;
-    background: #ffffff;
-    border: 1.5px solid #e2e8f0;
-    border-radius: 10px;
+    background: var(--rmm-ds-card, #ffffff);
+    border: 1.5px solid var(--rmm-ds-border, #e2e8f0);
+    border-radius: var(--rmm-ds-radius-input, 10px);
     margin-bottom: 8px;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -875,21 +875,21 @@ body.admin-bar .rmm-category-nav-wrapper.rmm-sticky-bar {
 
 .rmm-modal-portion-item:hover,
 .rmm-modal-addon-item:hover {
-    border-color: #0284c7;
-    background: #f0f9ff;
+    border-color: var(--rmm-ds-primary, #0284c7);
+    background: var(--rmm-ds-primary-soft, #f0f9ff);
 }
 
 .rmm-modal-portion-item.is-selected,
 .rmm-modal-addon-item.is-selected {
-    border-color: #0284c7;
-    background: #eff6ff;
+    border-color: var(--rmm-ds-primary, #0284c7);
+    background: var(--rmm-ds-primary-soft, #eff6ff);
     font-weight: 700;
 }
 
 .rmm-modal-portion-item input,
 .rmm-modal-addon-item input {
     margin-left: 8px;
-    accent-color: #0284c7;
+    accent-color: var(--rmm-ds-primary, #0284c7);
 }
 
 .rmm-modal-addon-price {
