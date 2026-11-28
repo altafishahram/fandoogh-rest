@@ -38,6 +38,47 @@ class DesignSystemTokensTest extends TestCase {
         }
     }
 
+    public function test_category_navigation_mapping_covers_default_active_and_visual_variants() {
+        $css = RMM\DesignSystem\CssCompiler::get_component_mapping_css();
+
+        $expected = [
+            '.rmm-category-nav-wrapper',
+            '.rmm-category-nav-wrapper .rmm-cat-pill',
+            '.rmm-category-nav-wrapper .rmm-cat-item.active',
+            '.rmm-cat-style--underline .rmm-cat-pill.active',
+            '.rmm-cat-style--button .rmm-cat-item.active',
+            'var(--rmm-ds-cat-gap)',
+            'var(--rmm-ds-cat-idle-bg)',
+            'var(--rmm-ds-cat-idle-text)',
+            'var(--rmm-ds-cat-active-bg)',
+            'var(--rmm-ds-cat-active-text)',
+            'var(--rmm-ds-cat-icon)',
+            'var(--rmm-ds-radius-btn)',
+        ];
+
+        foreach ($expected as $value) {
+            $this->assertStringContainsString(
+                $value,
+                $css,
+                sprintf('Category navigation mapping is missing: %s', $value)
+            );
+        }
+    }
+
+    public function test_category_navigation_tokens_are_compiled_for_light_and_dark_themes() {
+        $settings = RMM\DesignSystem\TokenSchema::get_default_settings();
+        $css      = RMM\DesignSystem\CssCompiler::compile($settings);
+
+        foreach (['cat_gap', 'cat_idle_bg', 'cat_idle_text', 'cat_active_bg', 'cat_active_text', 'cat_icon'] as $token) {
+            $css_variable = '--rmm-ds-' . str_replace('_', '-', $token) . ':';
+
+            $this->assertStringContainsString($css_variable, $css);
+        }
+
+        $this->assertStringContainsString('[data-theme="light"]', $css);
+        $this->assertStringContainsString('[data-theme="dark"]', $css);
+    }
+
     public function test_compiler_outputs_category_sheet_and_catalog_tokens_for_both_modes() {
         $settings = RMM\DesignSystem\TokenSchema::get_default_settings();
         $css      = RMM\DesignSystem\CssCompiler::compile($settings);
