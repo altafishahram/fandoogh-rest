@@ -767,6 +767,58 @@ class CssCompiler {
   background: var(--rmm-ds-primary-hover) !important;
 }
 
+
+/* ── Remaining Shared Frontend Controls ────────────────────────────────── */
+.rmm-category-nav-wrapper.rmm-sticky-bar {
+  box-shadow: var(--rmm-ds-shadow-card) !important;
+}
+.rmm-style-modern_grid .rmm-food-card:hover,
+.rmm-food-card.rmm-card-clickable:hover,
+.rmm-menu-container.rmm-view-list .rmm-food-card:hover {
+  box-shadow: var(--rmm-ds-shadow-card) !important;
+}
+.rmm-food-loop-load-more-btn {
+  background: var(--rmm-ds-card) !important;
+  color: var(--rmm-ds-text) !important;
+  border-color: var(--rmm-ds-border) !important;
+  border-radius: var(--rmm-ds-radius-btn) !important;
+  box-shadow: var(--rmm-ds-shadow-btn) !important;
+}
+.rmm-food-loop-load-more-btn:hover {
+  background: var(--rmm-ds-primary-soft) !important;
+  color: var(--rmm-ds-primary) !important;
+  border-color: var(--rmm-ds-primary) !important;
+}
+[data-theme="dark"] .rmm-food-loop-load-more-btn,
+.dark .rmm-food-loop-load-more-btn,
+body.dark-theme .rmm-food-loop-load-more-btn {
+  background: var(--rmm-ds-card) !important;
+  color: var(--rmm-ds-text) !important;
+  border-color: var(--rmm-ds-border) !important;
+}
+[data-theme="dark"] .rmm-food-loop-load-more-btn:hover,
+.dark .rmm-food-loop-load-more-btn:hover,
+body.dark-theme .rmm-food-loop-load-more-btn:hover {
+  background: var(--rmm-ds-primary-soft) !important;
+}
+.rmm-catalog-add-btn {
+  background: var(--rmm-ds-primary) !important;
+  color: var(--rmm-ds-on-primary) !important;
+  border-radius: var(--rmm-ds-radius-btn) !important;
+}
+.rmm-catalog-add-btn.in-list {
+  background: var(--rmm-ds-success) !important;
+  color: var(--rmm-ds-on-primary) !important;
+  border-color: var(--rmm-ds-success) !important;
+}
+.rmm-cat-header-thumb-wrap {
+  box-shadow: var(--rmm-ds-shadow-card) !important;
+}
+.rmm-card-price-badge-row .rmm-card-badge,
+.rmm-badge-custom {
+  box-shadow: var(--rmm-ds-shadow-btn) !important;
+}
+
 CSS;
     }
 
