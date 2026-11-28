@@ -165,4 +165,30 @@ class DesignSystemTokensTest extends TestCase {
     }
 
 
+
+    public function test_modal_option_base_styles_use_design_tokens_with_fallbacks() {
+        $css = file_get_contents(dirname(__DIR__, 2) . '/assets/css/frontend-menu.css');
+
+        $this->assertNotFalse($css);
+
+        $expected = [
+            'background: var(--rmm-ds-card, #ffffff);',
+            'border: 1.5px solid var(--rmm-ds-border, #e2e8f0);',
+            'border-radius: var(--rmm-ds-radius-input, 10px);',
+            'border-color: var(--rmm-ds-primary, #0284c7);',
+            'background: var(--rmm-ds-primary-soft, #f0f9ff);',
+            'background: var(--rmm-ds-primary-soft, #eff6ff);',
+            'accent-color: var(--rmm-ds-primary, #0284c7);',
+            'color: var(--rmm-ds-primary, #0284c7);',
+        ];
+
+        foreach ($expected as $declaration) {
+            $this->assertStringContainsString(
+                $declaration,
+                $css,
+                sprintf('Modal option base CSS is missing token fallback: %s', $declaration)
+            );
+        }
+    }
+
 }
