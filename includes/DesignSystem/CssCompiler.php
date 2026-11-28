@@ -177,6 +177,68 @@ class CssCompiler {
   font-size: var(--rmm-ds-desc-size) !important;
 }
 
+/* ── Food Loop Widget details ──────────────────────────────────────────── */
+.rmm-food-card .rmm-food-image-wrap {
+  aspect-ratio: var(--rmm-ds-card-image-ratio);
+  height: var(--rmm-ds-card-image-height);
+  overflow: hidden;
+  border-radius: var(--rmm-ds-card-image-radius);
+  background: var(--rmm-ds-subtle);
+}
+.rmm-food-card .rmm-food-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: var(--rmm-ds-card-image-fit);
+  border-radius: var(--rmm-ds-card-image-radius);
+}
+.rmm-food-card .rmm-food-placeholder-img {
+  background: var(--rmm-ds-subtle) !important;
+  color: var(--rmm-ds-muted) !important;
+}
+.rmm-food-card .rmm-food-info-wrap {
+  color: var(--rmm-ds-text);
+  font-family: var(--rmm-ds-font-family);
+}
+.rmm-food-card .rmm-food-bottom-bar {
+  gap: var(--rmm-ds-gap-grid);
+}
+.rmm-food-card .rmm-food-actions {
+  align-items: center;
+}
+.rmm-food-card .rmm-btn-details {
+  color: var(--rmm-ds-icon-color);
+  border-radius: var(--rmm-ds-radius-btn);
+}
+.rmm-food-card .rmm-btn-order {
+  background: var(--rmm-ds-primary) !important;
+  color: var(--rmm-ds-on-primary) !important;
+  border-radius: var(--rmm-ds-radius-btn) !important;
+  box-shadow: var(--rmm-ds-shadow-btn);
+  padding: var(--rmm-ds-btn-pad-y) var(--rmm-ds-btn-pad-x) !important;
+  font-family: var(--rmm-ds-font-family);
+  font-weight: 600;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+.rmm-food-card .rmm-btn-order:hover {
+  background: var(--rmm-ds-primary-hover) !important;
+}
+.rmm-food-loop-load-more-btn {
+  background: var(--rmm-ds-primary);
+  color: var(--rmm-ds-on-primary);
+  border: 1px solid var(--rmm-ds-primary);
+  border-radius: var(--rmm-ds-radius-btn);
+  box-shadow: var(--rmm-ds-shadow-btn);
+  font-family: var(--rmm-ds-font-family);
+  padding: var(--rmm-ds-btn-pad-y) var(--rmm-ds-btn-pad-x);
+  cursor: pointer;
+}
+.rmm-food-loop-load-more-btn:hover {
+  background: var(--rmm-ds-primary-hover);
+  border-color: var(--rmm-ds-primary-hover);
+}
+
+
 /* ── Food Details Modal / Popup ─────────────────────────────────────────── */
 .rmm-modal-backdrop {
   background:     var(--rmm-ds-modal-backdrop) !important;
