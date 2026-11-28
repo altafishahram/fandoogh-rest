@@ -1038,7 +1038,7 @@ body.admin-bar .rmm-category-nav-wrapper.rmm-sticky-bar {
 .rmm-entrance-modal-backdrop {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(15, 23, 42, 0.75);
+    background: var(--rmm-ds-modal-backdrop, rgba(15, 23, 42, 0.75));
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     display: flex;
@@ -1060,23 +1060,23 @@ body.admin-bar .rmm-category-nav-wrapper.rmm-sticky-bar {
 }
 
 .rmm-entrance-card {
-    background: #ffffff;
+    background: var(--rmm-ds-card, #ffffff);
     width: 100%;
     max-width: 440px;
-    border-radius: 24px;
+    border-radius: var(--rmm-ds-modal-radius, 24px);
     padding: 28px 24px 20px;
     position: relative;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+    box-shadow: var(--rmm-ds-shadow-card, 0 25px 50px -12px rgba(0, 0, 0, 0.35));
     animation: rmmCardPopIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     text-align: center;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid var(--rmm-ds-border, rgba(255, 255, 255, 0.2));
 }
 
 .rmm-entrance-close {
     position: absolute;
     top: 16px;
     left: 16px;
-    background: #f1f5f9;
+    background: var(--rmm-ds-subtle, #f1f5f9);
     border: none;
     font-size: 22px;
     line-height: 1;
@@ -1084,7 +1084,7 @@ body.admin-bar .rmm-category-nav-wrapper.rmm-sticky-bar {
     height: 34px;
     border-radius: 50%;
     cursor: pointer;
-    color: #64748b;
+    color: var(--rmm-ds-text-secondary, #64748b);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1092,8 +1092,8 @@ body.admin-bar .rmm-category-nav-wrapper.rmm-sticky-bar {
 }
 
 .rmm-entrance-close:hover {
-    background: #e2e8f0;
-    color: #0f172a;
+    background: var(--rmm-ds-border, #e2e8f0);
+    color: var(--rmm-ds-text, #0f172a);
     transform: rotate(90deg);
 }
 
@@ -1107,13 +1107,13 @@ body.admin-bar .rmm-category-nav-wrapper.rmm-sticky-bar {
     margin: 0 0 4px;
     font-size: 20px;
     font-weight: 800;
-    color: #0f172a;
+    color: var(--rmm-ds-text, #0f172a);
 }
 
 .rmm-entrance-subtitle {
     margin: 0 0 20px;
     font-size: 13px;
-    color: #64748b;
+    color: var(--rmm-ds-text-secondary, #64748b);
     line-height: 1.4;
 }
 
@@ -1129,8 +1129,8 @@ body.admin-bar .rmm-category-nav-wrapper.rmm-sticky-bar {
     align-items: center;
     gap: 12px;
     padding: 12px 14px;
-    background: #f8fafc;
-    border: 2px solid #e2e8f0;
+    background: var(--rmm-ds-bg, #f8fafc);
+    border: 2px solid var(--rmm-ds-border, #e2e8f0);
     border-radius: 14px;
     cursor: pointer;
     text-align: right;
@@ -1139,16 +1139,16 @@ body.admin-bar .rmm-category-nav-wrapper.rmm-sticky-bar {
 }
 
 .rmm-entrance-lang-btn:hover {
-    background: #f0fdf4;
-    border-color: #10b981;
+    background: var(--rmm-ds-primary-soft, #f0fdf4);
+    border-color: var(--rmm-ds-primary, #10b981);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
 }
 
 .rmm-entrance-lang-btn.is-active {
-    background: #eff6ff;
-    border-color: #0284c7;
-    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.15);
+    background: var(--rmm-ds-primary-soft, #eff6ff);
+    border-color: var(--rmm-ds-primary, #0284c7);
+    box-shadow: var(--rmm-ds-shadow-btn, 0 4px 12px rgba(2, 132, 199, 0.15));
 }
 
 .rmm-entrance-flag {
@@ -1166,18 +1166,18 @@ body.admin-bar .rmm-category-nav-wrapper.rmm-sticky-bar {
 .rmm-entrance-lang-native {
     font-size: 14px;
     font-weight: 700;
-    color: #0f172a;
+    color: var(--rmm-ds-text, #0f172a);
     line-height: 1.2;
 }
 
 .rmm-entrance-lang-name {
     font-size: 11px;
-    color: #64748b;
+    color: var(--rmm-ds-text-secondary, #64748b);
     margin-top: 2px;
 }
 
 .rmm-entrance-footer {
-    border-top: 1px solid #f1f5f9;
+    border-top: 1px solid var(--rmm-ds-border, #f1f5f9);
     padding-top: 14px;
     display: flex;
     justify-content: center;
@@ -1188,14 +1188,14 @@ body.admin-bar .rmm-category-nav-wrapper.rmm-sticky-bar {
     align-items: center;
     gap: 8px;
     font-size: 12px;
-    color: #64748b;
+    color: var(--rmm-ds-text-secondary, #64748b);
     cursor: pointer;
     user-select: none;
 }
 
 .rmm-remember-checkbox input {
     cursor: pointer;
-    accent-color: #0284c7;
+    accent-color: var(--rmm-ds-primary, #0284c7);
 }
 
 @media (max-width: 420px) {
