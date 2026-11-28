@@ -26,6 +26,7 @@ class GitHubUpdaterTest extends TestCase {
         );
 
         $this->assertIsObject($update);
+        $this->assertSame('1.3.2', $update->version);
         $this->assertSame('1.3.2', $update->new_version);
         $this->assertSame('fondogh-online-menu/fondogh-online-menu.php', $update->plugin);
         $this->assertSame(

@@ -209,6 +209,8 @@ class GitHubUpdater {
             'id'          => self::REPOSITORY,
             'slug'        => self::PLUGIN_SLUG,
             'plugin'      => $plugin_file,
+            // WordPress requires `version` for Update URI responses and maps it to `new_version`.
+            'version'     => $version,
             'new_version' => $version,
             'url'         => self::REPOSITORY,
             'package'     => $package,
