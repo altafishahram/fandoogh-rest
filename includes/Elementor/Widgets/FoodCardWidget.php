@@ -566,7 +566,7 @@ class FoodCardWidget extends Widget_Base {
         ?>
         <div class="<?php echo esc_attr($card_classes); ?>" data-product-id="<?php echo esc_attr($prod_id); ?>" data-cats="<?php echo esc_attr($cat_attr); ?>" data-title="<?php echo esc_attr($lower_title); ?>">
             <?php if ($settings['show_image'] === 'yes') : ?>
-                <div class="rmm-food-image-wrap rmm-open-modal" data-product-id="<?php echo esc_attr($prod_id); ?>" style="cursor:pointer;">
+                <div class="rmm-food-image-wrap rmm-open-modal rmm-card-image-trigger" data-product-id="<?php echo esc_attr($prod_id); ?>">
                     <?php if (!empty($image_url)) : ?>
                         <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($title); ?>" class="rmm-food-img" loading="lazy">
                     <?php else : ?>
@@ -587,7 +587,7 @@ class FoodCardWidget extends Widget_Base {
 
             <div class="rmm-food-info-wrap rmm-card-style-04">
                 <div>
-                    <h3 class="rmm-food-title rmm-open-modal" data-product-id="<?php echo esc_attr($prod_id); ?>" style="cursor:pointer; margin:0 0 6px 0;">
+                    <h3 class="rmm-food-title rmm-open-modal rmm-card-title-trigger" data-product-id="<?php echo esc_attr($prod_id); ?>">
                         <?php echo esc_html($title); ?>
                     </h3>
 
@@ -611,7 +611,7 @@ class FoodCardWidget extends Widget_Base {
 
                     <div class="rmm-food-actions rmm-card-style-08">
                         <?php if ($settings['show_details_btn'] === 'yes') : ?>
-                            <button type="button" class="rmm-btn-details rmm-open-modal" data-product-id="<?php echo esc_attr($prod_id); ?>" aria-label="<?php esc_attr_e('مشاهده جزئیات', 'fondogh-online-menu'); ?>" style="border:none; background:transparent; padding:6px; cursor:pointer;">
+                            <button type="button" class="rmm-btn-details rmm-open-modal rmm-food-details-trigger" data-product-id="<?php echo esc_attr($prod_id); ?>" aria-label="<?php esc_attr_e('مشاهده جزئیات', 'fondogh-online-menu'); ?>">
                                 <?php
                                 if (!empty($settings['details_btn_icon']['value'])) {
                                     Icons_Manager::render_icon($settings['details_btn_icon'], ['aria-hidden' => 'true']);
@@ -625,7 +625,7 @@ class FoodCardWidget extends Widget_Base {
                         <?php if ($settings['show_order_btn'] === 'yes') :
                             $card_raw_price = (isset($product) && $product) ? floatval($product->get_price()) : 0;
                         ?>
-                            <button type="button" class="rmm-btn-order" data-product-id="<?php echo esc_attr($prod_id); ?>" data-title="<?php echo esc_attr($title); ?>" data-price="<?php echo esc_attr($card_raw_price); ?>" data-image="<?php echo esc_url($image_url); ?>" style="display:inline-flex; align-items:center; gap:6px; border:none; cursor:pointer;">
+                            <button type="button" class="rmm-btn-order" data-product-id="<?php echo esc_attr($prod_id); ?>" data-title="<?php echo esc_attr($title); ?>" data-price="<?php echo esc_attr($card_raw_price); ?>" data-image="<?php echo esc_url($image_url); ?>" class="rmm-btn-order rmm-card-order-trigger">
                                 <?php if (!empty($settings['order_btn_icon']['value'])) : ?>
                                     <span class="rmm-btn-icon" aria-hidden="true">
                                         <?php Icons_Manager::render_icon($settings['order_btn_icon'], ['aria-hidden' => 'true']); ?>
