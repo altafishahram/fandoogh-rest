@@ -453,7 +453,7 @@ class FoodModalWidget extends Widget_Base {
             <!-- Modal Structure for Interactive Quick View -->
             <div id="rmm-food-modal" class="rmm-modal-backdrop rmm-food-details-modal" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="rmm-modal-title">
                 <div class="rmm-modal-content rmm-modal-style-01">
-                    <button type="button" class="rmm-modal-close" aria-label="<?php esc_attr_e('بستن پنجره', 'fondogh-online-menu'); ?>" style="position:absolute; top:14px; left:14px; z-index:10; background:rgba(0,0,0,0.3); border:none; border-radius:50%; width:36px; height:36px; display:flex; align-items:center; justify-content:center; color:#fff; cursor:pointer;">
+                    <button type="button" class="rmm-modal-close rmm-modal-close-trigger" aria-label="<?php esc_attr_e('بستن پنجره', 'fondogh-online-menu'); ?>">
                         <?php
                         if (!empty($settings['close_icon']['value'])) {
                             Icons_Manager::render_icon($settings['close_icon'], ['aria-hidden' => 'true']);
