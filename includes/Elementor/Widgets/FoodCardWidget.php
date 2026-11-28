@@ -566,18 +566,18 @@ class FoodCardWidget extends Widget_Base {
         ?>
         <div class="<?php echo esc_attr($card_classes); ?>" data-product-id="<?php echo esc_attr($prod_id); ?>" data-cats="<?php echo esc_attr($cat_attr); ?>" data-title="<?php echo esc_attr($lower_title); ?>">
             <?php if ($settings['show_image'] === 'yes') : ?>
-                <div class="rmm-food-image-wrap rmm-open-modal" data-product-id="<?php echo esc_attr($prod_id); ?>" style="cursor:pointer;">
+                <div class="rmm-food-image-wrap rmm-open-modal rmm-card-image-trigger" data-product-id="<?php echo esc_attr($prod_id); ?>">
                     <?php if (!empty($image_url)) : ?>
                         <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($title); ?>" class="rmm-food-img" loading="lazy">
                     <?php else : ?>
-                        <div class="rmm-food-placeholder-img" style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:#f1f5f9; color:#94a3b8;">
+                        <div class="rmm-food-placeholder-img rmm-card-style-01">
                             <i class="fas fa-utensils fa-2x" aria-hidden="true"></i>
                         </div>
                     <?php endif; ?>
 
                     <?php if ($settings['show_badges'] === 'yes') : ?>
-                        <div class="rmm-badges-container" style="position:absolute; top:10px; right:10px; display:flex; gap:6px;">
-                            <span class="rmm-badge rmm-badge-special" style="background:rgba(212,175,55,0.9); color:#fff; font-size:11px; padding:3px 8px; border-radius:12px;">
+                        <div class="rmm-badges-container rmm-card-style-02">
+                            <span class="rmm-badge rmm-badge-special rmm-card-style-03">
                                 <i class="fas fa-star" aria-hidden="true"></i> <?php esc_html_e('پیشنهاد سرآشپز', 'fondogh-online-menu'); ?>
                             </span>
                         </div>
@@ -585,33 +585,33 @@ class FoodCardWidget extends Widget_Base {
                 </div>
             <?php endif; ?>
 
-            <div class="rmm-food-info-wrap" style="flex:1; display:flex; flex-direction:column; justify-content:space-between;">
+            <div class="rmm-food-info-wrap rmm-card-style-04">
                 <div>
-                    <h3 class="rmm-food-title rmm-open-modal" data-product-id="<?php echo esc_attr($prod_id); ?>" style="cursor:pointer; margin:0 0 6px 0;">
+                    <h3 class="rmm-food-title rmm-open-modal rmm-card-title-trigger" data-product-id="<?php echo esc_attr($prod_id); ?>">
                         <?php echo esc_html($title); ?>
                     </h3>
 
                     <?php if ($settings['show_description'] === 'yes' && !empty($desc)) : ?>
-                        <div class="rmm-food-ingredients" style="font-size:13px; line-height:1.6; margin-bottom:10px;">
+                        <div class="rmm-food-ingredients rmm-card-style-05">
                             <?php echo wp_kses_post(wp_trim_words($desc, 18)); ?>
                         </div>
                     <?php endif; ?>
 
                     <?php if ($settings['show_calories'] === 'yes' && !empty($calories)) : ?>
-                        <div class="rmm-food-meta-row" style="font-size:12px; margin-bottom:8px; opacity:0.85;">
+                        <div class="rmm-food-meta-row rmm-card-style-06">
                             <span class="rmm-meta-calorie"><i class="fas fa-fire" aria-hidden="true"></i> <?php echo esc_html($calories); ?></span>
                         </div>
                     <?php endif; ?>
                 </div>
 
-                <div class="rmm-food-bottom-bar" style="display:flex; align-items:center; justify-content:space-between; margin-top:10px;">
+                <div class="rmm-food-bottom-bar rmm-card-style-07">
                     <div class="rmm-food-price">
                         <?php echo wp_kses_post($price_html); ?>
                     </div>
 
-                    <div class="rmm-food-actions" style="display:flex; gap:8px;">
+                    <div class="rmm-food-actions rmm-card-style-08">
                         <?php if ($settings['show_details_btn'] === 'yes') : ?>
-                            <button type="button" class="rmm-btn-details rmm-open-modal" data-product-id="<?php echo esc_attr($prod_id); ?>" aria-label="<?php esc_attr_e('مشاهده جزئیات', 'fondogh-online-menu'); ?>" style="border:none; background:transparent; padding:6px; cursor:pointer;">
+                            <button type="button" class="rmm-btn-details rmm-open-modal rmm-food-details-trigger" data-product-id="<?php echo esc_attr($prod_id); ?>" aria-label="<?php esc_attr_e('مشاهده جزئیات', 'fondogh-online-menu'); ?>">
                                 <?php
                                 if (!empty($settings['details_btn_icon']['value'])) {
                                     Icons_Manager::render_icon($settings['details_btn_icon'], ['aria-hidden' => 'true']);
@@ -625,7 +625,7 @@ class FoodCardWidget extends Widget_Base {
                         <?php if ($settings['show_order_btn'] === 'yes') :
                             $card_raw_price = (isset($product) && $product) ? floatval($product->get_price()) : 0;
                         ?>
-                            <button type="button" class="rmm-btn-order" data-product-id="<?php echo esc_attr($prod_id); ?>" data-title="<?php echo esc_attr($title); ?>" data-price="<?php echo esc_attr($card_raw_price); ?>" data-image="<?php echo esc_url($image_url); ?>" style="display:inline-flex; align-items:center; gap:6px; border:none; cursor:pointer;">
+                            <button type="button" class="rmm-btn-order rmm-card-order-trigger" data-product-id="<?php echo esc_attr($prod_id); ?>" data-title="<?php echo esc_attr($title); ?>" data-price="<?php echo esc_attr($card_raw_price); ?>" data-image="<?php echo esc_url($image_url); ?>">
                                 <?php if (!empty($settings['order_btn_icon']['value'])) : ?>
                                     <span class="rmm-btn-icon" aria-hidden="true">
                                         <?php Icons_Manager::render_icon($settings['order_btn_icon'], ['aria-hidden' => 'true']); ?>

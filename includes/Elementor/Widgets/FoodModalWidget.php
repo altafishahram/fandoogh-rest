@@ -452,8 +452,8 @@ class FoodModalWidget extends Widget_Base {
         <div class="rmm-modal-widget-container">
             <!-- Modal Structure for Interactive Quick View -->
             <div id="rmm-food-modal" class="rmm-modal-backdrop rmm-food-details-modal" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="rmm-modal-title">
-                <div class="rmm-modal-content" style="position:relative; margin:auto; overflow:hidden;">
-                    <button type="button" class="rmm-modal-close" aria-label="<?php esc_attr_e('بستن پنجره', 'fondogh-online-menu'); ?>" style="position:absolute; top:14px; left:14px; z-index:10; background:rgba(0,0,0,0.3); border:none; border-radius:50%; width:36px; height:36px; display:flex; align-items:center; justify-content:center; color:#fff; cursor:pointer;">
+                <div class="rmm-modal-content rmm-modal-style-01">
+                    <button type="button" class="rmm-modal-close rmm-modal-close-trigger" aria-label="<?php esc_attr_e('بستن پنجره', 'fondogh-online-menu'); ?>">
                         <?php
                         if (!empty($settings['close_icon']['value'])) {
                             Icons_Manager::render_icon($settings['close_icon'], ['aria-hidden' => 'true']);
@@ -463,40 +463,40 @@ class FoodModalWidget extends Widget_Base {
                         ?>
                     </button>
 
-                    <div class="rmm-modal-banner" style="position:relative; height:240px; background:#f1f5f9; overflow:hidden;">
-                        <img id="rmm-modal-image" src="" alt="" style="width:100%; height:100%; object-fit:cover; display:none;">
-                        <div class="rmm-modal-image-placeholder" style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:#94a3b8;">
+                    <div class="rmm-modal-banner rmm-modal-style-02">
+                        <img class="rmm-modal-style-03" id="rmm-modal-image" src="" alt="" style="display:none;">
+                        <div class="rmm-modal-image-placeholder rmm-modal-style-04">
                             <i class="fas fa-utensils fa-3x" aria-hidden="true"></i>
                         </div>
                     </div>
 
                     <div class="rmm-modal-body">
-                        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
-                            <h2 id="rmm-modal-title" class="rmm-modal-title" style="margin:0; font-size:20px; font-weight:700;"></h2>
-                            <div id="rmm-modal-price" class="rmm-modal-price" style="font-size:18px; font-weight:700;"></div>
+                        <div class="rmm-modal-style-05">
+                            <h2 id="rmm-modal-title" class="rmm-modal-title rmm-modal-style-06"></h2>
+                            <div id="rmm-modal-price" class="rmm-modal-price rmm-modal-style-07"></div>
                         </div>
 
                         <?php if ($settings['show_calories_badge'] === 'yes') : ?>
-                            <div id="rmm-modal-meta" class="rmm-modal-meta" style="margin-bottom:12px; display:flex; gap:8px;">
-                                <span id="rmm-modal-calories" class="rmm-badge rmm-badge-cal" style="display:none; font-size:12px; padding:4px 8px; border-radius:8px;"></span>
+                            <div id="rmm-modal-meta" class="rmm-modal-meta rmm-modal-style-08">
+                                <span id="rmm-modal-calories" class="rmm-badge rmm-badge-cal rmm-modal-style-09" style="display:none;"></span>
                             </div>
                         <?php endif; ?>
 
                         <?php if ($settings['show_ingredients_section'] === 'yes') : ?>
-                            <div id="rmm-modal-desc" class="rmm-modal-desc" style="font-size:14px; line-height:1.7; margin-bottom:16px;"></div>
+                            <div id="rmm-modal-desc" class="rmm-modal-desc rmm-modal-style-10"></div>
                         <?php endif; ?>
 
                         <!-- Addons / Variations Section -->
-                        <div id="rmm-modal-options" class="rmm-modal-options" style="margin-bottom:16px;"></div>
+                        <div id="rmm-modal-options" class="rmm-modal-options rmm-modal-style-11"></div>
 
-                        <div class="rmm-modal-footer" style="display:flex; align-items:center; justify-content:space-between; margin-top:16px; pt-4;">
-                            <div class="rmm-qty-stepper" style="display:inline-flex; align-items:center; gap:8px;">
-                                <button type="button" class="rmm-qty-btn rmm-qty-minus" style="width:32px; height:32px; border-radius:8px; border:none; cursor:pointer;">-</button>
-                                <span class="rmm-qty-val" style="font-weight:700; min-width:20px; text-align:center;">1</span>
-                                <button type="button" class="rmm-qty-btn rmm-qty-plus" style="width:32px; height:32px; border-radius:8px; border:none; cursor:pointer;">+</button>
+                        <div class="rmm-modal-footer rmm-modal-style-12">
+                            <div class="rmm-qty-stepper rmm-modal-style-13">
+                                <button type="button" class="rmm-qty-btn rmm-qty-minus rmm-modal-style-14">-</button>
+                                <span class="rmm-qty-val rmm-modal-style-15">1</span>
+                                <button type="button" class="rmm-qty-btn rmm-qty-plus rmm-modal-style-14">+</button>
                             </div>
 
-                            <button type="button" class="rmm-modal-add-cart" style="display:inline-flex; align-items:center; gap:8px; padding:10px 20px; border-radius:12px; border:none; font-weight:600; cursor:pointer;">
+                            <button type="button" class="rmm-modal-add-cart rmm-modal-style-16">
                                 <?php if (!empty($settings['cart_btn_icon']['value'])) : ?>
                                     <span class="rmm-btn-icon" aria-hidden="true">
                                         <?php Icons_Manager::render_icon($settings['cart_btn_icon'], ['aria-hidden' => 'true']); ?>
