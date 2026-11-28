@@ -3121,3 +3121,15 @@ input:checked + .rmm-slider:before {
     height:0;
     border:none;
 }
+
+
+/* Keep extracted portal form layouts usable on phones. */
+@media (max-width: 640px) {
+    .rmm-portal-style-14 {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .rmm-portal-style-06 {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
