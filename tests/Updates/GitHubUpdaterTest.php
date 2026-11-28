@@ -13,6 +13,7 @@ class GitHubUpdaterTest extends TestCase {
                 [
                     'name' => 'fondogh-online-menu.zip',
                     'browser_download_url' => $package,
+                    'digest' => 'sha256:' . str_repeat('a', 64),
                 ],
             ],
         ];
@@ -110,4 +111,51 @@ class GitHubUpdaterTest extends TestCase {
             )
         );
     }
+
+    public function test_update_metadata_matches_plugin_header_and_readme() {
+        $metadata = GitHubUpdater::get_compatibility_metadata();
+
+        $this->assertSame('8.2', $metadata['requires_php']);
+        $this->assertSame('5.8', $metadata['requires']);
+        $this->assertSame('7.1', $metadata['tested']);
+    }
+
+    public function test_update_object_includes_the_published_sha256_digest() {
+        $update = GitHubUpdater::create_update_object(
+            $this->release(),
+            '1.3.1',
+            'fondogh-online-menu/fondogh-online-menu.php'
+        );
+
+        $this->assertSame(str_repeat('a', 64), $update->package_hash);
+        $this->assertSame('8.2', $update->requires_php);
+    }
+
+    public function test_rejects_release_without_sha256_digest() {
+        $release = $this->release();
+        unset($release['assets'][0]['digest']);
+
+        $this->assertFalse(
+            GitHubUpdater::create_update_object(
+                $release,
+                '1.3.1',
+                'fondogh-online-menu/fondogh-online-menu.php'
+            )
+        );
+    }
+
+    public function test_rejects_malformed_sha256_digest() {
+        $release = $this->release();
+        $release['assets'][0]['digest'] = 'sha1:' . str_repeat('a', 40);
+
+        $this->assertFalse(
+            GitHubUpdater::create_update_object(
+                $release,
+                '1.3.1',
+                'fondogh-online-menu/fondogh-online-menu.php'
+            )
+        );
+    }
+
+
 }
