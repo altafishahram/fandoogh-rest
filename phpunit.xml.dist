@@ -10,6 +10,7 @@
             <directory>tests/FrontendDashboard</directory>
             <directory>tests/Elementor</directory>
             <directory>tests/Updates</directory>
+            <directory>tests/DesignSystem</directory>
         </testsuite>
     </testsuites>
 </phpunit>
