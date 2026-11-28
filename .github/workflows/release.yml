@@ -61,7 +61,7 @@ jobs:
             exit 1
           fi
           umask 077
-          printf '%s\\n' "$RELEASE_PRIVATE_KEY" > "$RUNNER_TEMP/release-private.pem"
+          printf '%s\n' "$RELEASE_PRIVATE_KEY" > "$RUNNER_TEMP/release-private.pem"
           python - <<'PY'
           import hashlib, json, os
           version = os.environ["RELEASE_VERSION"]
@@ -75,9 +75,9 @@ jobs:
               "package": "fondogh-online-menu.zip",
               "sha256": digest,
           }
-          with open("fondogh-online-menu.manifest.json", "w", encoding="utf-8", newline="\\n") as f:
+          with open("fondogh-online-menu.manifest.json", "w", encoding="utf-8", newline="\n") as f:
               json.dump(manifest, f, sort_keys=True, separators=(",", ":"))
-              f.write("\\n")
+              f.write("\n")
           PY
           openssl dgst -sha256 -sign "$RUNNER_TEMP/release-private.pem" -out "$RUNNER_TEMP/manifest.sig" fondogh-online-menu.manifest.json
           base64 -w 0 "$RUNNER_TEMP/manifest.sig" > fondogh-online-menu.manifest.sig
