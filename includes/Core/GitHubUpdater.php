@@ -303,12 +303,15 @@ class GitHubUpdater {
             !is_array($manifest)
             || !$signature
             || !$public_key
+            || !isset($manifest['schema'])
+            || (int) $manifest['schema'] !== 1
             || empty($manifest['tag'])
             || !is_string($manifest['tag'])
             || !hash_equals((string) $expected_tag, $manifest['tag'])
             || empty($manifest['version'])
             || !is_string($manifest['version'])
             || !preg_match('/^\\d+\\.\\d+\\.\\d+(?:[-+][0-9A-Za-z.-]+)?$/', $manifest['version'])
+            || !hash_equals((string) self::get_release_version(['tag_name' => $expected_tag]), $manifest['version'])
             || empty($manifest['package'])
             || $manifest['package'] !== self::PACKAGE_NAME
             || empty($manifest['sha256'])
