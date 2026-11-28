@@ -10,7 +10,7 @@
  * Domain Path: /languages
  * Update URI:  https://github.com/altafishahram/fandoogh-rest
  * Requires at least: 5.8
- * Requires PHP: 7.4
+ * Requires PHP: 8.2
  * WC requires at least: 5.0
  * WC tested up to: 11.3.1
  * Elementor tested up to: 4.4.2
