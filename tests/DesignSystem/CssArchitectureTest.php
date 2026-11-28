@@ -22,6 +22,9 @@ class CssArchitectureTest extends TestCase {
             'assets/css/frontend-menu-modern.css',
             'assets/css/category-sheet.css',
             'assets/css/portal-pwa.css',
+            'assets/css/admin-ui.css',
+            'assets/css/design-studio-admin.css',
+            'assets/css/thermal-receipt.css',
         ] as $path) {
             $this->assertFileExists($root . '/' . $path);
         }
@@ -30,6 +33,7 @@ class CssArchitectureTest extends TestCase {
         $this->assertStringContainsString('frontend-menu-base.css', $assets);
         $this->assertStringContainsString('frontend-menu-widgets.css', $assets);
         $this->assertStringContainsString('frontend-menu-modern.css', $assets);
+        $this->assertStringContainsString('admin-ui.css', $assets);
         $this->assertStringContainsString("['rmm-frontend-menu-base']", $assets);
         $this->assertStringContainsString("['rmm-frontend-menu-widgets']", $assets);
         $this->assertStringContainsString("RMM_PLUGIN_URL . 'assets/css/frontend-menu-modern.css'", $assets);
@@ -46,6 +50,16 @@ class CssArchitectureTest extends TestCase {
             'includes/Elementor/Widgets/FoodCardWidget.php',
             'includes/Elementor/Widgets/FoodModalWidget.php',
             'includes/FrontendDashboard/Views/portal-app.php',
+            'includes/Elementor/Widgets/CategoryBarWidget.php',
+            'includes/Elementor/Widgets/CategorySheetWidget.php',
+            'includes/Elementor/Widgets/SearchBarWidget.php',
+            'includes/Elementor/Widgets/ThemeToggleWidget.php',
+            'includes/FrontendDashboard/Views/thermal-receipt.php',
+            'includes/FrontendDashboard/PortalRouter.php',
+            'includes/Branches/BranchTaxonomy.php',
+            'includes/Core/Settings.php',
+            'includes/Elementor/TemplateLibrary/TemplateManager.php',
+            'includes/I18n/MultiLangManager.php',
         ];
 
         foreach ($paths as $path) {
@@ -54,12 +68,33 @@ class CssArchitectureTest extends TestCase {
 
             foreach ($matches[1] as $inline_style) {
                 $this->assertMatchesRegularExpression(
-                    '/^\s*display\s*:\s*none\s*;?\s*$/i',
+                    '/^(?:\s*display\s*:\s*none\s*;?\s*|(?=[\s\S]*<\?php)(?=[\s\S]*display\s*:\s*none)[\s\S]*\?>\s*)$/i',
                     trim($inline_style),
                     sprintf('Only state-driven visibility may remain inline in %s: %s', $path, $inline_style)
                 );
             }
         }
+    }
+
+    public function test_static_style_blocks_are_externalized() {
+        $root = dirname(__DIR__, 2);
+        foreach ([
+            'includes/Elementor/Widgets/ThemeToggleWidget.php',
+            'includes/Core/Settings.php',
+            'includes/FrontendDashboard/Views/thermal-receipt.php',
+        ] as $path) {
+            $source = file_get_contents($root . '/' . $path);
+            $this->assertDoesNotMatchRegularExpression('/<style\\s*>/i', $source, sprintf('Static style block remains in %s', $path));
+        }
+
+        $settings_page = file_get_contents($root . '/includes/DesignSystem/SettingsPage.php');
+        $receipt = file_get_contents($root . '/includes/FrontendDashboard/Views/thermal-receipt.php');
+        $router = file_get_contents($root . '/includes/FrontendDashboard/PortalRouter.php');
+        $languages = file_get_contents($root . '/includes/I18n/MultiLangManager.php');
+        $this->assertStringContainsString('design-studio-admin.css', $settings_page);
+        $this->assertStringContainsString('thermal-receipt.css', $receipt);
+        $this->assertStringContainsString("wp_enqueue_style('rmm-frontend-menu-widgets')", $router);
+        $this->assertStringContainsString("wp_enqueue_style('rmm-frontend-menu-widgets')", $languages);
     }
 
     public function test_extracted_widget_classes_have_stylesheet_rules() {
@@ -89,6 +124,9 @@ class CssArchitectureTest extends TestCase {
             'assets/css/frontend-menu-modern.css',
             'assets/css/category-sheet.css',
             'assets/css/portal-pwa.css',
+            'assets/css/admin-ui.css',
+            'assets/css/design-studio-admin.css',
+            'assets/css/thermal-receipt.css',
         ];
 
         foreach ($paths as $path) {
