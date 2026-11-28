@@ -117,4 +117,28 @@ class DesignSystemTokensTest extends TestCase {
     }
 
 
+
+    public function test_live_search_base_styles_use_design_tokens_with_fallbacks() {
+        $css = file_get_contents(dirname(__DIR__, 2) . '/assets/css/frontend-menu.css');
+
+        $this->assertNotFalse($css);
+
+        $expected = [
+            'color: var(--rmm-ds-search-icon, #94a3b8);',
+            'border-radius: var(--rmm-ds-search-radius, 12px);',
+            'border: 1.5px solid var(--rmm-ds-search-border, #e2e8f0);',
+            'background: var(--rmm-ds-search-bg, #ffffff);',
+            'border-color: var(--rmm-ds-primary, #0284c7);',
+        ];
+
+        foreach ($expected as $declaration) {
+            $this->assertStringContainsString(
+                $declaration,
+                $css,
+                sprintf('Live search base CSS is missing token fallback: %s', $declaration)
+            );
+        }
+    }
+
+
 }
