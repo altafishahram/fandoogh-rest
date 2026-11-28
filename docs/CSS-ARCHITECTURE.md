@@ -9,7 +9,7 @@
 - `portal-pwa.css`: standalone management PWA. It intentionally keeps its own `--rmm-*` token namespace rather than inheriting storefront theme colors.
 - `TokenSchema.php` and `CssCompiler.php`: source of truth for editable Design System tokens and generated component mappings.
 
-The three storefront layers are enqueued in dependency order. The public `rmm-frontend-menu` style handle remains registered as a dependency-only compatibility handle, so existing widgets and integrations can continue depending on it. The generated Design System stylesheet is loaded after that handle; when the generated file is unavailable, its fallback CSS is attached to the final storefront layer.
+The three storefront layers are enqueued in dependency order. The public `rmm-frontend-menu` style handle remains the final theme layer, so existing widgets, third-party integrations, and `wp_add_inline_style()` calls retain their original handle and output behavior. The generated Design System stylesheet is loaded after that handle; when the generated file is unavailable, its fallback CSS is attached to the same final layer.
 
 ## Authoring rules
 
