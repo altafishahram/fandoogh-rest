@@ -1,7 +1,7 @@
 <?php
 
-use PHPUnit\\Framework\\TestCase;
-use RMM\\Core\\GitHubUpdater;
+use PHPUnit\Framework\TestCase;
+use RMM\Core\GitHubUpdater;
 
 class GitHubUpdaterTest extends TestCase {
 
