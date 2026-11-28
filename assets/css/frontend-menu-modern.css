@@ -6,7 +6,7 @@
     border-radius: 16px;
     overflow: hidden;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
-    border: 1px solid var(--rmm-card-border);
+    border: 1px solid var(--rmm-ds-border);
     flex-shrink: 0;
 }.rmm-food-title{
     font-size: 16px;
@@ -33,9 +33,9 @@
     align-items: center;
     font-size: 14.5px;
     font-weight: 800;
-    color: var(--rmm-price-color);
-    background: var(--rmm-price-bg);
-    border: 1px solid var(--rmm-price-border);
+    color: var(--rmm-ds-primary);
+    background: var(--rmm-ds-primary-soft);
+    border: 1px solid var(--rmm-ds-border);
     padding: 3px 9px;
     border-radius: 8px;
     white-space: nowrap;
@@ -128,8 +128,8 @@ html.rmm-modal-open{
 }.rmm-modal-backdrop:not([style*="display: none"]):not([style*="display:none"]){
     display: flex !important;
 }.rmm-modal-box{
-    background: var(--rmm-modal-bg) !important;
-    border: 1px solid var(--rmm-modal-border) !important;
+    background: var(--rmm-ds-card) !important;
+    border: 1px solid var(--rmm-ds-border) !important;
     border-radius: 24px !important;
     box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45) !important;
     overflow-y: auto !important;
@@ -146,15 +146,15 @@ html.rmm-modal-open{
     font-size: 21px !important;
     font-weight: 800 !important;
 }.rmm-modal-food-price{
-    color: var(--rmm-price-color) !important;
+    color: var(--rmm-ds-primary) !important;
     font-size: 19px !important;
     font-weight: 900 !important;
 }.rmm-modal-price-row{
-    border-bottom: 1px dashed var(--rmm-card-border) !important;
+    border-bottom: 1px dashed var(--rmm-ds-border) !important;
 }.rmm-modal-chip{
-    background: var(--rmm-chip-bg) !important;
-    border: 1px solid var(--rmm-chip-border) !important;
-    color: var(--rmm-chip-text) !important;
+    background: var(--rmm-ds-subtle) !important;
+    border: 1px solid var(--rmm-ds-border) !important;
+    color: var(--rmm-ds-text) !important;
     border-radius: 12px !important;
     padding: 6px 14px !important;
 }.rmm-modal-desc-box{
@@ -165,13 +165,13 @@ html.rmm-modal-open{
     line-height: 1.75 !important;
     margin: 0 !important;
 }.rmm-modal-ingredients-box{
-    background: var(--rmm-modal-box-bg) !important;
-    border: 1px solid var(--rmm-card-border) !important;
+    background: var(--rmm-ds-subtle) !important;
+    border: 1px solid var(--rmm-ds-border) !important;
     border-radius: 16px !important;
     padding: 14px 18px !important;
     margin-bottom: 16px !important;
 }.rmm-modal-ingredients-box h4{
-    color: var(--rmm-price-color) !important;
+    color: var(--rmm-ds-primary) !important;
     font-size: 13.5px !important;
     margin-bottom: 6px !important;
 }.rmm-modal-ingredients-text{
@@ -182,20 +182,20 @@ html.rmm-modal-open{
     color: var(--rmm-ds-text, #0f172a) !important;
 }.rmm-modal-portion-item,
 .rmm-modal-addon-item{
-    background: var(--rmm-chip-bg) !important;
-    border: 1px solid var(--rmm-chip-border) !important;
+    background: var(--rmm-ds-subtle) !important;
+    border: 1px solid var(--rmm-ds-border) !important;
     color: var(--rmm-ds-text, #0f172a) !important;
     border-radius: 12px !important;
 }.rmm-modal-portion-item.is-selected,
 .rmm-modal-addon-item.is-selected{
-    border-color: var(--rmm-price-color) !important;
-    background: var(--rmm-price-bg) !important;
-    box-shadow: 0 0 12px var(--rmm-gold-glow) !important;
+    border-color: var(--rmm-ds-primary) !important;
+    background: var(--rmm-ds-primary-soft) !important;
+    box-shadow: 0 0 12px var(--rmm-ds-primary-soft) !important;
 }.rmm-modal-submit-btn{
-    background: var(--rmm-red-accent) !important;
+    background: var(--rmm-ds-primary) !important;
     color: #ffffff !important;
-    border: 1px solid var(--rmm-price-border) !important;
-    box-shadow: 0 6px 20px var(--rmm-gold-glow) !important;
+    border: 1px solid var(--rmm-ds-border) !important;
+    box-shadow: 0 6px 20px var(--rmm-ds-primary-soft) !important;
 }
 
 /* Ø±ÛŒØ³Ù¾Ø§Ù†Ø³ÛŒÙˆ Ù…ÙˆØ¨Ø§ÛŒÙ„: Ù¾Ø§Ù¾â€ŒØ¢Ù¾ Ù‡Ù…ÙˆØ§Ø±Ù‡ ÙˆØ³Ø· ØµÙØ­Ù‡ Ø¨Ø§Ø´Ø¯ Ùˆ Ù¾Ø§ÛŒÛŒÙ† Ø¨Ø§Ø² Ù†Ø´ÙˆØ¯ */
@@ -227,14 +227,14 @@ body:not(.light-theme) .woocommerce-Price-amount,
 body:not(.light-theme) .woocommerce-Price-amount *,
 body:not(.light-theme) .rmm-food-price bdi,
 body:not(.light-theme) .rmm-food-price bdi *{
-    color: var(--rmm-price-color) !important;
+    color: var(--rmm-ds-primary) !important;
 }body.light-theme .rmm-food-price,
 body.light-theme .rmm-food-price *,
 body.light-theme .rmm-card-regular-price,
 body.light-theme .rmm-card-regular-price *,
 body.light-theme .woocommerce-Price-amount,
 body.light-theme .woocommerce-Price-amount *{
-    color: var(--rmm-price-color) !important;
+    color: var(--rmm-ds-primary) !important;
 }.rmm-food-price ins,
 .rmm-food-price ins *,
 .rmm-card-sale-price,
@@ -377,9 +377,9 @@ body.light-theme .rmm-theme-toggle-btn:not(.rmm-theme-toggle-widget-btn){
     min-width: 44px !important;
     border-radius: 12px !important;
     overflow: hidden !important;
-    border: 1.5px solid var(--rmm-card-border, rgba(212, 175, 55, 0.3)) !important;
+    border: 1.5px solid var(--rmm-ds-border, rgba(212, 175, 55, 0.3)) !important;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18) !important;
-    background: var(--rmm-card-bg, #fff) !important;
+    background: var(--rmm-ds-card, #fff) !important;
 }.rmm-cat-header-thumb{
     width: 100% !important;
     height: 100% !important;
@@ -396,7 +396,7 @@ body.light-theme .rmm-theme-toggle-btn:not(.rmm-theme-toggle-widget-btn){
     margin: 0 !important;
     font-size: 21px !important;
     font-weight: 800 !important;
-    color: var(--rmm-text-title, #FFFFFF) !important;
+    color: var(--rmm-ds-text, #FFFFFF) !important;
     letter-spacing: -0.3px !important;
     line-height: 1.35 !important;
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5) !important;
@@ -413,13 +413,13 @@ html:not(.light-theme) .rmm-category-title{
     border-radius: 20px !important;
     font-size: 11.5px !important;
     font-weight: 800 !important;
-    background: var(--rmm-price-bg, rgba(212, 175, 55, 0.15)) !important;
-    color: var(--rmm-price-color, #F5E08B) !important;
-    border: 1px solid var(--rmm-price-border, rgba(212, 175, 55, 0.3)) !important;
+    background: var(--rmm-ds-primary-soft, rgba(212, 175, 55, 0.15)) !important;
+    color: var(--rmm-ds-primary, #F5E08B) !important;
+    border: 1px solid var(--rmm-ds-border, rgba(212, 175, 55, 0.3)) !important;
 }.rmm-category-desc{
     margin: 4px 0 0 0 !important;
     font-size: 13px !important;
-    color: var(--rmm-text-desc, #D9C3B0) !important;
+    color: var(--rmm-ds-text-secondary, #D9C3B0) !important;
     line-height: 1.5 !important;
 }.rmm-cat-header-divider{
     display: flex !important;
@@ -430,12 +430,12 @@ html:not(.light-theme) .rmm-category-title{
 }.rmm-cat-divider-line{
     flex-grow: 1 !important;
     height: 1.5px !important;
-    background: linear-gradient(90deg, var(--rmm-card-border, rgba(212, 175, 55, 0.4)) 0%, transparent 100%) !important;
+    background: linear-gradient(90deg, var(--rmm-ds-border, rgba(212, 175, 55, 0.4)) 0%, transparent 100%) !important;
 }.rmm-cat-divider-line:first-child{
-    background: linear-gradient(270deg, var(--rmm-card-border, rgba(212, 175, 55, 0.4)) 0%, transparent 100%) !important;
+    background: linear-gradient(270deg, var(--rmm-ds-border, rgba(212, 175, 55, 0.4)) 0%, transparent 100%) !important;
     max-width: 36px !important;
 }.rmm-cat-divider-ornament{
-    color: var(--rmm-gold-primary, #D4AF37) !important;
+    color: var(--rmm-ds-primary, #D4AF37) !important;
     font-size: 14px !important;
     opacity: 0.9 !important;
 }
@@ -473,9 +473,9 @@ html:not(.light-theme) .rmm-category-title{
 }.rmm-badge-text-val{
     display: inline-block !important;
 }.rmm-badge-custom{
-    background: var(--rmm-price-bg, rgba(212, 175, 55, 0.16)) !important;
-    color: var(--rmm-price-color, #F5E08B) !important;
-    border: 1px solid var(--rmm-price-border, rgba(212, 175, 55, 0.4)) !important;
+    background: var(--rmm-ds-primary-soft, rgba(212, 175, 55, 0.16)) !important;
+    color: var(--rmm-ds-primary, #F5E08B) !important;
+    border: 1px solid var(--rmm-ds-border, rgba(212, 175, 55, 0.4)) !important;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15) !important;
 }body.light-theme .rmm-badge-custom,
 .light-theme .rmm-badge-custom{
@@ -605,9 +605,9 @@ body.dark-theme .rmm-food-loop-load-more-btn:hover{
     width: 100%;
     max-width: 520px;
     max-height: 88vh;
-    background: var(--rmm-modal-bg, #1c0508);
-    color: var(--rmm-text-title, #ffffff);
-    border: 1px solid var(--rmm-modal-border, rgba(212, 175, 55, 0.35));
+    background: var(--rmm-ds-card, #1c0508);
+    color: var(--rmm-ds-text, #ffffff);
+    border: 1px solid var(--rmm-ds-border, rgba(212, 175, 55, 0.35));
     border-radius: 22px;
     box-shadow: 0 28px 70px rgba(0, 0, 0, 0.55);
     display: flex;
@@ -625,7 +625,7 @@ body.dark-theme .rmm-food-loop-load-more-btn:hover{
     justify-content: space-between;
     gap: 12px;
     padding: 16px 20px;
-    border-bottom: 1px solid var(--rmm-card-border, rgba(212, 175, 55, 0.2));
+    border-bottom: 1px solid var(--rmm-ds-border, rgba(212, 175, 55, 0.2));
 }body.light-theme .rmm-catalog-drawer-header{
     border-bottom-color: #f1f5f9;
 }.rmm-catalog-drawer-title-wrap{
@@ -643,9 +643,9 @@ body.dark-theme .rmm-food-loop-load-more-btn:hover{
     font-weight: 700;
     padding: 3px 10px;
     border-radius: 999px;
-    background: var(--rmm-price-bg, rgba(212, 175, 55, 0.14));
-    color: var(--rmm-price-color, #f5e08b);
-    border: 1px solid var(--rmm-price-border, rgba(212, 175, 55, 0.35));
+    background: var(--rmm-ds-primary-soft, rgba(212, 175, 55, 0.14));
+    color: var(--rmm-ds-primary, #f5e08b);
+    border: 1px solid var(--rmm-ds-border, rgba(212, 175, 55, 0.35));
     white-space: nowrap;
 }body.light-theme .rmm-catalog-drawer-count{
     background: #eff6ff;
@@ -678,7 +678,7 @@ body.dark-theme .rmm-food-loop-load-more-btn:hover{
     width: 34px;
     height: 34px;
     border-radius: 50%;
-    border: 1px solid var(--rmm-card-border, rgba(255, 255, 255, 0.18));
+    border: 1px solid var(--rmm-ds-border, rgba(255, 255, 255, 0.18));
     background: rgba(255, 255, 255, 0.08);
     color: inherit;
     font-size: 22px;
@@ -706,7 +706,7 @@ body.dark-theme .rmm-food-loop-load-more-btn:hover{
 }.rmm-catalog-empty{
     text-align: center;
     padding: 36px 16px;
-    color: var(--rmm-text-desc, #cbd5e1);
+    color: var(--rmm-ds-text-secondary, #cbd5e1);
 }.rmm-catalog-empty-icon{
     font-size: 40px;
     display: block;
@@ -715,7 +715,7 @@ body.dark-theme .rmm-food-loop-load-more-btn:hover{
     margin: 0 0 6px;
     font-size: 15px;
     font-weight: 700;
-    color: var(--rmm-text-title, #ffffff);
+    color: var(--rmm-ds-text, #ffffff);
 }.rmm-catalog-empty span{
     font-size: 13px;
     opacity: 0.85;
@@ -729,8 +729,8 @@ body.dark-theme .rmm-food-loop-load-more-btn:hover{
     gap: 12px;
     padding: 12px;
     border-radius: 16px;
-    background: var(--rmm-chip-bg, rgba(255, 255, 255, 0.05));
-    border: 1px solid var(--rmm-card-border, rgba(212, 175, 55, 0.22));
+    background: var(--rmm-ds-subtle, rgba(255, 255, 255, 0.05));
+    border: 1px solid var(--rmm-ds-border, rgba(212, 175, 55, 0.22));
     box-sizing: border-box;
 }body.light-theme .rmm-catalog-item-card{
     background: #f8fafc;
@@ -741,7 +741,7 @@ body.dark-theme .rmm-food-loop-load-more-btn:hover{
     min-width: 66px;
     border-radius: 12px;
     object-fit: cover;
-    border: 1px solid var(--rmm-card-border, rgba(212, 175, 55, 0.25));
+    border: 1px solid var(--rmm-ds-border, rgba(212, 175, 55, 0.25));
     background: rgba(0, 0, 0, 0.2);
 }.rmm-catalog-thumb-placeholder{
     display: flex;
@@ -763,7 +763,7 @@ body.dark-theme .rmm-food-loop-load-more-btn:hover{
     margin: 0;
     font-size: 14.5px;
     font-weight: 800;
-    color: var(--rmm-text-title, #ffffff);
+    color: var(--rmm-ds-text, #ffffff);
     line-height: 1.4;
     overflow-wrap: anywhere;
 }body.light-theme .rmm-catalog-item-title{
@@ -788,13 +788,13 @@ body.dark-theme .rmm-food-loop-load-more-btn:hover{
     color: #ffffff;
 }.rmm-catalog-item-meta{
     font-size: 12px;
-    color: var(--rmm-text-desc, #cbd5e1);
+    color: var(--rmm-ds-text-secondary, #cbd5e1);
     line-height: 1.45;
 }body.light-theme .rmm-catalog-item-meta{
     color: #64748b;
 }.rmm-catalog-item-unit-price{
     font-size: 12.5px;
-    color: var(--rmm-text-desc, #cbd5e1);
+    color: var(--rmm-ds-text-secondary, #cbd5e1);
 }body.light-theme .rmm-catalog-item-unit-price{
     color: #475569;
 }.rmm-catalog-item-bottom{
@@ -805,15 +805,15 @@ body.dark-theme .rmm-food-loop-load-more-btn:hover{
     gap: 10px;
     margin-top: 4px;
     padding-top: 8px;
-    border-top: 1px dashed var(--rmm-card-border, rgba(212, 175, 55, 0.2));
+    border-top: 1px dashed var(--rmm-ds-border, rgba(212, 175, 55, 0.2));
 }body.light-theme .rmm-catalog-item-bottom{
     border-top-color: #e2e8f0;
 }.rmm-catalog-item-qty{
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: var(--rmm-modal-box-bg, rgba(0, 0, 0, 0.28));
-    border: 1px solid var(--rmm-card-border, rgba(212, 175, 55, 0.25));
+    background: var(--rmm-ds-subtle, rgba(0, 0, 0, 0.28));
+    border: 1px solid var(--rmm-ds-border, rgba(212, 175, 55, 0.25));
     padding: 3px 6px;
     border-radius: 10px;
 }body.light-theme .rmm-catalog-item-qty{
@@ -824,8 +824,8 @@ body.dark-theme .rmm-food-loop-load-more-btn:hover{
     height: 26px;
     border-radius: 8px;
     border: none;
-    background: var(--rmm-price-bg, rgba(212, 175, 55, 0.16));
-    color: var(--rmm-price-color, #f5e08b);
+    background: var(--rmm-ds-primary-soft, rgba(212, 175, 55, 0.16));
+    color: var(--rmm-ds-primary, #f5e08b);
     font-size: 16px;
     font-weight: 800;
     cursor: pointer;
@@ -854,19 +854,19 @@ body.dark-theme .rmm-food-loop-load-more-btn:hover{
     gap: 5px;
     font-size: 13px;
 }.rmm-catalog-sub-label{
-    color: var(--rmm-text-desc, #cbd5e1);
+    color: var(--rmm-ds-text-secondary, #cbd5e1);
     font-size: 12px;
 }body.light-theme .rmm-catalog-sub-label{
     color: #64748b;
 }.rmm-catalog-sub-val{
-    color: var(--rmm-price-color, #f5e08b);
+    color: var(--rmm-ds-primary, #f5e08b);
     font-weight: 800;
 }body.light-theme .rmm-catalog-sub-val{
     color: #0284c7;
 }.rmm-catalog-drawer-footer{
     padding: 16px 20px 18px;
-    border-top: 1px solid var(--rmm-card-border, rgba(212, 175, 55, 0.25));
-    background: var(--rmm-modal-box-bg, rgba(0, 0, 0, 0.22));
+    border-top: 1px solid var(--rmm-ds-border, rgba(212, 175, 55, 0.25));
+    background: var(--rmm-ds-subtle, rgba(0, 0, 0, 0.22));
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -878,7 +878,7 @@ body.dark-theme .rmm-food-loop-load-more-btn:hover{
     align-items: center;
     justify-content: space-between;
     font-size: 13px;
-    color: var(--rmm-text-desc, #cbd5e1);
+    color: var(--rmm-ds-text-secondary, #cbd5e1);
 }body.light-theme .rmm-catalog-summary-row{
     color: #475569;
 }.rmm-catalog-grand-total-row{
@@ -887,8 +887,8 @@ body.dark-theme .rmm-food-loop-load-more-btn:hover{
     justify-content: space-between;
     padding: 10px 14px;
     border-radius: 12px;
-    background: var(--rmm-price-bg, rgba(212, 175, 55, 0.14));
-    border: 1px solid var(--rmm-price-border, rgba(212, 175, 55, 0.35));
+    background: var(--rmm-ds-primary-soft, rgba(212, 175, 55, 0.14));
+    border: 1px solid var(--rmm-ds-border, rgba(212, 175, 55, 0.35));
 }body.light-theme .rmm-catalog-grand-total-row{
     background: #eff6ff;
     border-color: #bfdbfe;
@@ -898,7 +898,7 @@ body.dark-theme .rmm-food-loop-load-more-btn:hover{
 }.rmm-catalog-grand-amount{
     font-size: 17px;
     font-weight: 900;
-    color: var(--rmm-price-color, #f5e08b);
+    color: var(--rmm-ds-primary, #f5e08b);
 }body.light-theme .rmm-catalog-grand-amount{
     color: #0369a1;
 }.rmm-catalog-footer-actions{
@@ -928,7 +928,7 @@ body.dark-theme .rmm-food-loop-load-more-btn:hover{
 }.rmm-catalog-wa-btn:hover{
     filter: brightness(1.06);
 }.rmm-catalog-done-btn{
-    background: var(--rmm-red-accent, #C82333);
+    background: var(--rmm-ds-primary, #C82333);
     color: #ffffff;
 }body.light-theme .rmm-catalog-done-btn{
     background: #0f172a;
