@@ -408,14 +408,14 @@ $login_error = isset($_GET['login_error']) ? wp_strip_all_tags(urldecode($_GET['
                 <!-- Branch Information & Edit Card -->
                 <div class="rmm-branch-management-card">
                     <div class="rmm-branch-card-header">
-                        <div style="display:flex; align-items:center; gap:12px;">
-                            <span class="rmm-branch-icon-svg" style="color:var(--rmm-primary); display:flex; align-items:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"> <path d="M11.9999 14.1695C9.86988 14.1695 8.12988 12.4395 8.12988 10.2995C8.12988 8.15945 9.86988 6.43945 11.9999 6.43945C14.1299 6.43945 15.8699 8.16945 15.8699 10.3095C15.8699 12.4495 14.1299 14.1695 11.9999 14.1695ZM11.9999 7.93945C10.6999 7.93945 9.62988 8.99945 9.62988 10.3095C9.62988 11.6195 10.6899 12.6795 11.9999 12.6795C13.3099 12.6795 14.3699 11.6195 14.3699 10.3095C14.3699 8.99945 13.2999 7.93945 11.9999 7.93945Z"/> <path d="M11.9999 22.76C10.5199 22.76 9.02993 22.2 7.86993 21.09C4.91993 18.25 1.65993 13.72 2.88993 8.33C3.99993 3.44 8.26993 1.25 11.9999 1.25C11.9999 1.25 11.9999 1.25 12.0099 1.25C15.7399 1.25 20.0099 3.44 21.1199 8.34C22.3399 13.73 19.0799 18.25 16.1299 21.09C14.9699 22.2 13.4799 22.76 11.9999 22.76ZM11.9999 2.75C9.08993 2.75 5.34993 4.3 4.35993 8.66C3.27993 13.37 6.23993 17.43 8.91993 20C10.6499 21.67 13.3599 21.67 15.0899 20C17.7599 17.43 20.7199 13.37 19.6599 8.66C18.6599 4.3 14.9099 2.75 11.9999 2.75Z"/> </svg></span>
+                        <div class="rmm-portal-style-01">
+                            <span class="rmm-branch-icon-svg rmm-portal-style-02"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"> <path d="M11.9999 14.1695C9.86988 14.1695 8.12988 12.4395 8.12988 10.2995C8.12988 8.15945 9.86988 6.43945 11.9999 6.43945C14.1299 6.43945 15.8699 8.16945 15.8699 10.3095C15.8699 12.4495 14.1299 14.1695 11.9999 14.1695ZM11.9999 7.93945C10.6999 7.93945 9.62988 8.99945 9.62988 10.3095C9.62988 11.6195 10.6899 12.6795 11.9999 12.6795C13.3099 12.6795 14.3699 11.6195 14.3699 10.3095C14.3699 8.99945 13.2999 7.93945 11.9999 7.93945Z"/> <path d="M11.9999 22.76C10.5199 22.76 9.02993 22.2 7.86993 21.09C4.91993 18.25 1.65993 13.72 2.88993 8.33C3.99993 3.44 8.26993 1.25 11.9999 1.25C11.9999 1.25 11.9999 1.25 12.0099 1.25C15.7399 1.25 20.0099 3.44 21.1199 8.34C22.3399 13.73 19.0799 18.25 16.1299 21.09C14.9699 22.2 13.4799 22.76 11.9999 22.76ZM11.9999 2.75C9.08993 2.75 5.34993 4.3 4.35993 8.66C3.27993 13.37 6.23993 17.43 8.91993 20C10.6499 21.67 13.3599 21.67 15.0899 20C17.7599 17.43 20.7199 13.37 19.6599 8.66C18.6599 4.3 14.9099 2.75 11.9999 2.75Z"/> </svg></span>
                             <div>
-                                <h3 style="margin:0; font-size:16px; font-weight:800; color:var(--rmm-text);"><?php _e('اطلاعات شعبه فعال', 'fondogh-online-menu'); ?></h3>
-                                <p style="margin:3px 0 0; font-size:13px; color:var(--rmm-text-muted);" id="rmm-active-branch-desc"><?php _e('مشاهده و ویرایش مشخصات شعبه انتخاب شده', 'fondogh-online-menu'); ?></p>
+                                <h3 class="rmm-portal-style-03"><?php _e('اطلاعات شعبه فعال', 'fondogh-online-menu'); ?></h3>
+                                <p class="rmm-portal-style-04" id="rmm-active-branch-desc"><?php _e('مشاهده و ویرایش مشخصات شعبه انتخاب شده', 'fondogh-online-menu'); ?></p>
                             </div>
                         </div>
-                        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                        <div class="rmm-portal-style-05">
                             <button type="button" class="rmm-btn-secondary" id="rmm-edit-current-branch-btn">
                                 <span><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"> <path d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H11C11.41 1.25 11.75 1.59 11.75 2C11.75 2.41 11.41 2.75 11 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V13C21.25 12.59 21.59 12.25 22 12.25C22.41 12.25 22.75 12.59 22.75 13V15C22.75 20.43 20.43 22.75 15 22.75Z"/> <path d="M8.50008 17.6905C7.89008 17.6905 7.33008 17.4705 6.92008 17.0705C6.43008 16.5805 6.22008 15.8705 6.33008 15.1205L6.76008 12.1105C6.84008 11.5305 7.22008 10.7805 7.63008 10.3705L15.5101 2.49055C17.5001 0.500547 19.5201 0.500547 21.5101 2.49055C22.6001 3.58055 23.0901 4.69055 22.9901 5.80055C22.9001 6.70055 22.4201 7.58055 21.5101 8.48055L13.6301 16.3605C13.2201 16.7705 12.4701 17.1505 11.8901 17.2305L8.88008 17.6605C8.75008 17.6905 8.62008 17.6905 8.50008 17.6905ZM16.5701 3.55055L8.69008 11.4305C8.50008 11.6205 8.28008 12.0605 8.24008 12.3205L7.81008 15.3305C7.77008 15.6205 7.83008 15.8605 7.98008 16.0105C8.13008 16.1605 8.37008 16.2205 8.66008 16.1805L11.6701 15.7505C11.9301 15.7105 12.3801 15.4905 12.5601 15.3005L20.4401 7.42055C21.0901 6.77055 21.4301 6.19055 21.4801 5.65055C21.5401 5.00055 21.2001 4.31055 20.4401 3.54055C18.8401 1.94055 17.7401 2.39055 16.5701 3.55055Z"/> <path d="M19.8501 9.83027C19.7801 9.83027 19.7101 9.82027 19.6501 9.80027C17.0201 9.06027 14.9301 6.97027 14.1901 4.34027C14.0801 3.94027 14.3101 3.53027 14.7101 3.41027C15.1101 3.30027 15.5201 3.53027 15.6301 3.93027C16.2301 6.06027 17.9201 7.75027 20.0501 8.35027C20.4501 8.46027 20.6801 8.88027 20.5701 9.28027C20.4801 9.62027 20.1801 9.83027 19.8501 9.83027Z"/> </svg></span>
                                 <span><?php _e('ویرایش مشخصات این شعبه', 'fondogh-online-menu'); ?></span>
@@ -427,22 +427,22 @@ $login_error = isset($_GET['login_error']) ? wp_strip_all_tags(urldecode($_GET['
                         </div>
                     </div>
 
-                    <div class="rmm-branch-details-grid" id="rmm-branch-details-view" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:16px; margin-top:20px;">
+                    <div class="rmm-branch-details-grid rmm-portal-style-06" id="rmm-branch-details-view">
                         <div class="rmm-detail-item">
-                            <span class="detail-label" style="font-size:12px; color:var(--rmm-text-muted); display:block; margin-bottom:4px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"> <path d="M11.9999 14.1695C9.86988 14.1695 8.12988 12.4395 8.12988 10.2995C8.12988 8.15945 9.86988 6.43945 11.9999 6.43945C14.1299 6.43945 15.8699 8.16945 15.8699 10.3095C15.8699 12.4495 14.1299 14.1695 11.9999 14.1695ZM11.9999 7.93945C10.6999 7.93945 9.62988 8.99945 9.62988 10.3095C9.62988 11.6195 10.6899 12.6795 11.9999 12.6795C13.3099 12.6795 14.3699 11.6195 14.3699 10.3095C14.3699 8.99945 13.2999 7.93945 11.9999 7.93945Z"/> <path d="M11.9999 22.76C10.5199 22.76 9.02993 22.2 7.86993 21.09C4.91993 18.25 1.65993 13.72 2.88993 8.33C3.99993 3.44 8.26993 1.25 11.9999 1.25C11.9999 1.25 11.9999 1.25 12.0099 1.25C15.7399 1.25 20.0099 3.44 21.1199 8.34C22.3399 13.73 19.0799 18.25 16.1299 21.09C14.9699 22.2 13.4799 22.76 11.9999 22.76ZM11.9999 2.75C9.08993 2.75 5.34993 4.3 4.35993 8.66C3.27993 13.37 6.23993 17.43 8.91993 20C10.6499 21.67 13.3599 21.67 15.0899 20C17.7599 17.43 20.7199 13.37 19.6599 8.66C18.6599 4.3 14.9099 2.75 11.9999 2.75Z"/> </svg> <?php _e('نام شعبه:', 'fondogh-online-menu'); ?></span>
-                            <strong class="detail-value" id="rmm-view-branch-name" style="font-size:14px; color:var(--rmm-text);">-</strong>
+                            <span class="detail-label rmm-portal-style-07"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"> <path d="M11.9999 14.1695C9.86988 14.1695 8.12988 12.4395 8.12988 10.2995C8.12988 8.15945 9.86988 6.43945 11.9999 6.43945C14.1299 6.43945 15.8699 8.16945 15.8699 10.3095C15.8699 12.4495 14.1299 14.1695 11.9999 14.1695ZM11.9999 7.93945C10.6999 7.93945 9.62988 8.99945 9.62988 10.3095C9.62988 11.6195 10.6899 12.6795 11.9999 12.6795C13.3099 12.6795 14.3699 11.6195 14.3699 10.3095C14.3699 8.99945 13.2999 7.93945 11.9999 7.93945Z"/> <path d="M11.9999 22.76C10.5199 22.76 9.02993 22.2 7.86993 21.09C4.91993 18.25 1.65993 13.72 2.88993 8.33C3.99993 3.44 8.26993 1.25 11.9999 1.25C11.9999 1.25 11.9999 1.25 12.0099 1.25C15.7399 1.25 20.0099 3.44 21.1199 8.34C22.3399 13.73 19.0799 18.25 16.1299 21.09C14.9699 22.2 13.4799 22.76 11.9999 22.76ZM11.9999 2.75C9.08993 2.75 5.34993 4.3 4.35993 8.66C3.27993 13.37 6.23993 17.43 8.91993 20C10.6499 21.67 13.3599 21.67 15.0899 20C17.7599 17.43 20.7199 13.37 19.6599 8.66C18.6599 4.3 14.9099 2.75 11.9999 2.75Z"/> </svg> <?php _e('نام شعبه:', 'fondogh-online-menu'); ?></span>
+                            <strong class="detail-value rmm-portal-style-08" id="rmm-view-branch-name">-</strong>
                         </div>
                         <div class="rmm-detail-item">
-                            <span class="detail-label" style="font-size:12px; color:var(--rmm-text-muted); display:block; margin-bottom:4px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg> <?php _e('شماره تماس:', 'fondogh-online-menu'); ?></span>
-                            <strong class="detail-value" id="rmm-view-branch-phone" style="font-size:14px; color:var(--rmm-text);">-</strong>
+                            <span class="detail-label rmm-portal-style-07"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg> <?php _e('شماره تماس:', 'fondogh-online-menu'); ?></span>
+                            <strong class="detail-value rmm-portal-style-08" id="rmm-view-branch-phone">-</strong>
                         </div>
                         <div class="rmm-detail-item">
-                            <span class="detail-label" style="font-size:12px; color:var(--rmm-text-muted); display:block; margin-bottom:4px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> <?php _e('ساعات کاری:', 'fondogh-online-menu'); ?></span>
-                            <strong class="detail-value" id="rmm-view-branch-hours" style="font-size:14px; color:var(--rmm-text);">-</strong>
+                            <span class="detail-label rmm-portal-style-07"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> <?php _e('ساعات کاری:', 'fondogh-online-menu'); ?></span>
+                            <strong class="detail-value rmm-portal-style-08" id="rmm-view-branch-hours">-</strong>
                         </div>
-                        <div class="rmm-detail-item" style="grid-column: 1 / -1;">
-                            <span class="detail-label" style="font-size:12px; color:var(--rmm-text-muted); display:block; margin-bottom:4px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"> <path d="M11.9999 14.1695C9.86988 14.1695 8.12988 12.4395 8.12988 10.2995C8.12988 8.15945 9.86988 6.43945 11.9999 6.43945C14.1299 6.43945 15.8699 8.16945 15.8699 10.3095C15.8699 12.4495 14.1299 14.1695 11.9999 14.1695ZM11.9999 7.93945C10.6999 7.93945 9.62988 8.99945 9.62988 10.3095C9.62988 11.6195 10.6899 12.6795 11.9999 12.6795C13.3099 12.6795 14.3699 11.6195 14.3699 10.3095C14.3699 8.99945 13.2999 7.93945 11.9999 7.93945Z"/> <path d="M11.9999 22.76C10.5199 22.76 9.02993 22.2 7.86993 21.09C4.91993 18.25 1.65993 13.72 2.88993 8.33C3.99993 3.44 8.26993 1.25 11.9999 1.25C11.9999 1.25 11.9999 1.25 12.0099 1.25C15.7399 1.25 20.0099 3.44 21.1199 8.34C22.3399 13.73 19.0799 18.25 16.1299 21.09C14.9699 22.2 13.4799 22.76 11.9999 22.76ZM11.9999 2.75C9.08993 2.75 5.34993 4.3 4.35993 8.66C3.27993 13.37 6.23993 17.43 8.91993 20C10.6499 21.67 13.3599 21.67 15.0899 20C17.7599 17.43 20.7199 13.37 19.6599 8.66C18.6599 4.3 14.9099 2.75 11.9999 2.75Z"/> </svg> <?php _e('آدرس شعبه:', 'fondogh-online-menu'); ?></span>
-                            <p class="detail-value" id="rmm-view-branch-address" style="margin:0; font-size:13px; color:var(--rmm-text); line-height:1.6;">-</p>
+                        <div class="rmm-detail-item rmm-portal-style-09">
+                            <span class="detail-label rmm-portal-style-07"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"> <path d="M11.9999 14.1695C9.86988 14.1695 8.12988 12.4395 8.12988 10.2995C8.12988 8.15945 9.86988 6.43945 11.9999 6.43945C14.1299 6.43945 15.8699 8.16945 15.8699 10.3095C15.8699 12.4495 14.1299 14.1695 11.9999 14.1695ZM11.9999 7.93945C10.6999 7.93945 9.62988 8.99945 9.62988 10.3095C9.62988 11.6195 10.6899 12.6795 11.9999 12.6795C13.3099 12.6795 14.3699 11.6195 14.3699 10.3095C14.3699 8.99945 13.2999 7.93945 11.9999 7.93945Z"/> <path d="M11.9999 22.76C10.5199 22.76 9.02993 22.2 7.86993 21.09C4.91993 18.25 1.65993 13.72 2.88993 8.33C3.99993 3.44 8.26993 1.25 11.9999 1.25C11.9999 1.25 11.9999 1.25 12.0099 1.25C15.7399 1.25 20.0099 3.44 21.1199 8.34C22.3399 13.73 19.0799 18.25 16.1299 21.09C14.9699 22.2 13.4799 22.76 11.9999 22.76ZM11.9999 2.75C9.08993 2.75 5.34993 4.3 4.35993 8.66C3.27993 13.37 6.23993 17.43 8.91993 20C10.6499 21.67 13.3599 21.67 15.0899 20C17.7599 17.43 20.7199 13.37 19.6599 8.66C18.6599 4.3 14.9099 2.75 11.9999 2.75Z"/> </svg> <?php _e('آدرس شعبه:', 'fondogh-online-menu'); ?></span>
+                            <p class="detail-value rmm-portal-style-10" id="rmm-view-branch-address">-</p>
                         </div>
                     </div>
                 </div>
@@ -456,7 +456,7 @@ $login_error = isset($_GET['login_error']) ? wp_strip_all_tags(urldecode($_GET['
         <div class="rmm-modal-box">
             <button class="rmm-modal-close-btn" id="rmm-close-food-modal-btn" type="button" aria-label="Close modal">&times;</button>
             <div class="rmm-modal-header">
-                <div class="modal-header-icon" style="color:var(--rmm-primary);"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"> <path d="M16.3799 22.7493H3.23993C2.28993 22.7493 1.40993 22.3093 0.839932 21.5393C0.259932 20.7593 0.0899403 19.7792 0.37994 18.8492L4.58993 5.31921C4.96993 4.05921 6.12995 3.19922 7.44995 3.19922H19.7499C20.9599 3.19922 22.0499 3.91931 22.5099 5.03931C22.7599 5.61931 22.8099 6.27932 22.6599 6.92932L19.2899 20.4592C18.9699 21.8092 17.7699 22.7493 16.3799 22.7493ZM7.45993 4.70923C6.80993 4.70923 6.21993 5.13929 6.02993 5.76929L1.81994 19.2993C1.67994 19.7693 1.75993 20.2593 2.05993 20.6593C2.33993 21.0393 2.77994 21.2593 3.24994 21.2593H16.3899C17.08 21.2593 17.6799 20.7893 17.8399 20.1193L21.2099 6.57922C21.2899 6.24922 21.2699 5.91927 21.1399 5.62927C20.9 5.05927 20.3699 4.69922 19.7599 4.69922H7.45993V4.70923Z"/> <path d="M20.78 22.7509H16C15.59 22.7509 15.25 22.4109 15.25 22.0009C15.25 21.5909 15.59 21.2509 16 21.2509H20.78C21.19 21.2509 21.57 21.081 21.85 20.781C22.13 20.481 22.27 20.081 22.24 19.671L21.25 6.05099C21.22 5.64099 21.53 5.28094 21.94 5.25094C22.35 5.23094 22.71 5.53089 22.74 5.94089L23.73 19.561C23.79 20.381 23.5 21.201 22.94 21.801C22.39 22.411 21.6 22.7509 20.78 22.7509Z"/> <path d="M9.67977 7.13069C9.61977 7.13069 9.55977 7.12067 9.49977 7.11067C9.09977 7.01067 8.84979 6.61064 8.94979 6.20064L9.98976 1.88069C10.0898 1.48069 10.4898 1.23064 10.8998 1.33064C11.2998 1.43064 11.5498 1.83068 11.4498 2.24068L10.4098 6.56074C10.3298 6.90074 10.0198 7.13069 9.67977 7.13069Z"/> <path d="M16.3799 7.13974C16.3299 7.13974 16.2699 7.13972 16.2199 7.11972C15.8199 7.02972 15.56 6.62971 15.64 6.22971L16.5799 1.88974C16.6699 1.47974 17.0699 1.22979 17.4699 1.30979C17.8699 1.38979 18.1299 1.79968 18.0499 2.19968L17.1099 6.53977C17.0399 6.89977 16.7299 7.13974 16.3799 7.13974Z"/> <path d="M15.7002 12.75H7.7002C7.2902 12.75 6.9502 12.41 6.9502 12C6.9502 11.59 7.2902 11.25 7.7002 11.25H15.7002C16.1102 11.25 16.4502 11.59 16.4502 12C16.4502 12.41 16.1102 12.75 15.7002 12.75Z"/> <path d="M14.7002 16.75H6.7002C6.2902 16.75 5.9502 16.41 5.9502 16C5.9502 15.59 6.2902 15.25 6.7002 15.25H14.7002C15.1102 15.25 15.4502 15.59 15.4502 16C15.4502 16.41 15.1102 16.75 14.7002 16.75Z"/> </svg></div>
+                <div class="modal-header-icon rmm-portal-style-11"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"> <path d="M16.3799 22.7493H3.23993C2.28993 22.7493 1.40993 22.3093 0.839932 21.5393C0.259932 20.7593 0.0899403 19.7792 0.37994 18.8492L4.58993 5.31921C4.96993 4.05921 6.12995 3.19922 7.44995 3.19922H19.7499C20.9599 3.19922 22.0499 3.91931 22.5099 5.03931C22.7599 5.61931 22.8099 6.27932 22.6599 6.92932L19.2899 20.4592C18.9699 21.8092 17.7699 22.7493 16.3799 22.7493ZM7.45993 4.70923C6.80993 4.70923 6.21993 5.13929 6.02993 5.76929L1.81994 19.2993C1.67994 19.7693 1.75993 20.2593 2.05993 20.6593C2.33993 21.0393 2.77994 21.2593 3.24994 21.2593H16.3899C17.08 21.2593 17.6799 20.7893 17.8399 20.1193L21.2099 6.57922C21.2899 6.24922 21.2699 5.91927 21.1399 5.62927C20.9 5.05927 20.3699 4.69922 19.7599 4.69922H7.45993V4.70923Z"/> <path d="M20.78 22.7509H16C15.59 22.7509 15.25 22.4109 15.25 22.0009C15.25 21.5909 15.59 21.2509 16 21.2509H20.78C21.19 21.2509 21.57 21.081 21.85 20.781C22.13 20.481 22.27 20.081 22.24 19.671L21.25 6.05099C21.22 5.64099 21.53 5.28094 21.94 5.25094C22.35 5.23094 22.71 5.53089 22.74 5.94089L23.73 19.561C23.79 20.381 23.5 21.201 22.94 21.801C22.39 22.411 21.6 22.7509 20.78 22.7509Z"/> <path d="M9.67977 7.13069C9.61977 7.13069 9.55977 7.12067 9.49977 7.11067C9.09977 7.01067 8.84979 6.61064 8.94979 6.20064L9.98976 1.88069C10.0898 1.48069 10.4898 1.23064 10.8998 1.33064C11.2998 1.43064 11.5498 1.83068 11.4498 2.24068L10.4098 6.56074C10.3298 6.90074 10.0198 7.13069 9.67977 7.13069Z"/> <path d="M16.3799 7.13974C16.3299 7.13974 16.2699 7.13972 16.2199 7.11972C15.8199 7.02972 15.56 6.62971 15.64 6.22971L16.5799 1.88974C16.6699 1.47974 17.0699 1.22979 17.4699 1.30979C17.8699 1.38979 18.1299 1.79968 18.0499 2.19968L17.1099 6.53977C17.0399 6.89977 16.7299 7.13974 16.3799 7.13974Z"/> <path d="M15.7002 12.75H7.7002C7.2902 12.75 6.9502 12.41 6.9502 12C6.9502 11.59 7.2902 11.25 7.7002 11.25H15.7002C16.1102 11.25 16.4502 11.59 16.4502 12C16.4502 12.41 16.1102 12.75 15.7002 12.75Z"/> <path d="M14.7002 16.75H6.7002C6.2902 16.75 5.9502 16.41 5.9502 16C5.9502 15.59 6.2902 15.25 6.7002 15.25H14.7002C15.1102 15.25 15.4502 15.59 15.4502 16C15.4502 16.41 15.1102 16.75 14.7002 16.75Z"/> </svg></div>
                 <div>
                     <h3 id="rmm-food-modal-title" class="rmm-modal-title">
                         <?php _e('افزودن غذای جدید به منو', 'fondogh-online-menu'); ?>
@@ -498,29 +498,29 @@ $login_error = isset($_GET['login_error']) ? wp_strip_all_tags(urldecode($_GET['
                     </div>
 
                     <!-- بخش تنظیمات اختصاصی نشان ویژه (متن، آیکون و تصویر) -->
-                    <div id="rmm-badge-extra-settings" class="rmm-badge-extra-box" style="display:none; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 12px; padding: 12px 14px; margin-top: 10px;">
-                        <span style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:8px;">
+                    <div id="rmm-badge-extra-settings" class="rmm-badge-extra-box rmm-portal-style-12" style="display:none;">
+                        <span class="rmm-portal-style-13">
                             🏷️ <?php _e('ویرایش عنوان، آیکون یا تصویر نشان ویژه غذا:', 'fondogh-online-menu'); ?>
                         </span>
-                        <div class="rmm-grid-3" style="display: grid; grid-template-columns: 1fr 1fr 1.3fr; gap: 12px; align-items: start;">
+                        <div class="rmm-grid-3 rmm-portal-style-14">
                             <div>
-                                <label style="font-size: 11.5px; font-weight: 600; color: #475569; display: block; margin-bottom: 4px;"><?php _e('عنوان دلخواه نشان:', 'fondogh-online-menu'); ?></label>
+                                <label class="rmm-portal-style-15"><?php _e('عنوان دلخواه نشان:', 'fondogh-online-menu'); ?></label>
                                 <input type="text" id="rmm-food-form-badge-text" placeholder="مثلاً: ویژه روز، پرطرفدار...">
                             </div>
                             <div>
-                                <label style="font-size: 11.5px; font-weight: 600; color: #475569; display: block; margin-bottom: 4px;"><?php _e('آیکون یا ایموجی نشان:', 'fondogh-online-menu'); ?></label>
+                                <label class="rmm-portal-style-15"><?php _e('آیکون یا ایموجی نشان:', 'fondogh-online-menu'); ?></label>
                                 <input type="text" id="rmm-food-form-badge-icon" placeholder="مثلاً: 👑، 💎، 🌶️، ⭐">
                             </div>
                             <div>
-                                <label style="font-size: 11.5px; font-weight: 600; color: #475569; display: block; margin-bottom: 4px;"><?php _e('تصویر یا لوگوی نشان:', 'fondogh-online-menu'); ?></label>
-                                <div style="display: flex; gap: 6px; align-items: center;">
-                                    <input type="text" id="rmm-food-form-badge-image" placeholder="آدرس یا آپلود عکس" style="flex: 1; font-size: 12px;">
-                                    <button type="button" id="rmm-badge-upload-btn" class="rmm-btn-secondary" style="padding: 6px 10px; font-size: 12px; white-space: nowrap;">📷 <?php _e('آپلود', 'fondogh-online-menu'); ?></button>
+                                <label class="rmm-portal-style-15"><?php _e('تصویر یا لوگوی نشان:', 'fondogh-online-menu'); ?></label>
+                                <div class="rmm-portal-style-16">
+                                    <input class="rmm-portal-style-17" type="text" id="rmm-food-form-badge-image" placeholder="آدرس یا آپلود عکس">
+                                    <button type="button" id="rmm-badge-upload-btn" class="rmm-btn-secondary rmm-portal-style-18">📷 <?php _e('آپلود', 'fondogh-online-menu'); ?></button>
                                     <input type="file" id="rmm-badge-file-input" accept="image/*" style="display:none;">
                                 </div>
-                                <div id="rmm-badge-img-preview" style="margin-top: 6px; display: none; align-items: center; gap: 8px;">
-                                    <img id="rmm-badge-img-tag" src="" style="width: 28px; height: 28px; object-fit: contain; border-radius: 6px; border: 1px solid #cbd5e1; background: #fff;">
-                                    <button type="button" id="rmm-badge-img-remove" style="background: none; border: none; color: #ef4444; cursor: pointer; font-size: 13px; font-weight: bold;" title="حذف تصویر">✕</button>
+                                <div class="rmm-portal-style-19" id="rmm-badge-img-preview" style="display: none;">
+                                    <img class="rmm-portal-style-20" id="rmm-badge-img-tag" src="">
+                                    <button class="rmm-portal-style-21" type="button" id="rmm-badge-img-remove" title="حذف تصویر">✕</button>
                                 </div>
                             </div>
                         </div>
@@ -689,7 +689,7 @@ $login_error = isset($_GET['login_error']) ? wp_strip_all_tags(urldecode($_GET['
         <div class="rmm-modal-box rmm-modal-box-md">
             <button class="rmm-modal-close-btn" id="rmm-close-cat-modal-btn" type="button" aria-label="Close modal">&times;</button>
             <div class="rmm-modal-header">
-                <div class="modal-header-icon" style="color:var(--rmm-primary);"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"> <path d="M7 10.75H5C2.58 10.75 1.25 9.42 1.25 7V5C1.25 2.58 2.58 1.25 5 1.25H7C9.42 1.25 10.75 2.58 10.75 5V7C10.75 9.42 9.42 10.75 7 10.75ZM5 2.75C3.42 2.75 2.75 3.42 2.75 5V7C2.75 8.58 3.42 9.25 5 9.25H7C8.58 9.25 9.25 8.58 9.25 7V5C9.25 3.42 8.58 2.75 7 2.75H5Z"/> <path d="M19 10.75H17C14.58 10.75 13.25 9.42 13.25 7V5C13.25 2.58 14.58 1.25 17 1.25H19C21.42 1.25 22.75 2.58 22.75 5V7C22.75 9.42 21.42 10.75 19 10.75ZM17 2.75C15.42 2.75 14.75 3.42 14.75 5V7C14.75 8.58 15.42 9.25 17 9.25H19C20.58 9.25 21.25 8.58 21.25 7V5C21.25 3.42 20.58 2.75 19 2.75H17Z"/> <path d="M19 22.75H17C14.58 22.75 13.25 21.42 13.25 19V17C13.25 14.58 14.58 13.25 17 13.25H19C21.42 13.25 22.75 14.58 22.75 17V19C22.75 21.42 21.42 22.75 19 22.75ZM17 14.75C15.42 14.75 14.75 15.42 14.75 17V19C14.75 20.58 15.42 21.25 17 21.25H19C20.58 21.25 21.25 20.58 21.25 19V17C21.25 15.42 20.58 14.75 19 14.75H17Z"/> <path d="M7 22.75H5C2.58 22.75 1.25 21.42 1.25 19V17C1.25 14.58 2.58 13.25 5 13.25H7C9.42 13.25 10.75 14.58 10.75 17V19C10.75 21.42 9.42 22.75 7 22.75ZM5 14.75C3.42 14.75 2.75 15.42 2.75 17V19C2.75 20.58 3.42 21.25 5 21.25H7C8.58 21.25 9.25 20.58 9.25 19V17C9.25 15.42 8.58 14.75 7 14.75H5Z"/> </svg></div>
+                <div class="modal-header-icon rmm-portal-style-11"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"> <path d="M7 10.75H5C2.58 10.75 1.25 9.42 1.25 7V5C1.25 2.58 2.58 1.25 5 1.25H7C9.42 1.25 10.75 2.58 10.75 5V7C10.75 9.42 9.42 10.75 7 10.75ZM5 2.75C3.42 2.75 2.75 3.42 2.75 5V7C2.75 8.58 3.42 9.25 5 9.25H7C8.58 9.25 9.25 8.58 9.25 7V5C9.25 3.42 8.58 2.75 7 2.75H5Z"/> <path d="M19 10.75H17C14.58 10.75 13.25 9.42 13.25 7V5C13.25 2.58 14.58 1.25 17 1.25H19C21.42 1.25 22.75 2.58 22.75 5V7C22.75 9.42 21.42 10.75 19 10.75ZM17 2.75C15.42 2.75 14.75 3.42 14.75 5V7C14.75 8.58 15.42 9.25 17 9.25H19C20.58 9.25 21.25 8.58 21.25 7V5C21.25 3.42 20.58 2.75 19 2.75H17Z"/> <path d="M19 22.75H17C14.58 22.75 13.25 21.42 13.25 19V17C13.25 14.58 14.58 13.25 17 13.25H19C21.42 13.25 22.75 14.58 22.75 17V19C22.75 21.42 21.42 22.75 19 22.75ZM17 14.75C15.42 14.75 14.75 15.42 14.75 17V19C14.75 20.58 15.42 21.25 17 21.25H19C20.58 21.25 21.25 20.58 21.25 19V17C21.25 15.42 20.58 14.75 19 14.75H17Z"/> <path d="M7 22.75H5C2.58 22.75 1.25 21.42 1.25 19V17C1.25 14.58 2.58 13.25 5 13.25H7C9.42 13.25 10.75 14.58 10.75 17V19C10.75 21.42 9.42 22.75 7 22.75ZM5 14.75C3.42 14.75 2.75 15.42 2.75 17V19C2.75 20.58 3.42 21.25 5 21.25H7C8.58 21.25 9.25 20.58 9.25 19V17C9.25 15.42 8.58 14.75 7 14.75H5Z"/> </svg></div>
                 <div>
                     <h3 class="rmm-modal-title"><?php _e('مدیریت و اولویت‌بندی دسته‌بندی‌ها', 'fondogh-online-menu'); ?></h3>
                     <p class="rmm-modal-desc"><?php _e('تعیین ترتیب نمایش دسته‌ها در منوی مشتری، افزودن دسته‌بندی و ویرایش ترجمه‌ها', 'fondogh-online-menu'); ?></p>
@@ -697,20 +697,20 @@ $login_error = isset($_GET['login_error']) ? wp_strip_all_tags(urldecode($_GET['
             </div>
 
             <!-- راهنمای اولویت‌بندی دسته‌بندی‌ها -->
-            <div class="rmm-cat-priority-alert" style="background:rgba(59, 130, 246, 0.08); border:1px solid rgba(59, 130, 246, 0.25); border-radius:12px; padding:12px 14px; margin-bottom:16px; display:flex; align-items:flex-start; gap:10px; font-size:12.5px; line-height:1.6; color:var(--rmm-text-main);">
-                <span style="font-size:18px;">💡</span>
+            <div class="rmm-cat-priority-alert rmm-portal-style-22">
+                <span class="rmm-portal-style-23">💡</span>
                 <div>
-                    <strong style="color:var(--rmm-primary);"><?php _e('راهنمای اولویت‌بندی منو:', 'fondogh-online-menu'); ?></strong>
+                    <strong class="rmm-portal-style-11"><?php _e('راهنمای اولویت‌بندی منو:', 'fondogh-online-menu'); ?></strong>
                     <?php _e('با دکمه‌های ⬆️ و ⬇️ در هر ردیف، ترتیب نمایش دسته‌بندی‌ها را در منوی آنلاین مشتری تنظیم کنید (مثلاً غذای اصلی در ردیف ۱ اولویت و نوشیدنی‌ها در انتها). تغییرات فوراً ذخیره می‌شوند.', 'fondogh-online-menu'); ?>
                 </div>
             </div>
 
-            <div style="margin-bottom:16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+            <div class="rmm-portal-style-24">
                 <button type="button" class="rmm-btn-primary" id="rmm-create-new-cat-btn">
                     <span>+</span>
                     <span><?php _e('افزودن دسته‌بندی جدید', 'fondogh-online-menu'); ?></span>
                 </button>
-                <button type="button" class="rmm-btn-secondary" id="rmm-save-cat-order-btn" style="display:inline-flex; align-items:center; gap:6px;">
+                <button type="button" class="rmm-btn-secondary rmm-portal-style-25" id="rmm-save-cat-order-btn">
                     <span>💾</span>
                     <span><?php _e('ذخیره ترتیب اولویت‌ها', 'fondogh-online-menu'); ?></span>
                 </button>
@@ -727,7 +727,7 @@ $login_error = isset($_GET['login_error']) ? wp_strip_all_tags(urldecode($_GET['
         <div class="rmm-modal-box rmm-modal-box-sm">
             <button class="rmm-modal-close-btn" id="rmm-close-cat-edit-modal-btn" type="button" aria-label="Close modal">&times;</button>
             <div class="rmm-modal-header">
-                <div class="modal-header-icon" style="color:var(--rmm-primary);"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"> <path d="M7 10.75H5C2.58 10.75 1.25 9.42 1.25 7V5C1.25 2.58 2.58 1.25 5 1.25H7C9.42 1.25 10.75 2.58 10.75 5V7C10.75 9.42 9.42 10.75 7 10.75ZM5 2.75C3.42 2.75 2.75 3.42 2.75 5V7C2.75 8.58 3.42 9.25 5 9.25H7C8.58 9.25 9.25 8.58 9.25 7V5C9.25 3.42 8.58 2.75 7 2.75H5Z"/> <path d="M19 10.75H17C14.58 10.75 13.25 9.42 13.25 7V5C13.25 2.58 14.58 1.25 17 1.25H19C21.42 1.25 22.75 2.58 22.75 5V7C22.75 9.42 21.42 10.75 19 10.75ZM17 2.75C15.42 2.75 14.75 3.42 14.75 5V7C14.75 8.58 15.42 9.25 17 9.25H19C20.58 9.25 21.25 8.58 21.25 7V5C21.25 3.42 20.58 2.75 19 2.75H17Z"/> <path d="M19 22.75H17C14.58 22.75 13.25 21.42 13.25 19V17C13.25 14.58 14.58 13.25 17 13.25H19C21.42 13.25 22.75 14.58 22.75 17V19C22.75 21.42 21.42 22.75 19 22.75ZM17 14.75C15.42 14.75 14.75 15.42 14.75 17V19C14.75 20.58 15.42 21.25 17 21.25H19C20.58 21.25 21.25 20.58 21.25 19V17C21.25 15.42 20.58 14.75 19 14.75H17Z"/> <path d="M7 22.75H5C2.58 22.75 1.25 21.42 1.25 19V17C1.25 14.58 2.58 13.25 5 13.25H7C9.42 13.25 10.75 14.58 10.75 17V19C10.75 21.42 9.42 22.75 7 22.75ZM5 14.75C3.42 14.75 2.75 15.42 2.75 17V19C2.75 20.58 3.42 21.25 5 21.25H7C8.58 21.25 9.25 20.58 9.25 19V17C9.25 15.42 8.58 14.75 7 14.75H5Z"/> </svg></div>
+                <div class="modal-header-icon rmm-portal-style-11"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"> <path d="M7 10.75H5C2.58 10.75 1.25 9.42 1.25 7V5C1.25 2.58 2.58 1.25 5 1.25H7C9.42 1.25 10.75 2.58 10.75 5V7C10.75 9.42 9.42 10.75 7 10.75ZM5 2.75C3.42 2.75 2.75 3.42 2.75 5V7C2.75 8.58 3.42 9.25 5 9.25H7C8.58 9.25 9.25 8.58 9.25 7V5C9.25 3.42 8.58 2.75 7 2.75H5Z"/> <path d="M19 10.75H17C14.58 10.75 13.25 9.42 13.25 7V5C13.25 2.58 14.58 1.25 17 1.25H19C21.42 1.25 22.75 2.58 22.75 5V7C22.75 9.42 21.42 10.75 19 10.75ZM17 2.75C15.42 2.75 14.75 3.42 14.75 5V7C14.75 8.58 15.42 9.25 17 9.25H19C20.58 9.25 21.25 8.58 21.25 7V5C21.25 3.42 20.58 2.75 19 2.75H17Z"/> <path d="M19 22.75H17C14.58 22.75 13.25 21.42 13.25 19V17C13.25 14.58 14.58 13.25 17 13.25H19C21.42 13.25 22.75 14.58 22.75 17V19C22.75 21.42 21.42 22.75 19 22.75ZM17 14.75C15.42 14.75 14.75 15.42 14.75 17V19C14.75 20.58 15.42 21.25 17 21.25H19C20.58 21.25 21.25 20.58 21.25 19V17C21.25 15.42 20.58 14.75 19 14.75H17Z"/> <path d="M7 22.75H5C2.58 22.75 1.25 21.42 1.25 19V17C1.25 14.58 2.58 13.25 5 13.25H7C9.42 13.25 10.75 14.58 10.75 17V19C10.75 21.42 9.42 22.75 7 22.75ZM5 14.75C3.42 14.75 2.75 15.42 2.75 17V19C2.75 20.58 3.42 21.25 5 21.25H7C8.58 21.25 9.25 20.58 9.25 19V17C9.25 15.42 8.58 14.75 7 14.75H5Z"/> </svg></div>
                 <div>
                     <h3 id="rmm-cat-edit-modal-title" class="rmm-modal-title"><?php _e('تعریف دسته‌بندی غذا', 'fondogh-online-menu'); ?></h3>
                     <p class="rmm-modal-desc"><?php _e('مشخصات، تصویر شاخص و ترجمه‌های هوشمند دسته', 'fondogh-online-menu'); ?></p>
@@ -752,7 +752,7 @@ $login_error = isset($_GET['login_error']) ? wp_strip_all_tags(urldecode($_GET['
                     <div class="rmm-form-group">
                         <label><?php _e('اولویت نمایش در منو (رتبه عددی)', 'fondogh-online-menu'); ?></label>
                         <input type="number" id="rmm-cat-form-order" min="1" placeholder="<?php _e('مثلاً: ۱ برای اولویت اول و نمایش در بالای منو', 'fondogh-online-menu'); ?>">
-                        <span style="font-size:11px; color:var(--rmm-text-muted); display:block; margin-top:3px;"><?php _e('عدد کمتر به معنی اولویت بالاتر و نمایش در ابتدای منوی آنلاین است.', 'fondogh-online-menu'); ?></span>
+                        <span class="rmm-portal-style-26"><?php _e('عدد کمتر به معنی اولویت بالاتر و نمایش در ابتدای منوی آنلاین است.', 'fondogh-online-menu'); ?></span>
                     </div>
 
                     <!-- Category Thumbnail Dropzone -->
@@ -782,8 +782,8 @@ $login_error = isset($_GET['login_error']) ? wp_strip_all_tags(urldecode($_GET['
                     <div class="rmm-form-card rmm-ai-card">
                         <div class="rmm-ai-header">
                             <div>
-                                <h4 class="rmm-form-card-title" style="margin:0; border:none; padding:0;">✨ <?php _e('ترجمه چندزبانه هوشمند دسته', 'fondogh-online-menu'); ?></h4>
-                                <p style="margin:4px 0 0; font-size:12px; color:var(--rmm-text-muted);"><?php _e('با یک کلیک نام و توضیحات دسته‌بندی را به تمام زبان‌ها ترجمه کنید.', 'fondogh-online-menu'); ?></p>
+                                <h4 class="rmm-form-card-title rmm-portal-style-27">✨ <?php _e('ترجمه چندزبانه هوشمند دسته', 'fondogh-online-menu'); ?></h4>
+                                <p class="rmm-portal-style-28"><?php _e('با یک کلیک نام و توضیحات دسته‌بندی را به تمام زبان‌ها ترجمه کنید.', 'fondogh-online-menu'); ?></p>
                             </div>
                             <button type="button" id="rmm-cat-ai-translate-btn" class="rmm-btn-ai">
                                 <span class="ai-sparkle">✨</span>
@@ -793,17 +793,17 @@ $login_error = isset($_GET['login_error']) ? wp_strip_all_tags(urldecode($_GET['
                         </div>
 
                         <!-- Multilingual Fields for Category -->
-                        <div class="rmm-translations-grid" style="margin-top:14px;">
+                        <div class="rmm-translations-grid rmm-portal-style-29">
                             <?php foreach ($trans_langs as $lang_code => $l_data) : ?>
                                 <div class="rmm-lang-box" data-lang="<?php echo esc_attr($lang_code); ?>">
                                     <div class="rmm-lang-box-header">
                                         <span class="rmm-lang-flag"><?php echo esc_html($l_data['flag']); ?></span>
                                         <strong><?php echo esc_html($l_data['native']); ?> (<?php echo esc_html($l_data['name']); ?>)</strong>
                                     </div>
-                                    <div class="rmm-form-group" style="margin-top:8px;">
+                                    <div class="rmm-form-group rmm-portal-style-30">
                                         <input type="text" class="rmm-cat-trans-name" data-lang="<?php echo esc_attr($lang_code); ?>" placeholder="<?php printf(__('نام دسته به %s...', 'fondogh-online-menu'), $l_data['native']); ?>">
                                     </div>
-                                    <div class="rmm-form-group" style="margin-top:6px;">
+                                    <div class="rmm-form-group rmm-portal-style-31">
                                         <input type="text" class="rmm-cat-trans-desc" data-lang="<?php echo esc_attr($lang_code); ?>" placeholder="<?php printf(__('توضیح کوتاه به %s...', 'fondogh-online-menu'), $l_data['native']); ?>">
                                     </div>
                                 </div>
@@ -828,7 +828,7 @@ $login_error = isset($_GET['login_error']) ? wp_strip_all_tags(urldecode($_GET['
         <div class="rmm-modal-box rmm-modal-box-sm">
             <button class="rmm-modal-close-btn" id="rmm-close-branch-modal-btn" type="button" aria-label="Close modal">&times;</button>
             <div class="rmm-modal-header">
-                <div class="modal-header-icon" style="color:var(--rmm-primary);"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"> <path d="M11.9999 14.1695C9.86988 14.1695 8.12988 12.4395 8.12988 10.2995C8.12988 8.15945 9.86988 6.43945 11.9999 6.43945C14.1299 6.43945 15.8699 8.16945 15.8699 10.3095C15.8699 12.4495 14.1299 14.1695 11.9999 14.1695ZM11.9999 7.93945C10.6999 7.93945 9.62988 8.99945 9.62988 10.3095C9.62988 11.6195 10.6899 12.6795 11.9999 12.6795C13.3099 12.6795 14.3699 11.6195 14.3699 10.3095C14.3699 8.99945 13.2999 7.93945 11.9999 7.93945Z"/> <path d="M11.9999 22.76C10.5199 22.76 9.02993 22.2 7.86993 21.09C4.91993 18.25 1.65993 13.72 2.88993 8.33C3.99993 3.44 8.26993 1.25 11.9999 1.25C11.9999 1.25 11.9999 1.25 12.0099 1.25C15.7399 1.25 20.0099 3.44 21.1199 8.34C22.3399 13.73 19.0799 18.25 16.1299 21.09C14.9699 22.2 13.4799 22.76 11.9999 22.76ZM11.9999 2.75C9.08993 2.75 5.34993 4.3 4.35993 8.66C3.27993 13.37 6.23993 17.43 8.91993 20C10.6499 21.67 13.3599 21.67 15.0899 20C17.7599 17.43 20.7199 13.37 19.6599 8.66C18.6599 4.3 14.9099 2.75 11.9999 2.75Z"/> </svg></div>
+                <div class="modal-header-icon rmm-portal-style-11"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"> <path d="M11.9999 14.1695C9.86988 14.1695 8.12988 12.4395 8.12988 10.2995C8.12988 8.15945 9.86988 6.43945 11.9999 6.43945C14.1299 6.43945 15.8699 8.16945 15.8699 10.3095C15.8699 12.4495 14.1299 14.1695 11.9999 14.1695ZM11.9999 7.93945C10.6999 7.93945 9.62988 8.99945 9.62988 10.3095C9.62988 11.6195 10.6899 12.6795 11.9999 12.6795C13.3099 12.6795 14.3699 11.6195 14.3699 10.3095C14.3699 8.99945 13.2999 7.93945 11.9999 7.93945Z"/> <path d="M11.9999 22.76C10.5199 22.76 9.02993 22.2 7.86993 21.09C4.91993 18.25 1.65993 13.72 2.88993 8.33C3.99993 3.44 8.26993 1.25 11.9999 1.25C11.9999 1.25 11.9999 1.25 12.0099 1.25C15.7399 1.25 20.0099 3.44 21.1199 8.34C22.3399 13.73 19.0799 18.25 16.1299 21.09C14.9699 22.2 13.4799 22.76 11.9999 22.76ZM11.9999 2.75C9.08993 2.75 5.34993 4.3 4.35993 8.66C3.27993 13.37 6.23993 17.43 8.91993 20C10.6499 21.67 13.3599 21.67 15.0899 20C17.7599 17.43 20.7199 13.37 19.6599 8.66C18.6599 4.3 14.9099 2.75 11.9999 2.75Z"/> </svg></div>
                 <div>
                     <h3 id="rmm-branch-modal-title" class="rmm-modal-title"><?php _e('مشخصات شعبه رستوران', 'fondogh-online-menu'); ?></h3>
                     <p class="rmm-modal-desc"><?php _e('اطلاعات تماس، آدرس و حالت کاری شعبه', 'fondogh-online-menu'); ?></p>
@@ -870,7 +870,7 @@ $login_error = isset($_GET['login_error']) ? wp_strip_all_tags(urldecode($_GET['
                         </select>
                     </div>
 
-                    <div class="rmm-form-row" style="margin-top:10px;">
+                    <div class="rmm-form-row rmm-portal-style-32">
                         <label class="rmm-checkbox-label">
                             <input type="checkbox" id="rmm-branch-form-open" value="1" checked>
                             <span><?php _e('شعبه فعال و آماده دریافت سفارش است', 'fondogh-online-menu'); ?></span>
@@ -890,7 +890,7 @@ $login_error = isset($_GET['login_error']) ? wp_strip_all_tags(urldecode($_GET['
     </div>
 
     <!-- Hidden Iframe for Direct 80mm Receipt Printing -->
-    <iframe id="rmm-receipt-print-frame" style="display:none; width:0; height:0; border:none;"></iframe>
+    <iframe class="rmm-portal-style-33" id="rmm-receipt-print-frame" style="display:none;"></iframe>
 
     <?php
     $branches_list = [];
