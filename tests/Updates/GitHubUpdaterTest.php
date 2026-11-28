@@ -51,7 +51,7 @@ class GitHubUpdaterTest extends TestCase {
     }
 
     public function test_accepts_valid_detached_signature_and_manifest() {
-        $manifest = '{"package":"fondogh-online-menu.zip","schema":1,"sha256":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","tag":"v1.3.7","version":"1.3.7"}' . "\\n";
+        $manifest = '{"package":"fondogh-online-menu.zip","schema":1,"sha256":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","tag":"v1.3.7","version":"1.3.7"}' . "\n";
         $signature = 'Tk9bMqrFEvxbgGYm7ip5rtdN51t3KDMKGVDfMYDC9nDRAh8lom6J5vaGuuFrNWTuy3rM35zJU3EmAGrXUrwXUYNGC6Wwv0R2JYuXAHKdp2SoeB3Zx2QhwunmXd9FLdlEI8ER/oPAbfj8kg/jLoAfK7mvJH+AhpXuFxs8E8ZNsHHQhXoxjaEcl48YV3r7JYEZKwgyJieLccqobkOeI/3/fkMMGWmYBWmrPRRf2s+XGIEiOr8aQURY3RFKXBFJxo9o+BuCKf3ZpKN51ZJSg8rWsS6XHcHeJw17zhVYXzIc4RcyZkaY0fFBRlv1hIKqnqZ4wQCJZflZp1S43t22eJJHqJT+eCl5bbfvlwn7pSjl+PJhRzOyC1wC+LsWzUI4nSGgxOHAvDzsPchWWG5q42G8Ha2qt5ky9TlazhSKhCP/CYZkm6mEIs7NYf6RXzh+7Xp65bhdBNEJRivXh/U73mxcXSRyPn0WqMaVPDHxChtpJGeCdeLwMFWidYX5DhjNk+7j';
         $verified = GitHubUpdater::verify_signed_manifest($manifest, $signature, 'v1.3.7');
         $this->assertIsArray($verified);
