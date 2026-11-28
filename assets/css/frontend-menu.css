@@ -421,12 +421,12 @@ body.admin-bar .rmm-category-nav-wrapper.rmm-sticky-bar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #0f172a;
-    color: #ffffff;
+    background: var(--rmm-ds-cart-bg, #0f172a);
+    color: var(--rmm-ds-cart-text, #ffffff);
     padding: 14px 20px;
-    border-radius: 16px;
+    border-radius: var(--rmm-ds-cart-radius, 16px);
     text-decoration: none;
-    box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.4);
+    box-shadow: var(--rmm-ds-shadow-card, 0 10px 25px -5px rgba(15, 23, 42, 0.4));
 }
 
 .rmm-cart-left {
@@ -436,8 +436,8 @@ body.admin-bar .rmm-category-nav-wrapper.rmm-sticky-bar {
 }
 
 .rmm-cart-badge-count {
-    background: #0284c7;
-    color: #fff;
+    background: var(--rmm-ds-cart-badge-bg, #0284c7);
+    color: var(--rmm-ds-cart-badge-text, #fff);
     width: 26px;
     height: 26px;
     border-radius: 50%;
