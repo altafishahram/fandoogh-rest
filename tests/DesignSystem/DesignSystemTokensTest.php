@@ -242,6 +242,34 @@ class DesignSystemTokensTest extends TestCase {
     }
 
 
+
+    public function test_standalone_search_widget_uses_design_tokens_with_fallbacks() {
+        $css = file_get_contents(dirname(__DIR__, 2) . '/assets/css/frontend-menu.css');
+
+        $this->assertNotFalse($css);
+
+        $expected = [
+            'border-radius: var(--rmm-ds-search-radius, 12px);',
+            'border: 1.5px solid var(--rmm-ds-search-border, #e2e8f0);',
+            'background: var(--rmm-ds-search-bg, #ffffff);',
+            'border-color: var(--rmm-ds-primary, #0284c7);',
+            'color: var(--rmm-ds-search-icon, #94a3b8);',
+            'background: var(--rmm-ds-subtle, #f1f5f9);',
+            'color: var(--rmm-ds-muted, #64748b);',
+            'background: var(--rmm-ds-border, #e2e8f0);',
+            'color: var(--rmm-ds-text, #0f172a);',
+        ];
+
+        foreach ($expected as $declaration) {
+            $this->assertStringContainsString(
+                $declaration,
+                $css,
+                sprintf('Standalone search CSS is missing token fallback: %s', $declaration)
+            );
+        }
+    }
+
+
     public function test_view_switcher_controls_use_design_tokens_with_fallbacks() {
         $css = file_get_contents(dirname(__DIR__, 2) . '/assets/css/frontend-menu.css');
 
