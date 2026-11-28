@@ -432,3 +432,101 @@
 .wrap .rmm-admin-number-80 { width: 80px; }
 .wrap .rmm-template-preview-image { width: 100%; height: 100%; object-fit: cover; }
 .wrap .rmm-template-import-button { width: 100%; border-radius: 6px; font-weight: bold; padding: 6px 0; height: auto; }
+
+
+/* Mobile overflow fixes for the main plugin settings screen. */
+@media (max-width: 782px) {
+    .rmm-admin-wrap,
+    .rmm-admin-wrap > div {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .rmm-admin-wrap {
+        width: calc(100% - 24px);
+        margin: 14px 12px 28px !important;
+        overflow: visible;
+    }
+
+    .rmm-admin-wrap > div {
+        padding: 16px !important;
+    }
+
+    .rmm-admin-wrap .form-table {
+        width: 100%;
+        table-layout: fixed;
+    }
+
+    .rmm-admin-wrap .form-table th,
+    .rmm-admin-wrap .form-table td {
+        min-width: 0;
+        overflow-wrap: anywhere;
+        word-break: normal;
+    }
+
+    .rmm-admin-wrap input[type="text"],
+    .rmm-admin-wrap input[type="password"],
+    .rmm-admin-wrap input[type="number"],
+    .rmm-admin-wrap input[type="email"],
+    .rmm-admin-wrap textarea,
+    .rmm-admin-wrap select {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .rmm-admin-wrap .rmm-admin-flex-row {
+        min-width: 0;
+        flex-wrap: wrap;
+    }
+
+    .rmm-admin-wrap .rmm-admin-inline-074f3071,
+    .rmm-admin-wrap .rmm-admin-inline-ca0689d3,
+    .rmm-admin-wrap .rmm-admin-inline-41ccfad7 {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .rmm-admin-wrap .rmm-admin-inline-95e59fba {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 14px;
+    }
+
+    .rmm-admin-wrap .rmm-admin-inline-95e59fba > div {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .rmm-admin-wrap .rmm-admin-inline-b7ec7161 {
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+    }
+
+    .rmm-admin-wrap .description {
+        max-width: 100%;
+        overflow-wrap: anywhere;
+    }
+}
+
+@media (max-width: 420px) {
+    .rmm-admin-wrap {
+        width: calc(100% - 16px);
+        margin-right: 8px !important;
+        margin-left: 8px !important;
+    }
+
+    .rmm-admin-wrap > div {
+        padding: 12px !important;
+    }
+
+    .rmm-admin-wrap .rmm-admin-inline-d4260324,
+    .rmm-admin-wrap .rmm-admin-inline-ac0cae36 {
+        padding: 16px !important;
+    }
+
+    .rmm-admin-wrap .rmm-admin-inline-c956b2fc {
+        font-size: 19px;
+        line-height: 1.5;
+    }
+}
