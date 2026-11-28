@@ -4,12 +4,12 @@
 
 - `frontend-menu-base.css`: shared storefront foundations, menu layout, cards and modal primitives.
 - `frontend-menu-widgets.css`: secondary storefront widgets and standalone controls.
-- `frontend-menu-modern.css`: theme variants, catalog presentation and the remaining storefront-specific layers.
+- `frontend-menu-modern.css`: the single supported Modern menu presentation, catalog presentation and shared storefront-specific overrides.
 - `category-sheet.css`: isolated category-sheet component; loaded after the storefront base handle.
 - `portal-pwa.css`: standalone management PWA. It intentionally keeps its own `--rmm-*` token namespace rather than inheriting storefront theme colors.
 - `TokenSchema.php` and `CssCompiler.php`: source of truth for editable Design System tokens and generated component mappings.
 
-The three storefront layers are enqueued in dependency order. The public `rmm-frontend-menu` style handle remains the final theme layer, so existing widgets, third-party integrations, and `wp_add_inline_style()` calls retain their original handle and output behavior. The generated Design System stylesheet is loaded after that handle; when the generated file is unavailable, its fallback CSS is attached to the same final layer.
+The three storefront layers are enqueued in dependency order. The public `rmm-frontend-menu` style handle remains the final Modern presentation layer, so existing widgets, third-party integrations, and `wp_add_inline_style()` calls retain their original handle and output behavior. The Elementor menu widget exposes only the Modern Grid preset; legacy saved preset values render through Modern Grid. The generated Design System stylesheet is loaded after that handle; when the generated file is unavailable, its fallback CSS is attached to the same final layer.
 
 ## Authoring rules
 
